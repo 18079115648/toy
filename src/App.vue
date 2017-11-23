@@ -5,11 +5,11 @@
 </template>
 
 <script>
-export default {
-  name: 'app'
-}
 </script>
 
 <style lang="scss">
-
+	#app{
+		background: #f5f5f9;
+		min-height: 100vh;
+	}
 </style>
