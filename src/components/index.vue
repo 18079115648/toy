@@ -1,14 +1,19 @@
 <template>
   <div class="content">
     <div class="header">
-    	<router-link to="" class="user-link link"></router-link>
+    	<router-link to="/user" class="user-link link"></router-link>
     	抓娃娃
     	<router-link to="" class="news-link link"></router-link>
     </div>
     <div class="navbar">
-    	<div v-for="(item, index) in navbar" :class="{'active': item.active}" class="nav-item">
+    	<div v-for="(item, index) in navbar" :class="{'active': item.active}" @click="changeNav(item)" class="nav-item">
     		<div class="text">{{item.text}}</div>
     	</div>
+    </div>
+    <div class="nav-content">
+    	<keep-alive>
+		    	<router-view></router-view>
+			</keep-alive>
     </div>
   </div>
 </template>
@@ -19,18 +24,31 @@ export default {
     return {
       navbar: [{
       	text: '首页',
-      	active: true
+      	active: true,
+      	link: '/index'
       },{
       	text: '最新',
-      	active: false
+      	active: false,
+      	link: '/index/new'
       },{
       	text: '爆款',
-      	active: false
+      	active: false,
+      	link: '/index/pop'
       },{
       	text: '畅玩',
-      	active: false
+      	active: false,
+      	link: '/index/fun'
       }]
     }
+  },
+  methods: {
+  	changeNav(obj) {
+  		this.navbar.forEach((item) => {
+  			item.active = false
+  		})
+  		obj.active = true
+  		this.$router.replace(obj.link)
+  	}
   }
 }
 </script>
@@ -62,12 +80,23 @@ export default {
 		.text{
 			color: #cb8c32;
 			font-size: 0.28rem;
+			transition: all 0.2s;
 		}
 		&.active{
 			.text{
 				color: #704a06;
+				padding: 0 0.06rem;
+				border-bottom: 2px solid #704a06;
 			}
 		}
 	}
+}
+.nav-content{
+	position: absolute;
+	width: 100%;
+	left: 0;
+	top: 1.51rem;
+	bottom: 0;
+	overflow-y: auto;
 }
 </style>
