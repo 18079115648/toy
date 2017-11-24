@@ -23,12 +23,32 @@ const orderList = r => require.ensure([], () => r(require('../components/orderLi
 const address = r => require.ensure([], () => r(require('../components/address.vue')), 'address')
 
 
+
+
+
+
+/**
+ * Demon Start
+ */
+
+ // 直播测试
+ const live = r => require.ensure([], () => r(require('../components/live.vue')), 'live')
+
+ /**
+  * Demon End
+  */
+
+
 Vue.use(Router)
 
 export default new Router({
   routes: [
     { path: '/',
       redirect: '/index' 
+    },
+    {
+      path: '/live',
+      component: live
     },
     {
       path: '/index',
