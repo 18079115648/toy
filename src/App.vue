@@ -15,6 +15,8 @@
 		background: #f5f5f9;
 		min-height: 100vh;
 		position: relative;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
 	}
 	.btn-default{
 		width: 6.9rem;

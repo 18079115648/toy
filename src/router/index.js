@@ -12,11 +12,59 @@ const signIn = r => require.ensure([], () => r(require('../components/signIn.vue
 const toysBox = r => require.ensure([], () => r(require('../components/toysBox.vue')), 'toysBox')
 const news = r => require.ensure([], () => r(require('../components/news.vue')), 'news')
 
+//个人中心
+const userInfo = r => require.ensure([], () => r(require('../components/userInfo.vue')), 'userInfo')
+//抓取记录
+const grabList = r => require.ensure([], () => r(require('../components/grabList.vue')), 'grabList')
+//抓取详情
+const grabDetails = r => require.ensure([], () => r(require('../components/grabDetails.vue')), 'grabDetails')
+//钻石充值
+const recharge = r => require.ensure([], () => r(require('../components/recharge.vue')), 'recharge')
+//确认支付
+const payment = r => require.ensure([], () => r(require('../components/payment.vue')), 'payment')
+//充值记录
+const paymentList = r => require.ensure([], () => r(require('../components/paymentList.vue')), 'paymentList')
+//订单中心
+const orderList = r => require.ensure([], () => r(require('../components/orderList.vue')), 'orderList')
+//订单详情
+const orderDetails = r => require.ensure([], () => r(require('../components/orderDetails.vue')), 'orderDetails')
+//地址管理
+const address = r => require.ensure([], () => r(require('../components/address.vue')), 'address')
+//添加地址
+const addAddress = r => require.ensure([], () => r(require('../components/addAddress.vue')), 'addAddress')
+//设置
+const set = r => require.ensure([], () => r(require('../components/set.vue')), 'set')
+//关于我们
+const aboutUs = r => require.ensure([], () => r(require('../components/aboutUs.vue')), 'aboutUs')
+
+
+
+
+
+
+
+
+
+/**
+ * Demon Start
+ */
+
+ // 直播测试
+ const live = r => require.ensure([], () => r(require('../components/live.vue')), 'live')
+
+ /**
+  * Demon End
+  */
+
 
 export default new Router({
   routes: [
     { path: '/',
       redirect: '/index' 
+    },
+    {
+      path: '/live',
+      component: live
     },
     {
       path: '/index',
@@ -32,6 +80,42 @@ export default new Router({
     {
       path: '/user',
       component: user
+    },{
+      path: '/userInfo',
+      component: userInfo
+    },{
+      path: '/grabList',
+      component: grabList
+    },{
+      path: '/grabDetails',
+      component: grabDetails
+    },{
+      path: '/recharge',
+      component: recharge
+    },{
+      path: '/payment',
+      component: payment
+    },{
+      path: '/paymentList',
+      component: paymentList
+    },{
+      path: '/orderList',
+      component: orderList
+    },{
+      path: '/orderDetails',
+      component: orderDetails
+    },{
+      path: '/address',
+      component: address
+    },{
+      path: '/addAddress',
+      component: addAddress
+    },{
+      path: '/set',
+      component: set
+    },{
+      path: '/aboutUs',
+      component: aboutUs
     },
     {
       path: '/login',
