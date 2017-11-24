@@ -7,12 +7,15 @@
         <div>头像</div>
         <div class="head_image"></div>
         <div>
-          <img src="../assets/34@3x.png" class="guide">
+          <img src="../../static/image/wdd.png" class="guide">
         </div>
       </div>
       <div class="head">
         <label for="user_name">昵称</label>
         <input type="text" name="user_name" placeholder="请输入昵称">
+        <div>
+          <img src="../../static/image/wdd.png" class="guide">
+        </div>
       </div>
     </div>
   </div>
@@ -44,6 +47,8 @@ export default {
   input{
     text-align: right;
     font-size: .28rem;
+    flex: 1;
+    padding-right: .3rem;
   }
 }
 .head_image{

@@ -1,9 +1,9 @@
 <template>
     <div class="content">
         <Header title="订单中心"></Header>
-        <div class="orderList_body">
+        <div class="orderList_body" @click="infoDetails">
             <div class="orderList_title">
-                <div>订单：5263137153715</div>
+                <div><span style="color:#888">订单号：</span>5263137153715</div>
                 <div>代发货</div>
             </div>
             <div class="puppets_img">
@@ -12,7 +12,7 @@
                         <img src="">
                     </div>
                     <div>
-                        <div>恐龙布朗熊公仔</div>
+                        <div style="margin-bottom: .1rem;">恐龙布朗熊公仔</div>
                         <div>x1</div>
                     </div>
                 </div>
@@ -21,7 +21,7 @@
                         <img src="">
                     </div>
                     <div>
-                        <div>恐龙布朗熊公仔</div>
+                        <div style="margin-bottom: .1rem;">恐龙布朗熊公仔</div>
                         <div>x1</div>
                     </div>
                 </div>
@@ -30,8 +30,8 @@
         </div>
         <div class="orderList_body">
             <div class="orderList_title">
-                <div>订单：5263137153715</div>
-                <div>代发货</div>
+                <div><span style="color:#888">订单号：</span>5263137153715</div>
+                <div class="succeed">已发货</div>
             </div>
             <div class="puppets_img">
                 <div class="puppetsList">
@@ -39,7 +39,7 @@
                         <img src="">
                     </div>
                     <div>
-                        <div>恐龙布朗熊公仔</div>
+                        <div style="margin-bottom: .1rem;">恐龙布朗熊公仔</div>
                         <div>x1</div>
                     </div>
                 </div>
@@ -58,7 +58,9 @@ export default {
     }
   },
   methods: {
-  	
+  	infoDetails(){
+        this.$router.push('/orderDetails')
+    }
   }
 }
 </script>
@@ -79,6 +81,7 @@ export default {
     background-color: #fff;
     border-radius: 10px 10px 0 0;
     border-bottom: solid 1px #eee;
+    font-size: .28rem;
 }
 .puppets_img{
     padding: 0 .3rem;
@@ -101,5 +104,8 @@ export default {
 .puppetsList{
     display: flex;
     padding: .3rem 0;
+}
+.succeed{
+    color: #EB6E8F;
 }
 </style>

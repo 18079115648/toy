@@ -21,6 +21,7 @@
 </template>
 
 <script>
+
 export default {
   data () {
     return {
@@ -64,10 +65,15 @@ export default {
             height: 100%;
         }
     }
+    span{
+        text-shadow: -1.5px -.5px  #000;
+    }
     
 }
 .recharge_center{
     color: #8B5F3A;
+    font-size: .32rem;
+    font-weight: 500;
 }
 .recharge_right{
     color: #EA7B97;
