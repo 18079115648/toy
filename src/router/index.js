@@ -36,12 +36,32 @@ const aboutUs = r => require.ensure([], () => r(require('../components/aboutUs.v
 
 
 
+
+
+
+
+/**
+ * Demon Start
+ */
+
+ // 直播测试
+ const live = r => require.ensure([], () => r(require('../components/live.vue')), 'live')
+
+ /**
+  * Demon End
+  */
+
+
 Vue.use(Router)
 
 export default new Router({
   routes: [
     { path: '/',
       redirect: '/index' 
+    },
+    {
+      path: '/live',
+      component: live
     },
     {
       path: '/index',
