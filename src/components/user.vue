@@ -3,17 +3,17 @@
     <Header title="我的"></Header>
     <div class="set-up"></div>
     <div class="user-info-link">
-    	<img class="avatar" src=""  />
-    	<p class="nick-name">昵称</p>
+    	<img class="avatar" :src="userInfo.avatar"  />
+    	<p class="nick-name">{{userInfo.nickname}}</p>
     	<img class="more" src="../../static/image/QEQ.png"  />
     </div>
     <div class="navbar">
     	<div class="nav-item diamount">
-    		<p class="count" style="color: #f8b62d;">999</p>
+    		<p class="count" style="color: #f8b62d;">{{userInfo.money}}</p>
     		<p class="text">钻石</p>
     	</div>
     	<div class="nav-item">
-    		<p class="count" style="color: #22ac38;">999</p>
+    		<p class="count" style="color: #22ac38;">{{userInfo.points}}</p>
     		<p class="text">积分</p>
     	</div>
     </div>
@@ -21,34 +21,34 @@
     	<div class="link-item">
     		<img src="../../static/image/3333.png" class="icon" />
     		<p class="text">砖石充值</p>
-    		<img src="../../static/image/wdd.png" class="more"  />
+    		<div class="recharge-btn">充值</div>
     	</div>
     </div>
     <div class="link-list">
     	<div class="link-item">
-    		<img src="../../static/image/3333.png" class="icon" />
+    		<img src="../../static/image/1233.png" class="icon" />
     		<p class="text">邀请好友</p>
     		<img src="../../static/image/wdd.png" class="more"  />
     	</div>
     	<div class="link-item">
-    		<img src="../../static/image/3333.png" class="icon" />
+    		<img src="../../static/image/ff233.png" class="icon" />
     		<p class="text">抓取记录</p>
     		<img src="../../static/image/wdd.png" class="more"  />
     	</div>
     	<div class="link-item">
-    		<img src="../../static/image/3333.png" class="icon" />
+    		<img src="../../static/image/wwww.png" class="icon" />
     		<p class="text">充值记录</p>
     		<img src="../../static/image/wdd.png" class="more"  />
     	</div>
     </div>
     <div class="link-list">
     	<div class="link-item">
-    		<img src="../../static/image/3333.png" class="icon" />
+    		<img src="../../static/image/4455.png" class="icon" />
     		<p class="text">订单中心</p>
     		<img src="../../static/image/wdd.png" class="more"  />
     	</div>
     	<div class="link-item">
-    		<img src="../../static/image/3333.png" class="icon" />
+    		<img src="../../static/image/2223ed.png" class="icon" />
     		<p class="text">地址管理</p>
     		<img src="../../static/image/wdd.png" class="more"  />
     	</div>
@@ -60,8 +60,16 @@
 export default {
   data () {
     return {
-      
+      userInfo:{}
     }
+  },
+  created() {
+  	this.$api.userInfo().then(res => {
+			this.userInfo = res.data
+			this.userInfo.avatar = this.userInfo.avatar ? this.userInfo.avatar : '../../static/image/avatar.png'
+    }, err => {
+    	
+    })
   },
   methods: {
   	
@@ -75,9 +83,10 @@ export default {
 	position: fixed;
 	width: 0.85rem;
 	height: 0.85rem;
-	right: 0;
+	right: 0.1rem;
 	top: 0;
-	background: #ddd;
+	background: url(../../static/image/d112.png) no-repeat center;
+	background-size: 50%;
 	z-index: 15;
 }
 .user-info-link{
@@ -161,5 +170,12 @@ export default {
 	.link-item:last-of-type{
 		border-bottom: 0;
 	}
+}
+.recharge-btn{
+	height: 0.5rem;
+	line-height: 0.5rem;
+	border-radius: 0.5rem;
+	background: #fdd152;
+	padding: 0 0.34rem;
 }
 </style>

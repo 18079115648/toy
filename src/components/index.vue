@@ -3,52 +3,150 @@
     <div class="header">
     	<router-link to="/user" class="user-link link"></router-link>
     	抓娃娃
-    	<router-link to="" class="news-link link"></router-link>
+    	<router-link to="/news" class="news-link link">
+    		<span class="count">9+</span>
+    	</router-link>
     </div>
     <div class="navbar">
-    	<div v-for="(item, index) in navbar" :class="{'active': item.active}" @click="changeNav(item)" class="nav-item">
-    		<div class="text">{{item.text}}</div>
+    	<div @click="changeTag(item)" v-for="(item, index) in navbar" :class="currTags == item.id ? 'active' : ''"  class="nav-item">
+    		<div class="text">{{item.name}}</div>
     	</div>
     </div>
     <div class="nav-content">
-    	<keep-alive>
-		    	<router-view></router-view>
-			</keep-alive>
+    	<div class="home-data" v-show="firstTag == currTags">
+    		<div class="banner">
+		    	<mt-swipe :auto="0">
+						<mt-swipe-item v-for="(item,index) in banner" :key="index">
+							<div class="fullEle" @click="bannerLink(item)">
+								<img :src="item.imgUrl" class="fullEle" />
+							</div>
+						</mt-swipe-item>
+					</mt-swipe>
+		    </div>
+		    <div class="homebar">
+		    	<router-link :to="item.link" class="nav-item" v-for="(item,index) in homebar" :key="index">
+		    		<div class="icon">
+		    			<img :src="item.icon"  />
+		    		</div>
+		    		<p>{{item.text}}</p>
+		    	</router-link>
+		    </div>
+    	</div>	
+    	<Pagination :render="render" :param="pagination" :autoload="false" ref="pagination" uri="home/tag">
+				<div class="toys-list" v-show="pagination.content.length>0">
+		    	<router-link to="" class="toys-item" v-for="(item, index) in pagination.content" :key="index">
+		    		<img class="toys-img" :src="item.imgs[0]"  />
+		    		<div class="toys-status" :class="[item.statusClass]">{{item.statusText}}</div>
+		    		<div class="toys-info">
+		    			<p class="join-count">
+			    			<img class="icon" src="../../static/image/wd.png" />
+			    			<span class="shadow-text">{{item.price}}</span>
+			    		</p>
+			    		<p class="toys-name shadow-text">{{item.name}}</p>
+		    		</div>	
+		    	</router-link>
+		    </div>
+			</Pagination>
+			<div class="none-data" v-show="pagination.content.length<1 && pagination.loadEnd">
+    		<p class="none-tip">没有找到商品信息</p>
+    	</div>
+	    	
     </div>
   </div>
 </template>
 
 <script>
+import { Toast, Indicator } from 'mint-ui'
 export default {
   data () {
     return {
-      navbar: [{
-      	text: '首页',
-      	active: true,
-      	link: '/index'
+    	homebar: [{
+      	text: '签到',
+      	icon: '../../static/image/saaa.png',
+      	link: '/signIn'
       },{
-      	text: '最新',
-      	active: false,
-      	link: '/index/new'
+      	text: '邀请好友',
+      	icon: '../../static/image/2333d.png',
+      	link: ''
       },{
-      	text: '爆款',
-      	active: false,
-      	link: '/index/pop'
+      	text: '娃娃盒',
+      	icon: '../../static/image/222.png',
+      	link: '/toysBox'
       },{
-      	text: '畅玩',
-      	active: false,
-      	link: '/index/fun'
-      }]
+      	text: '积分商城',
+      	icon: '../../static/image/111.png',
+      	link: ''
+      }],
+      banner: [],
+      
+      navbar: [],
+      toysList: [],
+      currTags: null,
+      firstTag: null,
+      pagination: {
+	        content: [],
+	        loadEnd: false,
+	        data: {
+	        	page: 1,
+	        	pageSize: 10
+	        }
+	    },
     }
   },
+  created() {
+  	this.$api.homeBanner().then(res => {
+			this.banner = res.data
+    }, err => {
+    	
+    })
+  },
+  mounted() {
+  	this.$api.homeTags().then(res => {
+			this.navbar = res.data
+			this.currTags = this.navbar[0].id
+			this.firstTag = this.navbar[0].id
+			this.tagChange(this.navbar[0].id)
+    }, err => {
+    	
+    })
+  },
   methods: {
-  	changeNav(obj) {
-  		this.navbar.forEach((item) => {
-  			item.active = false
-  		})
-  		obj.active = true
-  		this.$router.replace(obj.link)
-  	}
+  	tagChange(id) {
+  		this.pagination.data.type = id
+  		this.$refs.pagination.refresh()
+  	},
+  	changeTag(item) {
+  		if(this.currTags == item.id) {
+  			return
+  		}
+  		this.currTags = item.id
+  		this.tagChange(item.id)
+  	},
+  	bannerLink(item) {
+  		if(item.type == 1) {
+  			
+  		}else if(item.type == 3) {
+  			
+  		}else {
+  			window.location.href = item.url
+  		}
+  	},
+  	render(res) {
+  			res.data.forEach((item) => {
+  				if(item.status == 0) {
+  					item.statusText = '空闲中'
+  					item.statusClass = 'none'
+  				}else if(item.status == 1) {
+  					item.statusText = '游戏中'
+  					item.statusClass = 'ing'
+  				}else if(item.status == 2) {
+  					item.statusText = '维护中'
+  					item.statusClass = 'end'
+  				}
+        	this.pagination.content.push(item)
+        	console.log(this.pagination.content)
+        })
+    }
   }
 }
 </script>
@@ -65,7 +163,31 @@ export default {
 	.link{
 		width: 0.85rem;
 		height: 0.85rem;
-		background: #ddd;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: 55%;
+		position: relative;
+	}
+	.user-link{
+		background-image: url(../../static/image/vvv.png);
+	}
+	.news-link{
+		background-image: url(../../static/image/sdde.png);
+		background-size: 50%;
+		.count{
+			position: absolute;
+			padding: 0 0.06rem;
+			min-width: 0.36rem;
+			height: 0.36rem;
+			border-radius: 50%;
+			background: #f43c5f;
+			color: #fff;
+			text-align: center;
+			line-height: 0.36rem;
+			font-size: 0.24rem;
+			top: 0.1rem;
+			right: 0.06rem;
+		}
 	}
 }
 .navbar{
@@ -80,7 +202,7 @@ export default {
 		.text{
 			color: #cb8c32;
 			font-size: 0.28rem;
-			transition: all 0.2s;
+			transition: all 0.1s;
 		}
 		&.active{
 			.text{
@@ -98,5 +220,98 @@ export default {
 	top: 1.51rem;
 	bottom: 0;
 	overflow-y: auto;
+}
+.banner{
+	height: 2.7rem;
+	background: #ddd;
+}
+.homebar{
+	height: 1.6rem;
+	display: flex;
+	background: #fff;
+	padding-top: 0.12rem;
+	.nav-item{
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+    align-items: center;
+		.icon{
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 0.75rem;
+			margin-bottom: 0.15rem;
+			img{
+				width: 0.5rem;
+			}
+		}
+		p{
+			color: #666;
+		}
+	}
+}
+.toys-list{
+	padding: 0.2rem 0.1rem 0;
+	display: flex;
+		flex-wrap: wrap;
+	.toys-item{
+		margin: 0 0.1rem 0.2rem;
+		width: 3.45rem;
+		height: 3.45rem;
+		background: #fff;
+		position: relative;
+		border-radius: 0.3rem;
+		overflow: hidden;
+		
+		.toys-img{
+			position: absolute;
+			top:50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 100%;
+			height: 100%;
+		}
+		.toys-status{
+			position: absolute;
+			right: 0.2rem;
+			top: 0.2rem;
+			height: 0.34rem;
+			line-height: 0.34rem;
+			border-radius: 0.17rem;
+			color:#fff;
+			padding: 0 0.12rem;
+			z-index: 3;
+			font-size: 0.22rem;
+			&.ing{
+				background: #ff556e;
+			}
+			&.none{
+				background: #3eb428;
+			}
+			&.end{
+				background: #c7c8c8;
+			}
+		}
+		.toys-info{
+			position: absolute;
+			left: 0.2rem;
+			right: 0.2rem;
+			bottom: 0.2rem;
+			z-index: 3;
+			color: #fff;
+			font-weight: 700;
+			font-size: 0.28rem;
+			.join-count{
+				display: flex;
+				align-items: center;
+				font-weight: normal;
+				padding-bottom: 0.1rem;
+				.icon{
+					width: 0.26rem;
+					margin-right: 0.16rem;
+				}
+			}
+		}
+	}
 }
 </style>

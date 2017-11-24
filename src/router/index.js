@@ -1,13 +1,17 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+Vue.use(Router)
 const index = r => require.ensure([], () => r(require('../components/index.vue')), 'index')
-const home = r => require.ensure([], () => r(require('../components/home.vue')), 'home')
-const New = r => require.ensure([], () => r(require('../components/new.vue')), 'new')
-const pop = r => require.ensure([], () => r(require('../components/pop.vue')), 'pop')
-const fun = r => require.ensure([], () => r(require('../components/fun.vue')), 'fun')
+const room = r => require.ensure([], () => r(require('../components/room.vue')), 'room')
+
 const user = r => require.ensure([], () => r(require('../components/user.vue')), 'user')
 
-Vue.use(Router)
+
+const login = r => require.ensure([], () => r(require('../components/login.vue')), 'login')
+const signIn = r => require.ensure([], () => r(require('../components/signIn.vue')), 'signIn')
+const toysBox = r => require.ensure([], () => r(require('../components/toysBox.vue')), 'toysBox')
+const news = r => require.ensure([], () => r(require('../components/news.vue')), 'news')
+
 
 export default new Router({
   routes: [
@@ -17,23 +21,33 @@ export default new Router({
     {
       path: '/index',
       component: index,
-      children: [{
-	        path: '/index',
-	        component: home
-	    },{
-	        path: '/index/new',
-	        component: 	New
-	    },{
-	        path: '/index/pop',
-	        component: pop
-	    },{
-	        path: '/index/fun',
-	        component: fun
-	    }]
+      meta: {
+      	keepAlive: true
+      }
+    },
+    {
+      path: '/room',
+      component: room,
     },
     {
       path: '/user',
       component: user
+    },
+    {
+      path: '/login',
+      component: login
+    },
+    {
+      path: '/signIn',
+      component: signIn
+    },
+    {
+      path: '/toysBox',
+      component: toysBox
+    },
+    {
+      path: '/news',
+      component: news
     },
   ]
 })
