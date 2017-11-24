@@ -7,6 +7,9 @@ import VueRouter from 'vue-router'
 import mint from 'mint-ui'
 import 'mint-ui/lib/style.css'
 
+import Header from '@/components/common/Header'
+Vue.component('Header', Header)
+
 
 Vue.use(VueRouter)
 

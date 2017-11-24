@@ -1,6 +1,6 @@
 <template>
-  <div class="user">
-    <div class="user_head">个人中心</div>
+  <div class="content">
+    <Header title="个人中心"></Header>
 
     <div class="userInfo_body">
       <div class="head" style="border-bottom: solid 1px #eee;height: 1.3rem;">
@@ -29,17 +29,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.user{
-    width: 100vw;
-    height: 100vh;
-    background: #f5f5f5;
-}
-.user_head{
-  height: .85rem;
-	background: #ffe86e;
-  text-align: center;
-  line-height: .85rem;
-}
 .userInfo_body{
   padding-left:.3rem;
   background: #fff;

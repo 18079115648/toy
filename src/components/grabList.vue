@@ -1,23 +1,23 @@
 <template>
-    <div class="grabList_content">
-      <div class="grabList_head">抓取记录</div>
+    <div class="content">
 
-      <div class="grabList_body">
-        <div class="grabList">
-            <div class="left_img">
-                <img src="">
-            </div>
-            <div class="list_content">
-                <div>粉红小猪猪</div>
-                <!-- <div class="succeed">抓取成功</div> -->
-                <div>抓取失败</div>
-                <div class="time">2010-10-10 12:12</div>
-            </div>
-            <div>
-                <img src="../assets/34@3x.png" class="guide">
+        <Header title="抓取记录"></Header>
+        <div class="grabList_body">
+            <div class="grabList">
+                <div class="left_img">
+                    <img src="">
+                </div>
+                <div class="list_content">
+                    <div>粉红小猪猪</div>
+                    <!-- <div class="succeed">抓取成功</div> -->
+                    <div>抓取失败</div>
+                    <div class="time">2010-10-10 12:12</div>
+                </div>
+                <div>
+                    <img src="../../static/image/wdd.png" class="guide">
+                </div>
             </div>
         </div>
-      </div>
     </div>
 </template>
 
@@ -32,19 +32,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.grabList_content{
-    width: 100%;
-    height: 100vh;
-    background: #f5f5f5;
-    padding: 0;
-    margin: 0;
-}
-.grabList_head{
-    height: .85rem;
-    background: #ffe86e;
-    text-align: center;
-    line-height: .85rem;
-}
 .grabList_body{
     width: 100%;
     height: auto;

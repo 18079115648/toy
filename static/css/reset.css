@@ -87,8 +87,6 @@ input {
     margin: 0;
     padding: 0;
     border: 0;
-    font-weight: normal;
-    vertical-align: baseline;
     list-style: none;
     list-style-type: none;
 }
@@ -112,6 +110,7 @@ section {
 body {
     line-height: 1.5;
     font-size: 0.26rem;
+    color: #333;
 }
 
 blockquote,
@@ -135,7 +134,7 @@ table {
 /* custom */
 
 a {
-    color: #7e8c8d;
+    color: #666;
     text-decoration: none;
     -webkit-backface-visibility: hidden;
 }

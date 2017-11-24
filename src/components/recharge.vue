@@ -1,12 +1,11 @@
 <template>
-    <div class="recharge_content">
-        <div class="recharge_head">钻石充值</div>
-
+    <div class="content">
+        <Header title="钻石充值"></Header>
         <div class="recharge_body">
             <div class="recharge">
                 <div class="recharge_left">
                     <div >
-                        <img src="">
+                        <img src="../../static/image/wd.png">
                     </div>
                     <span >60</span>
                 </div>
@@ -32,19 +31,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.recharge_content{
-    width: 100%;
-    height: 100vh;
-    background: #f5f5f5;
-    padding: 0;
-    margin: 0;
-}
-.recharge_head{
-    height: .85rem;
-    background: #ffe86e;
-    text-align: center;
-    line-height: .85rem;
-}
 .recharge_body{
     width: 100%;
     height: auto;
@@ -55,24 +41,24 @@ export default {
 .recharge{
     width: 100%;
     height: 1rem;
-    background: #ffe86e;
-    border-radius: 15px;
     display: flex;
     justify-content: space-between;
     padding: .2rem .3rem;
     align-items: center;
     margin-bottom: .3rem;
+    background: url('../../static/image/333.png') no-repeat;
+    background-size: 100% 100%;
 }
 .recharge_left{
     display: flex;
     align-items: center;
     font-size: .33rem;
     color: #fff;
+    font-size: .4rem;
     div{
         width: .4rem;
         height: .6rem;
-        background-color: #ccc;
-        margin-right: .3rem;
+        margin-right: .2rem;
         img{
             width: 100%;
             height: 100%;
