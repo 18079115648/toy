@@ -119,6 +119,7 @@ export default {
 			}
 			Indicator.open()
 			this.$api.sign().then(res => {
+				Indicator.close()
 				this.signStatus = 0
 				this.initData()
 				Toast({

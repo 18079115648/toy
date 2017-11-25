@@ -24,6 +24,7 @@ axios.interceptors.request.use((config) => {
 
 
 function buildURL(url, needToken) {
+	url = url+(url.indexOf('?') >= 0 ? '&' : '?') + "key=8dd758066c594324962cc2de7ee7a306"
 	let token = Token.getAccessToken()
     if (!needToken) {
         return token ? url + (url.indexOf('?') >= 0 ? '&' : '?') + "accessToken=" + token : url
@@ -81,7 +82,9 @@ export function fetchGet(url, params, needToken) {
 	
 	url = buildURL(url, needToken)
 	if (!url) {
-        return
+        return new Promise((resolve, reject) => {
+	        reject()
+	      })
     }
     return new Promise((resolve, reject) => {
         axios.get( url, {
