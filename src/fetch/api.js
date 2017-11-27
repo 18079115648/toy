@@ -185,46 +185,46 @@ export default {
 
 	//充值选项列表
 	recharge(params) {
-		return fetchGet('charge/list', params, true)
+		return fetchGet('/dm-api/charge/list', params, true)
 	},
 	//充值下单
 	payment(params) {
-		return fetchPost('charge', params, true)
+		return fetchPost('/dm-api/charge', params, true)
 	},
 	//充值记录
 	paymentList(params) {
-		return fetchGet('charge/log', params, true)
+		return fetchGet('/dm-api/charge/log', params, true)
 	},
 	//订单列表
 	orderList(params) {
-		return fetchGet('order/list', params, true)
+		return fetchGet('/dm-api/order/list', params, true)
 	},
 	//订单详情
 	orderDetail(params) {
-		return fetchGet('order/info', params, true)
+		return fetchGet('/dm-api/order/info', params, true)
 	},
 	//抓取记录
 	grabList(params) {
-		return fetchGet('doll/log', params, true)
+		return fetchGet('/dm-api/doll/log', params, true)
 	},
 	//抓取详情
 	grabDetails(params) {
-		return fetchGet('doll/log/info', params, true)
+		return fetchGet('/dm-api/doll/log/info', params, true)
 	},
 	//申诉
 	appeal(params) {
-		return fetchPost('doll/appeal', params, true)
+		return fetchPost('/dm-api/doll/appeal', params, true)
 	},
 	//收货地址列表
 	address(params) {
-		return fetchGet('address/list', params, true)
+		return fetchGet('/dm-api/address/list', params, true)
 	},
 	//删除地址
 	deleteAddress(params) {
-		return fetchPost('address/delete', params, true)
+		return fetchPost('/dm-api/address/delete', params, true)
 	},
 	//个人中新信息
 	userInfo(params) {
-		return fetchGet('user/info', params, true)
+		return fetchGet('/dm-api/user/info', params, true)
 	},
 }
