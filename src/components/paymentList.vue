@@ -3,24 +3,25 @@
     <Header title="充值记录"></Header>
 
     <div class="paymentList_body">
-        <div class="head paymentList_border" >
+        <div class="head paymentList_border" v-for="item in paymentList">
             <div class="paymentList_msg" style="margin-bottom:.1rem;">
                 <div class="paymentList_img">
                     <img src="../../static/image/wd.png">
-                    <span>60</span>
+                    <span>{{item.money}}</span>
                 </div>
                 <div class="paymentList_way">
-                    <!-- <img src="../../static/image/444.png"> -->
-                    <img src="../../static/image/555.png">
-                    <span>¥ 6.00</span>
+                    <img src="../../static/image/444.png" v-if="item.type == 1">
+                    <img src="../../static/image/555.png" v-if="item.type == 2">
+                    <span>¥ {{item.price}}</span>
                 </div>
             </div>
             <div class="paymentList_msg">
                 <div>
-                    <span style="color:#ccc">2010-10-10 10:10</span>
+                    <span style="color:#ccc">{{item.createTime}}</span>
                 </div>
                 <div>
-                    <span>充值成功</span>
+                    <span v-if="item.status == 0">未支付</span>
+                    <span v-if="item.status == 1">已完成</span>
                 </div>
             </div>
         </div>
@@ -33,9 +34,22 @@
 export default {
   data () {
     return {
-
+        page: 1,
+        pageSize: 10,
+        paymentList:[],
     }
-  }
+  },
+  created(){
+    this.$api.paymentList({
+        page:this.page,
+        pageSize:this.pageSize
+    }).then(res => {
+        this.paymentList = res.data.data
+    }, err => {
+        
+    })
+  },
+  
 }
 </script>
 

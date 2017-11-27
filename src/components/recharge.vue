@@ -2,18 +2,18 @@
     <div class="content">
         <Header title="钻石充值"></Header>
         <div class="recharge_body">
-            <div class="recharge">
+            <div class="recharge" v-for="item in diamond" @click="infoPayment(item.id)">
                 <div class="recharge_left">
                     <div >
                         <img src="../../static/image/wd.png">
                     </div>
-                    <span >60</span>
+                    <span >{{item.money}}</span>
                 </div>
                 <div class="recharge_center">
-                    <div>多送6个</div>
+                    <div>{{item.desc}}</div>
                 </div>
                 <div class="recharge_right">
-                    <div>¥ 6.00</div>
+                    <div>¥ {{item.price}}</div>
                 </div>
             </div>
         </div>
@@ -25,7 +25,19 @@
 export default {
   data () {
     return {
-
+        diamond:[],
+    }
+  },
+  created(){
+      this.$api.recharge().then(res => {
+        this.diamond = res.data
+    }, err => {
+    	
+    })
+  },
+  methods: {
+    infoPayment(id){
+        this.$router.push('/payment/'+id)
     }
   }
 }

@@ -89,13 +89,13 @@ export default new Router({
       path: '/grabList',
       component: grabList
     },{
-      path: '/grabDetails',
+      path: '/grabDetails/:id',
       component: grabDetails
     },{
       path: '/recharge',
       component: recharge
     },{
-      path: '/payment',
+      path: '/payment/:id',
       component: payment
     },{
       path: '/paymentList',
@@ -104,7 +104,7 @@ export default new Router({
       path: '/orderList',
       component: orderList
     },{
-      path: '/orderDetails',
+      path: '/orderDetails/:orderSn',
       component: orderDetails
     },{
       path: '/address',

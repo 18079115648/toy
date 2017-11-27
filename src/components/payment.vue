@@ -3,16 +3,16 @@
     <div class="content">
         <Header title="钻石充值"></Header>
         <div class="payment_body">
-            <div class="payment">
+            <div class="payment" v-for="item in payment" v-if="item.id == id">
                 <div class="payment_left">
                     <div >
                         <img src="../../static/image/wd.png">
                     </div>
-                    <span class="payment_left_text">60</span>
+                    <span class="payment_left_text">{{item.money}}</span>
                 </div>
                
                 <div class="payment_right">
-                    <div>¥ 6.00</div>
+                    <div>¥ {{item.price}}</div>
                 </div>
             </div>
 
@@ -23,7 +23,9 @@
                     </div>
                     <div class="payment_way_text">支付宝支付</div>
                     <div class="way_right">
-                        <img src="../../static/image/bbb.png">
+                        <img src="../../static/image/bbb.png" v-if="type == 1" @click="type = 3">
+                        <img src="../../static/image/rrrr.png" v-if="type == 2" @click="type = 1">
+                        <img src="../../static/image/rrrr.png" v-if="type == 3" @click="type = 1">
                     </div>
                 </div>
                 <div class="payment_way_body payment_way_bottom">
@@ -32,23 +34,64 @@
                     </div>
                     <div class="payment_way_text">微信支付</div>
                     <div class="way_right">
-                        <img src="../../static/image/rrrr.png">
+                        <img src="../../static/image/bbb.png" v-if="type == 2" @click="type = 3">
+                        <img src="../../static/image/rrrr.png" v-if="type == 1" @click="type = 2">
+                        <img src="../../static/image/rrrr.png" v-if="type == 3" @click="type = 2">
                     </div>
                 </div>
             </div>
 
             <div class="payment_button_body">
-                <div class="payment_button">确认支付</div>
+                <div class="payment_button" @click="confirmPay">确认支付</div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import { Toast } from 'mint-ui';
 export default {
   data () {
     return {
-
+        id:this.$route.params.id,
+        price:'',
+        money:'',
+        payment:[],
+        type:1
+    }
+  },
+  created(){
+    this.$api.recharge().then(res => {
+        this.payment = res.data
+    }, err => {
+    	
+    })
+  },
+  methods: {
+    confirmPay(){
+        if(this.type == 3){
+            Toast({
+                message: '请选择支付方式',
+                position: 'bottom',
+                duration: 1000
+            })
+        }else{
+            this.$api.payment({
+                id: this.id,
+                type: this.type
+            }).then(res => {
+                if(res.errMsg == 0){
+                    Toast({
+                        message: '充值成功',
+                        position: 'bottom',
+                        duration: 1000
+                    })
+                }
+            }, err => {
+                
+            })
+        }
+        
     }
   }
 }
