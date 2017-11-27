@@ -1,7 +1,7 @@
 <template>
   <div class="content">
   	<Header title="娃娃盒"></Header>
-    <div class="toys-list">
+    <div class="toys-list" v-show="toysList.length > 0">
     	<div class="toys-item" v-for="(item, index) in toysList" :key="index">
     		<img class="toys-img" :src="item.img"  />
     		<div class="toys-info shadow-text">
@@ -9,8 +9,13 @@
     			<span>x{{item.num}}</span>
     		</div>	
     	</div>
+    	
     </div>
-    <div class="btn-default btn-hover btn-receive">立即领取</div>
+    <div class="no_msg" v-show="toysList.length < 1">
+        <img src="../../static/image/ewd.png"  />
+        <div>您还没有抓到娃娃~</div>
+    </div>
+    <router-link v-show="toysList.length > 0" to="/orderSubmit" class="btn-default btn-hover btn-receive">立即领取</router-link>
   </div>
 </template>
 
@@ -23,7 +28,7 @@ export default {
   },
   created() {
   	this.$api.toysWin().then(res => {
-			this.toysList = res.data.data
+		this.toysList = res.data.data
     }, err => {
     	
     })

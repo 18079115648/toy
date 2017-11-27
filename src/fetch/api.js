@@ -37,13 +37,51 @@ function buildURL(url, needToken) {
     return url + (url.indexOf('?') >= 0 ? '&' : '?') + "accessToken=" + token
 }
 
-export function fetchPost(url, params, needToken) {
+export function fetchPost(url, params, needToken, multiple) {
 	url = buildURL(url, needToken)
 	if (!url) {
         return new Promise((resolve, reject) => {
 	        reject()
 	      })
     }
+	if(multiple) {
+		return new Promise((resolve, reject) => {
+	        axios.post( url, params, {
+	            headers: {
+	                'Content-Type': 'multiple/form-data'
+	            }
+	        }).then(response => {
+	            	if(response.status == 200) {
+	            		if(response.data.errCode == 0) {
+	            			resolve(response.data) 
+	            		}else {
+	            			reject(response)
+	            			Toast({
+							  message: response.data.errMsg,
+							  position: 'bottom',
+							  duration: 1500
+							});
+	            		} 
+	            	}else {
+	            		reject(response)
+		               	Toast({
+						  message: '网络错误',
+						  position: 'bottom',
+						  duration: 2000
+						});
+	            	}
+	            	  
+	            })
+	            .catch((error) => {
+	               	reject(error)
+	               	Toast({
+					  message: '网络错误',
+					  position: 'bottom',
+					  duration: 2000
+					});
+	            })
+	    })
+	}
     return new Promise((resolve, reject) => {
         axios.post( url, qs.stringify(params))
             .then(response => {
@@ -219,9 +257,38 @@ export default {
 	address(params) {
 		return fetchGet('/dm-api/address/list', params, true)
 	},
+	
+	//添加或修改收货地址
+	editAddress(params) {
+		return fetchPost('/dm-api/address', params, true)
+	},
+	//省列表
+	provinces(params) {
+		return fetchGet('/dm-api/areas/provinces', params, false)
+	},
+	//市列表
+	citys(provinceId) {
+		return fetchGet('/dm-api/areas/provinces/' + provinceId, null, false)
+	},
+	//区列表
+	areas(cityId) {
+		return fetchGet('/dm-api/areas/cities/' + cityId, null, false)
+	},
+	//设置默认地址
+	defaultAddress(params) {
+		return fetchPost('/dm-api/address/default', params, true)
+	},
+	//获取默认地址
+	getDefaultAddress(params) {
+		return fetchGet('/dm-api/address/default', params, true)
+	},
 	//删除地址
 	deleteAddress(params) {
 		return fetchPost('/dm-api/address/delete', params, true)
+	},
+	//下单
+	submitOrder(params) {
+		return fetchPost('/dm-api/order/', params, true)
 	},
 	//个人中新信息
 	userInfo(params) {

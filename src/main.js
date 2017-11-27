@@ -28,6 +28,9 @@ Vue.component('Header', Header)
 import Pagination from '@/components/common/Pagination'
 Vue.component('Pagination', Pagination)
 
+import confirmModal from '@/components/common/confirmModal'
+Vue.component('confirmModal', confirmModal)
+
 Vue.use(VueRouter)
 
 Vue.use(mint)

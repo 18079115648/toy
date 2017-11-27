@@ -47,10 +47,10 @@
 		    	</router-link>
 		    </div>
 			</Pagination>
-			<div class="none-data" v-show="pagination.content.length<1 && pagination.loadEnd">
-    		<p class="none-tip">没有找到商品信息</p>
-    	</div>
-	    	
+	    <div class="no_msg" v-show="pagination.content.length<1 && pagination.loadEnd">
+	        <img src="../../static/image/ewd.png"  />
+	        <div>没有商品信息~</div>
+	    </div>	
     </div>
   </div>
 </template>
@@ -144,7 +144,6 @@ export default {
   					item.statusClass = 'end'
   				}
         	this.pagination.content.push(item)
-        	console.log(this.pagination.content)
         })
     }
   }

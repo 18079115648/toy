@@ -83,6 +83,7 @@ time,
 mark,
 audio,
 video,
+select,
 input {
     margin: 0;
     padding: 0;
@@ -163,12 +164,16 @@ body {
 input[type="button"],
 input[type="submit"],
 input[type="reset"],
+select,
 button {
     -webkit-appearance: none;
+    appearance: none;
+    outline: none;
 }
 
 textarea {
     -webkit-appearance: none;
+    appearance: none;
 }
 
 input:focus,
