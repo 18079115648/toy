@@ -12,7 +12,7 @@ import Token from '@/fetch/accessToken'
 // axios 配置
 axios.defaults.timeout = 20000;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
-axios.defaults.baseURL = '/dm-api/'
+//axios.defaults.baseURL = '/dm-api/'
 						
 //POST传参序列化
 axios.interceptors.request.use((config) => {
@@ -131,46 +131,55 @@ export default {
 	
 	//获取验证码
 	getCaptcha(params) {
-		return fetchPost('mobile/captcha', params, false)
+		return fetchPost('/dm-api/mobile/captcha', params, false)
 	},
 	
 	//手机号登录
 	mobileLogin(params) {
-		return fetchPost('login', params, false)
+		return fetchPost('/dm-api/login', params, false)
+	},
+	//微信登录
+	wechatLogin(params) {
+		return fetchPost('/dm-api/oauth/login', params, false)
 	},
 	
 	//首页标签
 	homeTags(params) {
-		return fetchGet('tags', params, true)
+		return fetchGet('/dm-api/tags', params, true)
 	},
 	
 	//标签获取房间列表
 	TagRooms(params) {
-		return fetchGet('home/tag', params, true)
+		return fetchGet('/dm-api/home/tag', params, true)
 	},
 	
 	//首页banner
 	homeBanner(params) {
-		return fetchGet('banner', params, false)
+		return fetchGet('/dm-api/banner', params, false)
 	},
 	
 	//签到列表
 	signList(params) {
-		return fetchGet('signList', params, true)
+		return fetchGet('/dm-api/signList', params, true)
 	},
 	
 	//签到
 	sign(params) {
-		return fetchPost('sign', params, true)
+		return fetchPost('/dm-api/sign', params, true)
 	},
 	
 	//娃娃袋
 	toysWin(params) {
-		return fetchGet('doll/list', params, true)
+		return fetchGet('/dm-api/doll/list', params, true)
 	},
 	
 	//用户信息
 	userInfo(params) {
-		return fetchGet('user/info', params, true)
+		return fetchGet('/dm-api/user/info', params, true)
+	},
+	
+	//消息列表
+	newsList(params) {
+		return fetchGet('/dm-api/messaages', params, true)
 	},
 }

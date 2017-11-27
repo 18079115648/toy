@@ -1,7 +1,7 @@
 <template>
     <div class="app" :style="{ height: wH + 'px' }">
     	<div class="room-top">
-    		<img class="back" src="../../static/image/feee.png"  />
+    		<img class="back" src="../../static/image/feee.png" @click="back" />
     		<img class="avatar" src="../../static/image/qd.png"  />
     		<div class="room-count shadow-text">
     			<p>当前房间人数</p>
@@ -75,9 +75,23 @@
 						<span class="btn-hover">分享好友</span>
 						<span class="btn-hover">再次挑战</span>
 					</p>
-					<p class="time">倒计时 {{readyTime}}秒</p>
+					<p class="time">倒计时 {{endTime}}秒</p>
 				</div>
-				<img src="../../static/image/qe.png" class="close" />	
+				<img src="../../static/image/qe.png" class="close" @click="closePop"/>	
+			</div>
+		</mt-popup>
+		
+		<mt-popup v-model="failStatus" class="pop" :closeOnClickModal="false">
+			<div class="fail-content">
+				<div class="shadow-text" style="text-align: center; color: #fff;">
+					<p class="succ-tip">很遗憾，差点就抓到了！</p>
+					<p class="operate-btn">
+						<span class="btn-hover">分享好友</span>
+						<span class="btn-hover">再次挑战</span>
+					</p>
+					<p class="time">倒计时 {{endTime}}秒</p>
+				</div>
+				<img src="../../static/image/qe.png" class="close" @click="closePop" />	
 			</div>
 		</mt-popup>
     </div>
@@ -93,7 +107,9 @@ export default {
 	    	readyTime: 3,
 	    	operateShow: false, //开始操作
 	    	operateTime: 30, //操作时间
-	    	succStatus: false, //成功抓到娃娃
+	    	succStatus: false, //成功抓到娃娃,
+	    	failStatus: false, //没有抓到娃娃,
+	    	endTime: 3
 	    }
 	},
 	mounted() {	
@@ -126,34 +142,45 @@ export default {
 		},
 		//操作计时
 		operateCountDown() {
+			const self = this
 			this.operateTime = 30
 			this.operateTimer = setInterval(() => {
 				this.operateTime--
 				if(this.operateTime < 1) {
-					this.grabClick()
+					self.grabClick()
 				}
 			},1000)
 		},
 		//抓取
-		grabClick() {
-			this.operateTime = 30
-			this.succStatus = true
+		grabClick(data) {
+			//status 成功或失败
+			this.failStatus = true
 			clearInterval(this.operateTimer)
 			this.resultGo()
 		},
 		
 		//退出计时
 		resultGo() {
-			this.readyTime = 3
-			this.readyTimer = setInterval(() => {
-				this.readyTime--
-				if(this.readyTime < 1) {
+			this.endTime = 3
+			this.endTimer = setInterval(() => {
+				this.endTime--
+				if(this.endTime < 1) {
 					this.succStatus = false
+					this.failStatus = false
 					this.operateShow = false
-					clearInterval(this.readyTimer)
+					clearInterval(this.endTimer)
 				}
 			},1000)
 		},
+		closePop() {
+			this.succStatus = false
+			this.failStatus = false
+			this.operateShow = false
+			clearInterval(this.endTimer)
+		},
+		back() {
+			this.$router.go(-1)
+		}
 	},
 	
 
@@ -366,28 +393,33 @@ export default {
 			transform: translate(-50%, -50%);
 		}
 	}
-	.close{
-		position: absolute;
-		right: 0;
-		top: 0;
-		width: 0.6rem;
-	}
-	.time{
-		padding-top: 0.5rem;
-		font-size: 0.3rem;
-	}
+	
+}
+.fail-content{
+	padding: 2rem 0;
+}
+.close{
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 0.6rem;
+}
+.time{
+	padding-top: 0.5rem;
+	font-size: 0.3rem;
 }
 .succ-tip{
 	font-size: 0.44rem;
 }
 .check-goods{
-	padding: 0.3rem 0 0.6rem;
+	padding: 0.3rem 0 0;
 	display: inline-block;
 	color: #fff;
 	font-size: 0.3rem;
 	text-decoration: underline;
 }
 .operate-btn{
+	padding-top: 0.6rem;
 	display: flex;
 	justify-content: center;
 	margin: 0 -0.3rem;

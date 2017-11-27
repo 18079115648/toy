@@ -19,6 +19,9 @@ Vue.prototype.$token = token
 import api from '@/fetch/api'
 Vue.prototype.$api = api
 
+import weixin from '@/fetch/weixin'
+Vue.prototype.$weixin = weixin
+
 import Header from '@/components/common/Header'
 Vue.component('Header', Header)
 
@@ -29,6 +32,17 @@ Vue.use(VueRouter)
 
 Vue.use(mint)
 Vue.config.productionTip = false
+
+
+
+router.beforeEach((to, from, next) => {
+    if (to.meta.requireAuth && !token.getAccessToken()) {
+        storage.set('history_url', to.fullPath)
+        next('/login')
+    }else {
+    	next()
+    }   
+})
 
 /* eslint-disable no-new */
 new Vue({

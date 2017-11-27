@@ -112,6 +112,9 @@ body {
     font-size: 0.26rem;
     color: #333;
 }
+input, textarea{
+	font-size: 0.26rem;
+}
 
 blockquote,
 q {
