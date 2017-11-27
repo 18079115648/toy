@@ -2,49 +2,59 @@
     <div class="content">
 
         <Header title="抓取记录"></Header>
-        <div class="grabList_body">
-            <div class="grabList" @click="infoDetails">
+
+        
+        
+        <div class="grabList_body" >
+            <div class="grabList" @click="infoDetails(item.id)" v-for="item in grabList">
                 <div class="left_img">
-                    <img src="">
+                    <img :src="item.img">
+                    <img src="../../static/image/weed.png"  class="play_img">
                 </div>
                 <div class="list_content">
-                    <div>粉红小猪猪</div>
-                    <!-- <div class="succeed">抓取成功</div> -->
-                    <div>抓取失败</div>
-                    <div class="time">2010-10-10 12:12</div>
+                    <div>{{item.name}}</div>
+                    <div class="succeed" v-if="item.status == 0">抓取成功</div>
+                    <div v-if="item.status == 1">抓取失败</div>
+                    <div class="time">{{item.createTime}}</div>
                 </div>
                 <div>
                     <img src="../../static/image/wdd.png" class="guide">
                 </div>
             </div>
-            <div class="grabList">
-                <div class="left_img">
-                    <img src="">
-                </div>
-                <div class="list_content">
-                    <div>粉红小猪猪</div>
-                    <div class="succeed">抓取成功</div>
-                    <!-- <div>抓取失败</div> -->
-                    <div class="time">2010-10-10 12:12</div>
-                </div>
-                <div>
-                    <img src="../../static/image/wdd.png" class="guide">
-                </div>
-            </div>
+            
         </div>
+
+        <div class="no_msg" v-if="this.grabList.length == 0">
+            <img src="../../static/image/wfdfc.png">
+            <div>暂无数据~</div>
+        </div>
+       
     </div>
+    
 </template>
 
 <script>
 export default {
   data () {
     return {
-
+        page: 1,
+        pageSize: 10,
+        grabList:[],
     }
   },
+  created(){
+    this.$api.grabList({
+        page:this.page,
+        pageSize:this.pageSize
+    }).then(res => {
+        this.grabList = res.data.data
+    }, err => {
+        
+    })
+  },
   methods: {
-    infoDetails(){
-        this.$router.push('/grabDetails')
+    infoDetails(id){
+        this.$router.push('/grabDetails/'+id)
     }
   }
 }
@@ -71,10 +81,21 @@ export default {
     height: 1.8rem;
     background-color: #ccc;
     border-radius: 10px;
+    position: relative;
     overflow: hidden;
     img{
         width: 100%;
         height: 100%;
+    }
+    .play_img{
+        width: .6rem;
+        height: .6rem;
+        display: block;
+        position: absolute;
+        top: 50%;
+        margin-top: -.3rem;
+        left: 50%;
+        margin-left: -.3rem;
     }
 }
 .list_content{
@@ -97,5 +118,20 @@ export default {
   height: .3rem;
   display: block;
 }
-
+.no_msg{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #C9CACA;
+    font-size: .4rem;
+    img{
+        width: 1.9rem;
+        height: 1.7rem;
+        display: block;
+        margin-bottom: .3rem;
+        margin-top: 1.6rem;
+    }
+}
 </style>

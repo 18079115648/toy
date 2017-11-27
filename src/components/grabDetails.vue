@@ -1,8 +1,8 @@
 <template>
     <div class="content">
         <Header title="抓取详情"></Header>
-        <div class="grabDetails_body">
-            <div style="margin-bottom:.3rem;">
+        <div class="grabDetails_body" >
+            <div style="margin-bottom:.3rem;" >
                 <div class="grabDetails_title">
                     <div> <span >抓取编号：</span>5263137153715</div>    
                     <div class="grabDetails_border"></div>
@@ -10,19 +10,19 @@
                 <div class="puppets_img">
                     <div class="puppetsList">
                         <div class="img_body">
-                            <img src="">
+                            <img :src="img">
                         </div>
                         <div class="grabDetails_msg">
-                            <div>恐龙布朗熊公仔</div>
-                            <div>抓取失败</div>
-                            <!-- <div class="succeed">抓取成功</div> -->
-                            <div style="color:#aaa;">2010-10-10 10:10</div>
+                            <div>{{productName}}</div>
+                            <div v-if="this.status = 1">抓取失败</div>
+                            <div v-if="this.status = 0" class="succeed">抓取成功</div>
+                            <div style="color:#aaa;">{{createTime}}</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="appeal_body">
+            <div class="appeal_body"  v-if="this.status = 1 && this.reason == '' ">
                 <div class="appeal_button_body">
                     <div class="appeal_button" @click="appeal">我要申诉</div>
                 </div>
@@ -36,15 +36,17 @@
                 </div>
             </div>
             
-            <!-- <div class="replenishment">
-                <div class="fail">抓取失败</div>
-                <div>游戏中工作人员补货</div>
+            <div class="replenishment" v-if="this.reason != ''">
+                <div class="fail" v-if="this.appealStatus == 0">申诉中</div>
+                <div class="fail" v-if="this.appealStatus == 1">申诉成功</div>
+                <div class="fail" v-if="this.appealStatus == 2">申诉失败</div>
+                <div>{{reason}}</div>
             </div>
             
-            <div class="replenishment">
+            <div class="replenishment" v-if="this.appealStatus == 1">
                 <div class="fail">处理结果</div>
                 <div class="succeed">28个钻石一退回您的账户</div>
-            </div> -->
+            </div>
 
         </div>
         <mt-actionsheet
@@ -60,6 +62,16 @@ export default {
   data () {
     return {
       Actionsheet: false,
+      id:this.$route.params.id,
+      appeal_body: true,
+      grabDetail:[],
+      results:[],
+      createTime:'',
+      img:'',
+      productName:'',
+      status:'',
+      appealStatus:'',
+      reason:'',
       actions:[
         {name:'画面黑屏或定格',method:this.add},
         {name:'按键操作失灵',method:this.add},
@@ -68,12 +80,39 @@ export default {
         ]
     }
   },
+  created(){
+    this.getData()
+  },
+  
   methods: {
+    getData(){
+        this.$api.grabDetails({
+            id:this.id,
+        }).then(res => {
+            this.createTime = res.data.createTime
+            this.img = res.data.img
+            this.productName = res.data.productName
+            this.status = res.data.status
+            this.reason = res.data.appeal.reason
+            this.appealStatus = res.data.appeal.status
+            
+        }, err => {
+            
+        })
+    },
   	appeal(){
         this.Actionsheet = true
     },
     add: function(actions,index){
         console.log(actions.name)
+        this.$api.appeal({
+            id: this.id,
+            reason: actions.name
+        }).then(res => {
+            this.getData()
+        }, err => {
+            
+        })
     }
   }
 }

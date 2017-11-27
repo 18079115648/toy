@@ -1,52 +1,29 @@
 <template>
     <div class="content">
         <Header title="订单中心"></Header>
-        <div class="orderList_body" @click="infoDetails">
+        <div class="orderList_body" @click="infoDetails(item.orderSn)" v-for="item in orderList">
             <div class="orderList_title">
-                <div><span style="color:#888">订单号：</span>5263137153715</div>
-                <div>代发货</div>
+                <div><span style="color:#888">订单号：</span>{{item.orderSn}}</div>
+                <div v-if="item.status == 1">代发货</div>
+                <div v-if="item.status == 0">已发货</div>
             </div>
             <div class="puppets_img">
-                <div class="puppetsList">
+                <div class="puppetsList" v-for="list in item.productList">
                     <div class="img_body">
-                        <img src="">
+                        <img :src="list.img">
                     </div>
                     <div>
-                        <div style="margin-bottom: .1rem;">恐龙布朗熊公仔</div>
-                        <div>x1</div>
-                    </div>
-                </div>
-                <div class="puppetsList">
-                    <div class="img_body">
-                        <img src="">
-                    </div>
-                    <div>
-                        <div style="margin-bottom: .1rem;">恐龙布朗熊公仔</div>
-                        <div>x1</div>
+                        <div style="margin-bottom: .1rem;">{{list.name}}</div>
+                        <div>x{{list.num}}</div>
                     </div>
                 </div>
             </div>
-            
         </div>
-        <div class="orderList_body">
-            <div class="orderList_title">
-                <div><span style="color:#888">订单号：</span>5263137153715</div>
-                <div class="succeed">已发货</div>
-            </div>
-            <div class="puppets_img">
-                <div class="puppetsList">
-                    <div class="img_body">
-                        <img src="">
-                    </div>
-                    <div>
-                        <div style="margin-bottom: .1rem;">恐龙布朗熊公仔</div>
-                        <div>x1</div>
-                    </div>
-                </div>
-                
-            </div>
-            
+        <div class="no_msg" v-if="this.orderList.length == 0">
+            <img src="../../static/image/wfdfc.png">
+            <div>暂无数据~</div>
         </div>
+
     </div>
 </template>
 
@@ -54,12 +31,25 @@
 export default {
   data () {
     return {
-      
+        page: 1,
+        pageSize: 10,
+        orderList:[],
+        orderSn:'',
     }
   },
+  created(){
+    this.$api.orderList({
+        page:this.page,
+        pageSize:this.pageSize
+    }).then(res => {
+        this.orderList = res.data.data
+    }, err => {
+        
+    })
+  },
   methods: {
-  	infoDetails(){
-        this.$router.push('/orderDetails')
+  	infoDetails(orderSn){
+        this.$router.push('/orderDetails/'+orderSn)
     }
   }
 }
@@ -107,5 +97,21 @@ export default {
 }
 .succeed{
     color: #EB6E8F;
+}
+.no_msg{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #C9CACA;
+    font-size: .4rem;
+    img{
+        width: 1.9rem;
+        height: 1.7rem;
+        display: block;
+        margin-bottom: .3rem;
+        margin-top: 2rem;
+    }
 }
 </style>

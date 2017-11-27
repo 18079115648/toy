@@ -27,7 +27,17 @@ export default {
     return {
 
     }
-  }
+  },
+  created(){
+    this.$api.orderList({
+        page:this.page,
+        pageSize:this.pageSize
+    }).then(res => {
+        this.orderList = res.data.data
+    }, err => {
+        
+    })
+  },
 }
 </script>
 

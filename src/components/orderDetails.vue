@@ -1,49 +1,41 @@
 <template>
     <div class="content">
         <Header title="订单中心"></Header>
-        <div class="orderDetails_body">
+        <div class="orderDetails_body" v-for="item in orderDetail">
             <div class="express_body">
                 <div class="express">
-                    <div class="express_img "></div>
+                    <div class="express_img"></div>
                     <div class="orderDetails_msg">
-                        <div class="wait">等待发货</div>
-                        <div class="orderDetails_text">暂无快递单号</div>
+                        <div class="wait" v-if="item.status == 1">等待发货</div>
+                        <div class="wait" v-if="item.status == 0">已发货</div>
+                        <div class="orderDetails_text"> <span v-for="items in express">{{items.name}}</span><span>{{item.expressNo}}</span></div>
                     </div>
                     <div class="express_border"></div>
                 </div>
                 <div class="express">
                     <div class="contact_img"></div>
                     <div class="orderDetails_msg">
-                        <div class="address">江苏省苏州市吴中区淞泽家园八区1303室</div>
-                        <div class="orderDetails_text">唐先生：10101010101</div>
+                        <div class="address">{{item.address}}</div>
+                        <div class="orderDetails_text">{{item.consignee}}:{{item.mobile}}</div>
                     </div>
                 </div>
             </div>
 
-            <div class="puppets_img">
+            <div class="puppets_img" v-for="list in item.productList">
                 <div class="puppetsList">
                     <div class="img_body">
-                        <img src="">
+                        <img :src="list.img">
                     </div>
                     <div>
-                        <div style="margin-bottom: .1rem;">恐龙布朗熊公仔</div>
-                        <div>x1</div>
-                    </div>
-                </div>
-                <div class="puppetsList">
-                    <div class="img_body">
-                        <img src="">
-                    </div>
-                    <div>
-                        <div style="margin-bottom: .1rem;">恐龙布朗熊公仔</div>
-                        <div>x1</div>
+                        <div style="margin-bottom: .1rem;">{{item.name}}</div>
+                        <div>x{{list.num}}</div>
                     </div>
                 </div>
             </div>
             
             <div class="express_body order_list">
-                <div style="margin-bottom: .1rem;">订单号：12318289348929</div>
-                <div>创建时间：2010-10-10 10:10</div>
+                <div style="margin-bottom: .1rem;">订单号：{{item.orderSn}}</div>
+                <div>创建时间：{{item.createTime}}</div>
             </div>
         </div>
         
@@ -54,8 +46,26 @@
 export default {
   data () {
     return {
-      
+      orderSn:this.$route.params.orderSn,
+      orderDetail:[],
+      express:[
+          {name:'暂无快递号',type:0},
+          {name:'顺丰',type:1},
+          {name:'申通',type:2},
+          {name:'韵达',type:3},
+          {name:'天天',type:4},
+          {name:'ems',type:5},
+      ]
     }
+  },
+  created(){
+    this.$api.orderDetail({
+        orderSn:this.orderSn
+    }).then(res => {
+        this.orderDetail = res.data.data
+    }, err => {
+        
+    })
   },
   methods: {
   	
