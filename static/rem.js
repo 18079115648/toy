@@ -4,6 +4,10 @@
   //doc ==》 document对象
   //doc.documentElement ==> 得到文档的根元素-->  <html>
   //之所以要得到文档的根元素，是为了计算网页所打开时屏幕的真实宽度
+  document.body.addEventListener('touchstart', function () { });
+  document.addEventListener('contextmenu', function(e) {
+	    e.preventDefault();
+	}, true);
   var docEl = doc.documentElement,
     resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
     recalc = function () {

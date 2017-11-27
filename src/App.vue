@@ -54,4 +54,7 @@
 	.toast-icon.icon-success{
 		background-image: url(../static/image/icon-success.png);
 	}
+	.v-modal{
+		opacity: 0.7 !important;
+	}
 </style>

@@ -82,7 +82,9 @@ export function fetchGet(url, params, needToken) {
 	
 	url = buildURL(url, needToken)
 	if (!url) {
-        return
+        return new Promise((resolve, reject) => {
+	        reject()
+	      })
     }
     return new Promise((resolve, reject) => {
         axios.get( url, {
