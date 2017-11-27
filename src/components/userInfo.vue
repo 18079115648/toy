@@ -29,7 +29,7 @@ export default {
     }
   },
   created(){
-    this.$api.orderList({
+    this.$api.userInfo({
         page:this.page,
         pageSize:this.pageSize
     }).then(res => {

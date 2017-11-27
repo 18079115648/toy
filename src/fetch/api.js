@@ -24,6 +24,7 @@ axios.interceptors.request.use((config) => {
 
 
 function buildURL(url, needToken) {
+
 	url = url+(url.indexOf('?') >= 0 ? '&' : '?') + "key=8dd758066c594324962cc2de7ee7a306" 
 	let token = Token.getAccessToken()
     if (!needToken) {
