@@ -12,7 +12,7 @@ import Token from '@/fetch/accessToken'
 // axios 配置
 axios.defaults.timeout = 20000;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
-axios.defaults.baseURL = '/dm-api/'
+//axios.defaults.baseURL = '/dm-api/'
 						
 //POST传参序列化
 axios.interceptors.request.use((config) => {
@@ -132,91 +132,100 @@ export default {
 	
 	//获取验证码
 	getCaptcha(params) {
-		return fetchPost('mobile/captcha', params, false)
+		return fetchPost('/dm-api/mobile/captcha', params, false)
 	},
 	
 	//手机号登录
 	mobileLogin(params) {
-		return fetchPost('login', params, false)
+		return fetchPost('/dm-api/login', params, false)
+	},
+	//微信登录
+	wechatLogin(params) {
+		return fetchPost('/dm-api/oauth/login', params, false)
 	},
 	
 	//首页标签
 	homeTags(params) {
-		return fetchGet('tags', params, true)
+		return fetchGet('/dm-api/tags', params, true)
 	},
 	
 	//标签获取房间列表
 	TagRooms(params) {
-		return fetchGet('home/tag', params, true)
+		return fetchGet('/dm-api/home/tag', params, true)
 	},
 	
 	//首页banner
 	homeBanner(params) {
-		return fetchGet('banner', params, false)
+		return fetchGet('/dm-api/banner', params, false)
 	},
 	
 	//签到列表
 	signList(params) {
-		return fetchGet('signList', params, true)
+		return fetchGet('/dm-api/signList', params, true)
 	},
 	
 	//签到
 	sign(params) {
-		return fetchPost('sign', params, true)
+		return fetchPost('/dm-api/sign', params, true)
 	},
 	
 	//娃娃袋
 	toysWin(params) {
-		return fetchGet('doll/list', params, true)
+		return fetchGet('/dm-api/doll/list', params, true)
 	},
 	
 	//用户信息
 	userInfo(params) {
-		return fetchGet('user/info', params, true)
+		return fetchGet('/dm-api/user/info', params, true)
+	},
+	
+	//消息列表
+	newsList(params) {
+		return fetchGet('/dm-api/messaages', params, true)
 	},
 
 	//充值选项列表
 	recharge(params) {
-		return fetchGet('charge/list', params, true)
+		return fetchGet('/dm-api/charge/list', params, true)
 	},
 	//充值下单
 	payment(params) {
-		return fetchPost('charge', params, true)
+		return fetchPost('/dm-api/charge', params, true)
 	},
 	//充值记录
 	paymentList(params) {
-		return fetchGet('charge/log', params, true)
+		return fetchGet('/dm-api/charge/log', params, true)
 	},
 	//订单列表
 	orderList(params) {
-		return fetchGet('order/list', params, true)
+		return fetchGet('/dm-api/order/list', params, true)
 	},
 	//订单详情
 	orderDetail(params) {
-		return fetchGet('order/info', params, true)
+		return fetchGet('/dm-api/order/info', params, true)
 	},
 	//抓取记录
 	grabList(params) {
-		return fetchGet('doll/log', params, true)
+		return fetchGet('/dm-api/doll/log', params, true)
 	},
 	//抓取详情
 	grabDetails(params) {
-		return fetchGet('doll/log/info', params, true)
+		return fetchGet('/dm-api/doll/log/info', params, true)
 	},
 	//申诉
 	appeal(params) {
-		return fetchPost('doll/appeal', params, true)
+		return fetchPost('/dm-api/doll/appeal', params, true)
 	},
 	//收货地址列表
 	address(params) {
-		return fetchGet('address/list', params, true)
+		return fetchGet('/dm-api/address/list', params, true)
 	},
 	//删除地址
 	deleteAddress(params) {
-		return fetchPost('address/delete', params, true)
+		return fetchPost('/dm-api/address/delete', params, true)
 	},
 	//个人中新信息
 	userInfo(params) {
-		return fetchGet('user/info', params, true)
+		return fetchGet('/dm-api/user/info', params, true)
 	},
 }

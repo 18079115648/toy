@@ -37,6 +37,13 @@ export default {
 
     }
   },
+  created() {
+  	this.$api.newsList().then(res => {
+			
+    }, err => {
+    	
+    })
+  },
   methods: {
   	
   }

@@ -22,9 +22,7 @@ export default {
     // 获取平台类型
     // 1微信公众号 2安卓 3iOS 
     getPlatformType() {
-        if (this.isWeixin()) {
-            return 1
-        } else if (this.isIOS()) {
+        if (this.isIOS()) {
             return 3
         } else {
             return 2

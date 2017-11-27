@@ -1,18 +1,16 @@
 <template>
-    <div class="app" id="app" :style="{ height: wH + 'px' }">
-    	<Header title="抓娃娃"></Header>
-    	<div class="login-content">
-    		<div class="input-item">
-    			<img class="icon phone" src="../../static/image/5.png" />
-    			<input v-model="phone" @input="inputNumber" class="phone" type="tel" maxlength="11" placeholder="手机号码" />
-    		</div>
-    		<div class="input-item">
-    			<img class="icon" src="../../static/image/55.png" />
-    			<input v-model="code" @input="inputCode" class="code" type="tel " maxlength="6" placeholder="验证码" />
-    			<div @click="getCode" class="captcha-btn" :class="{'disabled': disableSend}">{{captchaLabel}}</div>
+    <div class="app">
+    	<div class="top">
+    		<div class="bg"></div>
+    		<img src="../../static/image/vv.png"  />
+    	</div>
+    	<div class="bottom">
+    		<p class="login-tit">选择登录方式</p>
+    		<div class="login-way">
+    			<img src="../../static/image/rr.png" @click="wechatLogin" />
+    			<img src="../../static/image/ff.png" @click="mobileLogin" />
     		</div>
     	</div>
-    	<div class="btn-default btn-hover btn-login" @click="login">登录</div>
     </div>
 </template>
 
@@ -21,91 +19,39 @@ import { Toast } from 'mint-ui'
 export default {
 	data() {
 	    return {
-	    	phone: '',
-	    	code: '',
-	    	wH: 0,
-	    	captchaLabel:'获取验证码',
-	    	timer: null,
-	    	count: 60,
-	    	disableSend: false
+	    	
 	    }
 	},
-	mounted() {	
-		this.wH = document.getElementById('app').offsetHeight
+	created() {
+//		if(!this.$common.isWeixin()) {
+//			this.$router.replace('/mobileLogin')
+//		}
 	},
 	methods: {
-		inputNumber() {
-			if (!/^\d*$/.test(this.phone)) {	
-	            this.phone = this.phone.replace(/\D+/g,'')            
-	        } 
+		mobileLogin() {
+			this.$router.push('/mobileLogin')
 		},
-		inputCode() {
-			if (!/^\d*$/.test(this.code)) {	
-	            this.code = this.code.replace(/\D+/g,'')            
-	        } 
-		},
-		getCode() {
-			if(this.disableSend) {
-				return
-			}
-			if(!this.checkPhone) {
-				Toast({
-				  message: '请输入正确的手机号',
-				  position: 'bottom',
-				  duration: 1000
-				});
-				return
-			}
-			this.$api.getCaptcha({
-				mobile: this.phone
-			}).then(res => {
-				this.disableSend = true
-				this.count = 60
-				this.captchaLabel = '重新获取('+ this.count +')'
-				this.timer = setInterval(() => {
-					this.count--
-					this.captchaLabel = '重新获取('+ this.count +')'
-					if(this.count < 1) {
-						this.disableSend = false
-						this.captchaLabel = '获取验证码'
-						clearInterval(this.timer)
-					}
-				}, 1000)
-	        }, err => {
-	        	
-	        })
-		},
-		login() {
+		wechatLogin() {
 			const self = this
-			if(!this.checkPhone) {
-				Toast({
-				  message: '请输入正确的手机号',
-				  position: 'bottom',
-				  duration: 1000
-				});
-				return
-			}
-			if(!this.checkCode) {
-				Toast({
-				  message: '验证码错误',
-				  position: 'bottom',
-				  duration: 1000
-				});
-				return
-			}
-			this.$api.mobileLogin({
-				code: this.code,
-				mobile: this.phone,
-                platform: this.$common.getPlatformType()
-			}).then(res => {
+			let data = this.$storage.get('oauthInfo')
+            if (!data) {
+                this.$weixin.authorize()
+                return
+            }
+            this.$api.wechatLogin({
+    			nickname: data.nickname,
+    			avatar: data.avatar,
+    			oauthId: data.openid,
+    			platform: this.$common.getPlatformType()
+    		}).then(res => {
 				let accessToken = res.data.accessToken
                 self.$token.refreshToken(accessToken.accessToken, accessToken.refreshToken, accessToken.expireTime)
 				this.loginSuccess()
-	        }, err => {
-	        	
-	        })
+		    }, err => {
+		    	
+		    })
 		},
-		loginSuccess() {
+    	loginSuccess() {
 			let redirectURI = '/index'
             if (this.$storage.get('history_url') && this.$storage.get('history_url') != '/login') {
                 redirectURI = this.$storage.get('history_url')
@@ -113,20 +59,7 @@ export default {
             this.$router.replace(redirectURI)
 		}
 	},
-	computed: {
-		checkPhone: function() {
-			if(/^1[34578]\d{9}$/.test(this.phone)){   
-		        return true; 
-		    } 
-		    return false
-		},
-		checkCode: function() {
-			if(/^\d{4,6}$/.test(this.code)){   
-		        return true; 
-		    } 
-		    return false
-		}
-	}
+	
 
 		
 }
@@ -137,45 +70,70 @@ export default {
 	background: #fff !important;
 	position: relative;
 	height: 100vh;
-} 
-.login-content{
-	padding: 2rem 0.95rem 2.5rem;
-	.input-item{
-		border-bottom: 1px solid #d2d2d2;
-		padding:  0.25rem 0;
-		display: flex;
-		position: relative;
-		align-items: center;
-		padding-left: 1rem;
-		.icon{
-			width: 0.3rem;
+	.top{
+		position: absolute;
+		width: 100%;
+		height: 65vh;
+		left:0;
+		top:0;
+		
+		.bg{
+			background: #ffed8d;
+			width: 100%;
+			height: 50vh;
+		}
+		img{
 			position: absolute;
-			left: 0.3rem;
-			top: 50%;
-			transform: translateY(-50%);
-			&.phone{
-				width: 0.26rem;
-			}
-		}
-		input.phone{
-			padding: 0.1rem 0;
-			flex: 1;
-		}
-		input.code{
-			width: 2.6rem;
-		}
-		.captcha-btn{
-			width: 2rem;
-			text-align: center;
-			color: #fdaa10;
-			/*font-weight: 700;*/
-			&.disabled{
-				color: #ccc;
-			}
+			width: 100%;
+			left:0;
+			bottom:0;
+			z-index: 3;
 		}
 	}
-}
-.btn-login{
-	width: 5.6rem;
-}
+	.bottom{
+		position: absolute;
+		width: 100%;
+		height: 35vh;
+		left:0;
+		bottom:0;
+		padding: 1rem 2rem 0;
+		.login-tit{
+			text-align: center;
+			color: #222;
+			position: relative;
+			&:before{
+				content: '';
+				position: absolute;
+				left: -0.4rem;
+				top: 50%;
+				transform: translateY(-50%);
+				height: 0;
+				border-top: 1px solid #ccc;
+				width: 1rem;
+			}
+			&:after{
+				content: '';
+				position: absolute;
+				right: -0.4rem;
+				top: 50%;
+				transform: translateY(-50%);
+				height: 0;
+				border-top: 1px solid #ccc;
+				width: 1rem;
+			}
+		}
+		.login-way{
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding-top: 0.6rem;
+			img{
+				width: 1.1rem;
+				
+			}
+		}
+		
+	}
+} 
+
 </style>

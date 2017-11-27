@@ -8,6 +8,8 @@ const user = r => require.ensure([], () => r(require('../components/user.vue')),
 
 
 const login = r => require.ensure([], () => r(require('../components/login.vue')), 'login')
+const mobileLogin = r => require.ensure([], () => r(require('../components/mobileLogin.vue')), 'mobileLogin')
+const oauth = r => require.ensure([], () => r(require('../components/oauth.vue')), 'oauth')
 const signIn = r => require.ensure([], () => r(require('../components/signIn.vue')), 'signIn')
 const toysBox = r => require.ensure([], () => r(require('../components/toysBox.vue')), 'toysBox')
 const news = r => require.ensure([], () => r(require('../components/news.vue')), 'news')
@@ -120,6 +122,14 @@ export default new Router({
     {
       path: '/login',
       component: login
+    },
+    {
+      path: '/mobileLogin',
+      component: mobileLogin
+    },
+    {
+      path: '/oauth',
+      component: oauth
     },
     {
       path: '/signIn',
