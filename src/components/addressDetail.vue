@@ -1,6 +1,6 @@
 <template>
     <div class="content">
-        <Header title="新增地址"></Header>
+        <Header title="修改地址"></Header>
 
         <div class="addAddress_body">
             <div class="addAddress_msg">
@@ -19,11 +19,11 @@
                         <option v-for="item in areaList" :value="item">{{item.name}}</option>
                     </select>
 					
-                    <select v-model="city" @change="changeCity">
+                    <select v-model="city" @change="selectCity">
                         <option disabled value="disabled">城市</option>
                         <option v-for="item in cityList" :value="item">{{item.name}}</option>
                     </select>
-                    <select v-model="province" @change="changeProvince">
+                    <select v-model="province" @change="selectProvince">
 						<option disabled value="disabled">省份</option>
                         <option v-for="item in provinceList" :value="item">{{item.name}}</option>
                     </select>
@@ -47,13 +47,13 @@
 </template>
 
 <script>
-import { Toast } from 'mint-ui'
+import { Toast, Indicator } from 'mint-ui'
 export default {
   data () {
     return {
-        province: 'disabled',
-		city: 'disabled',
-		district: 'disabled',
+        province: '',
+		city: '',
+		district: '',
 		provinceList: [],
 		cityList: [],
 		areaList: [],
@@ -66,10 +66,45 @@ export default {
     }
   },
   created() {
+  	Indicator.open()
+  	this.addressDetail = this.$storage.get('currAddrDetail')
+  	this.addrInfo = this.addressDetail.address.split('-')
+  	this.province = this.addrInfo[0]
+  	this.city = this.addrInfo[1]
+  	this.district = this.addrInfo[2]
+  	this.detail = this.addrInfo[3]
+  	this.is_default = this.addressDetail.isDefault ? true : false
+  	this.name = this.addressDetail.consignee
+  	this.phone = this.addressDetail.mobile
   	this.$api.provinces().then(res => { 
 		this.provinceList = res.data
-    }, err => {
-    	
+		res.data.forEach((item) => {
+			if(item.name == this.province) {
+				this.province = item
+				return
+			}
+		})
+		this.changeProvince().then(msg => {
+			this.cityList = msg.data
+			msg.data.forEach((item) => {
+				if(item.name == this.city) {
+					this.city = item
+					return
+				}
+			})
+			return this.changeCity()
+		}).then(msg => {
+			setTimeout(() => {
+				Indicator.close()
+			},200)
+			this.areaList = msg.data
+			msg.data.forEach((item) => {
+				if(item.name == this.district) {
+					this.district = item
+					return
+				}
+			})
+		})
     })
   },
   methods: {
@@ -78,16 +113,22 @@ export default {
             this.phone = this.phone.replace(/\D+/g,'')            
         } 
 	},
-    changeProvince() {
+	changeProvince(){
+		return this.$api.citys(this.province.id)
+	},
+	changeCity(){
+		return this.$api.areas(this.city.id)
+	},
+    selectProvince() {
 		this.$api.citys(this.province.id).then(res => { 
 			this.cityList = res.data
 			this.city = res.data[0]
-			this.changeCity()
+			this.selectCity()
         }, err => {
         	
         })
 	},
-	changeCity() {
+	selectCity() {
 		this.$api.areas(this.city.id).then(res => { 
 			this.areaList = res.data
 			this.district = res.data[0]
@@ -112,14 +153,6 @@ export default {
 			});
 			return
 		}
-		if(this.province == 'disabled') {
-			Toast({
-			  message: '请选择地区',
-			  position: 'bottom',
-			  duration: 1000
-			});
-			return
-		}
 		if(!this.detail) {
 			Toast({
 			  message: '请填写详细地址',
@@ -137,7 +170,8 @@ export default {
 			address: address,
 			consignee: this.name,
 			isDefault: this.is_default ? 1 : 0,
-			mobile: this.phone
+			mobile: this.phone,
+			id: this.addressDetail.id
 		}).then(res => {
 			this.disabledBtn = false
 			Toast({

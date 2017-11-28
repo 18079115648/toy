@@ -35,6 +35,8 @@ const orderDetails = r => require.ensure([], () => r(require('../components/orde
 const address = r => require.ensure([], () => r(require('../components/address.vue')), 'address')
 //添加地址
 const addAddress = r => require.ensure([], () => r(require('../components/addAddress.vue')), 'addAddress')
+//地址详情
+const addressDetail = r => require.ensure([], () => r(require('../components/addressDetail.vue')), 'addressDetail')
 //设置
 const set = r => require.ensure([], () => r(require('../components/set.vue')), 'set')
 //关于我们
@@ -73,52 +75,96 @@ export default new Router({
       path: '/index',
       component: index,
       meta: {
-      	keepAlive: true
+      	keepAlive: true,
+      	requireAuth: true
       }
     },
     {
       path: '/room',
       component: room,
+      meta: {
+      	requireAuth: true
+      }
     },
     {
       path: '/user',
-      component: user
+      component: user,
+      meta: {
+      	requireAuth: true
+      }
     },{
       path: '/userInfo',
-      component: userInfo
+      component: userInfo,
+      meta: {
+      	requireAuth: true
+      }
     },{
       path: '/grabList',
-      component: grabList
+      component: grabList,
+      meta: {
+      	requireAuth: true
+      }
     },{
       path: '/grabDetails/:id',
-      component: grabDetails
+      component: grabDetails,
+      meta: {
+      	requireAuth: true
+      }
     },{
       path: '/recharge',
       component: recharge,
       meta: {
-      	keepAlive: true
+      	keepAlive: true,
+      	requireAuth: true
       }
     },{
       path: '/payment/:id',
-      component: payment
+      component: payment,
+      meta: {
+      	requireAuth: true
+      }
     },{
       path: '/paymentList',
-      component: paymentList
+      component: paymentList,
+      meta: {
+      	requireAuth: true
+      }
     },{
       path: '/orderList',
-      component: orderList
+      component: orderList,
+      meta: {
+      	requireAuth: true
+      }
     },{
       path: '/orderDetails/:orderSn',
-      component: orderDetails
+      component: orderDetails,
+      meta: {
+      	requireAuth: true
+      }
     },{
       path: '/address/:status',
-      component: address
+      component: address,
+      meta: {
+      	requireAuth: true
+      }
     },{
       path: '/addAddress',
-      component: addAddress
+      component: addAddress,
+      meta: {
+      	requireAuth: true
+      }
+    },{
+      path: '/addressDetail',
+      component: addressDetail,
+      meta: {
+      	requireAuth: true
+      }
     },{
       path: '/set',
-      component: set
+      component: set,
+      meta: {
+      	requireAuth: true
+      }
     },{
       path: '/aboutUs',
       component: aboutUs
@@ -137,19 +183,31 @@ export default new Router({
     },
     {
       path: '/signIn',
-      component: signIn
+      component: signIn,
+      meta: {
+      	requireAuth: true
+      }
     },
     {
       path: '/toysBox',
-      component: toysBox
+      component: toysBox,
+      meta: {
+      	requireAuth: true
+      }
     },
     {
       path: '/orderSubmit',
-      component: orderSubmit
+      component: orderSubmit,
+      meta: {
+      	requireAuth: true
+      }
     },
     {
       path: '/news',
-      component: news
+      component: news,
+      meta: {
+      	requireAuth: true
+      }
     },
   ]
 })

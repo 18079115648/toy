@@ -29,7 +29,7 @@
 
         <div class="no_msg" v-if="this.paymentList.length == 0">
             <img src="../../static/image/1266f.png">
-            <div>暂无记录~</div>
+            <div>暂无充值记录~</div>
         </div>
     </div>
 </template>
@@ -97,20 +97,5 @@ export default {
 .paymentList_border{
     border-bottom: solid 1px #f5f5f9
 }
-.no_msg{
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: #C9CACA;
-    font-size: .4rem;
-    img{
-        width: 1.9rem;
-        height: 1.7rem;
-        display: block;
-        margin-bottom: .3rem;
-        margin-top: 1.6rem;
-    }
-}
+
 </style>

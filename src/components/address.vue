@@ -15,7 +15,7 @@
 	                        <div>默认地址</div>
 	                    </div>
 	                    <div  class="address_operation">
-	                        <div>
+	                        <div @click="goDetail(item)">
 	                            <img src="../../static/image/11223.png">
 	                            <span>编辑</span>
 	                        </div>
@@ -112,11 +112,10 @@ export default {
 		    })
     	}
     },
-    //编辑收货地址
     goDetail(item){
-//  	this.$storage.set('currAddrDetail', item)
-//      this.$router.push('/addAddress')
-    },
+    	this.$storage.set('currAddrDetail', item)
+    	this.$router.push('/addressDetail')
+    }
   }
 }
 </script>

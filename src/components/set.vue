@@ -4,12 +4,6 @@
         <div class="set_body">
             <div class="set_first">
                 <div class="set_list">
-                    <div>推送通知</div>
-                    <div>
-                        <mt-switch @change="pushSwitch" v-model="push"></mt-switch>
-                    </div>
-                </div>
-                <div class="set_list">
                     <div>背景音乐</div>
                     <div>
                         <mt-switch @change="pushSwitch" v-model="music"></mt-switch>
@@ -23,10 +17,6 @@
                 </div>
             </div>
             <div class="set_second">
-                <div class="set_list">
-                    <div>清除缓存</div>
-                    <div>20MB</div>
-                </div>
                 <div class="set_list" style="border:none;" @click="intoUs">
                     <div>关于我们</div>
                     <div>
@@ -65,7 +55,7 @@ export default {
 
 <style lang="scss" scoped>
 .set_body{
-    font-size: .3rem;
+    padding-top: 0.3rem;
 }
 .set_first{
     padding-left: .3rem;
@@ -87,8 +77,7 @@ export default {
     margin-top: .4rem;
 }
 .set_last_img{
-    width: .2rem;
-    height: .3rem;
+    width: .16rem;
     display: block;
 }
 </style>
