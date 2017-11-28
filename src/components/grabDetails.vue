@@ -4,13 +4,15 @@
         <div class="grabDetails_body" >
             <div style="margin-bottom:.3rem;" >
                 <div class="grabDetails_title">
-                    <div> <span >抓取编号：</span>5263137153715</div>    
+                    <div> <span >抓取编号：</span>{{id}}</div>    
                     <div class="grabDetails_border"></div>
                 </div>
                 <div class="puppets_img">
                     <div class="puppetsList">
-                        <div class="img_body">
-                            <img :src="img">
+                        <div class="img_body" @click="video = true">
+                            <!-- <img :src="img"> -->
+                            <video :src="url" class="play_video"  :poster="img"></video>
+                            <img src="../../static/image/weed.png"  class="play_img">
                         </div>
                         <div class="grabDetails_msg">
                             <div>{{productName}}</div>
@@ -45,7 +47,7 @@
             
             <div class="replenishment" v-if="this.appealStatus == 1">
                 <div class="fail">处理结果</div>
-                <div class="succeed">28个钻石一退回您的账户</div>
+                <div class="succeed">28个钻石已退回您的账户</div>
             </div>
 
         </div>
@@ -53,6 +55,9 @@
         :actions="actions"
         v-model="Actionsheet">
         </mt-actionsheet>
+
+            
+        
     </div>
 </template>
 
@@ -72,6 +77,8 @@ export default {
       status:'',
       appealStatus:'',
       reason:'',
+      serial:'',
+      url:'',
       actions:[
         {name:'画面黑屏或定格',method:this.add},
         {name:'按键操作失灵',method:this.add},
@@ -95,7 +102,7 @@ export default {
             this.status = res.data.status
             this.reason = res.data.appeal.reason
             this.appealStatus = res.data.appeal.status
-            
+            this.url = res.data.url
         }, err => {
             
         })
@@ -103,6 +110,7 @@ export default {
   	appeal(){
         this.Actionsheet = true
     },
+    
     add: function(actions,index){
         console.log(actions.name)
         this.$api.appeal({
@@ -156,10 +164,22 @@ export default {
         border-radius: 10px;
         // overflow: hidden;
         margin-right: .3rem;
+        position: relative;
+        overflow: hidden;
         img{
             width: 100%;
             height: 100%;
             display: block;
+        }
+        .play_img{
+            width: .6rem;
+            height: .6rem;
+            display: block;
+            position: absolute;
+            top: 50%;
+            margin-top: -.3rem;
+            left: 50%;
+            margin-left: -.3rem;
         }
     }
 }
@@ -213,4 +233,10 @@ export default {
 .qq{
     color: #287DF6;
 }
+.play_video{
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
 </style>

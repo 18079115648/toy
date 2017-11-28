@@ -8,8 +8,10 @@
         <div class="grabList_body" >
             <div class="grabList" @click="infoDetails(item.id)" v-for="item in grabList">
                 <div class="left_img">
-                    <img :src="item.img">
+                    <!-- <img :src="item.img"> -->
+                    <video :src="item.url" class="play_video"  :poster="item.img"></video>
                     <img src="../../static/image/weed.png"  class="play_img">
+                    <!-- <video :src="item.url" class="play_video" controls="controls"></video> -->
                 </div>
                 <div class="list_content">
                     <div>{{item.name}}</div>
@@ -133,5 +135,10 @@ export default {
         margin-bottom: .3rem;
         margin-top: 1.6rem;
     }
+}
+.play_video{
+    width: 100%;
+    height: 100%;
+    display: block;
 }
 </style>

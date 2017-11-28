@@ -6,19 +6,19 @@
                 <div class="set_list">
                     <div>推送通知</div>
                     <div>
-                        <mt-switch ></mt-switch>
+                        <mt-switch @change="pushSwitch" v-model="push"></mt-switch>
                     </div>
                 </div>
                 <div class="set_list">
                     <div>背景音乐</div>
                     <div>
-                        <mt-switch ></mt-switch>
+                        <mt-switch @change="pushSwitch" v-model="music"></mt-switch>
                     </div>
                 </div>
                 <div class="set_list" style="border:none;">
-                    <div>背景音效</div>
+                    <div >背景音效</div>
                     <div>
-                        <mt-switch ></mt-switch>
+                        <mt-switch @change="pushSwitch" v-model="sound"></mt-switch>
                     </div>
                 </div>
             </div>
@@ -45,10 +45,17 @@ import { Switch } from 'mint-ui';
 export default {
   data () {
     return {
-
+        push:true,
+        music:true,
+        sound:true,
     }
   },
   methods: {
+    pushSwitch(){
+        console.log(this.push)
+        console.log(this.music)
+        console.log(this.sound)
+    },
     intoUs(){
         this.$router.push('/aboutUs')
     }

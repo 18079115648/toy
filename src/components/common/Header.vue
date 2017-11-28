@@ -1,7 +1,7 @@
 <template>
     <div class="header">
 	    <div class="headPart">
-	        <div class="headCont">
+	        <div class="headCont" >
 	            <div @click="goBack" class="back" v-if="!hiddenBack">
 	                <span class="fl"></span>
 	            </div>
@@ -100,5 +100,4 @@
         line-height: 0.85rem;
         z-index: -1;
     }
-    
 </style>

@@ -38,13 +38,51 @@ function buildURL(url, needToken) {
     return url + (url.indexOf('?') >= 0 ? '&' : '?') + "accessToken=" + token
 }
 
-export function fetchPost(url, params, needToken) {
+export function fetchPost(url, params, needToken,multiple) {
 	url = buildURL(url, needToken)
 	if (!url) {
         return new Promise((resolve, reject) => {
 	        reject()
 	      })
-    }
+	}
+	if(multiple) {
+		return new Promise((resolve, reject) => {
+	        axios.post( url, params, {
+	            headers: {
+	                'Content-Type': 'multiple/form-data'
+	            }
+	        }).then(response => {
+	            	if(response.status == 200) {
+	            		if(response.data.errCode == 0) {
+	            			resolve(response.data) 
+	            		}else {
+	            			reject(response)
+	            			Toast({
+							  message: response.data.errMsg,
+							  position: 'bottom',
+							  duration: 1500
+							});
+	            		} 
+	            	}else {
+	            		reject(response)
+		               	Toast({
+						  message: '网络错误',
+						  position: 'bottom',
+						  duration: 2000
+						});
+	            	}
+	            	  
+	            })
+	            .catch((error) => {
+	               	reject(error)
+	               	Toast({
+					  message: '网络错误',
+					  position: 'bottom',
+					  duration: 2000
+					});
+	            })
+	    })
+	}
     return new Promise((resolve, reject) => {
         axios.post( url, qs.stringify(params))
             .then(response => {
@@ -228,4 +266,13 @@ export default {
 	userInfo(params) {
 		return fetchGet('/dm-api/user/info', params, true)
 	},
+	//修改个人
+	saveUser(params) {
+		return fetchPost('/dm-api/user/edit', params, true)
+	},
+	//上传头像
+	saveHead(params) {
+		return fetchPost('/dm-api/upload/image', params, true, 'updataImg')
+	},
+
 }

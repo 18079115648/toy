@@ -13,7 +13,7 @@
                     <div>{{item.desc}}</div>
                 </div>
                 <div class="recharge_right">
-                    <div>¥ {{item.price}}</div>
+                    <div>¥ {{item.price}}.00</div>
                 </div>
             </div>
         </div>
@@ -78,7 +78,7 @@ export default {
         }
     }
     span{
-        text-shadow: -1.5px -.5px  #000;
+        text-shadow: 2px 0 0 #000,0 -2px 0 #000,-2px 0 0 #000,0 -2px 0 #000;
     }
     
 }

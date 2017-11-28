@@ -12,7 +12,7 @@
                 </div>
                
                 <div class="payment_right">
-                    <div>¥ {{item.price}}</div>
+                    <div>¥ {{item.price}}.00</div>
                 </div>
             </div>
 
@@ -129,7 +129,6 @@ export default {
         }
     }
     .payment_left_text{
-       
     }
     
 }
