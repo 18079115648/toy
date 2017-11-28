@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <Header title="我的"></Header>
-    <div class="set-up"></div>
+    <router-link to="/set" class="set-up"></router-link>
     <router-link to="/userInfo" class="user-info-link">
     	<img class="avatar" :src="userInfo.avatar"  />
     	<p class="nick-name">{{userInfo.nickname}}</p>
@@ -23,23 +23,23 @@
     		<p class="text">砖石充值</p>
     		<div class="recharge-btn">充值</div>
     	</router-link>
-    </div>
-    <div class="link-list">
-    	<!--<div class="link-item">
-    		<img src="../../static/image/1233.png" class="icon" />
-    		<p class="text">邀请好友</p>
-    		<img src="../../static/image/wdd.png" class="more"  />
-    	</div>-->
-    	<div class="link-item">
-    		<img src="../../static/image/ff233.png" class="icon" />
-    		<p class="text">抓取记录</p>
-    		<img src="../../static/image/wdd.png" class="more"  />
-    	</div>
     	<router-link to="/paymentList" class="link-item">
     		<img src="../../static/image/wwww.png" class="icon" />
     		<p class="text">充值记录</p>
     		<img src="../../static/image/wdd.png" class="more"  />
     	</router-link>
+    </div>
+    <div class="link-list">
+    	<div class="link-item" v-if="isWinxin">
+    		<img src="../../static/image/1233.png" class="icon" />
+    		<p class="text">邀请好友</p>
+    		<img src="../../static/image/wdd.png" class="more"  />
+    	</div>
+    	<div class="link-item">
+    		<img src="../../static/image/ff233.png" class="icon" />
+    		<p class="text">抓取记录</p>
+    		<img src="../../static/image/wdd.png" class="more"  />
+    	</div>
     	<router-link to="/orderList" class="link-item">
     		<img src="../../static/image/4455.png" class="icon" />
     		<p class="text">订单中心</p>
@@ -58,6 +58,7 @@
 export default {
   data () {
     return {
+    	isWinxin: this.$common.isWeixin(),
       userInfo:{}
     }
   },
@@ -168,7 +169,7 @@ export default {
 	  	
 	  }
 	}
-	.link-item:last-of-type{
+	.link-item:last-child{
 		border-bottom: 0;
 	}
 }

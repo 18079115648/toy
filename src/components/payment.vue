@@ -3,14 +3,14 @@
     <div class="content">
         <Header title="钻石充值"></Header>
         <div class="payment_body">
-            <div class="payment" v-for="item in payment" v-if="item.id == id">
+            <div class="payment">
                 <div class="payment_left">
                     <img class="diamond-icon" src="../../static/image/wd.png">
-                    <span class="payment_left_text">{{item.money}}</span>
+                    <span class="payment_left_text">{{payment.money}}</span>
                 </div>
                
                 <div class="payment_right">
-                    <div>&yen; {{item.price}}</div>
+                    <div>&yen; {{payment.price}}</div>
                 </div>
             </div>
 
@@ -27,56 +27,44 @@
             	</div>    
             </div>
 
-            <div class="btn-default btn-hover recharge">确认支付</div>
+            <div class="btn-default btn-hover recharge" @click="recharge">确认支付</div>
         </div>
     </div>
 </template>
 
 <script>
+import wx from 'weixin-js-sdk'
 import { Toast } from 'mint-ui';
 export default {
   data () {
     return {
     	isWinxin: this.$common.isWeixin(),
         id:this.$route.params.id,
-        price:'',
-        money:'',
-        payment:[],
-        type:1
+        payment:{},
     }
   },
   created(){
     this.$api.recharge().then(res => {
-        this.payment = res.data
+        res.data.forEach((item) => {
+        	if(item.id == this.id) {
+        		this.payment = item
+        		return
+        	}
+        })
     }, err => {
     	
     })
   },
   methods: {
-    confirmPay(){
-        if(this.type == 3){
-            Toast({
-                message: '请选择支付方式',
-                position: 'bottom',
-                duration: 1000
-            })
-        }else{
-            this.$api.payment({
-                id: this.id,
-                type: this.type
-            }).then(res => {
-                if(res.errMsg == 0){
-                    Toast({
-                        message: '充值成功',
-                        position: 'bottom',
-                        duration: 1000
-                    })
-                }
-            }, err => {
-                
-            })
-        }
-        
+    recharge() {
+    	this.$api.payment({
+	        id:this.id,
+	        type:2
+	    }).then(res => {
+	       
+	    }, err => {
+	        
+	    })
     }
   }
 }
