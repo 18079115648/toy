@@ -1,41 +1,48 @@
 <template>
     <div class="content">
         <Header title="订单中心"></Header>
-        <div class="orderDetails_body" v-for="item in orderDetail">
+        <div class="orderDetails_body">
             <div class="express_body">
                 <div class="express">
                     <div class="express_img"></div>
                     <div class="orderDetails_msg">
-                        <div class="wait" v-if="item.status == 1">等待发货</div>
-                        <div class="wait" v-if="item.status == 0">已发货</div>
-                        <div class="orderDetails_text"> <span v-for="items in express">{{items.name}}</span><span>{{item.expressNo}}</span></div>
+                        <div class="wait" style="color: #00913a;" v-if="orderDetail.status == 1">等待发货</div>
+                        <div class="wait" style="color:#fa7296" v-if="orderDetail.status == 0">已发货</div>
+                        <div class="orderDetails_text" v-if="orderDetail.status == 0"> 
+                        	<span>{{orderDetail.expressName}}</span>
+                        	<span>{{orderDetail.expressNo}}</span>
+                        </div>
+                        <div class="orderDetails_text" v-if="orderDetail.status == 1"> 
+                        	暂无快递号
+                        </div>
                     </div>
                     <div class="express_border"></div>
                 </div>
                 <div class="express">
                     <div class="contact_img"></div>
                     <div class="orderDetails_msg">
-                        <div class="address">{{item.address}}</div>
-                        <div class="orderDetails_text">{{item.consignee}}:{{item.mobile}}</div>
+                        <div class="address">{{orderDetail.address}}</div>
+                        <div class="orderDetails_text">{{orderDetail.consignee}}  {{orderDetail.mobile}}</div>
                     </div>
                 </div>
             </div>
-
-            <div class="puppets_img" v-for="list in item.productList">
-                <div class="puppetsList">
-                    <div class="img_body">
-                        <img :src="list.img">
-                    </div>
-                    <div>
-                        <div style="margin-bottom: .1rem;">{{item.name}}</div>
-                        <div>x{{list.num}}</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="express_body order_list">
-                <div style="margin-bottom: .1rem;">订单号：{{item.orderSn}}</div>
-                <div>创建时间：{{item.createTime}}</div>
+			<div class="toys-list">
+				<div class="puppets_img" v-for="list in orderDetail.productList">
+	                <div class="puppetsList">
+	                    <div class="img_body">
+	                        <img :src="list.img">
+	                    </div>
+	                    <div>
+	                        <div style="margin-bottom: .1rem;">{{list.name}}</div>
+	                        <div>x{{list.num}}</div>
+	                    </div>
+	                </div>
+	            </div>
+			</div>
+	            
+            <div class="order_list">
+                <div style="margin-bottom: .1rem;">订单号：{{orderDetail.orderSn}}</div>
+                <div>创建时间：{{orderDetail.createTime}}</div>
             </div>
         </div>
         
@@ -47,22 +54,35 @@ export default {
   data () {
     return {
       orderSn:this.$route.params.orderSn,
-      orderDetail:[],
-      express:[
-          {name:'暂无快递号',type:0},
-          {name:'顺丰',type:1},
-          {name:'申通',type:2},
-          {name:'韵达',type:3},
-          {name:'天天',type:4},
-          {name:'ems',type:5},
-      ]
+      orderDetail:{},
     }
   },
   created(){
     this.$api.orderDetail({
         orderSn:this.orderSn
     }).then(res => {
-        this.orderDetail = res.data.data
+        this.orderDetail = res.data
+        if(!res.data.status) {
+        	switch (res.data.type) {
+				case 1:
+				  this.orderDetail.expressName = '顺丰快递'
+				  break;
+				case 2:
+				  this.orderDetail.expressName = '申通快递'
+				  break;
+				case 3:
+				  this.orderDetail.expressName = '韵达快递'
+				  break;
+				case 4:
+				  this.orderDetail.expressName = '天天快递'
+				  break;
+				case 5:
+				this.orderDetail.expressName = 'EMS快递'
+				  this.title = ''
+				  break;
+			}
+        }
+        
     }, err => {
         
     })
@@ -82,7 +102,7 @@ export default {
 }
 .express_body{
     background-color: #fff;
-    border-radius: 10px;
+    border-radius: 0.15rem;
     margin-bottom: .3rem;
 }
 .express{
@@ -114,7 +134,7 @@ export default {
     position: absolute;
     bottom: 0;
     left: 2%;
-    border-bottom: solid 1px #eee;
+    border-bottom: solid 1px #f2f2f2;
 }
 .wait{
     margin-bottom: .1rem;
@@ -131,20 +151,20 @@ export default {
 }
 
 .puppets_img{
-    padding: 0 .3rem;
-    background-color: #fff;
-    border-radius: 10px ;
-    margin-bottom: .3rem;
+    border-bottom: 1px solid #f2f2f2;
     .img_body{
         width: 1.8rem;
         height: 1.8rem;
-        border-radius: 10px;
         margin-right: .3rem;
         img{
             width: 100%;
             height: 100%;
             display: block;
+            border-radius: 0.15rem;
         }
+    }
+    &:last-of-type{
+    	border-bottom: none;
     }
 }
 .puppetsList{
@@ -152,8 +172,16 @@ export default {
     padding: .3rem 0;
 }
 .order_list{
-    padding: .2rem .3rem;
+    padding: .3rem .3rem;
     color: #666;
     font-size: .28rem;
+    background-color: #fff;
+    border-radius: 0.15rem;
+}
+.toys-list{
+	padding: 0.1rem 0.3rem;
+	border-radius: 0.15rem;
+	background: #fff;
+	margin-bottom: 0.3rem;
 }
 </style>

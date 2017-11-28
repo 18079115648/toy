@@ -57,4 +57,22 @@
 	.v-modal{
 		opacity: 0.7 !important;
 	}
+	.mint-switch-input:checked + .mint-switch-core {
+	    border-color: #fdd152 !important;
+	    background-color: #fdd152 !important;
+	}
+	.no_msg{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #C9CACA;
+    font-size: .3rem;
+    padding-top: 1.4rem;
+    img{
+        width: 2rem;
+        display: block;
+        margin-bottom: .6rem;
+    }
+}
+
 </style>

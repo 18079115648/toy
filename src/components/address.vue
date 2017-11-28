@@ -1,91 +1,61 @@
 <template>
     <div class="content">
         <Header title="地址管理"></Header>
+		<div class="addrsss-list">
+			<div class="address_body" v-for="(item, index) in addressList" :key="index">
+	            <div class="address_title" @click="selectAddr(item)">
+	                <div class="address_first">{{item.address}}</div>
+	                <div>{{item.consignee}} &nbsp; {{item.mobile}}</div>
+	            </div>
+	            <div class="address_img">
+	                <div class="address">
+	                    <div class="img_body" @click="defaultChange(item)">
+	                        <img src="../../static/image/bbb.png" v-show="item.isDefault">
+	                        <img src="../../static/image/rrrr.png" v-show="!item.isDefault">
+	                        <div>默认地址</div>
+	                    </div>
+	                    <div  class="address_operation">
+	                        <div>
+	                            <img src="../../static/image/11223.png">
+	                            <span>编辑</span>
+	                        </div>
+	                        <div @click="selectDelete(item.id, index)">
+	                            <img src="../../static/image/424.png">
+	                            <span>删除</span>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	        <div class="no_msg" v-show="addressList.length < 1">
+	            <img src="../../static/image/wfffwf.png">
+	            <div>暂无收货地址~</div>
+	        </div>
+		</div>
+	        
+        <router-link to="/addAddress" class="btn-default btn-hover add">+ 新增收货地址</router-link>
 
-        <div class="address_body" v-for="item in addressList">
-            <div class="address_title">
-                <div class="address_hr"></div>
-                <div class="address_first">{{item.address}}</div>
-                <div>{{item.consignee}} {{item.mobile}}</div>
-            </div>
-            <div class="address_img">
-                <div class="address">
-                    <div class="img_body">
-                        <img src="../../static/image/bbb.png" v-if="item.isDefault = 1">
-                        <img src="../../static/image/rrrr.png" v-if="item.isDefault = 2">
-                        <div>默认地址</div>
-                    </div>
-                    <div  class="address_operation">
-                        <div>
-                            <img src="../../static/image/11223.png">
-                            <span>编辑</span>
-                        </div>
-                        <div>
-                            <img src="../../static/image/424.png">
-                            <span>删除</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- <div class="address_body" >
-            <div class="address_title">
-                <div class="address_hr"></div>
-                <div class="address_first">江苏省苏州市吴中区淞泽家园八区35栋1303室</div>
-                <div>唐相声 10101010101</div>
-            </div>
-            <div class="address_img">
-                <div class="address">
-                    <div class="img_body">
-                        <img src="../../static/image/bbb.png" v-if="isDefault == 1" @click="acquiesce">
-                        <img src="../../static/image/rrrr.png" v-if="isDefault == 2" @click="acquiesce">
-                        <div>默认地址</div>
-                    </div>
-                    <div  class="address_operation">
-                        <div @click="redactAddress">
-                            <img src="../../static/image/11223.png">
-                            <span >编辑</span>
-                        </div>
-                        <div @click="deleteAddress(1)">
-                            <img src="../../static/image/424.png">
-                            <span>删除</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-        
-        <div class="address_button_body">
-            <div class="address_button" @click="address">+ 新增收获地址</div>
-        </div>
-
-        <div class="no_msg" v-if="this.total == 0">
-            <img src="../../static/image/wfffwf.png">
-            <div>暂无地址~</div>
-        </div>
+        <confirm-modal :show="deleteShow" @confirm_modal="addrDelete" @closeModal="deleteShow = false" message="确定删除该地址?"></confirm-modal>	
     </div>
 </template>
 
 <script>
+import { Toast, Indicator } from 'mint-ui'
 export default {
   data () {
     return {
-        page: 1,
-        pageSize: 10,
         addressList:[],
-        isDefault:1,
-        total:'',
+        
+        deleteShow: false
     }
   },
   created(){
     //获取地址列表
     this.$api.address({
-        page:this.page,
-        pageSize:this.pageSize
+        page: 1,
+        pageSize: 100
     }).then(res => {
         this.addressList = res.data.data
-        this.total = res.data.total
     }, err => {
         
     })
@@ -93,64 +63,90 @@ export default {
 
   methods: {
     //删除地址
-    deleteAddress(id){
-        console.log(id)
-        // this.$api.address({
-        //     id : id
-        // }).then(res => {
-        //     this.addressList = res.data.data
-        //     this.total = res.data.total
-        // }, err => {
-            
-        // })
-    },
+	selectDelete(id, index){
+		this.currIndex = index
+		this.currId = id
+		this.deleteShow = true
+	},
+	addrDelete() {
+		Indicator.open()
+		this.$api.deleteAddress({
+			id:  this.currId
+		}).then(res => {
+			setTimeout(() => {
+	    		Indicator.close()
+	    	}, 300)
+			this.addressList.splice(this.currIndex, 1)
+        }, err => {
+        	Indicator.close()
+        })
+	},
     //设置默认地址
-    acquiesce(){
-        if(this.isDefault == 1){
-            this.isDefault = 2
-        }else if(this.isDefault == 2){
-            this.isDefault = 1
-        }
+    defaultChange(obj){
+    	if(obj.isDefault) {
+    		return
+    	}
+    	Indicator.open()
+        this.$api.defaultAddress({
+	        id: obj.id
+	    }).then(res => {
+	    	setTimeout(() => {
+	    		Indicator.close()
+	    	}, 300)
+	        this.addressList.forEach((item) => {
+	        	item.isDefault = item.id == obj.id
+	        })
+	    }, err => {
+	        Indicator.close()
+	    })
+    },
+    //订单地址选择
+    selectAddr(item){
+    	if(this.$route.params.status == 'select') {
+    		this.$api.defaultAddress({
+		        id: item.id
+		    }).then(res => {
+		    	this.$router.go(-1)
+		    }, err => {
+
+		    })
+    	}
     },
     //编辑收货地址
-    redactAddress(){
-        this.$router.push('/addAddress')
+    goDetail(item){
+//  	this.$storage.set('currAddrDetail', item)
+//      this.$router.push('/addAddress')
     },
-    //添加收货地址
-    address(){
-        this.$router.push('/addAddress')
-    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
+.content{
+	position: relative;
+	min-height: 100vh;
+	padding-bottom: 1.7rem;
+}
+.addrsss-list{
+	padding: 0.4rem 0.3rem 0;
+}
 .address_body{
     width: 100%;
     height: auto;
-    padding: .4rem .3rem 0 .3rem;
-    font-size: .3rem;
-    color: #aaa;
-    font-size: .28rem;
+    padding: 0 0.3rem;
+    background: #fff;
+    border-radius: 0.2rem;
+    margin-bottom: 0.3rem;
     
 }
 .address_title{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: .2rem .3rem;
-    background-color: #fff;
-    border-radius: 10px 10px 0 0;
+    padding: .2rem 0;
     position: relative;
-}
-.address_hr{
-    position: absolute;
-    bottom: 0;
-    left: 3%;
-    width: 94%;
-    border-bottom: solid 1px #eee;
-    
+    border-bottom: 1px solid #f2f2f2;
+    color: #666;
 }
 .address_first{
     color: #000;
@@ -158,11 +154,9 @@ export default {
     padding-bottom: .1rem;
 }
 .address_img{
-    padding: 0 .3rem;
-    background-color: #fff;
-    border-radius: 0 0 10px 10px ;
     .img_body{
         display: flex;
+        align-items: center;
         img{
             width: .4rem;
             height: .4rem;
@@ -173,9 +167,8 @@ export default {
 }
 .address{
     display: flex;
-    padding: .3rem 0;
     justify-content: space-between;
-    align-items: center;
+    height: 1rem;
     
 }
 .address_operation{
@@ -183,9 +176,8 @@ export default {
     div{
         display: flex;
         align-items: center;
-        margin-left: .4rem;
+        padding-left: .4rem;
         img{
-            width: .3rem;
             height: .3rem;
             display: block;
             margin-right: .15rem;
@@ -209,20 +201,10 @@ export default {
         font-weight: 400;
     }
 }
-.no_msg{
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: #C9CACA;
-    font-size: .4rem;
-    img{
-        width: 2rem;
-        height: 1.3rem;
-        display: block;
-        margin-bottom: .3rem;
-        margin-top: 1.6rem;
-    }
+
+.add{
+	position: absolute;
+	left: 0.3rem;
+	bottom: 0.5rem;
 }
 </style>

@@ -2,11 +2,11 @@
   <div class="content">
     <Header title="我的"></Header>
     <div class="set-up"></div>
-    <div class="user-info-link">
+    <router-link to="/userInfo" class="user-info-link">
     	<img class="avatar" :src="userInfo.avatar"  />
     	<p class="nick-name">{{userInfo.nickname}}</p>
     	<img class="more" src="../../static/image/QEQ.png"  />
-    </div>
+    </router-link>
     <div class="navbar">
     	<div class="nav-item diamount">
     		<p class="count" style="color: #f8b62d;">{{userInfo.money}}</p>
@@ -18,40 +18,38 @@
     	</div>
     </div>
     <div class="link-list">
-    	<div class="link-item">
+    	<router-link to="/recharge" class="link-item">
     		<img src="../../static/image/3333.png" class="icon" />
     		<p class="text">砖石充值</p>
     		<div class="recharge-btn">充值</div>
-    	</div>
+    	</router-link>
     </div>
     <div class="link-list">
-    	<div class="link-item">
+    	<!--<div class="link-item">
     		<img src="../../static/image/1233.png" class="icon" />
     		<p class="text">邀请好友</p>
     		<img src="../../static/image/wdd.png" class="more"  />
-    	</div>
+    	</div>-->
     	<div class="link-item">
     		<img src="../../static/image/ff233.png" class="icon" />
     		<p class="text">抓取记录</p>
     		<img src="../../static/image/wdd.png" class="more"  />
     	</div>
-    	<div class="link-item">
+    	<router-link to="/paymentList" class="link-item">
     		<img src="../../static/image/wwww.png" class="icon" />
     		<p class="text">充值记录</p>
     		<img src="../../static/image/wdd.png" class="more"  />
-    	</div>
-    </div>
-    <div class="link-list">
-    	<div class="link-item">
+    	</router-link>
+    	<router-link to="/orderList" class="link-item">
     		<img src="../../static/image/4455.png" class="icon" />
     		<p class="text">订单中心</p>
     		<img src="../../static/image/wdd.png" class="more"  />
-    	</div>
-    	<div class="link-item">
+    	</router-link>
+    	<router-link to="/address/unselect" class="link-item">
     		<img src="../../static/image/2223ed.png" class="icon" />
     		<p class="text">地址管理</p>
     		<img src="../../static/image/wdd.png" class="more"  />
-    	</div>
+    	</router-link>
     </div>
   </div>
 </template>
@@ -79,6 +77,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+.content{
+	padding-bottom: 0.6rem;
+}
 .set-up{
 	position: fixed;
 	width: 0.85rem;

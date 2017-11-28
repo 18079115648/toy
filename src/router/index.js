@@ -13,6 +13,7 @@ const oauth = r => require.ensure([], () => r(require('../components/oauth.vue')
 const signIn = r => require.ensure([], () => r(require('../components/signIn.vue')), 'signIn')
 const toysBox = r => require.ensure([], () => r(require('../components/toysBox.vue')), 'toysBox')
 const news = r => require.ensure([], () => r(require('../components/news.vue')), 'news')
+const orderSubmit = r => require.ensure([], () => r(require('../components/orderSubmit.vue')), 'orderSubmit')
 
 //个人中心
 const userInfo = r => require.ensure([], () => r(require('../components/userInfo.vue')), 'userInfo')
@@ -93,7 +94,10 @@ export default new Router({
       component: grabDetails
     },{
       path: '/recharge',
-      component: recharge
+      component: recharge,
+      meta: {
+      	keepAlive: true
+      }
     },{
       path: '/payment/:id',
       component: payment
@@ -107,7 +111,7 @@ export default new Router({
       path: '/orderDetails/:orderSn',
       component: orderDetails
     },{
-      path: '/address',
+      path: '/address/:status',
       component: address
     },{
       path: '/addAddress',
@@ -138,6 +142,10 @@ export default new Router({
     {
       path: '/toysBox',
       component: toysBox
+    },
+    {
+      path: '/orderSubmit',
+      component: orderSubmit
     },
     {
       path: '/news',
