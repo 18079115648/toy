@@ -14,12 +14,16 @@
           <img src="../../static/image/wdd.png" class="guide">
         </div>
       </div>
-      <div class="head">
+      <div class="head" style="border-bottom: solid 1px #f2f2f2;">
         <label for="user_name">昵称</label>
         <input type="text" class="nickname-text" name="user_name" placeholder="请输入昵称" v-model="nickname">
         <div>
           <img src="../../static/image/wdd.png" class="guide">
         </div>
+      </div>
+      <div class="head" >
+        <label for="user_name">邀请码</label>
+        <span class="nickname-text" >{{inviteCode}}</span>
       </div>
     </div>
   </div>
@@ -35,6 +39,7 @@ export default {
     return {
       avatar:'../../static/image/avatar.png',
       nickname:'',
+      inviteCode: '',
       disabledBtn: false
     }
   },
@@ -43,6 +48,7 @@ export default {
     this.$api.userInfo().then(res => {
       this.avatar = res.data.avatar
       this.nickname = res.data.nickname
+      this.inviteCode = res.data.inviteCode
     }, err => {
         
     })
@@ -130,7 +136,7 @@ export default {
   font-size: .28rem;
   position: relative;
   overflow: hidden;
-  input.nickname-text{
+  .nickname-text{
     text-align: right;
     line-height: 1;
     padding: 0.08rem 0;

@@ -18,6 +18,20 @@
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 	}
+	.pagination-content{
+		position: absolute;
+		width: 100%;
+		left: 0;
+		top: 0.85rem;
+		bottom: 0;
+		overflow-y: auto;
+	}
+	.mint-loadmore{
+		min-height: 100% !important;
+	}
+	.mint-loadmore-bottom{
+		display: none !important;
+	}
 	.btn-default{
 		width: 6.9rem;
 		height: 0.8rem;
@@ -73,6 +87,15 @@
         display: block;
         margin-bottom: .6rem;
     }
-}
+  }
+  .mint-actionsheet-listitem, .mint-actionsheet-button{
+  	height: 0.9rem !important;
+  	line-height: 0.9rem !important;
+  	color: #007aff !important;
+  	font-size: 0.3rem !important;
+  }
+  .mint-actionsheet-listitem{
+  	border-color: #eee !important;
+  }
 
 </style>

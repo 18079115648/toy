@@ -48,7 +48,7 @@ export default {
         // 上拉刷新加载
         loadTop() {
             this.param.data.page = 1
-            this.param.content = []
+//          this.param.content = []
             this.loadPage(true)
         },
         // 刷新
@@ -59,12 +59,12 @@ export default {
         loadPage(isRefresh) {
             let self = this
             self.param.loadEnd = false
-            Indicator.open()
+            Indicator.open('加载中...')
             setTimeout(function() {
             	self.$api.page(self.uri, self.param.data, self.needToken).then((response) => {
             		Indicator.close()
                     if (isRefresh) {
-                        self.param.page = 1
+                        self.param.data.page = 1
                         self.param.content = []
                         self.allLoaded = false
                     }
@@ -75,7 +75,7 @@ export default {
                         // 设置加1
                         self.allLoaded = true
                     } else {
-                        self.param.page++
+                        self.param.data.page++
                     }
 
                     if (isRefresh) {

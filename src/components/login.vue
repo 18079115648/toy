@@ -23,9 +23,9 @@ export default {
 	    }
 	},
 	created() {
-//		if(!this.$common.isWeixin()) {
-//			this.$router.replace('/mobileLogin')
-//		}
+		if(!this.$common.isWeixin()) {
+			this.$router.replace('/mobileLogin')
+		}
 	},
 	methods: {
 		mobileLogin() {
