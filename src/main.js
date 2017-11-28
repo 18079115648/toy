@@ -38,7 +38,6 @@ Vue.use(VueRouter)
 Vue.use(mint)
 Vue.config.productionTip = false
 
-// storage.set('token', {"accessToken":"123456789","expired":2511602293})
 
 router.beforeEach((to, from, next) => {
     if (to.meta.requireAuth && !token.getAccessToken()) {
