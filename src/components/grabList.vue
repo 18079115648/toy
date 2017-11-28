@@ -5,8 +5,8 @@
 
         
         
-        <div class="grabList_body" >
-            <div class="grabList" @click="infoDetails(item.id)" v-for="item in grabList">
+        <div class="grabList_body" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="0">
+            <div class="grabList" @click="infoDetails(item.id)" v-for="item in grabList"  >
                 <div class="left_img">
                     <img :src="item.img">
                     <!-- <video :src="item.url" class="play_video"  :poster="item.img"></video> -->
@@ -21,7 +21,7 @@
                         </div>
                         <div style="padding-left:.3rem;">
                             <div  v-if="item.appealStatus == 0">申诉中</div>
-                            <div  v-if="item.appealStatus == 1">申诉成功</div>
+                            <div  v-if="item.appealStatus == 1" class="qq">申诉成功</div>
                             <div  v-if="item.appealStatus == 2">申诉失败</div>
                         </div>
                     </div>
@@ -31,6 +31,11 @@
                     <img src="../../static/image/wdd.png" class="guide">
                 </div>
             </div>
+            <mt-popup
+                :visible.sync="popupVisible"
+                position="bottom">
+            </mt-popup>
+
             
         </div>
 
@@ -44,13 +49,14 @@
 </template>
 
 <script>
-import { Indicator } from 'mint-ui';
+import { Indicator,Popup } from 'mint-ui';
 export default {
   data () {
     return {
         page: 1,
-        pageSize: 10,
+        pageSize: 5,
         grabList:[],
+        popupVisible:true 
     }
   },
   created(){
@@ -68,6 +74,25 @@ export default {
   methods: {
     infoDetails(id){
         this.$router.push('/grabDetails/'+id)
+    },
+    loadMore() {
+    //     this.loading = true;
+    //     setTimeout(() => {
+    //         let last = this.pageSize + 5;
+    //         for(var i = last; i<=last+5; i++ ){
+    //             if(i-last== 5){
+    //                 last=i
+    //                 this.$api.grabList({
+    //                     page:this.page,
+    //                     pageSize:last
+    //                 }).then(res => {
+    //                     this.grabList = res.data.data
+    //                 }, err => {
+    //                 })
+    //             }
+    //         }
+    //         this.loading = false;
+    //     }, 2500);
     }
   }
 }
@@ -157,5 +182,8 @@ export default {
     width: 100%;
     height: 100%;
     display: block;
+}
+.qq{
+    color: #287DF6;
 }
 </style>

@@ -11,7 +11,7 @@
                     <div>{{item.desc}}</div>
                 </div>
                 <div class="recharge_right">
-                    &yen; {{item.price}}
+                    &yen; {{item.price}}.00
                 </div>
             </div>
         </div>
@@ -65,7 +65,7 @@ export default {
     color: #fff;
     font-size: .32rem;
     width: 2rem;
-    text-shadow: 2px 0 0 #000,0 2px 0 #000,-2px 0 0 #000,0 -2px 0 #000;
+    text-shadow: 1px 0 0 #000,0 1px 0 #000,-1px 0 0 #000,0 -1px 0 #000;
     .diamond-icon{
     	width: 0.3rem;
     	margin-right: 0.2rem;

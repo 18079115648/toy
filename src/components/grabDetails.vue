@@ -12,8 +12,8 @@
                     <div class="puppetsList">
                         <div class="img_body" @click="video = true">
                             <img :src="img" v-if="url == ''">
-                            <video :src="url" class="play_video" id="video"  :poster="img" v-if="url != ''" ></video>
-                            <img src="../../static/image/weed.png"  class="play_img" v-if="url != ''" @click="show_url">
+                            <video :src="url" class="play_video" id="video"  :poster="img" v-if="url != ''" @click="show_url"></video>
+                            <img src="../../static/image/weed.png"  class="play_img" v-if="url != ''" @click="show_url" >
                         </div>
                         <div class="grabDetails_msg">
                             <div>{{productName}}</div>
@@ -80,6 +80,7 @@ export default {
       reason:'',
       serial:'',
       url:'',
+      play:true,
       actions:[
         {name:'画面黑屏或定格',method:this.add},
         {name:'按键操作失灵',method:this.add},
@@ -143,8 +144,16 @@ export default {
         
     },
     show_url(){
-        var myVideo=document.getElementById("video");
+        var myVideo = document.getElementById("video");
+        if(this.play == true){
             myVideo.play();
+            this.play = false
+        }else if(this.play == false){
+            myVideo.pause();
+            this.play = true
+        }
+        
+            
 
     }
   }

@@ -29,6 +29,8 @@ import Pagination from '@/components/common/Pagination'
 Vue.component('Pagination', Pagination)
 
 import confirmModal from '@/components/common/confirmModal'
+
+
 Vue.component('confirmModal', confirmModal)
 
 Vue.use(VueRouter)
@@ -36,7 +38,7 @@ Vue.use(VueRouter)
 Vue.use(mint)
 Vue.config.productionTip = false
 
-
+// storage.set('token', {"accessToken":"123456789","expired":2511602293})
 
 router.beforeEach((to, from, next) => {
     if (to.meta.requireAuth && !token.getAccessToken()) {
