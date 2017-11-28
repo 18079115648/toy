@@ -8,10 +8,9 @@
         <div class="grabList_body" >
             <div class="grabList" @click="infoDetails(item.id)" v-for="item in grabList">
                 <div class="left_img">
-                    <!-- <img :src="item.img"> -->
-                    <video :src="item.url" class="play_video"  :poster="item.img"></video>
-                    <img src="../../static/image/weed.png"  class="play_img">
-                    <!-- <video :src="item.url" class="play_video" controls="controls"></video> -->
+                    <img :src="item.img">
+                    <!-- <video :src="item.url" class="play_video"  :poster="item.img"></video> -->
+                    <!-- <img src="../../static/image/weed.png"  class="play_img" v-if="item.url != '' "> -->
                 </div>
                 <div class="list_content">
                     <div>{{item.name}}</div>
@@ -36,6 +35,7 @@
 </template>
 
 <script>
+import { Indicator } from 'mint-ui';
 export default {
   data () {
     return {
@@ -45,13 +45,15 @@ export default {
     }
   },
   created(){
+    Indicator.open('加载中...')
     this.$api.grabList({
         page:this.page,
         pageSize:this.pageSize
     }).then(res => {
         this.grabList = res.data.data
+        Indicator.close()
     }, err => {
-        
+        Indicator.close()
     })
   },
   methods: {

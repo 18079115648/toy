@@ -303,5 +303,8 @@ export default {
 	saveHead(params) {
 		return fetchPost('/dm-api/upload/image', params, true, 'updataImg')
 	},
-
+	// 上传视频
+	uploadVideo(params) {
+		return fetchPost('/dm-api/upload/video', params, true)
+	}
 }
