@@ -4,15 +4,16 @@
         <div class="grabDetails_body" >
             <div style="margin-bottom:.3rem;" >
                 <div class="grabDetails_title">
-                    <div> <span >抓取编号：</span>{{id}}</div>    
+                    <div> <span >抓取编号：</span>{{id}}</div> 
+                    <div v-if="url == '' ">暂无视频～</div>
                     <div class="grabDetails_border"></div>
                 </div>
                 <div class="puppets_img">
                     <div class="puppetsList">
                         <div class="img_body" @click="video = true">
-                            <!-- <img :src="img"> -->
-                            <video :src="url" class="play_video"  :poster="img"></video>
-                            <img src="../../static/image/weed.png"  class="play_img">
+                            <img :src="img" v-if="url == ''">
+                            <video :src="url" class="play_video"  :poster="img" v-if="url != ''"></video>
+                            <img src="../../static/image/weed.png"  class="play_img" v-if="url != ''">
                         </div>
                         <div class="grabDetails_msg">
                             <div>{{productName}}</div>
@@ -62,7 +63,7 @@
 </template>
 
 <script>
-import { Actionsheet } from 'mint-ui';
+import { Actionsheet,Indicator } from 'mint-ui';
 export default {
   data () {
     return {
@@ -88,7 +89,20 @@ export default {
     }
   },
   created(){
-    this.getData()
+    let self = this
+    this.$api.grabDetails({
+        id:this.id,
+    }).then(res => {
+        this.url = res.data.url
+        this.createTime = res.data.createTime
+        this.img = res.data.img
+        this.productName = res.data.productName
+        this.status = res.data.status
+        this.reason = res.data.appeal.reason
+        this.appealStatus = res.data.appeal.status
+    }, err => {
+        
+    })
   },
   
   methods: {
@@ -96,6 +110,7 @@ export default {
         this.$api.grabDetails({
             id:this.id,
         }).then(res => {
+            
             this.createTime = res.data.createTime
             this.img = res.data.img
             this.productName = res.data.productName
@@ -110,17 +125,22 @@ export default {
   	appeal(){
         this.Actionsheet = true
     },
-    
+
     add: function(actions,index){
-        console.log(actions.name)
+        console.log(this.url)
+        Indicator.open('上传中...')
+        
         this.$api.appeal({
             id: this.id,
             reason: actions.name
         }).then(res => {
             this.getData()
+            Indicator.close()
         }, err => {
+            Indicator.close()
             
         })
+        
     }
   }
 }
@@ -180,6 +200,7 @@ export default {
             margin-top: -.3rem;
             left: 50%;
             margin-left: -.3rem;
+            z-index: 10;
         }
     }
 }
@@ -237,6 +258,7 @@ export default {
     width: 100%;
     height: 100%;
     display: block;
+    z-index: 11;
 }
 
 </style>
