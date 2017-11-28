@@ -12,8 +12,8 @@
                     <div class="puppetsList">
                         <div class="img_body" @click="video = true">
                             <img :src="img" v-if="url == ''">
-                            <video :src="url" class="play_video"  :poster="img" v-if="url != ''"></video>
-                            <img src="../../static/image/weed.png"  class="play_img" v-if="url != ''">
+                            <video :src="url" class="play_video" id="video"  :poster="img" v-if="url != ''" ></video>
+                            <img src="../../static/image/weed.png"  class="play_img" v-if="url != ''" @click="show_url">
                         </div>
                         <div class="grabDetails_msg">
                             <div>{{productName}}</div>
@@ -141,6 +141,11 @@ export default {
             
         })
         
+    },
+    show_url(){
+        var myVideo=document.getElementById("video");
+            myVideo.play();
+
     }
   }
 }
@@ -258,7 +263,6 @@ export default {
     width: 100%;
     height: 100%;
     display: block;
-    z-index: 11;
 }
 
 </style>

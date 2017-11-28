@@ -15,7 +15,16 @@
                 <div class="list_content">
                     <div>{{item.name}}</div>
                     <div class="succeed" v-if="item.status == 0">抓取成功</div>
-                    <div v-if="item.status == 1">抓取失败</div>
+                    <div v-if="item.status == 1" class="list_status">
+                        <div>
+                            抓取失败
+                        </div>
+                        <div style="padding-left:.3rem;">
+                            <div  v-if="item.appealStatus == 0">申诉中</div>
+                            <div  v-if="item.appealStatus == 1">申诉成功</div>
+                            <div  v-if="item.appealStatus == 2">申诉失败</div>
+                        </div>
+                    </div>
                     <div class="time">{{item.createTime}}</div>
                 </div>
                 <div>
@@ -105,17 +114,23 @@ export default {
 .list_content{
     flex: 1;
     height: 100%;
-    font-size: .28rem;
     padding-left: .2rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    .list_status{
+        display: flex;
+    }
     .succeed{
         color: #EA7B97;
     }
     .time{
         color: #A3A3A3;
     }
+}
+.list_content div{
+    font-size: .3rem;
+    
 }
 .guide{
   width: .2rem;
