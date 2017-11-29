@@ -14,6 +14,7 @@ const signIn = r => require.ensure([], () => r(require('../components/signIn.vue
 const toysBox = r => require.ensure([], () => r(require('../components/toysBox.vue')), 'toysBox')
 const news = r => require.ensure([], () => r(require('../components/news.vue')), 'news')
 const orderSubmit = r => require.ensure([], () => r(require('../components/orderSubmit.vue')), 'orderSubmit')
+const invite = r => require.ensure([], () => r(require('../components/invite.vue')), 'invite')
 
 //个人中心
 const userInfo = r => require.ensure([], () => r(require('../components/userInfo.vue')), 'userInfo')
@@ -191,6 +192,13 @@ export default new Router({
     {
       path: '/toysBox',
       component: toysBox,
+      meta: {
+      	requireAuth: true
+      }
+    },
+    {
+      path: '/invite',
+      component: invite,
       meta: {
       	requireAuth: true
       }

@@ -69,10 +69,11 @@ export default {
   	Indicator.open()
   	this.addressDetail = this.$storage.get('currAddrDetail')
   	this.addrInfo = this.addressDetail.address.split('-')
-  	this.province = this.addrInfo[0]
-  	this.city = this.addrInfo[1]
-  	this.district = this.addrInfo[2]
-  	this.detail = this.addrInfo[3]
+  	let [province,city,district, ...detail] = this.addrInfo
+	this.province = province
+	this.city = city
+	this.district = district
+	this.detail = detail.join('-')
   	this.is_default = this.addressDetail.isDefault ? true : false
   	this.name = this.addressDetail.consignee
   	this.phone = this.addressDetail.mobile

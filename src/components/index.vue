@@ -3,9 +3,7 @@
     <div class="header">
     	<router-link to="/user" class="user-link link"></router-link>
     	抓娃娃
-    	<router-link to="/news" class="news-link link">
-    		<span class="count">9+</span>
-    	</router-link>
+    	<span style="width: 0.85rem;"></span>
     </div>
     <div class="navbar">
     	<div @click="changeTag(item)" v-for="(item, index) in navbar" :class="currTags == item.id ? 'active' : ''"  class="nav-item">
@@ -32,25 +30,28 @@
 		    	</router-link>
 		    </div>
     	</div>	
-    	<Pagination :render="render" :param="pagination" :autoload="false" ref="pagination" uri="/dm-api/home/tag">
-			<div class="toys-list" v-show="pagination.content.length>0">
-		    	<router-link :to='"/room?machineSn="+item.machineSn' class="toys-item" v-for="(item, index) in pagination.content" :key="index">
-		    		<img class="toys-img" :src="item.imgs[0]"  />
-		    		<div class="toys-status" :class="[item.statusClass]">{{item.statusText}}</div>
-		    		<div class="toys-info">
-		    			<p class="join-count">
-			    			<img class="icon" src="../../static/image/wd.png" />
-			    			<span class="shadow-text">{{item.price}}</span>
-			    		</p>
-			    		<p class="toys-name shadow-text">{{item.name}}</p>
-		    		</div>	
-		    	</router-link>
-		    </div>
-		</Pagination>
-	    <div class="no_msg" v-show="pagination.content.length<1 && pagination.loadEnd">
-	        <img src="../../static/image/ewd.png"  />
-	        <div>没有商品信息~</div>
-	    </div>	
+    	<div class="toys-content">
+    		<Pagination :render="render" :param="pagination" :autoload="false" ref="pagination" uri="/dm-api/home/tag">
+					<div class="toys-list" v-show="pagination.content.length>0">
+			    	<router-link :to='"/room?machineSn="+item.machineSn' class="toys-item" v-for="(item, index) in pagination.content" :key="index">
+			    		<img class="toys-img" :src="item.imgs[0]"  />
+			    		<div class="toys-status" :class="[item.statusClass]">{{item.statusText}}</div>
+			    		<div class="toys-info">
+			    			<p class="join-count">
+				    			<img class="icon" src="../../static/image/wd.png" />
+				    			<span class="shadow-text">{{item.price}}</span>
+				    		</p>
+				    		<p class="toys-name shadow-text">{{item.name}}</p>
+			    		</div>	
+			    	</router-link>
+			    </div>
+				</Pagination>
+		    <div class="no_msg" v-show="pagination.content.length<1 && pagination.loadEnd">
+		        <img src="../../static/image/ewd.png"  />
+		        <div>没有商品信息~</div>
+		    </div>	
+    	</div>
+	    	
     </div>
   </div>
 </template>
@@ -67,7 +68,7 @@ export default {
       },{
       	text: '邀请好友',
       	icon: '../../static/image/2333d.png',
-      	link: ''
+      	link: '/invite'
       },{
       	text: '娃娃盒',
       	icon: '../../static/image/222.png',
@@ -219,6 +220,8 @@ export default {
 	top: 1.51rem;
 	bottom: 0;
 	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
 }
 .banner{
 	height: 2.7rem;
@@ -248,6 +251,10 @@ export default {
 			color: #666;
 		}
 	}
+}
+.toys-content{
+	flex: 1;
+	overflow-y: auto;
 }
 .toys-list{
 	padding: 0.2rem 0.1rem 0;

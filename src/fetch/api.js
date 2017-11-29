@@ -306,5 +306,9 @@ export default {
 	// 上传视频
 	uploadVideo(params) {
 		return fetchPost('/dm-api/upload/video', params, true)
+	},
+    //	接受邀请
+	invite(params) {
+		return fetchPost('/dm-api/invite/code', params, true)
 	}
 }
