@@ -35,11 +35,11 @@
     		<p class="text">邀请好友</p>
     		<img src="../../static/image/wdd.png" class="more"  />
     	</div>
-    	<div class="link-item">
+    	<router-link to="/grabList" class="link-item">
     		<img src="../../static/image/ff233.png" class="icon" />
     		<p class="text">抓取记录</p>
     		<img src="../../static/image/wdd.png" class="more"  />
-    	</div>
+    	</router-link>
     	<router-link to="/orderList" class="link-item">
     		<img src="../../static/image/4455.png" class="icon" />
     		<p class="text">订单中心</p>

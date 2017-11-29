@@ -2,55 +2,62 @@
     <div class="content">
         <Header title="抓取详情"></Header>
         <div class="grabDetails_body" >
-            <div style="margin-bottom:.3rem;" >
+            <div class="grab-info" >
                 <div class="grabDetails_title">
-                    <div> <span >抓取编号：</span>{{id}}</div> 
-                    <div v-if="url == '' ">暂无视频～</div>
-                    <div class="grabDetails_border"></div>
+                    <div> <span >抓取编号：</span>{{grabInfo.id}}</div> 
                 </div>
                 <div class="puppets_img">
                     <div class="puppetsList">
-                        <div class="img_body" @click="video = true">
-                            <img :src="img" v-if="url == ''">
-                            <video :src="url" class="play_video" id="video"  :poster="img" v-if="url != ''" @click="show_url"></video>
-                            <img src="../../static/image/weed.png"  class="play_img" v-if="url != ''" @click="show_url" >
+                        <div class="img_body" v-if="grabInfo.url">
+                            <video 
+                            	@click="play"
+                            	id="video"
+                            	x-webkit-airplay="allow" 
+                            	:src="grabInfo.url" 
+                            	class="play_video"  
+                            	webkit-playsinline="true"   
+						      	playsinline="true"
+                            	:poster="grabInfo.img">
+                            </video>
+                            <img src="../../static/image/weed.png" @click="play"  class="play_img">
+                        </div>
+                        <div class="img_body none-video" v-if="!grabInfo.url">
+                        	<img class="none-img" src="../../static/image/none-video.png"  />
+                        	<p class="none-text">暂无视频</p>
                         </div>
                         <div class="grabDetails_msg">
-                            <div>{{productName}}</div>
-                            <div v-if="this.status = 1">抓取失败</div>
-                            <div v-if="this.status = 0" class="succeed">抓取成功</div>
-                            <div style="color:#aaa;">{{createTime}}</div>
+                            <div>{{grabInfo.productName}}</div>
+                            <div v-if="grabInfo.status == 0 ">抓取失败</div>
+                            <div v-if="grabInfo.status == 1 " class="succeed">抓取成功</div>
+                            <div class="time">{{grabInfo.createTime}}</div>
                         </div>
                     </div>
                 </div>
+                <div class="appear-info" v-if="grabInfo.status == 1 && status != 0">
+                	<div class="status">
+                		<span class="tit">申诉状态：</span>
+                		<span class="text" v-if="grabInfo.appeal.status == 0">申诉中</span>
+                		<span class="text" v-if="grabInfo.appeal.status == 1">申诉成功</span>
+                		<span class="text" v-if="grabInfo.appeal.status == 2">申诉失败</span>
+                	</div>
+                	<div class="reason">
+                		<span class="tit">申诉原因：</span>
+                		<span class="text">{{grabInfo.appeal.reason}}</span>
+                		
+                	</div>
+                </div>
             </div>
 
-            <div class="appeal_body"  v-if="this.status = 1 && this.reason == '' ">
-                <div class="appeal_button_body">
-                    <div class="appeal_button" @click="appeal">我要申诉</div>
-                </div>
-
+            <div class="appeal_body"  v-if="grabInfo.status = 1 && !grabInfo.appeal ">
+				<div class="btn-default btn-hover" @click="Actionsheet = true">我要申诉</div>
                 <div class="problem">
                     <p>如果在游戏中遇到以下问题：</p>
-                    <p>1.画面黑屏或定格</p>
-                    <p>2.按键操作失灵</p>
-                    <p>3.爪子卡住动不了</p>
-                    <p>4.游戏中工作人员补货</p>
+                    <p>1. 画面黑屏或定格</p>
+                    <p>2. 按键操作失灵</p>
+                    <p>3. 爪子卡住动不了</p>
+                    <p>4. 游戏中工作人员补货</p>
                 </div>
             </div>
-            
-            <div class="replenishment" v-if="this.reason != ''">
-                <div class="fail" v-if="this.appealStatus == 0">申诉中</div>
-                <div class="fail" v-if="this.appealStatus == 1">申诉成功</div>
-                <div class="fail" v-if="this.appealStatus == 2">申诉失败</div>
-                <div>{{reason}}</div>
-            </div>
-            
-            <div class="replenishment" v-if="this.appealStatus == 1">
-                <div class="fail">处理结果</div>
-                <div class="succeed">28个钻石已退回您的账户</div>
-            </div>
-
         </div>
         <mt-actionsheet
         :actions="actions"
@@ -67,76 +74,55 @@ import { Actionsheet,Indicator } from 'mint-ui';
 export default {
   data () {
     return {
-      Actionsheet: false,
-      id:this.$route.params.id,
-      appeal_body: true,
-      grabDetail:[],
-      results:[],
-      createTime:'',
-      img:'',
-      productName:'',
-      status:'',
-      appealStatus:'',
-      reason:'',
-      serial:'',
-      url:'',
-      play:true,
-      actions:[
-        {name:'画面黑屏或定格',method:this.add},
-        {name:'按键操作失灵',method:this.add},
-        {name:'爪子卡住动不了',method:this.add},
-        {name:'游戏中工作人员补货',method:this.add},
-        ]
+	    Actionsheet: false,
+	    id:this.$route.params.id,
+	    actions:[
+	        {name:'画面黑屏或定格',method:this.add},
+	        {name:'按键操作失灵',method:this.add},
+	        {name:'爪子卡住动不了',method:this.add},
+	        {name:'游戏中工作人员补货',method:this.add},
+        ],
+        // status:'',
+        grabInfo: {},
     }
   },
   created(){
-    let self = this
-    this.$api.grabDetails({
-        id:this.id,
-    }).then(res => {
-        this.url = res.data.url
-        this.createTime = res.data.createTime
-        this.img = res.data.img
-        this.productName = res.data.productName
-        this.status = res.data.status
-        this.reason = res.data.appeal.reason
-        this.appealStatus = res.data.appeal.status
-    }, err => {
-        
-    })
+    this.initData()
   },
   
   methods: {
-    getData(){
+  	play() {
+  		let video = document.getElementById('video')
+  		if(video.paused) {
+  			document.getElementById('video').play()
+  		}else {
+  			document.getElementById('video').pause()
+  		}
+  		
+  	},
+    initData(){
         this.$api.grabDetails({
-            id:this.id,
-        }).then(res => {
-            
-            this.createTime = res.data.createTime
-            this.img = res.data.img
-            this.productName = res.data.productName
-            this.status = res.data.status
-            this.reason = res.data.appeal.reason
-            this.appealStatus = res.data.appeal.status
-            this.url = res.data.url
-        }, err => {
-            
+	        id:this.id,
+	    }).then(res => {
+            this.grabInfo = res.data
+            console.log()
+            // this.status = res.data.status
+	    }, err => {
+	        
         })
-    },
-  	appeal(){
-        this.Actionsheet = true
-    },
-
-    add: function(actions,index){
-        console.log(this.url)
-        Indicator.open('上传中...')
         
+    },
+    add(actions,index) {
+    	Indicator.open()
         this.$api.appeal({
             id: this.id,
             reason: actions.name
         }).then(res => {
-            this.getData()
-            Indicator.close()
+            this.initData()
+            setTimeout(() => {
+            	Indicator.close()
+            },200)
+            
         }, err => {
             Indicator.close()
             
@@ -166,44 +152,65 @@ export default {
     width: 100%;
     height: auto;
     padding: .3rem .3rem;
-    font-size: .3rem;
+    font-size: .28rem;
+}
+.grab-info{
+	border-radius: 0.15rem;
+	background: #FFFFFF;
+	padding: 0.1rem 0.3rem;
+	color: #000;
+	margin-bottom: 0.3rem;
 }
 .grabDetails_title{
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: .2rem .3rem;
-    background-color: #fff;
-    border-radius: 10px 10px 0 0;
+    padding: .15rem 0;
     position: relative;
+    border-bottom:1px solid #f2f2f2;
     span{
         color:#aaa;
     }
-    .grabDetails_border{
-        width: 96%;
-        position: absolute;
-        bottom: 0;
-        left: 2%;
-        border-bottom:solid 1px #eee;
-    }
+    
+}
+.appear-info{
+	padding: 0.3rem 0 0.2rem;
+	border-top:1px solid #f2f2f2;
+	&>div{
+		display: flex;
+	}
+	&>div>span.tit{
+		color: #aaa;
+	}
+	&>div>span.text{
+		flex: 1;
+		overflow: hidden;
+	}
+	.reason{
+		color: #287DF6;
+		padding-top: 0.06rem;
+	}
 }
 .puppets_img{
-    padding: 0 .3rem;
-    background-color: #fff;
-    border-radius: 0 0 10px 10px ;
     .img_body{
         width: 1.8rem;
         height: 1.8rem;
-        // background-color: #ccc;
-        border-radius: 10px;
-        // overflow: hidden;
+        border-radius: 0.15rem;
         margin-right: .3rem;
         position: relative;
         overflow: hidden;
-        img{
-            width: 100%;
-            height: 100%;
-            display: block;
+        &.none-video{
+        	border: 1px solid #f2f2f2;
+        	padding-top: 0.3rem;
+        	background: #eee;
+        }
+        
+        .none-img{
+        	display: block;
+        	width: 100%;
+        }
+        .none-text{
+        	text-align: center;
+        	padding-top: 0.2rem;
+        	font-size: 0.24rem;
         }
         .play_img{
             width: .6rem;
@@ -221,11 +228,16 @@ export default {
 .puppetsList{
     display: flex;
     padding: .3rem 0;
-    font-size:.3rem;
     .grabDetails_msg{
         display: flex;
+        flex: 1;
+        overflow: hidden;
         flex-direction: column;
         justify-content: space-between;
+        .time{
+        	padding-top: 0.25rem;
+        	color: #aaa;
+        }
     }
 }
 .replenishment{
@@ -257,10 +269,14 @@ export default {
         font-weight: 400;
     }
 }
+.appeal_body{
+	padding-top: 0.5rem;
+}
 .problem{
     margin-top: .5rem;
     padding: 0 .35rem;
     color: #999999;
+    font-size: 0.26rem;
     p{
         margin-bottom: .1rem;
     }
@@ -272,6 +288,8 @@ export default {
     width: 100%;
     height: 100%;
     display: block;
+    z-index: 11;
+    border-radius: 0.15rem;
 }
 
 </style>

@@ -2,13 +2,13 @@ import axios from 'axios'
 import storage from './storage'
 import router from '../router'
 
-const APP_ID = 'wxa44aee61d206be4a'
-const APP_SECRET = '82247ce969bf0b7f3e12a636fe87434f'
+const APP_ID = process.env.WEIXIN.APP_ID
+const APP_SECRET = process.env.WEIXIN.APP_SECRET
 
 export default {
     // 认证
     authorize() {
-        let redirect = 'http://192.168.0.61:8080/#/oauth'
+        let redirect = process.env.WEIXIN.REDIRECT_URI
         let authURI = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + APP_ID + '&redirect_uri=' + encodeURIComponent(redirect) + '&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
         window.location.replace(authURI)
     },
