@@ -27,8 +27,8 @@
                         </div>
                         <div class="grabDetails_msg">
                             <div>{{grabInfo.productName}}</div>
-                            <div v-if="this.status = 1">抓取失败</div>
-                            <div v-if="this.status = 0" class="succeed">抓取成功</div>
+                            <div v-if="grabInfo.status">抓取失败</div>
+                            <div v-if="!grabInfo.status" class="succeed">抓取成功</div>
                             <div class="time">{{grabInfo.createTime}}</div>
                         </div>
                     </div>
@@ -48,7 +48,7 @@
                 </div>
             </div>
 
-            <div class="appeal_body"  v-if="grabInfo.status = 1 && !grabInfo.appeal ">
+            <div class="appeal_body"  v-if="grabInfo.status == 1 && !grabInfo.appeal ">
 				<div class="btn-default btn-hover" @click="Actionsheet = true">我要申诉</div>
                 <div class="problem">
                     <p>如果在游戏中遇到以下问题：</p>
@@ -105,6 +105,7 @@ export default {
 	        id:this.id,
 	    }).then(res => {
 	    	this.grabInfo = res.data
+	    	console.log(this.grabInfo)
 	    }, err => {
 	        
 	    })
