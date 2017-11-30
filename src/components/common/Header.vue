@@ -9,6 +9,7 @@
 	        </div>
 	    </div>
 	    <div class="menu-blank" style="height: 0.85rem;"></div>
+	    <slot></slot>
     </div>
 </template>
 
