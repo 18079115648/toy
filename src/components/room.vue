@@ -1,5 +1,7 @@
 <template>
     <div class="app" :style="{ height: wH + 'px' }">
+		<canvas id="frontview" :class="{show:showFront}" :style="{ height: wH + 'px' }"></canvas>
+      	<canvas id="sideview" :class="{show:showSide}" :style="{ height: wH + 'px' }"></canvas>
     	<div class="room-top">
     		<img class="back" src="../../static/image/feee.png" @click="back" />
     		<img class="avatar" src="../../static/image/qd.png"  />
@@ -9,10 +11,10 @@
     		</div>
     		<div class="price">
     			<img src="../../static/image/wd.png"  />
-    			<span class="shadow-text">29</span>
+    			<span class="shadow-text">{{remainGold}}</span>
     		</div>
     	</div>
-    	<img class="view-change" src="../../static/image/dd33.png"  />
+    	<img class="view-change" @click="changeView" src="../../static/image/dd33.png"  />
     	<div class="room-bottom" v-show="!operateShow">
     		<div class="detail">
     			<img src="../../static/image/d122.png"  />
@@ -21,7 +23,7 @@
     		<div class="begin btn-hover" @click="beginGame">
     			<p class="price">
     				<img src="../../static/image/wd.png"  />
-    				<span class="shadow-text">29</span>
+    				<span class="shadow-text">{{remainGold}}</span>
     			</p>
     			<p class="shadow-text begin-text">开始游戏</p>
     		</div>
@@ -32,24 +34,24 @@
     	</div>
     	<div class="operate-area" v-show="operateShow">
     		<div class="operate-direc">
-    			<div class="direction-item left has-box">
+    			<div class="direction-item left has-box" @click="moveDirection(3)">
     				<img class="fullEle com" src="../../static/image/sss33.png"  />
     				<img class="fullEle active" src="../../static/image/qdd.png"  />
     			</div>
-    			<div class="direction-item top has-box">
+    			<div class="direction-item top has-box" @click="moveDirection(1)">
     				<img class="fullEle com" src="../../static/image/fff33.png"  />
     				<img class="fullEle active" src="../../static/image/dd112.png"  />
     			</div>
-    			<div class="direction-item right has-box">
+    			<div class="direction-item right has-box" @click="moveDirection(4)">
     				<img class="fullEle com" src="../../static/image/wfff.png"  />
     				<img class="fullEle active" src="../../static/image/wrwf.png"  />
     			</div>
-    			<div class="direction-item bottom has-box">
+    			<div class="direction-item bottom has-box" @click="moveDirection(2)">
     				<img class="fullEle com" src="../../static/image/adad.png"  />
     				<img class="fullEle active" src="../../static/image/wrqe.png"  />
     			</div>
     		</div>
-    		<div class="operate-click has-box" @click="grabClick">
+    		<div class="operate-click has-box" @click="grab">
     			<img class="fullEle com" src="../../static/image/adada.png"  />
     			<img class="fullEle active" src="../../static/image/wfwfc.png"  />
     		</div>
@@ -94,6 +96,12 @@
 				<img src="../../static/image/qe.png" class="close" @click="closePop" />	
 			</div>
 		</mt-popup>
+
+		<audio id="click-audio" src="../../static/audio/startClickItem.mp3" preload></audio>
+		<audio id="bg-audio" src="../../static/audio/bgm01.mp3" autoplay loop></audio>
+		<audio id="ready-audio" src="../../static/audio/readygo.mp3" preload></audio>
+		<audio id="success-audio" src="../../static/audio/result_succeed.mp3" preload></audio>
+		<audio id="failure-audio" src="../../static/audio/result_failed.mp3" preload></audio>
     </div>
 </template>
 
@@ -102,6 +110,7 @@ import { Toast } from 'mint-ui'
 import accessToken from '../fetch/accessToken'
 import storage from '../fetch/storage'
 import * as SockJS from 'sockjs-client'
+import {} from '../../static/js/jZego-1.0.0'
 
 export default {
 	data() {
@@ -114,14 +123,29 @@ export default {
 	    	succStatus: false, //成功抓到娃娃,
 	    	failStatus: false, //没有抓到娃娃,
 			endTime: 3,
+			remainGold: 0,
 			
 			machineSn: undefined,	// 设备编号
       		sock: undefined,		// socket handler
-      		roomStatus: 1, 			// 1有效中 0空闲
+			roomStatus: 1, 			// 1游戏中 0空闲
+			  
+			zegoRoomId: 'WWJ_ZEGO_12345_54323',
+			zegoAppId: 3177435262,
+			zegoServer: 'ws://106.15.41.49:8181/ws',
+			zegoIdName: '1221',
+			zegoNickName: 'Demon',
+			showFront: true,
+			showSide: false,
+
+			clickAudio: undefined,		// 点击音效
+			readyGoAudio: undefined, 	// 准备音效
+			successAudio: undefined, 	// 抓取成功音效
+			failureAudio: undefined,	// 抓取失败音效
 	    }
 	},
 	created() {
 		this.machineSn = this.$route.query.machineSn
+		// this.machineSn = 'f527008d024800'
 
 		const method = this
 		this.sock = new SockJS(process.env.WEBSOCKET_URL)
@@ -144,10 +168,15 @@ export default {
 		switch(data.cmd) {
 			case 'conn_r':
 				if (data.status !== 200) {
-					alert('房间连接失败，请退出重试')
-					console.error('房间连接失败：' + data.msg)
+					Toast({
+						message: data.msg,
+						position: 'middle',
+						duration: 1500
+					})
 					return;
 				}
+
+				this.roomStatus = data.room_status
 
 				// 自动发送心跳包（30s一次）
 				method.sendHeartBeate()
@@ -161,9 +190,30 @@ export default {
 				break;
 			case 'start_r':
 				console.debug('游戏开始状态')
+				if (data.status === 200) {
+					this.playClickAudio()
+					this.readyGo()	
+					this.remainGold = data.remainGold
+				} else {
+					Toast({
+						message: data.msg,
+						position: 'middle',
+						duration: 1500
+					})
+				}
 				break;
 			case 'grab_r':
 				console.debug('抓取' + (data.value === 1 ? '成功' : '失败'))
+				this.operateShow = false
+				if (data.value === 1) {
+					// 抓取成功
+					this.succStatus = true
+					this.playSuccessAudio()
+				} else {
+					// 抓取失败
+					this.failStatus = true
+					this.playFailureAudio()
+				}
 				break;
 			default:
 				console.debug('message', e.data)
@@ -174,6 +224,50 @@ export default {
 		this.sock.onclose = () => {
 			console.info('close connection')
 		}
+
+
+		const zg = new ZegoClient()
+		zg.config({
+			appid: this.zegoAppId,
+			server: this.zegoServer,
+			idName: this.zegoIdName,
+			nickName: this.zegoNickName
+		})
+
+		this.$api.getZegoToken(this.zegoAppId, this.zegoIdName).then((token) => {
+			zg.login(this.zegoRoomId, 2, token, function(streamList) {
+				if (streamList[0]) {
+					zg.startPlayingStream(streamList[0].stream_id, document.getElementById('sideview'))
+				}
+				if (streamList[1]) {
+					zg.startPlayingStream(streamList[1].stream_id, document.getElementById('frontview'))
+				}
+			}, function(error) {
+				console.info(error)
+				console.error('连接失败:' + error.msg)
+			})
+		})
+
+		
+
+		// 断开连接通知
+		zg.onDisconnect((err) => {
+			alert('服务器断开连接')
+			console.error('房间断开连接[code: ' + err.code + ' , msg: ' + err.msg + ']');
+		})
+
+		// 被踢下线通知
+		zg.onKickOut(() => {
+			alert('被踢出')
+		})
+
+		// 流变更通知
+		zg.onStreamExtraInfoUpdated((streamList) => {
+		})
+
+		// 流信息变更通知
+		zg.onPlayStateUpdate((type, streamId) => {
+		})
 	},
 	mounted() {	
 		this.wH = document.getElementById('app').offsetHeight
@@ -181,45 +275,47 @@ export default {
 	methods: {
 		//点击开始游戏
 		beginGame() {
-//			Toast({
-//			  message: '玩家正在游戏，请稍后！',
-//			  position: 'bottom',
-//			  duration: 1000
-//			});
-			this.readyStatus = true
-			this.readyGo()
-
-	    },
-	    //准备计时
-		readyGo() {
-			this.readyTime = 3
-			this.readyTimer = setInterval(() => {
-				this.readyTime--
-				if(this.readyTime < 1) {
-					this.readyStatus = false
-					this.operateShow = true
-					this.operateCountDown()
-					clearInterval(this.readyTimer)
-				}
-			},1000)
+			this.startGame()
 		},
+
+	    //准备到计时
+		readyGo() {
+			this.readyStatus = true
+			this.readyTime = 3		// 倒计时3秒
+			const parent = this
+			function timeout() {
+				setTimeout(() => {
+					if (parent.readyTime == 1) {
+						parent.readyStatus = false
+						parent.operateShow = true
+						parent.operateCountDown()
+						return
+					}
+					if (parent.readyTime == 2) {
+						parent.playReadyGoAudio()
+					}
+					parent.readyTime--
+					timeout()
+				}, 1000)
+			}
+			timeout()
+		},
+
 		//操作计时
 		operateCountDown() {
 			const self = this
 			this.operateTime = 30
-			this.operateTimer = setInterval(() => {
-				this.operateTime--
-				if(this.operateTime < 1) {
-					self.grabClick()
-				}
-			},1000)
-		},
-		//抓取
-		grabClick(data) {
-			//status 成功或失败
-			this.failStatus = true
-			clearInterval(this.operateTimer)
-			this.resultGo()
+
+			function timeout() {
+				setTimeout(() => {
+					if (this.operateTime < 1) {
+						this.grab()
+						return
+					}
+					this.operateTime--
+					timeout()
+				}, 1000)
+			}
 		},
 		
 		//退出计时
@@ -230,17 +326,20 @@ export default {
 				if(this.endTime < 1) {
 					this.succStatus = false
 					this.failStatus = false
-					this.operateShow = false
 					clearInterval(this.endTimer)
 				}
 			},1000)
 		},
+
+		// 关闭弹窗
 		closePop() {
 			this.succStatus = false
 			this.failStatus = false
 			this.operateShow = false
 			clearInterval(this.endTimer)
 		},
+		
+		// 返回
 		back() {
 			this.$router.go(-1)
 		},
@@ -285,6 +384,7 @@ export default {
 		 * 移动方向（1前2后3左4右）
 		 */
 		moveDirection(direction) {
+			this.playClickAudio()
 			if (this.sock == undefined) {
 				alert('服务器连接失败，请重试')
 				return
@@ -307,9 +407,58 @@ export default {
 			}
 
 			this.sock.send(JSON.stringify({
-				cmd: 'grap',
+				cmd: 'grab',
 				vmc_no: this.machineSn,
 			}))
+		},
+		
+		/**
+		 * 切换视角
+		 */
+		changeView() {
+			this.showFront = !this.showFront
+			this.showSide = !this.showSide
+			this.playClickAudio()
+		},
+
+		/**
+		 * 播放点击音效
+		 */
+		playClickAudio() {
+			if (this.clickAudio === undefined) {
+				this.clickAudio = document.getElementById('click-audio')
+			}
+			this.clickAudio.play()
+		},
+
+		/**
+		 * 播放ReadyGo音效
+		 */
+		playReadyGoAudio() {
+			if (this.readyGoAudio === undefined) {
+				this.readyGoAudio = document.getElementById('ready-audio')
+			}
+			this.readyGoAudio.play()
+		},
+
+		/**
+		 * 播放抓取成功音效
+		 */
+		playSuccessAudio() {
+			if (this.successAudio === undefined) {
+				this.successAudio = document.getElementById('success-audio')
+			}
+			this.successAudio.play()
+		},
+
+		/**
+		 * 播放抓取失败音效
+		 */
+		playFailureAudio() {
+			if (this.failureAudio === undefined) {
+				this.failureAudio = document.getElementById('failure-audio')
+			}
+			this.failureAudio.play()
 		}
 	},
 	
@@ -319,6 +468,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#frontview, #sideview {
+	width: 100%;
+	z-index: -2;
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+#frontview.show, #sideview.show {
+	z-index: 0;
+}
 .app{
 	background: #6d6481 !important;
 	position: relative;
