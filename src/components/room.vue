@@ -4,10 +4,10 @@
       	<canvas id="sideview" :class="{show:showSide}" :style="{ height: wH + 'px' }"></canvas>
     	<div class="room-top">
     		<img class="back" src="../../static/image/feee.png" @click="back" />
-    		<img class="avatar" src="../../static/image/qd.png"  />
+    		<img class="avatar" :src="avatar"  />
     		<div class="room-count shadow-text">
     			<p>当前房间人数</p>
-    			<p>71</p>
+    			<p>{{memberNum}}</p>
     		</div>
     		<div class="price">
     			<img src="../../static/image/wd.png"  />
@@ -16,7 +16,7 @@
     	</div>
     	<img class="view-change" @click="changeView" src="../../static/image/dd33.png"  />
     	<div class="room-bottom" v-show="!operateShow">
-    		<div class="detail">
+    		<div class="detail" @click="goGrabList">
     			<img src="../../static/image/d122.png"  />
     			<p class="shadow-text">详情</p>
     		</div>
@@ -27,7 +27,7 @@
     			</p>
     			<p class="shadow-text begin-text">开始游戏</p>
     		</div>
-    		<div class="rechatge">
+    		<div class="rechatge" @click="goRecharge">
     			<img src="../../static/image/ccc3.png"  />
     			<p class="shadow-text">充值</p>
     		</div>
@@ -75,7 +75,7 @@
 					<a class="check-goods shadow-text">立即查看</a>
 					<p class="operate-btn">
 						<span class="btn-hover">分享好友</span>
-						<span class="btn-hover">再次挑战</span>
+						<span class="btn-hover" @click="beginGame">再次挑战</span>
 					</p>
 					<p class="time">倒计时 {{endTime}}秒</p>
 				</div>
@@ -89,7 +89,7 @@
 					<p class="succ-tip">很遗憾，差点就抓到了！</p>
 					<p class="operate-btn">
 						<span class="btn-hover">分享好友</span>
-						<span class="btn-hover">再次挑战</span>
+						<span class="btn-hover" @click="beginGame">再次挑战</span>
 					</p>
 					<p class="time">倒计时 {{endTime}}秒</p>
 				</div>
@@ -119,17 +119,21 @@ export default {
 	    	readyStatus: false, //readyGO 倒计时3秒弹框
 	    	readyTime: 3,
 	    	operateShow: false, //开始操作
-	    	operateTime: 30, //操作时间
+			operateTime: 30, //操作时间
+			operationTimer: undefined,
 	    	succStatus: false, //成功抓到娃娃,
 	    	failStatus: false, //没有抓到娃娃,
 			endTime: 3,
-			remainGold: 0,
+			remainGold: storage.get('remain_gold'),			// 剩余金币
+			memberNum: 0, 			// 房间人数
+			avatar: storage.get('headUrl'),
 			
 			machineSn: undefined,	// 设备编号
       		sock: undefined,		// socket handler
 			roomStatus: 1, 			// 1游戏中 0空闲
 			  
-			zegoRoomId: 'WWJ_ZEGO_12345_54323',
+			zegoRoomId: 'WWJ_ZEGO_12345_54322',
+			// zegoRoomId: 'sander_21312312312',
 			zegoAppId: 3177435262,
 			zegoServer: 'ws://106.15.41.49:8181/ws',
 			zegoIdName: '1221',
@@ -141,11 +145,14 @@ export default {
 			readyGoAudio: undefined, 	// 准备音效
 			successAudio: undefined, 	// 抓取成功音效
 			failureAudio: undefined,	// 抓取失败音效
+
+			isGame: false,				// 是否游戏中
 	    }
 	},
 	created() {
-		this.machineSn = this.$route.query.machineSn
-		// this.machineSn = 'f527008d024800'
+		// this.machineSn = this.$route.query.machineSn
+		this.memberNum = this.$route.query.num
+		this.machineSn = '117.81.164.129'
 
 		const method = this
 		this.sock = new SockJS(process.env.WEBSOCKET_URL)
@@ -177,6 +184,13 @@ export default {
 				}
 
 				this.roomStatus = data.room_status
+				this.avatar = data.headUrl
+
+				if (data.isGame === 1) {
+					this.operateTime = data.remainSecond
+					this.operateShow = true
+					this.operateCountDown(data.remainSecond)
+				}
 
 				// 自动发送心跳包（30s一次）
 				method.sendHeartBeate()
@@ -191,9 +205,14 @@ export default {
 			case 'start_r':
 				console.debug('游戏开始状态')
 				if (data.status === 200) {
-					this.playClickAudio()
+					this.succStatus = false
+					this.failStatus = false
+					this.operateShow = true
+					this.pauseSuccessAudio()
+					this.pauseFailureAudio()
 					this.readyGo()	
 					this.remainGold = data.remainGold
+					storage.set('remain_gold', data.remainGold)
 				} else {
 					Toast({
 						message: data.msg,
@@ -205,14 +224,13 @@ export default {
 			case 'grab_r':
 				console.debug('抓取' + (data.value === 1 ? '成功' : '失败'))
 				this.operateShow = false
+				clearInterval(this.operationTimer)
 				if (data.value === 1) {
 					// 抓取成功
-					this.succStatus = true
-					this.playSuccessAudio()
+					this.grabSucces()
 				} else {
 					// 抓取失败
-					this.failStatus = true
-					this.playFailureAudio()
+					this.grabFailure()
 				}
 				break;
 			default:
@@ -236,9 +254,9 @@ export default {
 
 		this.$api.getZegoToken(this.zegoAppId, this.zegoIdName).then((token) => {
 			zg.login(this.zegoRoomId, 2, token, function(streamList) {
-				if (streamList[0]) {
-					zg.startPlayingStream(streamList[0].stream_id, document.getElementById('sideview'))
-				}
+				// if (streamList[0]) {
+				// 	zg.startPlayingStream(streamList[0].stream_id, document.getElementById('sideview'))
+				// }
 				if (streamList[1]) {
 					zg.startPlayingStream(streamList[1].stream_id, document.getElementById('frontview'))
 				}
@@ -275,6 +293,7 @@ export default {
 	methods: {
 		//点击开始游戏
 		beginGame() {
+			this.playClickAudio()
 			this.startGame()
 		},
 
@@ -283,12 +302,12 @@ export default {
 			this.readyStatus = true
 			this.readyTime = 3		// 倒计时3秒
 			const parent = this
+			parent.operateCountDown(30)
 			function timeout() {
 				setTimeout(() => {
-					if (parent.readyTime == 1) {
+					if (parent.readyTime === 1) {
 						parent.readyStatus = false
-						parent.operateShow = true
-						parent.operateCountDown()
+						// parent.operateShow = true
 						return
 					}
 					if (parent.readyTime == 2) {
@@ -302,20 +321,18 @@ export default {
 		},
 
 		//操作计时
-		operateCountDown() {
+		operateCountDown(seconds) {
 			const self = this
-			this.operateTime = 30
-
-			function timeout() {
-				setTimeout(() => {
-					if (this.operateTime < 1) {
-						this.grab()
-						return
-					}
-					this.operateTime--
-					timeout()
-				}, 1000)
-			}
+			this.operateTime = seconds
+			const parent = this
+			this.operationTimer = setInterval(() => {
+				if (self.operateTime === 0) {
+					this.grab()
+					clearInterval(parent.operationTimer)
+					return
+				}
+				self.operateTime--
+			}, 1000)
 		},
 		
 		//退出计时
@@ -323,7 +340,7 @@ export default {
 			this.endTime = 3
 			this.endTimer = setInterval(() => {
 				this.endTime--
-				if(this.endTime < 1) {
+				if(this.endTime === 1) {
 					this.succStatus = false
 					this.failStatus = false
 					clearInterval(this.endTimer)
@@ -384,6 +401,18 @@ export default {
 		 * 移动方向（1前2后3左4右）
 		 */
 		moveDirection(direction) {
+			if (this.showSide) {
+				if (direction === 1) {
+					direction = 4
+				} else if (direction === 2) {
+					direction = 3
+				} else if (direction === 3) {
+					direction = 1
+				} else if (direction === 4) {
+					direction = 2
+				}
+			}
+
 			this.playClickAudio()
 			if (this.sock == undefined) {
 				alert('服务器连接失败，请重试')
@@ -452,6 +481,15 @@ export default {
 		},
 
 		/**
+		 * 暂停抓取成功音乐
+		 */
+		pauseSuccessAudio() {
+			if (this.successAudio != undefined) {
+				this.successAudio.load()
+			}
+		},
+
+		/**
 		 * 播放抓取失败音效
 		 */
 		playFailureAudio() {
@@ -459,6 +497,71 @@ export default {
 				this.failureAudio = document.getElementById('failure-audio')
 			}
 			this.failureAudio.play()
+		},
+
+		/**
+		 * 暂停抓取失败音效
+		 */
+		pauseFailureAudio() {
+			if (this.failureAudio != undefined) {
+				this.failureAudio.load()
+			}
+		},
+
+		/**
+		 * 去充值
+		 */
+		goRecharge() {
+			this.$router.push('/recharge')
+		},
+
+		/**
+		 * 去抓取记录
+		 */
+		goGrabList() {
+			this.$router.push('/grabList')
+		},
+
+		/**
+		 * 抓取成功
+		 */
+		grabSucces() {
+			this.succStatus = true
+			this.playSuccessAudio()
+			this.endTime = 3
+			const parent = this
+			function timeout() {
+				setTimeout(() => {
+					if (parent.endTime === 1) {
+						parent.succStatus = true
+						return
+					}
+					parent.endTime--
+					timeout()
+				})
+			}
+			timeout()
+		},
+
+		/**
+		 * 抓取失败
+		 */
+		grabFailure() {
+			this.failStatus = true
+			this.playFailureAudio()
+			this.endTime = 3
+			const parent = this
+			function timeout() {
+				setTimeout(function() {
+					if (parent.endTime === 1) {
+						parent.failStatus = false
+						return
+					}
+					parent.endTime--
+					timeout()
+				}, 1000)
+			}
+			timeout()
 		}
 	},
 	

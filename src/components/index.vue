@@ -33,18 +33,18 @@
     	<div class="toys-content">
     		<Pagination :render="render" :param="pagination" :autoload="false" ref="pagination" uri="/dm-api/home/tag">
 					<div class="toys-list" v-show="pagination.content.length>0">
-			    	<router-link :to='"/room?machineSn="+item.machineSn' class="toys-item" v-for="(item, index) in pagination.content" :key="index">
-			    		<img class="toys-img" :src="item.imgs[0]"  />
-			    		<div class="toys-status" :class="[item.statusClass]">{{item.statusText}}</div>
-			    		<div class="toys-info">
-			    			<p class="join-count">
-				    			<img class="icon" src="../../static/image/wd.png" />
-				    			<span class="shadow-text">{{item.price}}</span>
-				    		</p>
-				    		<p class="toys-name shadow-text">{{item.name}}</p>
-			    		</div>	
-			    	</router-link>
-			    </div>
+						<router-link :to='"/room?machineSn="+item.machineSn+"&num="+item.num' class="toys-item" v-for="(item, index) in pagination.content" :key="index">
+							<img class="toys-img" :src="item.imgs[0]"  />
+							<div class="toys-status" :class="[item.statusClass]">{{item.statusText}}</div>
+							<div class="toys-info">
+								<p class="join-count">
+									<img class="icon" src="../../static/image/wd.png" />
+									<span class="shadow-text">{{item.price}}</span>
+								</p>
+								<p class="toys-name shadow-text">{{item.name}}</p>
+							</div>	
+						</router-link>
+					</div>
 				</Pagination>
 		    <div class="no_msg" v-show="pagination.content.length<1 && pagination.loadEnd">
 		        <img src="../../static/image/ewd.png"  />
