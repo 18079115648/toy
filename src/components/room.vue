@@ -132,8 +132,8 @@ export default {
       		sock: undefined,		// socket handler
 			roomStatus: 1, 			// 1游戏中 0空闲
 			  
-			zegoRoomId: 'WWJ_ZEGO_12345_54322',
-			// zegoRoomId: 'sander_21312312312',
+			// zegoRoomId: 'WWJ_ZEGO_12345_54323',
+			zegoRoomId: 'sander_21312312312',
 			zegoAppId: 3177435262,
 			zegoServer: 'ws://106.15.41.49:8181/ws',
 			zegoIdName: '1221',
@@ -150,9 +150,9 @@ export default {
 	    }
 	},
 	created() {
-		// this.machineSn = this.$route.query.machineSn
+		this.machineSn = this.$route.query.machineSn
 		this.memberNum = this.$route.query.num
-		this.machineSn = '117.81.164.129'
+		// this.machineSn = '117.81.164.129'
 
 		const method = this
 		this.sock = new SockJS(process.env.WEBSOCKET_URL)
@@ -254,12 +254,16 @@ export default {
 
 		this.$api.getZegoToken(this.zegoAppId, this.zegoIdName).then((token) => {
 			zg.login(this.zegoRoomId, 2, token, function(streamList) {
-				// if (streamList[0]) {
-				// 	zg.startPlayingStream(streamList[0].stream_id, document.getElementById('sideview'))
-				// }
-				if (streamList[1]) {
-					zg.startPlayingStream(streamList[1].stream_id, document.getElementById('frontview'))
-				}
+				streamList.forEach((item) => {
+					console.info(item.stream_id)
+					if (item.stream_id.endsWith('_2')) {
+						zg.startPlayingStream(item.stream_id, document.getElementById('sideview'))
+					} else {
+						zg.startPlayingStream(item.stream_id, document.getElementById('frontview'))
+					}
+				})
+				// zg.startPlayingStream(streamList[1].stream_id, document.getElementById('sideview'))
+				// zg.startPlayingStream(streamList[0].stream_id, document.getElementById('frontview'))
 			}, function(error) {
 				console.info(error)
 				console.error('连接失败:' + error.msg)
