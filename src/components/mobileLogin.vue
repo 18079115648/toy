@@ -1,6 +1,8 @@
 <template>
     <div class="app" id="app" :style="{ height: wH + 'px' }">
-    	<Header title="抓娃娃"></Header>
+    	<Header title="">
+    		<img class="logo-text" src="../../static/image/logo-text.png" />
+    	</Header>
     	<div class="login-content">
     		<div class="input-item">
     			<img class="icon phone" src="../../static/image/5.png" />
@@ -141,6 +143,14 @@ export default {
 	position: relative;
 	height: 100vh;
 } 
+.logo-text{
+	position: fixed;
+	height: 0.66rem;
+	top: 0.1rem;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 15;
+}
 .login-content{
 	padding: 2rem 0.95rem 2rem;
 	.input-item{

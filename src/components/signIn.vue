@@ -115,6 +115,11 @@ export default {
 		},
 		sign() {
 			if(!this.signStatus) {
+				Toast({
+				  message: '今天已签到',
+				  position: 'bottom',
+				  duration: 1000
+				});
 				return
 			}
 			Indicator.open()

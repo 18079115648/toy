@@ -597,6 +597,7 @@ export default {
 	align-items: center;
 	padding: 0.2rem;
 	color: #fff;
+	background: #6d6481;
 	.back{
 		width: 1rem;
 		margin-right: 0.2rem;
@@ -641,6 +642,7 @@ export default {
 	padding: 0.1rem;
 	color: #fff;
 	font-size: 0.3rem;
+	background: #6d6481;
 	&>div{
 		background: rgba(0,0,0,0.2);
 		border-radius: 0.2rem;
