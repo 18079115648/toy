@@ -6,13 +6,13 @@
                 <div class="set_list">
                     <div>背景音乐</div>
                     <div>
-                        <mt-switch @change="pushSwitch" v-model="music"></mt-switch>
+                        <mt-switch @change="changeMusicSwitch" v-model="music"></mt-switch>
                     </div>
                 </div>
                 <div class="set_list" style="border:none;">
                     <div >背景音效</div>
                     <div>
-                        <mt-switch @change="pushSwitch" v-model="sound"></mt-switch>
+                        <mt-switch @change="changeSoundSwitch" v-model="sound"></mt-switch>
                     </div>
                 </div>
             </div>
@@ -32,6 +32,7 @@
 <script>
 
 import { Switch } from 'mint-ui';
+import storage from '../fetch/storage'
 export default {
   data () {
     return {
@@ -40,12 +41,28 @@ export default {
         sound:true,
     }
   },
+  created() {
+      if (storage.get('music_switch') != null) {
+          this.music = storage.get('music_switch')
+      }
+      if (storage.get('sound_switch') != null) {
+          this.sound = storage.get('sound_switch')
+      }
+  },
   methods: {
-    pushSwitch(){
-        console.log(this.push)
-        console.log(this.music)
-        console.log(this.sound)
+    /**
+     * 背景音乐开关
+     */
+    changeMusicSwitch(){
+        storage.set('music_switch', this.music)
     },
+    /**
+     * 背景音效开关
+     */
+    changeSoundSwitch() {
+        storage.set('sound_switch', this.sound)
+    },
+
     intoUs(){
         this.$router.push('/aboutUs')
     }

@@ -1,5 +1,10 @@
 <template>
     <div class="app" :style="{ height: wH + 'px' }">
+		<div class="loading" v-if="showLoading">
+			<div class="progress">
+				<mt-progress :value="loadingProgress" :bar-height="6"></mt-progress>
+			</div>
+		</div>
 		<canvas id="frontview" :class="{show:showFront}" :style="{ height: wH + 'px' }"></canvas>
       	<canvas id="sideview" :class="{show:showSide}" :style="{ height: wH + 'px' }"></canvas>
     	<div class="room-top">
@@ -14,7 +19,7 @@
     			<span class="shadow-text">{{remainGold}}</span>
     		</div>
     	</div>
-    	<img class="view-change" @click="changeView" src="../../static/image/dd33.png"  />
+    	<img class="view-change" v-if="isGame" @click="changeView" src="../../static/image/dd33.png"  />
     	<div class="room-bottom" v-show="!operateShow">
     		<div class="detail" @click="goGrabList">
     			<img src="../../static/image/d122.png"  />
@@ -25,13 +30,15 @@
     				<img src="../../static/image/wd.png"  />
     				<span class="shadow-text">{{remainGold}}</span>
     			</p>
-    			<p class="shadow-text begin-text">开始游戏</p>
+    			<p class="shadow-text begin-text" :class="{enabled: roomStatus == 0}">开始游戏</p>
     		</div>
     		<div class="rechatge" @click="goRecharge">
     			<img src="../../static/image/ccc3.png"  />
     			<p class="shadow-text">充值</p>
     		</div>
     	</div>
+
+		<!-- 操作区域 -->
     	<div class="operate-area" v-show="operateShow">
     		<div class="operate-direc">
     			<div class="direction-item left has-box" @click="moveDirection(3)">
@@ -58,6 +65,7 @@
     		<div class="count-dowm shadow-text">倒计时 {{operateTime}}秒</div>
     	</div>
     	
+		<!-- 准备开始页面 -->
     	<mt-popup v-model="readyStatus" :closeOnClickModal="false">
 			<div class="ready-time shadow-text">
 				<p>即将开始</p>
@@ -65,6 +73,7 @@
 			</div>
 		</mt-popup>
 		
+		<!-- 抓取成功提示页面 -->
 		<mt-popup v-model="succStatus" class="pop" :closeOnClickModal="false">
 			<div class="succ-content">
 				<div class="goods-img">
@@ -72,7 +81,7 @@
 				</div>
 				<div class="shadow-text" style="text-align: center; color: #fff;">
 					<p class="succ-tip">太棒了，抓到娃娃了耶！</p>
-					<a class="check-goods shadow-text">立即查看</a>
+					<a class="check-goods shadow-text" @click="toToysPocket">立即查看</a>
 					<p class="operate-btn">
 						<span class="btn-hover">分享好友</span>
 						<span class="btn-hover" @click="beginGame">再次挑战</span>
@@ -83,6 +92,7 @@
 			</div>
 		</mt-popup>
 		
+		<!-- 抓取失败提示页面 -->
 		<mt-popup v-model="failStatus" class="pop" :closeOnClickModal="false">
 			<div class="fail-content">
 				<div class="shadow-text" style="text-align: center; color: #fff;">
@@ -96,17 +106,11 @@
 				<img src="../../static/image/qe.png" class="close" @click="closePop" />	
 			</div>
 		</mt-popup>
-
-		<audio id="click-audio" src="../../static/audio/startClickItem.mp3" preload></audio>
-		<audio id="bg-audio" src="../../static/audio/bgm01.mp3" autoplay loop></audio>
-		<audio id="ready-audio" src="../../static/audio/readygo.mp3" preload></audio>
-		<audio id="success-audio" src="../../static/audio/result_succeed.mp3" preload></audio>
-		<audio id="failure-audio" src="../../static/audio/result_failed.mp3" preload></audio>
     </div>
 </template>
 
 <script>
-import { Toast } from 'mint-ui'
+import { Toast, Progress, MessageBox } from 'mint-ui'
 import accessToken from '../fetch/accessToken'
 import storage from '../fetch/storage'
 import * as SockJS from 'sockjs-client'
@@ -115,186 +119,237 @@ import {} from '../../static/js/jZego-1.0.0'
 export default {
 	data() {
 	    return {
-	    	wH: 0,
-	    	readyStatus: false, //readyGO 倒计时3秒弹框
-	    	readyTime: 3,
-	    	operateShow: false, //开始操作
-			operateTime: 30, //操作时间
-			operationTimer: undefined,
-	    	succStatus: false, //成功抓到娃娃,
-	    	failStatus: false, //没有抓到娃娃,
-			endTime: 3,
-			remainGold: storage.get('remain_gold'),			// 剩余金币
-			memberNum: 0, 			// 房间人数
-			avatar: storage.get('headUrl'),
+	    	wH: 0,							// 页面高度
+	    	readyStatus: false, 			//readyGO 倒计时3秒弹框
+	    	readyTime: 3,					// 准备倒计时（3秒）
+	    	operateShow: false, 			// 操作区域显示标志位
+			operateTime: 30, 				// 抓取操作倒计时
+			operationTimer: undefined,		// 抓取操作倒计时句柄
+	    	succStatus: false, 				// 成功抓到娃娃,
+	    	failStatus: false, 				// 没有抓到娃娃,
+			endTime: 3,						// 抓取结果展示倒计时
+			remainGold: storage.get('remain_gold'),	// 剩余金币
+			memberNum: 0, 					// 房间人数
+			avatar: storage.get('headUrl'), // 头像
 			
-			machineSn: undefined,	// 设备编号
-      		sock: undefined,		// socket handler
-			roomStatus: 1, 			// 1游戏中 0空闲
+			machineSn: undefined,			// 设备编号
+      		sock: undefined,				// socket handler
+			roomStatus: 0, 					// 1游戏中 0空闲
 			  
 			// zegoRoomId: 'WWJ_ZEGO_12345_54323',
-			zegoRoomId: 'sander_21312312312',
-			zegoAppId: 3177435262,
-			zegoServer: 'ws://106.15.41.49:8181/ws',
-			zegoIdName: '1221',
-			zegoNickName: 'Demon',
-			showFront: true,
-			showSide: false,
+			zg: undefined,								// zego对象
+			zegoRoomId: 'sander_21312312312',			// 房间号
+			zegoAppId: 3177435262,						// 应用编号
+			zegoServer: 'ws://106.15.41.49:8181/ws',	// 服务器地址
+			zegoIdName: '1221',							// 用户编号
+			zegoNickName: 'Demon',						// 昵称
+			showFront: true,							// 显示正摄像头
+			showSide: false,							// 显示副摄像头
 
+			frontStreamId: undefined,		// 正面视频流编号
+			sideStreamId: undefined,		// 侧面视频流编号
+
+			bgAudio: undefined,			// 背景音效
 			clickAudio: undefined,		// 点击音效
 			readyGoAudio: undefined, 	// 准备音效
 			successAudio: undefined, 	// 抓取成功音效
 			failureAudio: undefined,	// 抓取失败音效
+			loadCount: 0,				// 加载统计
 
 			isGame: false,				// 是否游戏中
+
+			musicSwitch: true,			// 背景音乐开关
+			soundSwitch: true,			// 背景音效开关
+
+			loadingProgress: 0,			// 进度
+			showLoading: true,			// 显示加载页面
 	    }
 	},
-	created() {
-		this.machineSn = this.$route.query.machineSn
-		this.memberNum = this.$route.query.num
-		// this.machineSn = '117.81.164.129'
-
-		const method = this
-		this.sock = new SockJS(process.env.WEBSOCKET_URL)
-
-		// 打开成功连接
-		this.sock.onopen = () => {
-			console.debug('连接成功')
-			this.sock.send(JSON.stringify({
-				cmd: 'conn',
-				headUrl: storage.get('headUrl'),
-				token: accessToken.getAccessToken(),
-				vmc_no: this.machineSn
-			}))
-		}
-
-		// 接收数据
-		this.sock.onmessage = (e) => {
-		
-		let data = JSON.parse(e.data)
-		switch(data.cmd) {
-			case 'conn_r':
-				if (data.status !== 200) {
-					Toast({
-						message: data.msg,
-						position: 'middle',
-						duration: 1500
-					})
-					return;
-				}
-
-				this.roomStatus = data.room_status
-				this.avatar = data.headUrl
-
-				if (data.isGame === 1) {
-					this.operateTime = data.remainSecond
-					this.operateShow = true
-					this.operateCountDown(data.remainSecond)
-				}
-
-				// 自动发送心跳包（30s一次）
-				method.sendHeartBeate()
-				console.debug('连接服务器成功')
-				break;
-			case 'hb_r':
-				console.debug('心跳包答复')
-				break;
-			case 'status':
-				console.debug('游戏状态更新')
-				break;
-			case 'start_r':
-				console.debug('游戏开始状态')
-				if (data.status === 200) {
-					this.succStatus = false
-					this.failStatus = false
-					this.operateShow = true
-					this.pauseSuccessAudio()
-					this.pauseFailureAudio()
-					this.readyGo()	
-					this.remainGold = data.remainGold
-					storage.set('remain_gold', data.remainGold)
-				} else {
-					Toast({
-						message: data.msg,
-						position: 'middle',
-						duration: 1500
-					})
-				}
-				break;
-			case 'grab_r':
-				console.debug('抓取' + (data.value === 1 ? '成功' : '失败'))
-				this.operateShow = false
-				clearInterval(this.operationTimer)
-				if (data.value === 1) {
-					// 抓取成功
-					this.grabSucces()
-				} else {
-					// 抓取失败
-					this.grabFailure()
-				}
-				break;
-			default:
-				console.debug('message', e.data)
-				break;
-			}
-		}
-
-		this.sock.onclose = () => {
-			console.info('close connection')
-		}
-
-
-		const zg = new ZegoClient()
-		zg.config({
-			appid: this.zegoAppId,
-			server: this.zegoServer,
-			idName: this.zegoIdName,
-			nickName: this.zegoNickName
-		})
-
-		this.$api.getZegoToken(this.zegoAppId, this.zegoIdName).then((token) => {
-			zg.login(this.zegoRoomId, 2, token, function(streamList) {
-				streamList.forEach((item) => {
-					console.info(item.stream_id)
-					if (item.stream_id.endsWith('_2')) {
-						zg.startPlayingStream(item.stream_id, document.getElementById('sideview'))
-					} else {
-						zg.startPlayingStream(item.stream_id, document.getElementById('frontview'))
-					}
-				})
-				// zg.startPlayingStream(streamList[1].stream_id, document.getElementById('sideview'))
-				// zg.startPlayingStream(streamList[0].stream_id, document.getElementById('frontview'))
-			}, function(error) {
-				console.info(error)
-				console.error('连接失败:' + error.msg)
-			})
-		})
-
-		
-
-		// 断开连接通知
-		zg.onDisconnect((err) => {
-			alert('服务器断开连接')
-			console.error('房间断开连接[code: ' + err.code + ' , msg: ' + err.msg + ']');
-		})
-
-		// 被踢下线通知
-		zg.onKickOut(() => {
-			alert('被踢出')
-		})
-
-		// 流变更通知
-		zg.onStreamExtraInfoUpdated((streamList) => {
-		})
-
-		// 流信息变更通知
-		zg.onPlayStateUpdate((type, streamId) => {
-		})
+	created() {	
+		// 机器编号
+		this.machineSn = this.$route.query.machineSn 	
+		// 房间人数
+		this.memberNum = this.$route.query.num			
+		// 获取金币
+		this.getGold()
+		// 加载音频资源
+		this.loadAudios()
+		// 初始化socket
+		this.initWebSocket()
+		// 即构推流初始化
+		this.initZego()
 	},
 	mounted() {	
 		this.wH = document.getElementById('app').offsetHeight
 	},
 	methods: {
+		// 初始化socket
+		initWebSocket() {
+			this.sock = new SockJS(process.env.WEBSOCKET_URL)
+
+			const parent = this
+
+			// 打开成功连接
+			this.sock.onopen = () => {
+				this.sock.send(JSON.stringify({
+					cmd: 'conn',
+					headUrl: storage.get('headUrl'),
+					token: accessToken.getAccessToken(),
+					vmc_no: this.machineSn
+				}))
+			}
+
+			// 接收数据
+			this.sock.onmessage = (e) => {
+				let data = JSON.parse(e.data)
+				switch(data.cmd) {
+					case 'conn_r':
+						if (data.status !== 200) {
+							Toast({
+								message: data.msg,
+								position: 'middle',
+								duration: 1500
+							})
+							return;
+						}
+
+						this.roomStatus = data.room_status
+						// this.avatar = data.headUrl
+
+						if (data.isGame === 1) {
+							this.operateTime = data.remainSecond
+							this.operateShow = true
+							this.isGame = true
+							this.startSideStream()
+							this.operateCountDown(data.remainSecond)
+						}
+
+						// 自动发送心跳包（30s一次）
+						this.sendHeartBeate()
+						console.debug('连接服务器成功')
+						break;
+					case 'hb_r':
+						console.debug('心跳包答复')
+						break;
+					case 'status':
+						console.debug('游戏状态更新')
+						this.roomStatus = data.gameStatus
+						if (data.gameStatus === 1) {
+							this.avatar = data.headUrl
+						}
+						break;
+					case 'start_r':
+						console.debug('游戏开始状态')
+						if (data.status === 200) {
+							this.succStatus = false
+							this.failStatus = false
+							this.operateShow = true
+							this.isGame = true
+							this.startSideStream()
+							this.pauseSuccessAudio()
+							this.pauseFailureAudio()
+							this.readyGo()	
+							this.remainGold = data.remainGold
+							storage.set('remain_gold', data.remainGold)
+						} else {
+							Toast({
+								message: data.msg,
+								position: 'middle',
+								duration: 1500
+							})
+						}
+						break;
+					case 'grab_r':
+						console.debug('抓取' + (data.value === 1 ? '成功' : '失败'))
+						this.operateShow = false
+						this.isGame = false
+						this.closeSideStream()
+						this.showFront = true
+						this.showSide = false
+						clearInterval(this.operationTimer)
+						if (data.value === 1) {
+							// 抓取成功
+							this.grabSucces()
+						} else {
+							// 抓取失败
+							this.grabFailure()
+						}
+						break;
+					default:
+						console.debug('message', e.data)
+						break;
+				}
+			}
+			this.sock.onclose = () => {
+				console.info('关闭socket')
+			}
+		},
+
+		// 即构推流初始化
+		initZego() {
+			this.zg = new ZegoClient()
+			this.zg.config({
+				appid: this.zegoAppId,
+				server: this.zegoServer,
+				idName: this.zegoIdName,
+				nickName: this.zegoNickName
+			})
+
+			const parent = this
+
+			// 获取token
+			this.$api.getZegoToken(this.zegoAppId, this.zegoIdName).then((token) => {
+				// 登录房间
+				this.zg.login(this.zegoRoomId, 2, token, (streamList) => {
+					streamList.forEach((item) => {
+						// 设置音量0
+						parent.zg.setPlayVolume(item.stream_id, 0)
+						if (item.stream_id.endsWith('_2')) {
+							parent.sideStreamId = item.stream_id
+							// 只有游戏中才开始播放侧边视频流，观众模式播放侧边视频流
+							this.isGame && parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'))
+						} else {
+							parent.frontStreamId = item.stream_id
+							parent.zg.startPlayingStream(item.stream_id, document.getElementById('frontview'))
+						}
+					})
+				}, (error) => {
+					console.error('连接失败:' + error.msg)
+				})
+			})
+
+			// 房间连接断开通知
+			this.zg.onDisconnect((err) => {
+				console.error('房间断开连接[code: ' + err.code + ' , msg: ' + err.msg + ']')
+				MessageBox.alert('连接断开，退出房间').then(action => {
+					this.$router.push('/index')
+				})
+			})
+
+			// 被踢下线通知
+			this.zg.onKickOut((err) => {
+				console.error('被踢下线通知[code: ' + err.code + ' , msg: ' + err.msg + ']')
+				MessageBox.alert('账号冲突，退出房间').then(action => {
+					this.$router.push('/index')
+				})
+			})
+
+			// 流更新通知
+			this.zg.onStreamUpdated((type, streamList) => {
+				console.info('流更新通知')
+			})
+
+			// 流状态变更通知
+			this.zg.onStreamExtraInfoUpdated((streamList) => {
+				console.info("流状态变更通知")
+			})
+
+			// 流信息变更通知
+			this.zg.onPlayStateUpdate((type, streamId) => {
+				console.info('流' + streamId + ', 状态：' + type)
+			})
+		},
+
 		//点击开始游戏
 		beginGame() {
 			this.playClickAudio()
@@ -458,58 +513,42 @@ export default {
 		 * 播放点击音效
 		 */
 		playClickAudio() {
-			if (this.clickAudio === undefined) {
-				this.clickAudio = document.getElementById('click-audio')
-			}
-			this.clickAudio.play()
+			this.soundSwitch && this.clickAudio.play()
 		},
 
 		/**
 		 * 播放ReadyGo音效
 		 */
 		playReadyGoAudio() {
-			if (this.readyGoAudio === undefined) {
-				this.readyGoAudio = document.getElementById('ready-audio')
-			}
-			this.readyGoAudio.play()
+			this.soundSwitch && this.readyGoAudio.play()
 		},
 
 		/**
 		 * 播放抓取成功音效
 		 */
 		playSuccessAudio() {
-			if (this.successAudio === undefined) {
-				this.successAudio = document.getElementById('success-audio')
-			}
-			this.successAudio.play()
+			this.soundSwitch && this.successAudio.play()
 		},
 
 		/**
 		 * 暂停抓取成功音乐
 		 */
 		pauseSuccessAudio() {
-			if (this.successAudio != undefined) {
-				this.successAudio.load()
-			}
+			this.successAudio.load()
 		},
 
 		/**
 		 * 播放抓取失败音效
 		 */
 		playFailureAudio() {
-			if (this.failureAudio === undefined) {
-				this.failureAudio = document.getElementById('failure-audio')
-			}
-			this.failureAudio.play()
+			this.soundSwitch && this.failureAudio.play()
 		},
 
 		/**
 		 * 暂停抓取失败音效
 		 */
 		pauseFailureAudio() {
-			if (this.failureAudio != undefined) {
-				this.failureAudio.load()
-			}
+			this.failureAudio.load()
 		},
 
 		/**
@@ -537,12 +576,12 @@ export default {
 			function timeout() {
 				setTimeout(() => {
 					if (parent.endTime === 1) {
-						parent.succStatus = true
+						parent.succStatus = false
 						return
 					}
 					parent.endTime--
 					timeout()
-				})
+				}, 1000)
 			}
 			timeout()
 		},
@@ -566,9 +605,115 @@ export default {
 				}, 1000)
 			}
 			timeout()
+		},
+
+		/**
+		 * 获取金币
+		 */
+		getGold() {
+			this.$api.userInfo().then(response => {
+				this.remainGold = response.data.money
+				this.avatar = response.data.avatar
+			})
+		},
+
+		/**
+		 * 跳转娃娃袋
+		 */
+		toToysPocket() {
+			this.$router.push('/toysBox')
+		},
+
+		/**
+		 * 加载完成检查
+		 */
+		loadCheck() {
+			this.loadCount++
+			if (this.loadCount === 5) {
+				this.bgAudio.play()
+				this.showLoading = false
+			}
+			this.loadingProgress = this.loadCount * 100 / 5
+		},
+
+		/**
+		 * 加载音频资源
+		 */
+		loadAudios() {
+			// 控制音乐和音效
+			if (storage.get('music_switch') != null) {
+				this.musicSwitch = storage.get('music_switch')
+			}
+			if (storage.get('sound_switch') != null) {
+				this.soundSwitch = storage.get('sound_switch')
+			}
+
+			const parent = this
+			
+			// 背景音乐
+			this.bgAudio = new Audio()
+			this.bgAudio.src = '../../static/audio/bgm02.mp3'
+			this.bgAudio.onloadedmetadata = function() {
+				console.info('背景音乐加载完成')
+				parent.loadCheck()
+			}
+
+			// 点击音效
+			this.clickAudio = new Audio()
+			this.clickAudio.src = '../../static/audio/startClickItem.mp3'
+			this.clickAudio.onloadedmetadata = function() {
+				console.info('点击音乐加载完成')
+				parent.loadCheck()
+			}
+
+			// 准备音效
+			this.readyGoAudio = new Audio()	
+			this.readyGoAudio.src = '../../static/audio/readygo.mp3'
+			this.readyGoAudio.onloadedmetadata = function() {
+				console.info('准备音乐加载完成')
+				parent.loadCheck()
+			}
+
+			// 抓取成功音效
+			this.successAudio = new Audio()	
+			this.successAudio.src = '../../static/audio/result_succeed.mp3'
+			this.successAudio.onloadedmetadata = function() {
+				console.info('抓取成功音效加载完成')
+				parent.loadCheck()
+			}
+
+			// 抓取失败音效
+			this.failureAudio = new Audio()
+			this.failureAudio.src = '../../static/audio/result_failed.mp3'
+			this.failureAudio.onloadedmetadata = function() {
+				console.info('抓取失败音效加载完成')
+				parent.loadCheck()
+			}
+		},
+
+		/**
+		 * 关闭侧边视频
+		 */
+		closeSideStream() {
+			this.zg.stopPlayingStream(this.sideStreamId)
+		},
+
+		/**
+		 * 播放侧边视频
+		 */
+		startSideStream() {
+			this.zg.startPlayingStream(this.sideStreamId, document.getElementById('sideview'))
+			this.zg.setPlayVolume(this.sideStreamId, 0)
 		}
 	},
-	
+
+	beforeDestroy() {
+		// 关闭背景音量
+		this.bgAudio && this.bgAudio.load()
+
+		// 释放即构资源
+		// this.zg.release()
+	}
 
 		
 }
@@ -585,12 +730,28 @@ export default {
 #frontview.show, #sideview.show {
 	z-index: 0;
 }
+.loading {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	background: rgba(0, 0, 0, 0.7);
+	// opacity: 0.5;
+	z-index: 2;
+}
+.progress {
+	width: 80%;
+	height: 60px;
+	margin: 300px auto 0;
+}
 .app{
 	background: #6d6481 !important;
 	position: relative;
 	height: 100vh;
 	display: flex;
 	flex-direction: column;
+	font-weight: 700;
 } 
 .room-top{
 	position: absolute;
