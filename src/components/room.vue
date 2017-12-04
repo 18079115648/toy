@@ -105,6 +105,53 @@
 		<audio id="ready-audio" src='../static/audio/readygo.mp3' preload></audio>
 		<audio id="success-audio" src='../static/audio/result_succeed.mp3' preload></audio>
 		<audio id="failure-audio" src='../static/audio/result_failed.mp3' preload></audio>
+
+		<!-- 详情页面 -->
+		<mt-popup v-model="roomDetail" class="pop">
+			<div class="detail-content">
+				<div class="tit">抓取记录</div>
+				<div class="grab-list">
+					<Pagination :render="render" :param="pagination"  ref="pagination" uri="/dm-api/doll/log/room" >
+						<div class="grab-item" v-for="(item, index) in pagination.content" :key="index">
+							<img class="avatar" :src="item.avatar" />
+							<div class="grab-text">
+								<p class="name">{{item.nickname}}</p>
+								<p class="status">
+									<span v-if="item.status">抓取失败</span>
+									<span v-if="!item.status" style="color: #EA7B97;">抓取成功</span>
+								</p>
+							</div>
+							<div class="grab-time">{{item.createTime.split(' ')[0]}}<br>{{item.createTime.split(' ')[1]}}</div>
+						</div>
+						<div class="no_msg" v-show="pagination.content.length<1 && pagination.loadEnd">
+					        <img src="../../static/image/wfdfc.png">
+				            <div>暂无抓取数据~</div>
+					    </div>	   
+					</Pagination>
+				</div>
+				<img src="../../static/image/x.png" class="close" @click="closeGrabList" />	
+			</div>
+		</mt-popup>
+		<!-- 充值页面 -->
+		<!--<mt-popup v-model="rechargeStatus" class="pop">
+			<div class="recharge-content">
+				<div class="recharge-list">
+					<div class="recharge-item" v-for="(item, index) in rechargeList" :key="index">
+		                <div class="recharge_left">
+		                    <img class="diamond-icon" src="../../static/image/wd.png">
+		                    <span >{{item.money}}</span>
+		                </div>
+		                <div class="recharge_center">
+		                    <div>{{item.desc}}</div>
+		                </div>
+		                <div class="recharge_right">
+		                    &yen; {{item.price}}
+		                </div>
+		            </div>
+				</div>
+				<img src="../../static/image/x.png" class="close" @click="rechargeStatus = false" />	
+			</div>
+		</mt-popup>-->
     </div>
 </template>
 
@@ -160,6 +207,23 @@ export default {
 
 			musicSwitch: true,			// 背景音乐开关
 			soundSwitch: true,			// 背景音效开关
+			
+			roomDetail: false,    // 房间抓取详情
+			
+			
+			//分页参数
+			pagination: {
+		        content: [],
+		        loadEnd: false,
+		        data: {
+		        	page: 1,
+		        	pageSize: 15,
+		        	machineId: this.$route.query.machineId
+		        }
+		    },
+		    
+//		    rechargeStatus: false,  //充值
+//		    rechargeList: []
 	    }
 	},
 	created() {	
@@ -183,6 +247,20 @@ export default {
 		this.loadAudios()
 	},
 	methods: {
+		//房间抓取记录
+		render(res) {
+			res.data.forEach((item) => {
+		    	this.pagination.content.push(item)
+	    	})
+	    },
+		//充值列表
+		rechargeData() {
+			this.$api.recharge().then(res => {
+		        this.rechargeList = res.data
+		    }, err => {
+		    	
+		    })
+		},
 		// 初始化socket
 		initWebSocket() {
 			this.sock = new SockJS(process.env.WEBSOCKET_URL)
@@ -559,13 +637,15 @@ export default {
 		 */
 		goRecharge() {
 			this.$router.push('/recharge')
+//			this.rechargeStatus = true
 		},
 
 		/**
 		 * 去抓取记录
 		 */
 		goGrabList() {
-			this.$router.push('/grabList')
+			this.playClickAudio()
+			this.roomDetail = true
 		},
 
 		/**
@@ -678,30 +758,34 @@ export default {
 		// 阻止双击放大
 		preventScale() {
 			const parent = this
-			window.onload = function () {
-				document.addEventListener('gesturestart', function (e) {
-					e.preventDefault()
-				})
-				document.addEventListener('dblclick', function (e) {
-					e.preventDefault();
-				})
-				document.addEventListener('touchstart', function (event) {
-					// if (parent.bgAudio.paused) {
-					// 	parent.bgAudio.play()
-					// }
-					if (event.touches.length > 1) {
-						event.preventDefault();
-					}
-				})
-				var lastTouchEnd = 0
-				document.addEventListener('touchend', function (event) {
-					var now = (new Date()).getTime()
-					if (now - lastTouchEnd <= 300) {
-						event.preventDefault();
-					}
-					lastTouchEnd = now;
-				}, false)
-			}
+			
+			document.addEventListener('gesturestart', function (e) {
+				e.preventDefault()
+			}, false)
+			document.addEventListener('dblclick', function (e) {
+				e.preventDefault();
+			}, false)
+			document.addEventListener('touchstart', function (event) {
+				if (event.touches.length > 1) {
+					event.preventDefault();
+				}
+			}, false)
+			var lastTouchEnd = 0
+			document.addEventListener('touchend', function (event) {
+				var now = (new Date()).getTime()
+				if (now - lastTouchEnd <= 300) {
+					event.preventDefault();
+				}
+				lastTouchEnd = now;
+			}, false)
+		},
+
+		/**
+		 * 关闭抓取记录弹框
+		 */
+		closeGrabList() {
+			this.playClickAudio()
+			this.roomDetail = false
 		}
 	},
 
@@ -726,21 +810,6 @@ export default {
 }
 #frontview.show, #sideview.show {
 	z-index: 0;
-}
-.loading {
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	left: 0;
-	top: 0;
-	background: rgba(0, 0, 0, 0.7);
-	// opacity: 0.5;
-	z-index: 2;
-}
-.progress {
-	width: 80%;
-	height: 60px;
-	margin: 300px auto 0;
 }
 .app{
 	background: #6d6481 !important;
@@ -993,5 +1062,120 @@ export default {
 .back-position {
 	width: 1rem;
 	margin-right: .2rem;
+}
+.detail-content{
+	width: 6.5rem;
+	height: 66vh;
+	border-radius: 0.2rem;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	padding-bottom: 1.3rem;
+	position: relative;
+	.tit{
+		text-align: center;
+		padding: 0.2rem 0 0.25rem;
+		background: #fff;
+	}
+	.grab-list{
+		background: #fff;
+		flex: 1;
+		border-radius: 0 0 0.2rem 0.2rem;
+		overflow-y: auto;
+		.grab-item{
+			display: flex;
+			padding: 0.2rem 0.3rem;
+			border-top: 1px solid #f2f2f2;
+			font-weight: normal;
+			align-items: center;
+			.avatar{
+				width: 0.6rem;
+				height: 0.6rem;
+				border-radius: 100%;
+				margin-right: 0.2rem;
+				
+	        }
+	        .grab-text{
+	        	flex: 1;
+	        	overflow: hidden;
+	        }
+		}
+	}
+	.close{
+		top: auto;
+		bottom: 0 !important;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 0.8rem;
+		height: 0.8rem;
+	}
+}
+.recharge-content{
+	width: 6.5rem;
+	height: 60vh;
+	overflow: hidden;
+	padding-bottom: 1.3rem;
+	position: relative;
+	display: flex;
+	.recharge-list{
+		background: #fff;
+		width: 100%;
+		border-radius: 0.2rem;
+		overflow-y: auto;
+		padding: 0.4rem 0.3rem;
+		.recharge-item{
+			display: flex;
+			height: 0.8rem;
+			align-items: center;
+			font-weight: normal;
+			border: 1px solid #ddd;
+			padding: 0 0.3rem;
+			border-radius: 0.8rem;
+			margin-bottom: 0.4rem;
+			.recharge_left{
+			    display: flex;
+			    align-items: center;
+			    font-size: .33rem;
+			    color: #fff;
+			    font-size: .3rem;
+			    width: 1.6rem;
+			    text-shadow: 1px 0 0 #000,0 1px 0 #000,-1px 0 0 #000,0 -1px 0 #000;
+			    .diamond-icon{
+			    	width: 0.22rem;
+			    	margin-right: 0.2rem;
+			    }
+			    
+			}
+			.recharge_center{
+			    color: #956134;
+			    font-size: .28rem;
+			    font-weight: 500;
+			    flex: 1;
+			    overflow: hidden;
+			}
+			.recharge_right{
+			    color: #fc7298;
+			    height: 0.54rem;
+			    line-height: 0.54rem;
+			    border-radius: 0.54rem;
+			    width: 1.1rem;
+			    text-align: right;
+			    background: #fff;
+			    font-size: 0.3rem;
+			    font-weight: 700;
+			}
+			&:last-of-type{
+				margin-bottom: 0;
+			}
+		}
+	}
+	.close{
+		top: auto;
+		bottom: 0 !important;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 0.8rem;
+		height: 0.8rem;
+	}
 }
 </style>

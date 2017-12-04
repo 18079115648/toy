@@ -59,7 +59,8 @@ export default {
     recharge() {
     	this.$api.payment({
 	        id:this.id,
-	        type:3
+	        type:3,
+	        returnUrl: 'http://' + window.location.host + '/#/index'
 	    }).then(res => {
             document.write(res.data)
 	    }, err => {

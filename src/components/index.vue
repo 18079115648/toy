@@ -153,7 +153,7 @@ export default {
 
     // 进入房间
     enterRoom(room) {
-        this.$root.bgAudio.play()
+        this.$root.bgAudio.paused && this.$root.bgAudio.play()
         this.$router.push({path: '/room', query: {machineSn: room.machineSn, num: room.num, price: room.price, machineId: room.machineId}})
     }
   }

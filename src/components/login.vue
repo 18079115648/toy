@@ -29,34 +29,10 @@ export default {
 	},
 	methods: {
 		mobileLogin() {
-			this.$router.push('/mobileLogin')
+			this.$router.replace('/mobileLogin')
 		},
 		wechatLogin() {
-			const self = this
-			let data = this.$storage.get('oauthInfo')
-            if (!data) {
-                this.$weixin.authorize()
-                return
-            }
-            this.$api.wechatLogin({
-    			nickname: data.nickname,
-    			avatar: data.avatar,
-    			oauthId: data.openid,
-    			platform: this.$common.getPlatformType()
-    		}).then(res => {
-				let accessToken = res.data.accessToken
-                self.$token.refreshToken(accessToken.accessToken, accessToken.refreshToken, accessToken.expireTime)
-				this.loginSuccess()
-		    }, err => {
-		    	
-		    })
-		},
-    	loginSuccess() {
-			let redirectURI = '/index'
-            if (this.$storage.get('history_url') && this.$storage.get('history_url') != '/login') {
-                redirectURI = this.$storage.get('history_url')
-            }
-            this.$router.replace(redirectURI)
+			this.$weixin.authorize()
 		}
 	},
 	

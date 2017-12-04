@@ -1,6 +1,6 @@
 <template>
     <div class="app" id="app" :style="{ height: wH + 'px' }">
-    	<Header title="">
+    	<Header title="" back="/login">
     		<img class="logo-text" src="../../static/image/logo-text.png" />
     	</Header>
     	<div class="login-content">
@@ -101,7 +101,7 @@ export default {
 			this.$api.mobileLogin({
 				code: this.code,
 				mobile: this.phone,
-                platform: this.$common.getPlatformType()
+                platform: 4
 			}).then(res => {
 				let accessToken = res.data.accessToken
                 self.$token.refreshToken(accessToken.accessToken, accessToken.refreshToken, accessToken.expireTime)

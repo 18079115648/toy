@@ -33,7 +33,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="appear-info" v-if="grabInfo.status == 1 && status != 0">
+                <div class="appear-info" v-if="grabInfo.status == 1 && grabInfo.appeal">
                 	<div class="status">
                 		<span class="tit">申诉状态：</span>
                 		<span class="text" v-if="grabInfo.appeal.status == 0">申诉中</span>
