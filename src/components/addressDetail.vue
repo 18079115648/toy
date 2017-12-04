@@ -5,7 +5,7 @@
         <div class="addAddress_body">
             <div class="addAddress_msg">
                 <label for="people">联系人</label>
-                <input type="text" v-model="name" name="people" placeholder="请输入姓名">
+                <input type="text" v-model.trim="name" name="people" placeholder="请输入姓名">
             </div>
             <div class="addAddress_msg">
                 <label for="phone">联系电话</label>
@@ -29,7 +29,7 @@
                     </select>
 				</div>
 			</div>
-            <textarea v-model="detail" placeholder="请填写详细地址~" class="trueAddress"></textarea>
+            <textarea v-model.trim="detail" placeholder="请填写详细地址~" class="trueAddress"></textarea>
             
         </div>
 		<div class="default-content">
@@ -51,7 +51,7 @@ import { Toast, Indicator } from 'mint-ui'
 export default {
   data () {
     return {
-        province: '',
+	    province: '',
 		city: '',
 		district: '',
 		provinceList: [],
@@ -68,28 +68,30 @@ export default {
   created() {
   	Indicator.open()
   	this.addressDetail = this.$storage.get('currAddrDetail')
-  	this.addrInfo = this.addressDetail.address.split('-')
-  	let [province,city,district, ...detail] = this.addrInfo
-	this.province = province
-	this.city = city
-	this.district = district
-	this.detail = detail.join('-')
+  	this.addrInfo = this.addressDetail.address
+  	// let [province,city,district, ...detail] = this.addrInfo
+	// this.province = province
+	// this.city = city
+	// this.district = district
+	// this.detail = detail.join('-')
   	this.is_default = this.addressDetail.isDefault ? true : false
   	this.name = this.addressDetail.consignee
   	this.phone = this.addressDetail.mobile
   	this.$api.provinces().then(res => { 
 		this.provinceList = res.data
 		res.data.forEach((item) => {
-			if(item.name == this.province) {
+			if(this.addrInfo.indexOf(item.name) > -1) {
 				this.province = item
+				this.detail = this.addrInfo.replace(item.name, '')
 				return
 			}
 		})
 		this.changeProvince().then(msg => {
 			this.cityList = msg.data
 			msg.data.forEach((item) => {
-				if(item.name == this.city) {
+				if(this.addrInfo.indexOf(item.name) > -1) {
 					this.city = item
+					this.detail = this.detail.replace(item.name, '')
 					return
 				}
 			})
@@ -100,8 +102,9 @@ export default {
 			},200)
 			this.areaList = msg.data
 			msg.data.forEach((item) => {
-				if(item.name == this.district) {
+				if(this.addrInfo.indexOf(item.name) > -1) {
 					this.district = item
+					this.detail = this.detail.replace(item.name, '')
 					return
 				}
 			})

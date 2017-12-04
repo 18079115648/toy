@@ -132,7 +132,7 @@ export default {
 			return
 		}
 		this.disabledBtn = true
-		let address = this.province.name + '-' + this.city.name + '-' + this.district.name + '-' + this.detail
+		let address = this.province.name + this.city.name + this.district.name + this.detail
 		this.$api.editAddress({
 			address: address,
 			consignee: this.name,
