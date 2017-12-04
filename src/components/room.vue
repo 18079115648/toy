@@ -205,23 +205,23 @@ export default {
 	created() {	
 		// 机器编号
 		this.machineSn = this.$route.query.machineSn 	
-//		// 房间人数
-//		this.memberNum = this.$route.query.num		
-//		// 抓取价格
-//		this.price = parseInt(this.$route.query.price)
-//		// 加载音频资源
-//		this.loadAudios()
-//		// 获取金币
-//		this.getGold()
-//		// 初始化socket
-//		this.initWebSocket()
-//		// 即构推流初始化
-//		this.initZego()
-//		// 阻止缩放
-//		this.preventScale()
-//		document.addEventListener("WeixinJSBridgeReady", function () {  
-//         document.getElementById('bg-audio').play()
-//  	}, false);  
+		// 房间人数
+		this.memberNum = this.$route.query.num		
+		// 抓取价格
+		this.price = parseInt(this.$route.query.price)
+		// 加载音频资源
+		this.loadAudios()
+		// 获取金币
+		this.getGold()
+		// 初始化socket
+		this.initWebSocket()
+		// 即构推流初始化
+		this.initZego()
+		// 阻止缩放
+		this.preventScale()
+		document.addEventListener("WeixinJSBridgeReady", function () {  
+           document.getElementById('bg-audio').play()
+    	}, false);  
 	},
 	mounted() {	
 		this.wH = document.getElementById('app').offsetHeight
