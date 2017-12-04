@@ -654,11 +654,6 @@ export default {
 			// 	}, false);  
 			// } else {
 				this.bgAudio.play()
-				const parent = this
-				setTimeout(function() {
-					alert('aaa')
-					parent.bgAudio.play()
-				}, 2000)
 			// }
 			
 
