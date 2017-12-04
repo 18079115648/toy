@@ -56,6 +56,10 @@ export function fetchPost(url, params, needToken, multiple) {
 	            		if(response.data.errCode == 0) {
 	            			resolve(response.data) 
 	            		}else {
+							if (response.data.errCode === 20002) {
+								router.replace('/login')
+								return
+							}
 	            			reject(response)
 	            			Toast({
 							  message: response.data.errMsg,
@@ -130,9 +134,13 @@ export function fetchGet(url, params, needToken) {
         	params: params
         }).then(response => {
             	if(response.status == 200) {
-            		if(response.data.errCode == 0) {
+            		if(response.data.errCode == undefined || response.data.errCode == 0) {
             			resolve(response.data) 
             		}else {
+						if (response.data.errCode === 20002) {
+							router.replace('/login')
+							return
+						}
             			reject(response)
             			Toast({
 						  message: response.data.errMsg,
@@ -166,7 +174,10 @@ export default {
 		return fetchGet( url, params, needToken)
 	},
 
-	
+	// 获取即构token
+	getZegoToken(appId, idName) {
+		return fetchGet('http://106.15.41.49:8181/token?app_id=' + appId + '&id_name=' + idName, {}, false)
+	},
 	
 	//获取验证码
 	getCaptcha(params) {

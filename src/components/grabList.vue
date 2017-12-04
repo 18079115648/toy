@@ -2,8 +2,8 @@
     <div class="content">
         <Header title="抓取记录"></Header>
         <div class="pagination-content">
-        	<Pagination :render="render" :param="pagination" :autoload="false"  ref="pagination" uri="/dm-api/doll/log" v-show="pagination.content.length > 0">
-				<div class="grabList_body" >
+        	<Pagination :render="render" :param="pagination" :autoload="false"  ref="pagination" uri="/dm-api/doll/log" >
+				<div class="grabList_body" v-show="pagination.content.length > 0">
 		            <div class="grabList" @click="infoDetails(item.id)" v-for="(item, index) in pagination.content" :key="index">
 		                <div class="left_img">
 		                    <img :src="item.img">
@@ -21,12 +21,13 @@
 		                </div>
 		                <img src="../../static/image/wdd.png" class="guide">
 		            </div>
-		        </div>   
+		        </div>  
+		        <div class="no_msg" v-if="pagination.content.length<1 && pagination.loadEnd">
+		            <img src="../../static/image/wfdfc.png">
+		            <div>暂无抓取记录~</div>
+		        </div>
 			</Pagination>
-			<div class="no_msg" v-if="pagination.content.length<1 && pagination.loadEnd">
-	            <img src="../../static/image/wfdfc.png">
-	            <div>暂无抓取记录~</div>
-	        </div>
+			
         </div>
 			
 	        
@@ -122,22 +123,7 @@ export default {
   width: .16rem;
   display: block;
 }
-.no_msg{
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: #C9CACA;
-    font-size: .4rem;
-    img{
-        width: 1.9rem;
-        height: 1.7rem;
-        display: block;
-        margin-bottom: .3rem;
-        margin-top: 1.6rem;
-    }
-}
+
 .play_video{
     width: 100%;
     height: 100%;

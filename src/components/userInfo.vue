@@ -46,7 +46,7 @@ export default {
   created(){
     // this.saveImg()
     this.$api.userInfo().then(res => {
-      this.avatar = res.data.avatar
+      this.avatar = res.data.avatar ? res.data.avatar : '../../static/image/avatar.png'
       this.nickname = res.data.nickname
       this.inviteCode = res.data.inviteCode
     }, err => {

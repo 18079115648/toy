@@ -2,8 +2,8 @@
     <div class="content">
         <Header title="订单中心"></Header>
 	    <div class="pagination-content">
-	    	<Pagination :render="render" :param="pagination"  ref="pagination" uri="/dm-api/order/list" v-show="pagination.content.length > 0">
-				<div class="order-list">
+	    	<Pagination :render="render" :param="pagination"  ref="pagination" uri="/dm-api/order/list" >
+				<div class="order-list" v-show="pagination.content.length > 0">
 					<router-link :to="'/orderDetails/' + item.orderSn" class="orderList_body" v-for="(item, index) in pagination.content" :key="index">
 			            <div class="orderList_title">
 			                <div><span style="color:#888">订单号：</span>{{item.orderSn}}</div>
@@ -23,12 +23,12 @@
 			            </div>
 			        </router-link>
 				</div>
-				    
+				<div class="no_msg" v-show="pagination.content.length<1 && pagination.loadEnd">
+			        <img src="../../static/image/wfdfc.png">
+		            <div>暂无订单数据~</div>
+			    </div>	   
 			</Pagination>
-		    <div class="no_msg" v-show="pagination.content.length<1 && pagination.loadEnd">
-		        <img src="../../static/image/wfdfc.png">
-	            <div>暂无订单数据~</div>
-		    </div>	
+		    
 	    </div>    
 			
     </div>

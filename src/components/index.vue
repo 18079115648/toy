@@ -2,7 +2,7 @@
   <div class="content">
     <div class="header">
     	<router-link to="/user" class="user-link link"></router-link>
-    	抓娃娃
+    	<img class="logo-text" src="../../static/image/logo-text.png" />
     	<span style="width: 0.85rem;"></span>
     </div>
     <div class="navbar">
@@ -11,29 +11,29 @@
     	</div>
     </div>
     <div class="nav-content">
-    	<div class="home-data" v-show="firstTag == currTags">
-    		<div class="banner">
-		    	<mt-swipe :auto="0">
-						<mt-swipe-item v-for="(item,index) in banner" :key="index">
-							<div class="fullEle" @click="bannerLink(item)">
-								<img :src="item.imgUrl" class="fullEle" />
-							</div>
-						</mt-swipe-item>
-					</mt-swipe>
-		    </div>
-		    <div class="homebar">
-		    	<router-link :to="item.link" class="nav-item" v-for="(item,index) in homebar" :key="index">
-		    		<div class="icon">
-		    			<img :src="item.icon"  />
-		    		</div>
-		    		<p>{{item.text}}</p>
-		    	</router-link>
-		    </div>
-    	</div>	
     	<div class="toys-content">
-    		<Pagination :render="render" :param="pagination" :autoload="false" ref="pagination" uri="/dm-api/home/tag">
+    		<Pagination :render="render" :param="pagination" :autoload="false" ref="pagination" uri="/dm-api/home/tag" >
+					<div class="home-data" v-show="firstTag == currTags">
+		    		<div class="banner">
+				    	<mt-swipe :auto="0">
+								<mt-swipe-item v-for="(item,index) in banner" :key="index">
+									<div class="fullEle" @click="bannerLink(item)">
+										<img :src="item.imgUrl" class="fullEle" />
+									</div>
+								</mt-swipe-item>
+							</mt-swipe>
+				    </div>
+				    <div class="homebar">
+				    	<router-link :to="item.link" class="nav-item" v-for="(item,index) in homebar" :key="index">
+				    		<div class="icon">
+				    			<img :src="item.icon"  />
+				    		</div>
+				    		<p>{{item.text}}</p>
+				    	</router-link>
+				    </div>
+		    	</div>	
 					<div class="toys-list" v-show="pagination.content.length>0">
-			    	<router-link :to='"/room?machineSn="+item.machineSn' class="toys-item" v-for="(item, index) in pagination.content" :key="index">
+			    	<router-link :to='"/room?machineSn="+item.machineSn+"&num="+item.num+"&price="+item.price' class="toys-item" v-for="(item, index) in pagination.content" :key="index">
 			    		<img class="toys-img" :src="item.imgs[0]"  />
 			    		<div class="toys-status" :class="[item.statusClass]">{{item.statusText}}</div>
 			    		<div class="toys-info">
@@ -45,11 +45,12 @@
 			    		</div>	
 			    	</router-link>
 			    </div>
+			    <div class="no_msg" v-show="pagination.content.length<1 && pagination.loadEnd">
+			        <img src="../../static/image/ewd.png"  />
+			        <div>没有商品信息~</div>
+			    </div>	
 				</Pagination>
-		    <div class="no_msg" v-show="pagination.content.length<1 && pagination.loadEnd">
-		        <img src="../../static/image/ewd.png"  />
-		        <div>没有商品信息~</div>
-		    </div>	
+		    
     	</div>
 	    	
     </div>
@@ -99,7 +100,7 @@ export default {
 			this.banner = res.data
     }, err => {
     	
-    })
+	})
   },
   mounted() {
   	this.$api.homeTags().then(res => {
@@ -120,7 +121,7 @@ export default {
   		if(this.currTags == item.id) {
   			return
   		}
-  		this.currTags = item.id
+//		this.currTags = item.id
   		this.tagChange(item.id)
   	},
   	bannerLink(item) {
@@ -145,6 +146,7 @@ export default {
   					item.statusClass = 'end'
   				}
         	this.pagination.content.push(item)
+        	this.currTags = this.pagination.data.type
         })
     }
   }
@@ -188,6 +190,9 @@ export default {
 			top: 0.1rem;
 			right: 0.06rem;
 		}
+	}
+	.logo-text{
+		height: 0.66rem;
 	}
 }
 .navbar{
