@@ -106,6 +106,7 @@ export default {
 				let accessToken = res.data.accessToken
 				self.$token.refreshToken(accessToken.accessToken, accessToken.refreshToken, accessToken.expireTime)
 				this.$storage.set('hx', {id: res.data.hxId, password: res.data.hxPwd})
+				this.$storage.set('user', res.data)
 				this.loginSuccess()
 	        }, err => {
 	        	

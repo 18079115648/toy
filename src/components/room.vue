@@ -132,6 +132,10 @@
 				<img src="../../static/image/x.png" class="close" @click="closeGrabList" />	
 			</div>
 		</mt-popup>
+		
+		<div id="danmu-container"></div>
+
+		
 		<!-- 充值页面 -->
 		<!--<mt-popup v-model="rechargeStatus" class="pop">
 			<div class="recharge-content">
@@ -211,9 +215,12 @@ export default {
 
 			musicSwitch: true,			// 背景音乐开关
 			soundSwitch: true,			// 背景音效开关
+
+			webIMConn: undefined,		// 环信连接
+			webIMChatroomId: undefined, // 环信房间编号
 			
-			roomDetail: false,    // 房间抓取详情
-			
+			roomDetail: false,   	 	// 房间抓取详情
+			nickname: storage.get('user').nickname,	// 昵称
 			
 			//分页参数
 			pagination: {
@@ -255,25 +262,21 @@ export default {
 		this.initWebIM()
 	},
 	methods: {
-		//房间抓取记录
+		/**
+		 * 房间抓取记录
+		 */
 		render(res) {
 			res.data.forEach((item) => {
 		    	this.pagination.content.push(item)
 	    	})
 	    },
-		//充值列表
-		rechargeData() {
-			this.$api.recharge().then(res => {
-		        this.rechargeList = res.data
-		    }, err => {
-		    	
-		    })
-		},
 
-		// 初始化环信
+		/**
+		 * 初始化环信
+		 */
 		initWebIM() {
 			this.$api.enterRoom({machineSn: this.machineSn}).then((response) => {
-				var conn = new WebIM.connection({
+				this.webIMConn = new WebIM.connection({
 					isMultiLoginSessions: WebIM.config.isMultiLoginSessions,
 					https: typeof WebIM.config.https === 'boolean' ? WebIM.config.https : location.protocol === 'https:',
 					url: WebIM.config.xmppURL,
@@ -283,20 +286,29 @@ export default {
 					apiUrl: WebIM.config.apiURL,
 					isAutoLogin: true
 				})
-				conn.listen({
-					onOpened: function() {
-						console.info('连接成功')
+				const parent = this
+				const hx = storage.get('hx')
+				this.webIMConn.listen({
+					onOpened: function(message) {
+						console.info('环信连接成功')
+
+						setTimeout(function() {
+							parent.sendWebIMMessage(parent.nickname + ' 进入了房间')
+						}, 2500)
 					},
 					onError: function(message) {
+						console.error('环信连接失败')
 						console.info(message)
 					},
+					onTextMessage: function(message) {
+						parent.createDanmu(message.data)
+					},
 					onPresence: function ( message ) {
+						parent.webIMChatroomId = message.from
 						console.info(message)
 					}
 				})
-				const hx = storage.get('hx')
-				console.info(hx)
-				conn.open({
+				this.webIMConn.open({
 					apiUrl: WebIM.config.apiURL,
 					user: hx.id,
 					pwd: hx.password,
@@ -306,7 +318,45 @@ export default {
 			
 		},
 
-		// 初始化socket
+		/**
+		 * 发送环信聊天室信息
+		 */
+		sendWebIMMessage(text) {
+			return new Promise((resolve, reject) => {
+				let id = this.webIMConn.getUniqueId()      	// 生成本地消息id
+				let msg = new WebIM.message('txt', id) 		// 创建文本消息
+				let option = {
+					msg: text,          // 消息内容
+					to: this.webIMChatroomId,               // 接收消息对象(聊天室id)
+					roomType: true,
+					chatType: 'chatRoom',
+					success: function () {
+						resolve()
+					},
+					fail: function (e) {
+						reject(e)
+					}
+				}
+				msg.set(option)
+				msg.setGroup('groupchat')
+				this.webIMConn.send(msg.body)
+			})
+		},
+
+		/**
+		 * 退出环信聊天室
+		 */
+		quitWebIMChatRoom() {
+			this.sendWebIMMessage(this.nickname + ' 退出了房间').then(() => {
+				this.webIMConn.quitChatRoom({
+					roomId: this.webIMChatroomId // 聊天室id
+				})
+			})
+		},
+
+		/**
+		 * 初始化socket
+		 */
 		initWebSocket() {
 			this.sock = new SockJS(process.env.WEBSOCKET_URL)
 
@@ -392,9 +442,11 @@ export default {
 						clearInterval(this.operationTimer)
 						if (data.value === 1) {
 							// 抓取成功
+							this.sendWebIMMessage(this.nickname + ' 抓中了娃娃')
 							this.grabSucces()
 						} else {
 							// 抓取失败
+							this.sendWebIMMessage(this.nickname + ' 险些抓中')
 							this.grabFailure()
 						}
 						break;
@@ -831,12 +883,26 @@ export default {
 		closeGrabList() {
 			this.playClickAudio()
 			this.roomDetail = false
+		},
+
+		/**
+		 * 创建弹幕
+		 */
+		createDanmu(text) {
+			const colors = ['red', 'green', 'yellow', 'purple']
+			const randomNum = Math.floor(Math.random()*4);
+			let html = '<div class="danmu ' + colors[randomNum] + '" style="top: '+ (100 + 20 * randomNum) +'px">' + text + '</div>'
+			console.info(html)
+			// document.getElementById('danmu-container').appendChild(html)
 		}
 	},
 
 	beforeDestroy() {
 		// 关闭背景音量
 		this.$root.bgAudio && !this.$root.bgAudio.paused && this.$root.bgAudio.pause()
+
+		// 退出环信聊天室
+		this.quitWebIMChatRoom()
 
 		this.zg.release()
 	}
@@ -846,6 +912,38 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.danmu {
+  position: fixed;
+  left: 100%;
+  top: 100px;
+  font-size: .32rem;
+  width: 4rem;
+  animation: danmu 5s linear 0s 1;
+}
+.danmu.red {
+	color: red;
+}
+.danmu.green {
+	color:green;
+}
+.danmu.yellow {
+	color:yellow;
+}
+.danmu.purple {
+	color:purple;
+}
+
+@keyframes danmu {
+  from {
+    left: 100%;
+    transform: translateX(0);
+  }
+  to {
+    left: 0;
+    transform: translateX(-100%);
+  }
+}
+
 #frontview, #sideview {
 	width: 100%;
 	z-index: -2;
