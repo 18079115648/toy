@@ -282,18 +282,26 @@ export default {
 					autoReconnectInterval: WebIM.config.autoReconnectInterval,
 					apiUrl: WebIM.config.apiURL,
 					isAutoLogin: true
-				});
+				})
 				conn.listen({
 					onOpened: function() {
 						console.info('连接成功')
 					},
-					onError: function() {
-						consoele.info("失败")
+					onError: function(message) {
+						console.info(message)
 					},
 					onPresence: function ( message ) {
 						console.info(message)
 					}
-				});
+				})
+				const hx = storage.get('hx')
+				console.info(hx)
+				conn.open({
+					apiUrl: WebIM.config.apiURL,
+					user: hx.id,
+					pwd: hx.password,
+					appKey: WebIM.config.appkey
+				})
 			})
 			
 		},
