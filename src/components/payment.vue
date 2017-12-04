@@ -60,7 +60,7 @@ export default {
     	this.$api.payment({
 	        id:this.id,
 	        type:3,
-	        returnUrl: 'http://' + window.location.host + '/#/user'
+	        returnUrl: 'http://' + window.location.host + '/#/index'
 	    }).then(res => {
             document.write(res.data)
 	    }, err => {

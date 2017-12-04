@@ -13,7 +13,7 @@ export default {
         })
         this.$api.wechatLogin({
 			code: code,
-			platform: this.$common.getPlatformType()
+			platform: 5
 		}).then(res => {
 			let accessToken = res.data.accessToken
             self.$token.refreshToken(accessToken.accessToken, accessToken.refreshToken, accessToken.expireTime)

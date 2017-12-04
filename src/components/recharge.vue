@@ -27,7 +27,7 @@ export default {
     }
   },
   created(){
-      this.$api.recharge().then(res => {
+    this.$api.recharge().then(res => {
         this.diamond = res.data
     }, err => {
     	

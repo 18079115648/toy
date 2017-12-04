@@ -103,7 +103,7 @@
 		</mt-popup>
 
 		<!-- <audio id="bg-audio" src="../../static/audio/bgm01.mp3"  preload="preload" loop></audio> -->
-		
+		<!-- 详情页面 -->
 		<mt-popup v-model="roomDetail" class="pop">
 			<div class="detail-content">
 				<div class="tit">抓取记录</div>
@@ -129,6 +129,26 @@
 				<img src="../../static/image/x.png" class="close" @click="roomDetail = false" />	
 			</div>
 		</mt-popup>
+		<!-- 充值页面 -->
+		<!--<mt-popup v-model="rechargeStatus" class="pop">
+			<div class="recharge-content">
+				<div class="recharge-list">
+					<div class="recharge-item" v-for="(item, index) in rechargeList" :key="index">
+		                <div class="recharge_left">
+		                    <img class="diamond-icon" src="../../static/image/wd.png">
+		                    <span >{{item.money}}</span>
+		                </div>
+		                <div class="recharge_center">
+		                    <div>{{item.desc}}</div>
+		                </div>
+		                <div class="recharge_right">
+		                    &yen; {{item.price}}
+		                </div>
+		            </div>
+				</div>
+				<img src="../../static/image/x.png" class="close" @click="rechargeStatus = false" />	
+			</div>
+		</mt-popup>-->
     </div>
 </template>
 
@@ -200,6 +220,9 @@ export default {
 		        	machineId: this.$route.query.machineId
 		        }
 		    },
+		    
+//		    rechargeStatus: false,  //充值
+//		    rechargeList: []
 	    }
 	},
 	created() {	
@@ -222,6 +245,7 @@ export default {
 		document.addEventListener("WeixinJSBridgeReady", function () {  
            document.getElementById('bg-audio').play()
     	}, false);  
+//		this.rechargeData()
 	},
 	mounted() {	
 		this.wH = document.getElementById('app').offsetHeight
@@ -230,10 +254,17 @@ export default {
 		//房间抓取记录
 		render(res) {
 			res.data.forEach((item) => {
-		    	this.pagination.content.push(item)
+//		    	this.pagination.content.push(item)
 	    	})
 	    },
-			
+		//充值列表
+		rechargeData() {
+			this.$api.recharge().then(res => {
+		        this.rechargeList = res.data
+		    }, err => {
+		    	
+		    })
+		},
 		// 初始化socket
 		initWebSocket() {
 			this.sock = new SockJS(process.env.WEBSOCKET_URL)
@@ -610,6 +641,7 @@ export default {
 		 */
 		goRecharge() {
 			this.$router.push('/recharge')
+//			this.rechargeStatus = true
 		},
 
 		/**
@@ -1086,6 +1118,74 @@ export default {
 	        	flex: 1;
 	        	overflow: hidden;
 	        }
+		}
+	}
+	.close{
+		top: auto;
+		bottom: 0 !important;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 0.8rem;
+		height: 0.8rem;
+	}
+}
+.recharge-content{
+	width: 6.5rem;
+	height: 60vh;
+	overflow: hidden;
+	padding-bottom: 1.3rem;
+	position: relative;
+	display: flex;
+	.recharge-list{
+		background: #fff;
+		width: 100%;
+		border-radius: 0.2rem;
+		overflow-y: auto;
+		padding: 0.4rem 0.3rem;
+		.recharge-item{
+			display: flex;
+			height: 0.8rem;
+			align-items: center;
+			font-weight: normal;
+			border: 1px solid #ddd;
+			padding: 0 0.3rem;
+			border-radius: 0.8rem;
+			margin-bottom: 0.4rem;
+			.recharge_left{
+			    display: flex;
+			    align-items: center;
+			    font-size: .33rem;
+			    color: #fff;
+			    font-size: .3rem;
+			    width: 1.6rem;
+			    text-shadow: 1px 0 0 #000,0 1px 0 #000,-1px 0 0 #000,0 -1px 0 #000;
+			    .diamond-icon{
+			    	width: 0.22rem;
+			    	margin-right: 0.2rem;
+			    }
+			    
+			}
+			.recharge_center{
+			    color: #956134;
+			    font-size: .28rem;
+			    font-weight: 500;
+			    flex: 1;
+			    overflow: hidden;
+			}
+			.recharge_right{
+			    color: #fc7298;
+			    height: 0.54rem;
+			    line-height: 0.54rem;
+			    border-radius: 0.54rem;
+			    width: 1.1rem;
+			    text-align: right;
+			    background: #fff;
+			    font-size: 0.3rem;
+			    font-weight: 700;
+			}
+			&:last-of-type{
+				margin-bottom: 0;
+			}
 		}
 	}
 	.close{

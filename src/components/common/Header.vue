@@ -40,7 +40,7 @@
                 if (!this.back) {
                     this.$router.back()
                 } else {
-                    this.$router.push(this.back)
+                    this.$router.replace(this.back)
                 }
             }
         }

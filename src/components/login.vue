@@ -29,7 +29,7 @@ export default {
 	},
 	methods: {
 		mobileLogin() {
-			this.$router.push('/mobileLogin')
+			this.$router.replace('/mobileLogin')
 		},
 		wechatLogin() {
 			this.$weixin.authorize()
