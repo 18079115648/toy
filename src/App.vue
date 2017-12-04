@@ -4,18 +4,16 @@
 		    <router-view v-if="$route.meta.keepAlive"></router-view>
 	</keep-alive>
 	<router-view v-if="!$route.meta.keepAlive"></router-view>
-	<audio id="bg-audio" src='../static/audio/bgm02.mp3' preload></audio>
-	<audio id="take-audio" src='../static/audio/take.mp3' preload></audio>
-	<audio id="click-audio" src='../static/audio/startClickItem.mp3' preload></audio>
-	<audio id="ready-audio" src='../static/audio/readygo.mp3' preload></audio>
-	<audio id="success-audio" src='../static/audio/result_succeed.mp3' preload></audio>
-	<audio id="failure-audio" src='../static/audio/result_failed.mp3' preload></audio>
+
+	<audio id="bg-audio" src='../static/audio/bgm02.mp3' preload loop></audio>
   </div>
 </template>
 
 <script>
 export default {
-	
+	mounted() {
+		this.$root.bgAudio = document.getElementById('bg-audio')
+	}
 }
 </script>
 

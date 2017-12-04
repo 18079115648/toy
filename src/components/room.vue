@@ -3,12 +3,10 @@
 		<canvas id="frontview" :class="{show:showFront}" :style="{ height: wH + 'px' }"></canvas>
       	<canvas id="sideview" :class="{show:showSide}" :style="{ height: wH + 'px' }"></canvas>
     	<div class="room-top">
-    		<img class="back" src="../../static/image/feee.png" @click="back" />
+			<div v-if="isGame" class="back-position"></div>
+    		<img v-if="!isGame" class="back" src="../../static/image/feee.png" @click="back" />
     		<img class="avatar" :src="avatar"  />
-    		<div class="room-count shadow-text">
-    			<p>当前房间人数</p>
-    			<p>{{memberNum}}</p>
-    		</div>
+    		<div class="room-count shadow-text"></div>
     		<div class="price">
     			<img src="../../static/image/wd.png"  />
     			<span class="shadow-text">{{remainGold}}</span>
@@ -102,7 +100,11 @@
 			</div>
 		</mt-popup>
 
-		<!-- <audio id="bg-audio" src="../../static/audio/bgm01.mp3"  preload="preload" loop></audio> -->
+		<audio id="take-audio" src='../static/audio/take.mp3' preload></audio>
+		<audio id="click-audio" src='../static/audio/startClickItem.mp3' preload></audio>
+		<audio id="ready-audio" src='../static/audio/readygo.mp3' preload></audio>
+		<audio id="success-audio" src='../static/audio/result_succeed.mp3' preload></audio>
+		<audio id="failure-audio" src='../static/audio/result_failed.mp3' preload></audio>
     </div>
 </template>
 
@@ -127,7 +129,6 @@ export default {
 	    	failStatus: false, 				// 没有抓到娃娃,
 			endTime: 3,						// 抓取结果展示倒计时
 			remainGold: storage.get('remain_gold'),	// 剩余金币
-			memberNum: 0, 					// 房间人数
 			avatar: storage.get('headUrl'), // 头像
 			
 			machineSn: undefined,			// 设备编号
@@ -135,20 +136,19 @@ export default {
 			roomStatus: 0, 					// 1游戏中 0空闲
 			price: 20,						// 价格
 			  
-			zegoRoomId: 'WWJ_ZEGO_12345_54323',
+			// zegoRoomId: 'WWJ_ZEGO_12345_54323',
 			zg: undefined,								// zego对象
-			// zegoRoomId: 'sander_21312312312',			// 房间号
+			zegoRoomId: 'sander_21312312312',			// 房间号
 			zegoAppId: 3177435262,						// 应用编号
 			zegoServer: 'ws://106.15.41.49:8181/ws',	// 服务器地址
-			zegoIdName: '1221',							// 用户编号
-			zegoNickName: 'Demon',						// 昵称
+			zegoIdName: accessToken.getAccessToken(),			// 用户编号
+			zegoNickName: 'U' + accessToken.getAccessToken(),	// 昵称
 			showFront: true,							// 显示正摄像头
 			showSide: false,							// 显示副摄像头
 
 			frontStreamId: undefined,		// 正面视频流编号
 			sideStreamId: undefined,		// 侧面视频流编号
 
-			bgAudio: undefined,			// 背景音效
 			clickAudio: undefined,		// 点击音效
 			readyGoAudio: undefined, 	// 准备音效
 			successAudio: undefined, 	// 抓取成功音效
@@ -165,12 +165,8 @@ export default {
 	created() {	
 		// 机器编号
 		this.machineSn = this.$route.query.machineSn 	
-		// 房间人数
-		this.memberNum = this.$route.query.num		
 		// 抓取价格
 		this.price = parseInt(this.$route.query.price)
-		// 加载音频资源
-		this.loadAudios()
 		// 获取金币
 		this.getGold()
 		// 初始化socket
@@ -179,12 +175,12 @@ export default {
 		this.initZego()
 		// 阻止缩放
 		this.preventScale()
-		document.addEventListener("WeixinJSBridgeReady", function () {  
-           document.getElementById('bg-audio').play()
-    }, false);  
 	},
 	mounted() {	
 		this.wH = document.getElementById('app').offsetHeight
+
+		// 加载音频资源
+		this.loadAudios()
 	},
 	methods: {
 		// 初始化socket
@@ -323,35 +319,35 @@ export default {
 			})
 
 			// 房间连接断开通知
-			this.zg.onDisconnect((err) => {
+			this.zg.onDisconnect = (err) => {
 				console.error('房间断开连接[code: ' + err.code + ' , msg: ' + err.msg + ']')
 				MessageBox.alert('连接断开，退出房间').then(action => {
 					this.$router.push('/index')
 				})
-			})
+			}
 
 			// 被踢下线通知
-			this.zg.onKickOut((err) => {
+			this.zg.onKickOut = (err) => {
 				console.error('被踢下线通知[code: ' + err.code + ' , msg: ' + err.msg + ']')
 				MessageBox.alert('账号冲突，退出房间').then(action => {
 					this.$router.push('/index')
 				})
-			})
+			}
 
 			// 流更新通知
-			this.zg.onStreamUpdated((type, streamList) => {
+			this.zg.onStreamUpdated = (type, streamList) => {
 				console.info('流更新通知')
-			})
+			}
 
 			// 流状态变更通知
-			this.zg.onStreamExtraInfoUpdated((streamList) => {
+			this.zg.onStreamExtraInfoUpdated = (streamList) => {
 				console.info("流状态变更通知")
-			})
+			}
 
 			// 流信息变更通知
-			this.zg.onPlayStateUpdate((type, streamId) => {
+			this.zg.onPlayStateUpdate = (type, streamId) => {
 				console.info('流' + streamId + ', 状态：' + type)
-			})
+			}
 		},
 
 		//点击开始游戏
@@ -366,7 +362,7 @@ export default {
 			this.readyTime = 3		// 倒计时3秒
 			this.playReadyGoAudio()
 			const parent = this
-			parent.operateCountDown(30)
+			this.operateCountDown(30)
 			function timeout() {
 				setTimeout(() => {
 					if (parent.readyTime === 1) {
@@ -385,11 +381,11 @@ export default {
 		operateCountDown(seconds) {
 			const self = this
 			this.operateTime = seconds
-			const parent = this
 			this.operationTimer = setInterval(() => {
 				if (self.operateTime === 0) {
-					this.grab()
-					clearInterval(parent.operationTimer)
+					self.grab()
+					console.info("抓取:" + self.operationTimer)
+					clearInterval(self.operationTimer)
 					return
 				}
 				self.operateTime--
@@ -499,7 +495,7 @@ export default {
 			const parent = this
 			setTimeout(() => {
 				parent.takeAudio.play()
-			}, 400)
+			}, 200)
 
 			this.sock.send(JSON.stringify({
 				cmd: 'grab',
@@ -646,16 +642,7 @@ export default {
 			}
 
 			// 背景音乐
-			this.bgAudio = document.getElementById('bg-audio')
-			// if (common.isWeixin()) {
-			// 	const parent = this
-			// 	document.addEventListener("WeixinJSBridgeReady", function () {  
-			// 		 document.getElementById('bg-audio').play()
-			// 	}, false);  
-			// } else {
-				this.bgAudio.play()
-			// }
-			
+			this.$root.bgAudio.paused && this.$root.bgAudio.play()
 
 			// 点击音效
 			this.clickAudio = document.getElementById('click-audio')
@@ -688,6 +675,7 @@ export default {
 			this.zg.setPlayVolume(this.sideStreamId, 0)
 		},
 
+		// 阻止双击放大
 		preventScale() {
 			const parent = this
 			window.onload = function () {
@@ -719,10 +707,9 @@ export default {
 
 	beforeDestroy() {
 		// 关闭背景音量
-		this.bgAudio && !this.bgAudio.paused && this.bgAudio.pause()
+		this.$root.bgAudio && !this.$root.bgAudio.paused && this.$root.bgAudio.pause()
 
-		// 释放即构资源
-		// this.zg.release()
+		this.zg.release()
 	}
 
 		
@@ -772,7 +759,7 @@ export default {
 	align-items: center;
 	padding: 0.2rem;
 	color: #fff;
-	background: #6d6481;
+	// background: #6d6481;
 	.back{
 		width: 1rem;
 		margin-right: 0.2rem;
@@ -817,7 +804,7 @@ export default {
 	padding: 0.1rem;
 	color: #fff;
 	font-size: 0.3rem;
-	background: #6d6481;
+	// background: #6d6481;
 	&>div{
 		background: rgba(0,0,0,0.2);
 		border-radius: 0.2rem;
@@ -1002,5 +989,9 @@ export default {
 		margin:  0 0.5rem;
 		box-shadow: 3px 0 0 #000,0 3px 0 #000,-2px 0 0 #000,0 -2px 0 #000;;
 	}
+}
+.back-position {
+	width: 1rem;
+	margin-right: .2rem;
 }
 </style>

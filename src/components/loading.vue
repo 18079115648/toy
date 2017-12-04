@@ -34,14 +34,8 @@ mounted() {
 },
 methods: {
   a() {
-    // document.getElementById('bg-audio').addEventListener('onloadedmetadata', () => {
-    //   alert('aafdafdafdafd')
-    // })
-      document.getElementById('bg-audio').addEventListener('loadedmetadata', () => {
-        
-      })
-       document.addEventListener("WeixinJSBridgeReady", function () {  
-           document.getElementById('bg-audio').play()
+    document.addEventListener("WeixinJSBridgeReady", function () {  
+      document.getElementById('bg-audio').play()
     }, false);  
     
   },

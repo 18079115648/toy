@@ -33,14 +33,6 @@ import confirmModal from '@/components/common/confirmModal'
 
 Vue.component('confirmModal', confirmModal)
 
-// 音频资源
-Vue.prototype.$bgAudio = undefined			// 背景音效
-Vue.prototype.$clickAudio = undefined		// 点击音效
-Vue.prototype.$readyGoAudio = undefined 	    // 准备音效
-Vue.prototype.$successAudio = undefined 	    // 抓取成功音效
-Vue.prototype.$failureAudio = undefined	    // 抓取失败音效
-Vue.prototype.$takeAudio = undefined        // 抓取音效
-
 Vue.use(VueRouter)
 
 Vue.use(mint)
@@ -58,6 +50,11 @@ router.beforeEach((to, from, next) => {
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  data() {
+    return {
+        bgAudio: undefined
+    }
+  },
   router,
   template: '<App/>',
   components: { App }
