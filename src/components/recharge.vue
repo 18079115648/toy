@@ -44,7 +44,10 @@ export default {
 <style lang="scss" scoped>
 .recharge_body{
     width: 100%;
-    height: auto;
+    position: absolute;
+    left: 0;
+    top: 0.85rem;
+    bottom: 0;
     padding: .4rem .2rem;
 
 }

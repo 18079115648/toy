@@ -169,6 +169,10 @@ export function fetchGet(url, params, needToken) {
     })
 }
 export default {
+	//	房间抓取记录
+	logRoom(params) {
+		return fetchGet('/dm-api/doll/log/room', params, true)
+	},
     //分页
 	page(url, params, needToken) {
 		return fetchGet( url, params, needToken)
@@ -321,5 +325,6 @@ export default {
     //	接受邀请
 	invite(params) {
 		return fetchPost('/dm-api/invite/code', params, true)
-	}
+	},
+	
 }

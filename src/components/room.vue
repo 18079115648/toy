@@ -103,6 +103,32 @@
 		</mt-popup>
 
 		<!-- <audio id="bg-audio" src="../../static/audio/bgm01.mp3"  preload="preload" loop></audio> -->
+		
+		<mt-popup v-model="roomDetail" class="pop">
+			<div class="detail-content">
+				<div class="tit">抓取记录</div>
+				<div class="grab-list">
+					<Pagination :render="render" :param="pagination"  ref="pagination" uri="/dm-api/doll/log/room" >
+						<div class="grab-item" v-for="(item, index) in pagination.content" :key="index">
+							<img class="avatar" :src="item.avatar" />
+							<div class="grab-text">
+								<p class="name">{{item.nickname}}</p>
+								<p class="status">
+									<span v-if="item.status">抓取失败</span>
+									<span v-if="!item.status" style="color: #EA7B97;">抓取成功</span>
+								</p>
+							</div>
+							<div class="grab-time">{{item.createTime.split(' ')[0]}}<br>{{item.createTime.split(' ')[1]}}</div>
+						</div>
+						<div class="no_msg" v-show="pagination.content.length<1 && pagination.loadEnd">
+					        <img src="../../static/image/wfdfc.png">
+				            <div>暂无抓取数据~</div>
+					    </div>	   
+					</Pagination>
+				</div>
+				<img src="../../static/image/x.png" class="close" @click="roomDetail = false" />	
+			</div>
+		</mt-popup>
     </div>
 </template>
 
@@ -160,33 +186,54 @@ export default {
 
 			musicSwitch: true,			// 背景音乐开关
 			soundSwitch: true,			// 背景音效开关
+			
+			roomDetail: false,    // 房间抓取详情
+			
+			
+			//分页参数
+			pagination: {
+		        content: [],
+		        loadEnd: false,
+		        data: {
+		        	page: 1,
+		        	pageSize: 15,
+		        	machineId: this.$route.query.machineId
+		        }
+		    },
 	    }
 	},
 	created() {	
 		// 机器编号
 		this.machineSn = this.$route.query.machineSn 	
-		// 房间人数
-		this.memberNum = this.$route.query.num		
-		// 抓取价格
-		this.price = parseInt(this.$route.query.price)
-		// 加载音频资源
-		this.loadAudios()
-		// 获取金币
-		this.getGold()
-		// 初始化socket
-		this.initWebSocket()
-		// 即构推流初始化
-		this.initZego()
-		// 阻止缩放
-		this.preventScale()
-		document.addEventListener("WeixinJSBridgeReady", function () {  
-           document.getElementById('bg-audio').play()
-    }, false);  
+//		// 房间人数
+//		this.memberNum = this.$route.query.num		
+//		// 抓取价格
+//		this.price = parseInt(this.$route.query.price)
+//		// 加载音频资源
+//		this.loadAudios()
+//		// 获取金币
+//		this.getGold()
+//		// 初始化socket
+//		this.initWebSocket()
+//		// 即构推流初始化
+//		this.initZego()
+//		// 阻止缩放
+//		this.preventScale()
+//		document.addEventListener("WeixinJSBridgeReady", function () {  
+//         document.getElementById('bg-audio').play()
+//  	}, false);  
 	},
 	mounted() {	
 		this.wH = document.getElementById('app').offsetHeight
 	},
 	methods: {
+		//房间抓取记录
+		render(res) {
+			res.data.forEach((item) => {
+		    	this.pagination.content.push(item)
+	    	})
+	    },
+			
 		// 初始化socket
 		initWebSocket() {
 			this.sock = new SockJS(process.env.WEBSOCKET_URL)
@@ -569,7 +616,7 @@ export default {
 		 * 去抓取记录
 		 */
 		goGrabList() {
-			this.$router.push('/grabList')
+			this.roomDetail = true
 		},
 
 		/**
@@ -1001,6 +1048,53 @@ export default {
 		font-size: 0.3rem;
 		margin:  0 0.5rem;
 		box-shadow: 3px 0 0 #000,0 3px 0 #000,-2px 0 0 #000,0 -2px 0 #000;;
+	}
+}
+.detail-content{
+	width: 6.5rem;
+	height: 66vh;
+	border-radius: 0.2rem;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	padding-bottom: 1.3rem;
+	position: relative;
+	.tit{
+		text-align: center;
+		padding: 0.2rem 0 0.25rem;
+		background: #fff;
+	}
+	.grab-list{
+		background: #fff;
+		flex: 1;
+		border-radius: 0 0 0.2rem 0.2rem;
+		overflow-y: auto;
+		.grab-item{
+			display: flex;
+			padding: 0.2rem 0.3rem;
+			border-top: 1px solid #f2f2f2;
+			font-weight: normal;
+			align-items: center;
+			.avatar{
+				width: 0.6rem;
+				height: 0.6rem;
+				border-radius: 100%;
+				margin-right: 0.2rem;
+				
+	        }
+	        .grab-text{
+	        	flex: 1;
+	        	overflow: hidden;
+	        }
+		}
+	}
+	.close{
+		top: auto;
+		bottom: 0 !important;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 0.8rem;
+		height: 0.8rem;
 	}
 }
 </style>
