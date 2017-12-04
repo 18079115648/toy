@@ -11,7 +11,7 @@
 			                <div style="color:#fa7296" v-if="item.status == 0">已发货</div>
 			            </div>
 			            <div class="puppets_img">
-			                <div class="puppetsList" v-for="list in item.productList">
+			                <div class="puppetsList" v-for="list in item.productList" >
 			                    <div class="img_body">
 			                        <img :src="list.img">
 			                    </div>

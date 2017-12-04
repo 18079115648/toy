@@ -85,24 +85,15 @@ export default {
 .left_img{
     width: 1.8rem;
     height: 1.8rem;
-    background-color: #ccc;
     border-radius: 10px;
     position: relative;
     overflow: hidden;
     img{
         width: 100%;
         height: 100%;
-    }
-    .play_img{
-        width: .6rem;
-        height: .6rem;
         display: block;
-        position: absolute;
-        top: 50%;
-        margin-top: -.3rem;
-        left: 50%;
-        margin-left: -.3rem;
     }
+   
 }
 .list_content{
     flex: 1;

@@ -42,9 +42,7 @@ export default {
   },
   methods: {
     pushSwitch(){
-        console.log(this.push)
-        console.log(this.music)
-        console.log(this.sound)
+        
     },
     intoUs(){
         this.$router.push('/aboutUs')

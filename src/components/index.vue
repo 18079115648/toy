@@ -33,7 +33,7 @@
     	<div class="toys-content">
     		<Pagination :render="render" :param="pagination" :autoload="false" ref="pagination" uri="/dm-api/home/tag">
 					<div class="toys-list" v-show="pagination.content.length>0">
-			    	<router-link to="" class="toys-item" v-for="(item, index) in pagination.content" :key="index">
+			    	<router-link :to='"/room?machineSn="+item.machineSn' class="toys-item" v-for="(item, index) in pagination.content" :key="index">
 			    		<img class="toys-img" :src="item.imgs[0]"  />
 			    		<div class="toys-status" :class="[item.statusClass]">{{item.statusText}}</div>
 			    		<div class="toys-info">

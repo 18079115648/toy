@@ -162,6 +162,9 @@ export default {
             display: block;
             margin-right: .15rem;
         }
+        div{
+            color: #666;
+        }
     }
 }
 .address{
@@ -176,6 +179,7 @@ export default {
         display: flex;
         align-items: center;
         padding-left: .4rem;
+        color: #666;
         img{
             height: .3rem;
             display: block;

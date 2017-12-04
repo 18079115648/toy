@@ -11,7 +11,7 @@
                     <div>{{item.desc}}</div>
                 </div>
                 <div class="recharge_right">
-                    &yen; {{item.price}}.00
+                    &yen; {{item.price}}
                 </div>
             </div>
         </div>

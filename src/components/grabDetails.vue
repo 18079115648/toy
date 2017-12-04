@@ -27,8 +27,8 @@
                         </div>
                         <div class="grabDetails_msg">
                             <div>{{grabInfo.productName}}</div>
-                            <div v-if="grabInfo.status == 0 ">抓取失败</div>
-                            <div v-if="grabInfo.status == 1 " class="succeed">抓取成功</div>
+                            <div v-if="grabInfo.status">抓取失败</div>
+                            <div v-if="!grabInfo.status" class="succeed">抓取成功</div>
                             <div class="time">{{grabInfo.createTime}}</div>
                         </div>
                     </div>
@@ -48,7 +48,7 @@
                 </div>
             </div>
 
-            <div class="appeal_body"  v-if="grabInfo.status = 1 && !grabInfo.appeal ">
+            <div class="appeal_body"  v-if="grabInfo.status == 1 && !grabInfo.appeal ">
 				<div class="btn-default btn-hover" @click="Actionsheet = true">我要申诉</div>
                 <div class="problem">
                     <p>如果在游戏中遇到以下问题：</p>
@@ -64,8 +64,8 @@
         v-model="Actionsheet">
         </mt-actionsheet>
 
-            
         
+
     </div>
 </template>
 
@@ -87,7 +87,9 @@ export default {
     }
   },
   created(){
+    Indicator.open('加载中...')
     this.initData()
+    
   },
   
   methods: {
@@ -101,14 +103,15 @@ export default {
   		
   	},
     initData(){
+        
         this.$api.grabDetails({
 	        id:this.id,
 	    }).then(res => {
             this.grabInfo = res.data
-            console.log()
-            // this.status = res.data.status
+            Indicator.close()
+            
 	    }, err => {
-	        
+            Indicator.close()
         })
         
     },
@@ -221,7 +224,6 @@ export default {
             margin-top: -.3rem;
             left: 50%;
             margin-left: -.3rem;
-            z-index: 10;
         }
     }
 }
