@@ -24,6 +24,7 @@
                     </div>
                 </div>
             </div>
+            <div class="btn-default btn-hover login-out" @click="loginOut">退出登录</div>
         </div>
         
     </div>
@@ -65,6 +66,13 @@ export default {
 
     intoUs(){
         this.$router.push('/aboutUs')
+    },
+
+    //退出登录
+    loginOut() {
+        this.$storage.remove('token')
+        this.$storage.remove('history_url')
+        this.$router.replace('/login')
     }
   }
 }
@@ -96,5 +104,10 @@ export default {
 .set_last_img{
     width: .16rem;
     display: block;
+}
+.login-out{
+    position:absolute;
+    bottom: 1rem;
+    left: 0.3rem;
 }
 </style>

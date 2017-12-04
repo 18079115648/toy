@@ -15,15 +15,17 @@
             </div>
 
             <div class="payment_way">
-            	<div class="pay-item" v-if="!isWinxin">
+            	<div class="pay-item" @click="payWay = 1">
             		<img class="pay-icon" src="../../static/image/444.png">
 	                <div class="payment_way_text">支付宝支付</div>
-	                <img class="select-icon" src="../../static/image/bbb.png">
+	                <img class="select-icon" v-show="payWay == 1" src="../../static/image/bbb.png">
+	                <img class="select-icon" v-show="payWay != 1" src="../../static/image/rrrr.png">
             	</div>
-	            <div class="pay-item" v-if="isWinxin">
+	            <div class="pay-item" @click="payWay = 2" v-if="!isWinxin">
             		<img class="pay-icon" src="../../static/image/555.png">
 	                <div class="payment_way_text">微信支付</div>
-	                <img class="select-icon" src="../../static/image/bbb.png">
+	                <img class="select-icon" v-show="payWay == 2" src="../../static/image/bbb.png">
+	                <img class="select-icon" v-show="payWay != 2" src="../../static/image/rrrr.png">
             	</div>    
             </div>
 
@@ -41,6 +43,7 @@ export default {
     	isWinxin: this.$common.isWeixin(),
         id:this.$route.params.id,
         payment:{},
+        payWay: 1,   //1 支付宝   2 微信
     }
   },
   created(){
@@ -57,15 +60,32 @@ export default {
   },
   methods: {
     recharge() {
-    	this.$api.payment({
-	        id:this.id,
-	        type:3,
-	        returnUrl: 'http://' + window.location.host + '/#/index'
-	    }).then(res => {
-            document.write(res.data)
-	    }, err => {
-	        
-        })
+    	if(this.isWinxin) {
+    		
+    	}else {
+    		if(this.payWay == 1) {
+    			this.$api.payment({
+			        id:this.id,
+			        type:1,
+			        returnUrl: 'http://' + window.location.host + '/#/index'
+			    }).then(res => {
+		            document.write(res.data)
+			    }, err => {
+			        
+		        })
+			    return
+    		}
+    		this.$api.payment({
+		        id:this.id,
+		        type:2,
+		        tradeType: 'MWEB'
+		    }).then(res => {
+
+		    }, err => {
+		        
+	        })
+    	}
+	    	
         
     }
   }
@@ -121,11 +141,16 @@ export default {
 .payment_way{
     margin-bottom: 1.6rem;
     border-radius: 0.15rem;
-    padding: 0.3rem;
+    padding: 0.15rem 0.3rem;
     background: #fff;
     .pay-item{
     	display: flex;
     	align-items: center;
+    	padding: 0.25rem 0;
+    	border-bottom: 1px solid #f2f2f2;
+    	&:last-of-type{
+    		border-bottom: none;
+    	}
     	.pay-icon{
     		width: 0.5rem;
     		margin-right: 0.2rem;

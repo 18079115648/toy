@@ -254,7 +254,7 @@ export default {
 		//房间抓取记录
 		render(res) {
 			res.data.forEach((item) => {
-//		    	this.pagination.content.push(item)
+		    	this.pagination.content.push(item)
 	    	})
 	    },
 		//充值列表
