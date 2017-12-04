@@ -326,5 +326,8 @@ export default {
 	invite(params) {
 		return fetchPost('/dm-api/invite/code', params, true)
 	},
-	
+	// 进入房间
+	enterRoom(params) {
+		return fetchPost('/dm-api/enter/room', params, true)
+	}
 }

@@ -6,6 +6,9 @@ import router from './router'
 import VueRouter from 'vue-router'
 import mint from 'mint-ui'
 import 'mint-ui/lib/style.css'
+import '../static/js/webim/webim.config'
+import '../static/js/webim/strophe-1.2.8.min'
+
 
 import storage from '@/fetch/storage'
 Vue.prototype.$storage = storage

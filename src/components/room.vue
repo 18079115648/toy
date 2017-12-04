@@ -162,6 +162,10 @@ import storage from '../fetch/storage'
 import common from '../fetch/common'
 import * as SockJS from 'sockjs-client'
 import {} from '../../static/js/jZego-1.0.0'
+// console.info(WebIM)
+// import '../../static/js/webim/webim.config'
+// import '../../static/js/webim/strophe-1.2.8.min'
+import '../../static/js/webim/websdk-1.4.13'
 
 export default {
 	data() {
@@ -237,6 +241,7 @@ export default {
 		this.initWebSocket()
 		// 即构推流初始化
 		this.initZego()
+		
 		// 阻止缩放
 		this.preventScale()
 	},
@@ -245,6 +250,9 @@ export default {
 
 		// 加载音频资源
 		this.loadAudios()
+
+		// 初始化环信
+		this.initWebIM()
 	},
 	methods: {
 		//房间抓取记录
@@ -261,6 +269,35 @@ export default {
 		    	
 		    })
 		},
+
+		// 初始化环信
+		initWebIM() {
+			this.$api.enterRoom({machineSn: this.machineSn}).then((response) => {
+				var conn = new WebIM.connection({
+					isMultiLoginSessions: WebIM.config.isMultiLoginSessions,
+					https: typeof WebIM.config.https === 'boolean' ? WebIM.config.https : location.protocol === 'https:',
+					url: WebIM.config.xmppURL,
+					heartBeatWait: WebIM.config.heartBeatWait,
+					autoReconnectNumMax: WebIM.config.autoReconnectNumMax,
+					autoReconnectInterval: WebIM.config.autoReconnectInterval,
+					apiUrl: WebIM.config.apiURL,
+					isAutoLogin: true
+				});
+				conn.listen({
+					onOpened: function() {
+						console.info('连接成功')
+					},
+					onError: function() {
+						consoele.info("失败")
+					},
+					onPresence: function ( message ) {
+						console.info(message)
+					}
+				});
+			})
+			
+		},
+
 		// 初始化socket
 		initWebSocket() {
 			this.sock = new SockJS(process.env.WEBSOCKET_URL)
@@ -318,7 +355,7 @@ export default {
 						break;
 					case 'start_r':
 						console.debug('游戏开始状态')
-						if (data.status === 200) {
+						if (!this.isGame && data.status === 200) {
 							this.succStatus = false
 							this.failStatus = false
 							this.operateShow = true
