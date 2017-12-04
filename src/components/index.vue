@@ -32,8 +32,8 @@
 				    	</router-link>
 				    </div>
 		    	</div>	
-					<div class="toys-list" v-show="pagination.content.length>0">
-			    	<router-link :to='"/room?machineSn="+item.machineSn+"&num="+item.num+"&price="+item.price+"&machineId="+ item.machineId' class="toys-item" v-for="(item, index) in pagination.content" :key="index">
+				<div class="toys-list" v-show="pagination.content.length>0">
+			    	<div @click="enterRoom(item)" class="toys-item" v-for="(item, index) in pagination.content" :key="index">
 			    		<img class="toys-img" :src="item.imgs[0]"  />
 			    		<div class="toys-status" :class="[item.statusClass]">{{item.statusText}}</div>
 			    		<div class="toys-info">
@@ -43,16 +43,14 @@
 				    		</p>
 				    		<p class="toys-name shadow-text">{{item.name}}</p>
 			    		</div>	
-			    	</router-link>
+			    	</div>
 			    </div>
-			    <div class="no_msg" v-show="pagination.content.length<1 && pagination.loadEnd">
-			        <img src="../../static/image/ewd.png"  />
-			        <div>没有商品信息~</div>
-			    </div>	
-				</Pagination>
-		    
+				<div class="no_msg" v-show="pagination.content.length<1 && pagination.loadEnd">
+					<img src="../../static/image/ewd.png"  />
+					<div>没有商品信息~</div>
+				</div>	
+			</Pagination>
     	</div>
-	    	
     </div>
   </div>
 </template>
@@ -101,6 +99,9 @@ export default {
     }, err => {
     	
 	})
+	// document.addEventListener("WeixinJSBridgeReady", function () {  
+    //   document.getElementById('bg-audio').play()
+    // }, false);  
   },
   mounted() {
   	this.$api.homeTags().then(res => {
@@ -148,6 +149,12 @@ export default {
         	this.pagination.content.push(item)
         	this.currTags = this.pagination.data.type
         })
+    },
+
+    // 进入房间
+    enterRoom(room) {
+        this.$root.bgAudio.paused && this.$root.bgAudio.play()
+        this.$router.push({path: '/room', query: {machineSn: room.machineSn, num: room.num, price: room.price, machineId: room.machineId}})
     }
   }
 }
