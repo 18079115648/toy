@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
 Vue.use(Router)
 const index = r => require.ensure([], () => r(require('../components/index.vue')), 'index')
 const room = r => require.ensure([], () => r(require('../components/room.vue')), 'room')
@@ -47,23 +48,22 @@ const aboutUs = r => require.ensure([], () => r(require('../components/aboutUs.v
 
 
 
-
-
-
-
 /**
  * Demon Start
  */
 
  // 直播测试
  const live = r => require.ensure([], () => r(require('../components/live.vue')), 'live')
+ // 加载动画
+ const loading = r => require.ensure([], () => r(require('../components/loading.vue')), 'loading')
 
  /**
   * Demon End
   */
 
 
-export default new Router({
+
+const router = new Router({
   routes: [
     { path: '/',
       redirect: '/index' 
@@ -71,6 +71,10 @@ export default new Router({
     {
       path: '/live',
       component: live
+    },
+    {
+      path: '/loading',
+      component: loading
     },
     {
       path: '/index',
@@ -219,3 +223,5 @@ export default new Router({
     },
   ]
 })
+
+export default router

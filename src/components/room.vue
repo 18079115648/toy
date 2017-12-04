@@ -1,10 +1,5 @@
 <template>
     <div class="app" :style="{ height: wH + 'px' }">
-		<div class="loading" v-if="showLoading">
-			<div class="progress">
-				<mt-progress :value="loadingProgress" :bar-height="6"></mt-progress>
-			</div>
-		</div>
 		<canvas id="frontview" :class="{show:showFront}" :style="{ height: wH + 'px' }"></canvas>
       	<canvas id="sideview" :class="{show:showSide}" :style="{ height: wH + 'px' }"></canvas>
     	<div class="room-top">
@@ -28,7 +23,7 @@
     		<div class="begin btn-hover" @click="beginGame">
     			<p class="price">
     				<img src="../../static/image/wd.png"  />
-    				<span class="shadow-text">{{remainGold}}</span>
+    				<span class="shadow-text">{{price}}</span>
     			</p>
     			<p class="shadow-text begin-text" :class="{enabled: roomStatus == 0}">开始游戏</p>
     		</div>
@@ -86,7 +81,7 @@
 						<span class="btn-hover">分享好友</span>
 						<span class="btn-hover" @click="beginGame">再次挑战</span>
 					</p>
-					<p class="time">倒计时 {{endTime}}秒</p>
+					<p class="time" v-if="endTime >= 1">倒计时 {{endTime}}秒</p>
 				</div>
 				<img src="../../static/image/qe.png" class="close" @click="closePop"/>	
 			</div>
@@ -101,18 +96,21 @@
 						<span class="btn-hover">分享好友</span>
 						<span class="btn-hover" @click="beginGame">再次挑战</span>
 					</p>
-					<p class="time">倒计时 {{endTime}}秒</p>
+					<p class="time" v-if="endTime >= 1">倒计时 {{endTime}}秒</p>
 				</div>
 				<img src="../../static/image/qe.png" class="close" @click="closePop" />	
 			</div>
 		</mt-popup>
+
+		<!-- <audio id="bg-audio" src="../../static/audio/bgm01.mp3"  preload="preload" loop></audio> -->
     </div>
 </template>
 
 <script>
-import { Toast, Progress, MessageBox } from 'mint-ui'
+import { Toast, MessageBox } from 'mint-ui'
 import accessToken from '../fetch/accessToken'
 import storage from '../fetch/storage'
+import common from '../fetch/common'
 import * as SockJS from 'sockjs-client'
 import {} from '../../static/js/jZego-1.0.0'
 
@@ -135,10 +133,11 @@ export default {
 			machineSn: undefined,			// 设备编号
       		sock: undefined,				// socket handler
 			roomStatus: 0, 					// 1游戏中 0空闲
+			price: 20,						// 价格
 			  
-			// zegoRoomId: 'WWJ_ZEGO_12345_54323',
+			zegoRoomId: 'WWJ_ZEGO_12345_54323',
 			zg: undefined,								// zego对象
-			zegoRoomId: 'sander_21312312312',			// 房间号
+			// zegoRoomId: 'sander_21312312312',			// 房间号
 			zegoAppId: 3177435262,						// 应用编号
 			zegoServer: 'ws://106.15.41.49:8181/ws',	// 服务器地址
 			zegoIdName: '1221',							// 用户编号
@@ -154,30 +153,35 @@ export default {
 			readyGoAudio: undefined, 	// 准备音效
 			successAudio: undefined, 	// 抓取成功音效
 			failureAudio: undefined,	// 抓取失败音效
+			takeAudio: undefined,		// 抓取音效
 			loadCount: 0,				// 加载统计
 
 			isGame: false,				// 是否游戏中
 
 			musicSwitch: true,			// 背景音乐开关
 			soundSwitch: true,			// 背景音效开关
-
-			loadingProgress: 0,			// 进度
-			showLoading: true,			// 显示加载页面
 	    }
 	},
 	created() {	
 		// 机器编号
 		this.machineSn = this.$route.query.machineSn 	
 		// 房间人数
-		this.memberNum = this.$route.query.num			
-		// 获取金币
-		this.getGold()
+		this.memberNum = this.$route.query.num		
+		// 抓取价格
+		this.price = parseInt(this.$route.query.price)
 		// 加载音频资源
 		this.loadAudios()
+		// 获取金币
+		this.getGold()
 		// 初始化socket
 		this.initWebSocket()
 		// 即构推流初始化
 		this.initZego()
+		// 阻止缩放
+		this.preventScale()
+		document.addEventListener("WeixinJSBridgeReady", function () {  
+           document.getElementById('bg-audio').play()
+    }, false);  
 	},
 	mounted() {	
 		this.wH = document.getElementById('app').offsetHeight
@@ -235,7 +239,7 @@ export default {
 						console.debug('游戏状态更新')
 						this.roomStatus = data.gameStatus
 						if (data.gameStatus === 1) {
-							this.avatar = data.headUrl
+							data.headUrl && (this.avatar = data.headUrl)
 						}
 						break;
 					case 'start_r':
@@ -300,7 +304,7 @@ export default {
 			// 获取token
 			this.$api.getZegoToken(this.zegoAppId, this.zegoIdName).then((token) => {
 				// 登录房间
-				this.zg.login(this.zegoRoomId, 2, token, (streamList) => {
+				this.zg.login(this.zegoRoomId, 1, token, (streamList) => {
 					streamList.forEach((item) => {
 						// 设置音量0
 						parent.zg.setPlayVolume(item.stream_id, 0)
@@ -360,6 +364,7 @@ export default {
 		readyGo() {
 			this.readyStatus = true
 			this.readyTime = 3		// 倒计时3秒
+			this.playReadyGoAudio()
 			const parent = this
 			parent.operateCountDown(30)
 			function timeout() {
@@ -368,9 +373,6 @@ export default {
 						parent.readyStatus = false
 						// parent.operateShow = true
 						return
-					}
-					if (parent.readyTime == 2) {
-						parent.playReadyGoAudio()
 					}
 					parent.readyTime--
 					timeout()
@@ -494,6 +496,11 @@ export default {
 				return
 			}
 
+			const parent = this
+			setTimeout(() => {
+				parent.takeAudio.play()
+			}, 400)
+
 			this.sock.send(JSON.stringify({
 				cmd: 'grab',
 				vmc_no: this.machineSn,
@@ -576,7 +583,8 @@ export default {
 			function timeout() {
 				setTimeout(() => {
 					if (parent.endTime === 1) {
-						parent.succStatus = false
+						// parent.succStatus = false
+						parent.endTime--
 						return
 					}
 					parent.endTime--
@@ -597,7 +605,8 @@ export default {
 			function timeout() {
 				setTimeout(function() {
 					if (parent.endTime === 1) {
-						parent.failStatus = false
+						// parent.failStatus = false
+						parent.endTime--
 						return
 					}
 					parent.endTime--
@@ -625,18 +634,6 @@ export default {
 		},
 
 		/**
-		 * 加载完成检查
-		 */
-		loadCheck() {
-			this.loadCount++
-			if (this.loadCount === 5) {
-				this.bgAudio.play()
-				this.showLoading = false
-			}
-			this.loadingProgress = this.loadCount * 100 / 5
-		},
-
-		/**
 		 * 加载音频资源
 		 */
 		loadAudios() {
@@ -648,47 +645,37 @@ export default {
 				this.soundSwitch = storage.get('sound_switch')
 			}
 
-			const parent = this
-			
 			// 背景音乐
-			this.bgAudio = new Audio()
-			this.bgAudio.src = '../../static/audio/bgm02.mp3'
-			this.bgAudio.onloadedmetadata = function() {
-				console.info('背景音乐加载完成')
-				parent.loadCheck()
-			}
+			this.bgAudio = document.getElementById('bg-audio')
+			// if (common.isWeixin()) {
+			// 	const parent = this
+			// 	document.addEventListener("WeixinJSBridgeReady", function () {  
+			// 		 document.getElementById('bg-audio').play()
+			// 	}, false);  
+			// } else {
+				this.bgAudio.play()
+				const parent = this
+				setTimeout(function() {
+					alert('aaa')
+					parent.bgAudio.play()
+				}, 2000)
+			// }
+			
 
 			// 点击音效
-			this.clickAudio = new Audio()
-			this.clickAudio.src = '../../static/audio/startClickItem.mp3'
-			this.clickAudio.onloadedmetadata = function() {
-				console.info('点击音乐加载完成')
-				parent.loadCheck()
-			}
+			this.clickAudio = document.getElementById('click-audio')
 
 			// 准备音效
-			this.readyGoAudio = new Audio()	
-			this.readyGoAudio.src = '../../static/audio/readygo.mp3'
-			this.readyGoAudio.onloadedmetadata = function() {
-				console.info('准备音乐加载完成')
-				parent.loadCheck()
-			}
+			this.readyGoAudio = document.getElementById('ready-audio')
 
 			// 抓取成功音效
-			this.successAudio = new Audio()	
-			this.successAudio.src = '../../static/audio/result_succeed.mp3'
-			this.successAudio.onloadedmetadata = function() {
-				console.info('抓取成功音效加载完成')
-				parent.loadCheck()
-			}
+			this.successAudio = document.getElementById('success-audio')
 
 			// 抓取失败音效
-			this.failureAudio = new Audio()
-			this.failureAudio.src = '../../static/audio/result_failed.mp3'
-			this.failureAudio.onloadedmetadata = function() {
-				console.info('抓取失败音效加载完成')
-				parent.loadCheck()
-			}
+			this.failureAudio = document.getElementById('failure-audio')
+
+			// 抓取音效
+			this.takeAudio = document.getElementById('take-audio')
 		},
 
 		/**
@@ -704,12 +691,40 @@ export default {
 		startSideStream() {
 			this.zg.startPlayingStream(this.sideStreamId, document.getElementById('sideview'))
 			this.zg.setPlayVolume(this.sideStreamId, 0)
+		},
+
+		preventScale() {
+			const parent = this
+			window.onload = function () {
+				document.addEventListener('gesturestart', function (e) {
+					e.preventDefault()
+				})
+				document.addEventListener('dblclick', function (e) {
+					e.preventDefault();
+				})
+				document.addEventListener('touchstart', function (event) {
+					// if (parent.bgAudio.paused) {
+					// 	parent.bgAudio.play()
+					// }
+					if (event.touches.length > 1) {
+						event.preventDefault();
+					}
+				})
+				var lastTouchEnd = 0
+				document.addEventListener('touchend', function (event) {
+					var now = (new Date()).getTime()
+					if (now - lastTouchEnd <= 300) {
+						event.preventDefault();
+					}
+					lastTouchEnd = now;
+				}, false)
+			}
 		}
 	},
 
 	beforeDestroy() {
 		// 关闭背景音量
-		this.bgAudio && this.bgAudio.load()
+		this.bgAudio && !this.bgAudio.paused && this.bgAudio.pause()
 
 		// 释放即构资源
 		// this.zg.release()

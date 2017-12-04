@@ -33,7 +33,7 @@
 				    </div>
 		    	</div>	
 					<div class="toys-list" v-show="pagination.content.length>0">
-			    	<router-link :to='"/room?machineSn="+item.machineSn+"&num="+item.num' class="toys-item" v-for="(item, index) in pagination.content" :key="index">
+			    	<router-link :to='"/room?machineSn="+item.machineSn+"&num="+item.num+"&price="+item.price' class="toys-item" v-for="(item, index) in pagination.content" :key="index">
 			    		<img class="toys-img" :src="item.imgs[0]"  />
 			    		<div class="toys-status" :class="[item.statusClass]">{{item.statusText}}</div>
 			    		<div class="toys-info">
@@ -100,7 +100,7 @@ export default {
 			this.banner = res.data
     }, err => {
     	
-    })
+	})
   },
   mounted() {
   	this.$api.homeTags().then(res => {
