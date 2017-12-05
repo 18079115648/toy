@@ -15,13 +15,13 @@
             </div>
 
             <div class="payment_way">
-            	<div class="pay-item" @click="payWay = 1">
+            	<div class="pay-item" @click="payWay = 1"  v-if="!isWinxin">
             		<img class="pay-icon" src="../../static/image/444.png">
 	                <div class="payment_way_text">支付宝支付</div>
 	                <img class="select-icon" v-show="payWay == 1" src="../../static/image/bbb.png">
 	                <img class="select-icon" v-show="payWay != 1" src="../../static/image/rrrr.png">
             	</div>
-	            <div class="pay-item" @click="payWay = 2" v-if="!isWinxin">
+	            <div class="pay-item" @click="payWay = 2">
             		<img class="pay-icon" src="../../static/image/555.png">
 	                <div class="payment_way_text">微信支付</div>
 	                <img class="select-icon" v-show="payWay == 2" src="../../static/image/bbb.png">
@@ -65,8 +65,8 @@ export default {
     	}else {
     		if(this.payWay == 1) {
     			this.$api.payment({
-			        id:this.id,
-			        type:1,
+			        id: this.id,
+			        type: 3,
 			        returnUrl: 'http://' + window.location.host + '/#/index'
 			    }).then(res => {
 		            document.write(res.data)
@@ -76,8 +76,8 @@ export default {
 			    return
     		}
     		this.$api.payment({
-		        id:this.id,
-		        type:2,
+		        id: this.id,
+		        type: 2,
 		        tradeType: 'MWEB'
 		    }).then(res => {
 

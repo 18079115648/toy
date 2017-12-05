@@ -1,9 +1,9 @@
 <template>
     <mt-loadmore :bottom-method="loadBottom" :top-method="loadTop" :auto-fill="false" :bottom-all-loaded="allLoaded" :bottomDistance="40" ref="loadmore">
         <slot></slot>
-    </mt-loadmore>
+    </mt-loadmore>  
 </template>
-
+ 
 <script>
 import {Loadmore, Indicator} from 'mint-ui'
 export default {
