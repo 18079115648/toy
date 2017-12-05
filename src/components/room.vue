@@ -301,7 +301,8 @@ export default {
 						console.info(message)
 					},
 					onTextMessage: function(message) {
-						parent.createDanmu(message.data)
+						console.info(message)
+						// parent.createDanmu(message.data)
 					},
 					onPresence: function ( message ) {
 						parent.webIMChatroomId = message.from
