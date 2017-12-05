@@ -97,7 +97,7 @@ export default {
   	this.$api.homeBanner().then(res => {
 			this.banner = res.data
     }, err => {
-    	
+    	  
 	})
 	// document.addEventListener("WeixinJSBridgeReady", function () {  
     //   document.getElementById('bg-audio').play()
@@ -116,25 +116,25 @@ export default {
   methods: {
   	tagChange(id) {
   		this.pagination.data.type = id
-  		this.$refs.pagination.refresh()
+  		this.$refs.pagination.refresh() 
   	},
   	changeTag(item) {
   		if(this.currTags == item.id) {
   			return
   		}
-//		this.currTags = item.id
   		this.tagChange(item.id)
   	},
   	bannerLink(item) {
   		if(item.type == 1) {
   			
-  		}else if(item.type == 3) {
-  			
+  		}else if(item.type == 2) {
+			this.$router.push('/recharge')
   		}else {
   			window.location.href = item.url
   		}
   	},
   	render(res) {
+			this.currTags = this.pagination.data.type
   			res.data.forEach((item) => {
   				if(item.status == 0) {
   					item.statusText = '空闲中'
@@ -147,7 +147,6 @@ export default {
   					item.statusClass = 'end'
   				}
         	this.pagination.content.push(item)
-        	this.currTags = this.pagination.data.type
         })
     },
 
