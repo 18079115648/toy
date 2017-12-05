@@ -16,6 +16,7 @@ const toysBox = r => require.ensure([], () => r(require('../components/toysBox.v
 const news = r => require.ensure([], () => r(require('../components/news.vue')), 'news')
 const orderSubmit = r => require.ensure([], () => r(require('../components/orderSubmit.vue')), 'orderSubmit')
 const invite = r => require.ensure([], () => r(require('../components/invite.vue')), 'invite')
+const share = r => require.ensure([], () => r(require('../components/share.vue')), 'share')
 
 //个人中心
 const userInfo = r => require.ensure([], () => r(require('../components/userInfo.vue')), 'userInfo')
@@ -206,6 +207,10 @@ const router = new Router({
       meta: {
       	requireAuth: true
       }
+    },
+    {
+      path: '/share/:id',
+      component: share,
     },
     {
       path: '/orderSubmit',

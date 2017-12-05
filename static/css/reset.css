@@ -169,11 +169,13 @@ button {
     -webkit-appearance: none;
     appearance: none;
     outline: none;
+    background: transparent;
 }
 
 textarea {
     -webkit-appearance: none;
     appearance: none;
+    background: transparent;
 }
 
 input:focus,

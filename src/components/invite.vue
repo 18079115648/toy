@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import wx from 'weixin-js-sdk'
 import { Toast } from 'mint-ui'
 export default {
   data () {
@@ -35,12 +36,38 @@ export default {
   	if(this.$common.isWeixin()) {
   		this.$api.userInfo().then(res => {
 			this.code = res.data.inviteCode.split('')
+			this.lineLink = 'http://' + location.host + '/#/share' + res.data.inviteCode
+			this.imgUrl = '../../static/image/512.png'
+			this.shareTitle = '优抓'
+			this.descContent = '欢乐抓娃娃，分享奖励多多！'
+			this.wxShare(this.lineLink, this.imgUrl, this.shareTitle, this.descContent)	
 	    }, err => {
 	    	
 	    })
   	}
   },
   methods: {
+  	wxShare(lineLink, imgUrl, shareTitle, descContent) {
+		let self = this
+		this.$api.wxShare({
+			url: window.location.href.split('#')[0]
+		}).then((res) => {
+			console.log(res)
+			wx.config({
+				debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+				appId: res.data.appId, // 必填，公众号的唯一标识
+				timestamp: parseInt(res.data.timestamp), // 必填，生成签名的时间戳
+				nonceStr: res.data.nonceStr, // 必填，生成签名的随机串
+				signature: res.signature, // 必填，签名，见附录1
+				jsApiList: ['uploadImage', 'getLocation', 'chooseImage', 'previewImage', 'uploadImage', 'scanQRCode', 'chooseWXPay', 'onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareQZone'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+			})
+			wx.ready(function() {
+				self.$loadJssdk(lineLink, imgUrl, shareTitle, descContent, self.wxShare)
+			})
+		}).catch((err) => {
+			console.log(err)
+		})
+	},
     receive() {
     	if(!this.inviteCode) {
     		Toast({

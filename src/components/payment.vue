@@ -15,18 +15,19 @@
             </div>
 
             <div class="payment_way">
+            	<div class="pay-item" @click="payWay = 2">
+            		<img class="pay-icon" src="../../static/image/555.png">
+	                <div class="payment_way_text">微信支付</div>
+	                <img class="select-icon" v-show="payWay == 2" src="../../static/image/bbb.png">
+	                <img class="select-icon" v-show="payWay != 2" src="../../static/image/rrrr.png">
+            	</div>  
             	<div class="pay-item" @click="payWay = 1"  v-if="!isWinxin">
             		<img class="pay-icon" src="../../static/image/444.png">
 	                <div class="payment_way_text">支付宝支付</div>
 	                <img class="select-icon" v-show="payWay == 1" src="../../static/image/bbb.png">
 	                <img class="select-icon" v-show="payWay != 1" src="../../static/image/rrrr.png">
             	</div>
-	            <div class="pay-item" @click="payWay = 2">
-            		<img class="pay-icon" src="../../static/image/555.png">
-	                <div class="payment_way_text">微信支付</div>
-	                <img class="select-icon" v-show="payWay == 2" src="../../static/image/bbb.png">
-	                <img class="select-icon" v-show="payWay != 2" src="../../static/image/rrrr.png">
-            	</div>    
+	              
             </div>
 
             <div class="btn-default btn-hover recharge" @click="recharge">确认支付</div>
@@ -43,7 +44,7 @@ export default {
     	isWinxin: this.$common.isWeixin(),
         id:this.$route.params.id,
         payment:{},
-        payWay: 1,   //1 支付宝   2 微信
+        payWay: 2,   //1 支付宝   2 微信
     }
   },
   created(){

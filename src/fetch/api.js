@@ -326,6 +326,10 @@ export default {
 	invite(params) {
 		return fetchPost('/dm-api/invite/code', params, true)
 	},
+	//	微信分享
+	wxShare(params) {
+		return fetchGet('/dm-api/wechat/getjsapi/signpackage', params, true)
+	},
 	// 进入房间
 	enterRoom(params) {
 		return fetchPost('/dm-api/enter/room', params, true)

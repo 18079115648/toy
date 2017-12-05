@@ -14,7 +14,7 @@
     			<div @click="getCode" class="captcha-btn" :class="{'disabled': disableSend}">{{captchaLabel}}</div>
     		</div>
     		<p class="tip">
-    			未注册疯狂抓娃娃的手机号，登录时将自动注册且代表您已经同意遵守<a> 用户协议及隐私条款 </a>
+    			未注册优抓的手机号，登录时将自动注册且代表您已经同意遵守<a> 用户协议及隐私条款 </a>
     		</p>
     	</div>
     	<div class="btn-default btn-hover btn-login" @click="login">登录</div>

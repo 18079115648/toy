@@ -22,6 +22,9 @@ Vue.prototype.$token = token
 import api from '@/fetch/api'
 Vue.prototype.$api = api
 
+import { loadJssdk } from '@/fetch/tool'
+Vue.prototype.$loadJssdk = loadJssdk
+
 import weixin from '@/fetch/weixin'
 Vue.prototype.$weixin = weixin
 
