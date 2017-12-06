@@ -199,12 +199,12 @@ export default {
 	
 	//首页标签
 	homeTags(params) {
-		return fetchGet('/dm-api/tags', params, true)
+		return fetchGet('/dm-api/tags', params, false)
 	},
 	
 	//标签获取房间列表
 	TagRooms(params) {
-		return fetchGet('/dm-api/home/tag', params, true)
+		return fetchGet('/dm-api/home/tag', params, false)
 	},
 	
 	//首页banner

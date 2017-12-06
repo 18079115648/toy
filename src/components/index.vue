@@ -1,7 +1,9 @@
 <template>
   <div class="content">
     <div class="header">
-    	<router-link to="/user" class="user-link link"></router-link>
+    	<router-link to="/user" class="user-link link">
+    		<img :src="avatar"  class="fullEle" />
+    	</router-link>
     	<img class="logo-text" src="../../static/image/logo-text.png" />
     	<span style="width: 0.85rem;"></span>
     </div>
@@ -12,10 +14,10 @@
     </div>
     <div class="nav-content">
     	<div class="toys-content">
-    		<Pagination :render="render" :param="pagination" :autoload="false" ref="pagination" uri="/dm-api/home/tag" >
+    		<Pagination :render="render" :needToken="false" :param="pagination" :autoload="false" ref="pagination" uri="/dm-api/home/tag" >
 					<div class="home-data" v-show="firstTag == currTags">
 		    		<div class="banner">
-				    	<mt-swipe :auto="0">
+				    	<mt-swipe :auto="4000">
 								<mt-swipe-item v-for="(item,index) in banner" :key="index">
 									<div class="fullEle" @click="bannerLink(item)">
 										<img :src="item.imgUrl" class="fullEle" />
@@ -91,9 +93,14 @@ export default {
 	        	pageSize: 10
 	        }
 	    },
+	    
+	    avatar: '',  //头像
     }
   },
   created() {
+  	if(this.$storage.get('user')) {
+  		this.avatar = this.$storage.get('user').avatar ? this.$storage.get('user').avatar : '../../static/image/logo-text.png'
+  	}
   	this.$api.homeBanner().then(res => {
 			this.banner = res.data
     }, err => {
@@ -153,7 +160,7 @@ export default {
     // 进入房间
     enterRoom(room) {
         this.$root.bgAudio.paused && this.$root.bgAudio.play()
-        this.$router.push({path: '/room', query: {machineSn: room.machineSn, num: room.num, price: room.price, machineId: room.machineId}})
+        this.$router.push({path: '/room', query: {machineSn: room.machineSn, num: room.num, price: room.price, machineId: room.machineId, liveRoomCode: room.liveRoomCode}})
     }
   }
 }
@@ -171,12 +178,13 @@ export default {
 	.link{
 		width: 0.85rem;
 		height: 0.85rem;
-		background-position: center;
+		/*background-position: center;
 		background-repeat: no-repeat;
-		background-size: 55%;
+		background-size: 55%;*/
 		position: relative;
+		padding: 0.15rem;
 	}
-	.user-link{
+	/*.user-link{
 		background-image: url(../../static/image/vvv.png);
 	}
 	.news-link{
@@ -196,7 +204,7 @@ export default {
 			top: 0.1rem;
 			right: 0.06rem;
 		}
-	}
+	}*/
 	.logo-text{
 		height: 0.66rem;
 	}

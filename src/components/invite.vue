@@ -58,7 +58,7 @@ export default {
 				appId: res.data.appId, // 必填，公众号的唯一标识
 				timestamp: parseInt(res.data.timestamp), // 必填，生成签名的时间戳
 				nonceStr: res.data.nonceStr, // 必填，生成签名的随机串
-				signature: res.signature, // 必填，签名，见附录1
+				signature: res.data.signature, // 必填，签名，见附录1
 				jsApiList: ['uploadImage', 'getLocation', 'chooseImage', 'previewImage', 'uploadImage', 'scanQRCode', 'chooseWXPay', 'onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareQZone'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
 			})
 			wx.ready(function() {
@@ -113,14 +113,14 @@ export default {
 		height: 0.7rem;
 		border-radius: 0.7rem;
 		background: #ffe889;
-		padding:0 0.5rem;
+		padding:0.15rem 0.5rem;
 		input{
 			background: transparent;
 			height: 100%;
 			width: 100%;
 			text-align: center;
 			color: #f3ad00;
-			line-height: 0.7rem;
+			line-height: 0.4rem;
 		}
 		input::-webkit-input-placeholder{
 			color: #f3ad00;

@@ -20,7 +20,7 @@
     <div class="link-list">
     	<router-link to="/recharge" class="link-item">
     		<img src="../../static/image/3333.png" class="icon" />
-    		<p class="text">砖石充值</p>
+    		<p class="text">钻石充值</p>
     		<div class="recharge-btn">充值</div>
     	</router-link>
     	<router-link to="/paymentList" class="link-item">

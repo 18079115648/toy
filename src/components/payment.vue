@@ -10,7 +10,7 @@
                 </div>
                
                 <div class="payment_right">
-                    <div>&yen; {{payment.price}}</div>
+                    <div>&yen; {{payment.price.toFixed(2)}}</div>
                 </div>
             </div>
 

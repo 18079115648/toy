@@ -21,10 +21,10 @@
           <img src="../../static/image/wdd.png" class="guide">
         </div>
       </div>
-      <div class="head" >
+      <!--<div class="head" >
         <label for="user_name">邀请码</label>
         <span class="nickname-text" >{{inviteCode}}</span>
-      </div>
+      </div>-->
     </div>
   </div>
     

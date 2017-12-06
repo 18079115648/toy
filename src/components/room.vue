@@ -240,6 +240,8 @@ export default {
 	created() {	
 		// 机器编号
 		this.machineSn = this.$route.query.machineSn 	
+		//房间号
+		this.zegoRoomId = this.$route.query.liveRoomCode
 		// 抓取价格
 		this.price = parseInt(this.$route.query.price)
 		// 获取金币
