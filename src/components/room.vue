@@ -184,7 +184,7 @@ export default {
 	    	failStatus: false, 				// 没有抓到娃娃,
 			endTime: 3,						// 抓取结果展示倒计时
 			remainGold: storage.get('remain_gold'),	// 剩余金币
-			avatar: storage.get('headUrl'), // 头像
+			avatar: storage.get('headUrl') || '../../static/image/avatar.png', // 头像
 			
 			machineSn: undefined,			// 设备编号
       		sock: undefined,				// socket handler
@@ -638,9 +638,9 @@ export default {
 		moveDirection(direction) {
 			if (this.showSide) {
 				if (direction === 1) {
-					direction = 4
-				} else if (direction === 2) {
 					direction = 3
+				} else if (direction === 2) {
+					direction = 4
 				} else if (direction === 3) {
 					direction = 1
 				} else if (direction === 4) {
@@ -822,8 +822,9 @@ export default {
 			}
 
 			// 背景音乐
-			this.$root.bgAudio.paused && this.$root.bgAudio.play()
-
+			if(this.musicSwitch) {
+				this.$root.bgAudio.paused && this.$root.bgAudio.play()
+			}
 			// 点击音效
 			this.clickAudio = document.getElementById('click-audio')
 

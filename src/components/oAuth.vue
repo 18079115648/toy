@@ -30,7 +30,7 @@ export default {
             if (this.$storage.get('history_url') && this.$storage.get('history_url') != '/login') {
                 redirectURI = this.$storage.get('history_url')
             }
-            window.location.replace('http://' + window.location.host + '/#' + redirectURI)
+            window.location.replace('http://' + window.location.host + '/#/index')
 //          this.$router.replace(redirectURI)
 		}
     }

@@ -95,12 +95,12 @@ export default {
 	    },
 	    
 	    avatar: '../../static/image/avatar.png',  //头像
+	    
+	    musicSwitch: true,  //背景音乐
     }
   },
   created() {
-  	if(this.$storage.get('user')) {
-  		this.avatar = this.$storage.get('user').avatar ? this.$storage.get('user').avatar : '../../static/image/avatar.png'
-  	}
+  	
   	this.$api.homeBanner().then(res => {
 			this.banner = res.data
     }, err => {
@@ -109,6 +109,15 @@ export default {
 	// document.addEventListener("WeixinJSBridgeReady", function () {  
     //   document.getElementById('bg-audio').play()
     // }, false);  
+  },
+  activated() {
+  	//背景音乐
+  	if(this.$storage.get('user')) {
+  		this.avatar = this.$storage.get('user').avatar ? this.$storage.get('user').avatar : '../../static/image/avatar.png'
+  	}
+  	if (this.$storage.get('music_switch') != null) {
+			this.musicSwitch = this.$storage.get('music_switch')
+		}
   },
   mounted() {
   	this.$api.homeTags().then(res => {
@@ -159,7 +168,18 @@ export default {
 
     // 进入房间
     enterRoom(room) {
-        this.$root.bgAudio.paused && this.$root.bgAudio.play()
+    	if(room.status == 2) {
+    		Toast({
+					message: '机器维护中，请选择其他房间吧',
+					position: 'middle',
+					duration: 1500
+				})
+    		return
+    	}
+    	if(this.musicSwitch) {
+    		this.$root.bgAudio.paused && this.$root.bgAudio.play()
+    	}
+        
         this.$router.push({path: '/room', query: {machineSn: room.machineSn, num: room.num, price: room.price, machineId: room.machineId, liveRoomCode: room.liveRoomCode}})
     }
   }

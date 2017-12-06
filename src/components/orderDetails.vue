@@ -77,7 +77,7 @@ export default {
 				  this.orderDetail.expressName = '天天快递'
 				  break;
 				case 5:
-				this.orderDetail.expressName = 'EMS快递'
+				this.orderDetail.expressName = '天天快递'
 				  this.title = ''
 				  break;
 			}

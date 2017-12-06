@@ -21,7 +21,7 @@
 		</div>
 		<div class="price-content">
 			<div class="price-item">
-				<span>我的砖石</span>
+				<span>我的钻石</span>
 				<span class="price"><img src="../../static/image/wd.png" />9999</span>
 			</div>
 			<div class="price-item">
