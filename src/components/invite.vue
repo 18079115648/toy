@@ -16,8 +16,9 @@
         	<div class="invite-code" >
         		<span v-for="(item, index) in code" :key="index">{{item}}</span>
         	</div>
-        	<div class="receive btn-hover">分享邀请好友</div>
+        	<div class="receive btn-hover" @click="show = true">分享邀请好友</div>
         </div>
+        <share-tip v-show="show" @shareCancel="show = false"></share-tip>
     </div>
 </template>
 
@@ -29,16 +30,18 @@ export default {
     return {
 		isWinxin: this.$common.isWeixin(),
 		inviteCode: '',
-		code:[]
+		code:[],
+		
+		show: false
     }
   },
   created() {
   	if(this.$common.isWeixin()) {
   		this.$api.userInfo().then(res => {
 			this.code = res.data.inviteCode.split('')
-			this.lineLink = 'http://' + location.host + '/#/share' + res.data.inviteCode
-			this.imgUrl = '../../static/image/512.png'
-			this.shareTitle = '优抓'
+			this.lineLink = 'http://' + location.host + '/#/share/' + res.data.inviteCode
+			this.imgUrl = 'https://yingdd.oss-cn-hangzhou.aliyuncs.com/0d25d14de142d89f5af33b0b53ecc7b0.png'
+			this.shareTitle = '优抓娃娃机'
 			this.descContent = '欢乐抓娃娃，分享奖励多多！'
 			this.wxShare(this.lineLink, this.imgUrl, this.shareTitle, this.descContent)	
 	    }, err => {

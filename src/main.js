@@ -34,6 +34,9 @@ Vue.component('Header', Header)
 import Pagination from '@/components/common/Pagination'
 Vue.component('Pagination', Pagination)
 
+import shareTip from '@/components/common/shareTip'
+Vue.component('shareTip', shareTip)
+
 import confirmModal from '@/components/common/confirmModal'
 
 

@@ -17,6 +17,7 @@ const news = r => require.ensure([], () => r(require('../components/news.vue')),
 const orderSubmit = r => require.ensure([], () => r(require('../components/orderSubmit.vue')), 'orderSubmit')
 const invite = r => require.ensure([], () => r(require('../components/invite.vue')), 'invite')
 const share = r => require.ensure([], () => r(require('../components/share.vue')), 'share')
+const agree = r => require.ensure([], () => r(require('../components/agree.vue')), 'agree')
 
 //个人中心
 const userInfo = r => require.ensure([], () => r(require('../components/userInfo.vue')), 'userInfo')
@@ -180,7 +181,14 @@ const router = new Router({
     },
     {
       path: '/mobileLogin',
-      component: mobileLogin
+      component: mobileLogin,
+      meta: {
+      	keepAlive: true
+      }
+    },
+    {
+      path: '/agree',
+      component: agree 
     },
     {
       path: '/oauth',

@@ -2,7 +2,7 @@
   <div class="content">
     <div class="header">
     	<router-link to="/user" class="user-link link">
-    		<img :src="avatar"  class="fullEle" />
+    		<img :src="avatar" style="border-radius: 50%;"  class="fullEle" />
     	</router-link>
     	<img class="logo-text" src="../../static/image/logo-text.png" />
     	<span style="width: 0.85rem;"></span>
@@ -41,7 +41,7 @@
 			    		<div class="toys-info">
 			    			<p class="join-count">
 				    			<img class="icon" src="../../static/image/wd.png" />
-				    			<span class="shadow-text">{{item.price}}</span>
+				    			<span class="shadow-text">{{parseInt(item.price)}}</span>
 				    		</p>
 				    		<p class="toys-name shadow-text">{{item.name}}</p>
 			    		</div>	
@@ -94,12 +94,12 @@ export default {
 	        }
 	    },
 	    
-	    avatar: '',  //头像
+	    avatar: '../../static/image/avatar.png',  //头像
     }
   },
   created() {
   	if(this.$storage.get('user')) {
-  		this.avatar = this.$storage.get('user').avatar ? this.$storage.get('user').avatar : '../../static/image/logo-text.png'
+  		this.avatar = this.$storage.get('user').avatar ? this.$storage.get('user').avatar : '../../static/image/avatar.png'
   	}
   	this.$api.homeBanner().then(res => {
 			this.banner = res.data
