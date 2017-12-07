@@ -76,7 +76,7 @@
 					<p class="succ-tip">太棒了，抓到娃娃了耶！</p>
 					<a class="check-goods shadow-text" @click="toToysPocket">立即查看</a>
 					<p class="operate-btn">
-						<span class="btn-hover">分享好友</span>
+						<!--<span class="btn-hover">分享好友</span>-->
 						<span class="btn-hover" @click="beginGame">再次挑战</span>
 					</p>
 					<p class="time" v-if="endTime >= 1">倒计时 {{endTime}}秒</p>
@@ -91,7 +91,7 @@
 				<div class="shadow-text" style="text-align: center; color: #fff;">
 					<p class="succ-tip">很遗憾，差点就抓到了！</p>
 					<p class="operate-btn">
-						<span class="btn-hover">分享好友</span>
+						<!--<span class="btn-hover">分享好友</span>-->
 						<span class="btn-hover" @click="beginGame">再次挑战</span>
 					</p>
 					<p class="time" v-if="endTime >= 1">倒计时 {{endTime}}秒</p>
@@ -184,7 +184,7 @@ export default {
 	    	failStatus: false, 				// 没有抓到娃娃,
 			endTime: 3,						// 抓取结果展示倒计时
 			remainGold: storage.get('remain_gold'),	// 剩余金币
-			avatar: storage.get('headUrl') || '../../static/image/avatar.png', // 头像
+			avatar: storage.get('headUrl'), // 头像
 			
 			machineSn: undefined,			// 设备编号
       		sock: undefined,				// socket handler
@@ -642,9 +642,9 @@ export default {
 				} else if (direction === 2) {
 					direction = 4
 				} else if (direction === 3) {
-					direction = 1
-				} else if (direction === 4) {
 					direction = 2
+				} else if (direction === 4) {
+					direction = 1
 				}
 			}
 
@@ -1169,6 +1169,8 @@ export default {
 }
 .fail-content{
 	padding: 2rem 0;
+	width: 5.4rem;
+	position: relative;
 }
 .close{
 	position: absolute;

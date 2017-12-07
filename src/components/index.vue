@@ -111,10 +111,9 @@ export default {
     // }, false);  
   },
   activated() {
+  	
+  	this.avatar = this.$storage.get('headUrl') || '../../static/image/avatar.png'
   	//背景音乐
-  	if(this.$storage.get('user')) {
-  		this.avatar = this.$storage.get('user').avatar ? this.$storage.get('user').avatar : '../../static/image/avatar.png'
-  	}
   	if (this.$storage.get('music_switch') != null) {
 			this.musicSwitch = this.$storage.get('music_switch')
 		}

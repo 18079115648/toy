@@ -16,7 +16,7 @@
       </div>
       <div class="head" style="border-bottom: solid 1px #f2f2f2;">
         <label for="user_name">昵称</label>
-        <input type="text" class="nickname-text" name="user_name" placeholder="请输入昵称" v-model="nickname">
+        <input type="text" class="nickname-text" name="user_name" @input="inputEmoji" placeholder="请输入昵称" v-model="nickname">
         <div>
           <img src="../../static/image/wdd.png" class="guide">
         </div>
@@ -54,6 +54,10 @@ export default {
     })
   },
   methods: {
+  	inputEmoji() {
+  		this.nickname = this.nickname.replace(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g, '')
+    	this.nickname = this.nickname.replace(/(^\s+)|\s+$/g, "")
+  	},
     save(){
     	if(!this.nickname) {
     		Toast({
