@@ -176,9 +176,9 @@ export default {
 				})
     		return
     	}
-    	if(this.musicSwitch) {
-    		this.$root.bgAudio.paused && this.$root.bgAudio.play()
-    	}
+//  	if(this.musicSwitch) {
+//  		this.$root.bgAudio.paused && this.$root.bgAudio.play()
+//  	}
         
         this.$router.push({path: '/room', query: {machineSn: room.machineSn, num: room.num, price: room.price, machineId: room.machineId, liveRoomCode: room.liveRoomCode}})
     }
