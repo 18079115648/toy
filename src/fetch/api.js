@@ -94,6 +94,10 @@ export function fetchPost(url, params, needToken, multiple) {
             		if(response.data.errCode == 0) {
             			resolve(response.data) 
             		}else {
+            			if (response.data.errCode === 20002) {
+							router.replace('/login')
+							return
+						}
             			reject(response)
             			Toast({
 						  message: response.data.errMsg,
