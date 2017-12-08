@@ -60,7 +60,7 @@
 <script>
 import { Toast, Indicator } from 'mint-ui'
 export default {
-  data () {
+  data () { 
     return {
     	homebar: [{
       	text: '签到',
@@ -119,6 +119,7 @@ export default {
 		}
   },
   mounted() {
+	console.log(this.$refs)
   	this.$api.homeTags().then(res => {
 			this.navbar = res.data
 			this.currTags = this.navbar[0].id

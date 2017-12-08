@@ -5,10 +5,7 @@ import storage from '@/fetch/storage'
 import router from '@/router'
 import Token from '@/fetch/accessToken'
 
-
-
-
-
+ 
 // axios 配置
 axios.defaults.timeout = 20000;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
@@ -186,7 +183,7 @@ export default {
 	getZegoToken(appId, idName) {
 		return fetchGet('http://106.15.41.49:8181/token?app_id=' + appId + '&id_name=' + idName, {}, false)
 	},
-	
+	 
 	//获取验证码
 	getCaptcha(params) {
 		return fetchPost('/dm-api/mobile/captcha', params, false)

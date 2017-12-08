@@ -1,4 +1,4 @@
-<template>
+<template> 
     <div class="app" :style="{ height: wH + 'px' }">
 		<canvas id="frontview" :class="{show:showFront}" :style="{ height: wH + 'px' }"></canvas>
       	<canvas id="sideview" :class="{show:showSide}" :style="{ height: wH + 'px' }"></canvas>
@@ -139,7 +139,7 @@
 			</div>
 		</mt-popup>
 		
-		<div id="danmu-container"></div>
+		<div id="danmu-container" ref="pro"></div>
 
 		
 		<!-- 充值页面 -->
@@ -263,6 +263,7 @@ export default {
 		this.preventScale()
 	},
 	mounted() {	
+		let self = this
 		this.wH = document.getElementById('app').offsetHeight
 
 		// 加载音频资源
@@ -270,6 +271,14 @@ export default {
 
 		// 初始化环信
 		this.initWebIM()
+
+		// setInterval(() => {
+		// 	this.createDanmu(1)
+		// }, 3000);
+
+		// setInterval(() => {
+		// 	this.createDanmu(2)
+		// }, 1500);
 	},
 	methods: {
 		/**
@@ -284,7 +293,7 @@ export default {
 		/**
 		 * 初始化环信
 		 */
-		initWebIM() {
+		initWebIM() { 
 			this.$api.enterRoom({machineSn: this.machineSn}).then((response) => {
 				this.toyImgs = response.data.imgs
 				this.webIMConn = new WebIM.connection({
@@ -302,7 +311,6 @@ export default {
 				this.webIMConn.listen({
 					onOpened: function(message) {
 						console.info('环信连接成功')
-
 						setTimeout(function() {
 							parent.sendWebIMMessage(parent.nickname + ' 进入了房间')
 						}, 2500)
@@ -313,7 +321,7 @@ export default {
 					},
 					onTextMessage: function(message) {
 						console.info(message)
-						// parent.createDanmu(message.data)
+						parent.createDanmu(message.data)
 					},
 					onPresence: function ( message ) {
 						parent.webIMChatroomId = message.from
@@ -321,7 +329,7 @@ export default {
 					}
 				})
 				this.webIMConn.open({
-					apiUrl: WebIM.config.apiURL,
+					apiUrl: WebIM.config.apiURL,  
 					user: hx.id,
 					pwd: hx.password,
 					appKey: WebIM.config.appkey
@@ -372,7 +380,7 @@ export default {
 		initWebSocket() {
 			this.sock = new SockJS(process.env.WEBSOCKET_URL)
 
-			const parent = this
+			const parent = this 
 
 			// 打开成功连接
 			this.sock.onopen = () => {
@@ -781,7 +789,7 @@ export default {
 
 		/**
 		 * 抓取失败
-		 */
+		 */ 
 		grabFailure() {
 			this.failStatus = true
 			this.playFailureAudio()
@@ -902,11 +910,42 @@ export default {
 		 * 创建弹幕
 		 */
 		createDanmu(text) {
-			const colors = ['red', 'green', 'yellow', 'purple']
-			const randomNum = Math.floor(Math.random()*4);
-			let html = '<div class="danmu ' + colors[randomNum] + '" style="top: '+ (100 + 20 * randomNum) +'px">' + text + '</div>'
-			console.info(html)
-			// document.getElementById('danmu-container').appendChild(html)
+			let box = document.getElementById('danmu-container')
+			const colors = ['#a1c843', '#f2b02d', '#ff808e']
+			const randomNum = Math.floor(Math.random()*3);
+			let html = `<div class = "danmu ${colors[randomNum]}" style = "top: ${100 + 20 * randomNum}px" >${text}</div>`
+			let myhtml = document.createElement('div')
+			myhtml.className = "danmu"
+			myhtml.style = `
+				top: ${100 + 20 * randomNum}px; 
+				position: fixed;
+				left: 100%;
+				font-size: .4rem;
+				font-weight: bold;
+				width: 4rem;
+				color: white;
+				animation: danmu 5s linear 0s 1;
+				text-shadow: 0 0 .03rem #fff064;
+				text-stroke: .02rem ${colors[randomNum]};
+				-webkit-text-stroke: .02rem ${colors[randomNum]};`
+			myhtml.innerHTML = html
+			box.appendChild(myhtml)
+
+			console.log(box.childNodes)
+			setTimeout(() => {
+				box.childNodes.forEach((item, index) => {
+					if(index > 30) {
+						box.childNodes.forEach((it, ind) => {
+							box.removeChild(box.childNodes[ind])
+						})
+					}
+				})
+			}, 10000);
+		},
+
+		// 
+		danmu() {
+			
 		}
 	},
 
@@ -926,24 +965,28 @@ export default {
 
 <style lang="scss" scoped>
 .danmu {
-  position: fixed;
-  left: 100%;
-  top: 100px;
-  font-size: .32rem;
-  width: 4rem;
-  animation: danmu 5s linear 0s 1;
+  	position: fixed;
+  	left: 100%;
+  	top: 100px;
+ 	font-size: .4rem;
+	font-weight: bold;
+  	width: 4rem;
+  	color: white;
+  	animation: danmu 5s linear 0s 1;
+	text-shadow: 0 0 .03rem #fff064
 }
-.danmu.red {
-	color: red;
-}
+
 .danmu.green {
-	color:green;
+	text-stroke: .02rem #a1c843;
+	-webkit-text-stroke: .02rem #a1c843;	
 }
 .danmu.yellow {
-	color:yellow;
+	text-stroke: .02rem #f2b02d;
+	-webkit-text-stroke: .02rem #f2b02d;
 }
 .danmu.purple {
-	color:purple;
+	text-stroke: .02rem #ff808e;
+	-webkit-text-stroke: .02rem #ff808e;
 }
 
 @keyframes danmu {
