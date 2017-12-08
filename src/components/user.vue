@@ -67,7 +67,7 @@ export default {
   created() {
   	this.$api.userInfo().then(res => {
 			this.userInfo = res.data
-			this.userInfo.avatar = this.userInfo.avatar ? this.userInfo.avatar : '../../static/image/avatar.png'
+			this.userInfo.avatar = this.userInfo.avatar ? this.userInfo.avatar : '../../static/image/vvv.png'
 			storage.set('headUrl', this.userInfo.avatar)
     }, err => {
     	

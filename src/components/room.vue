@@ -4,8 +4,8 @@
       	<canvas id="sideview" :class="{show:showSide}" :style="{ height: wH + 'px' }"></canvas>
     	<div class="room-top">
 			<div v-if="isGame" class="back-position"></div>
-    		<img v-if="!isGame" class="back" src="../../static/image/feee.png" @click="back" />
-    		<img class="avatar" :src="avatar"  />
+    		<img v-if="!isGame" class="back" src="../../static/image/ss44.png" @click="back" />
+    		<img v-show="avatar" class="avatar" :src="avatar"  />
     		<div class="room-count shadow-text"></div>
     		<div class="price">
     			<img src="../../static/image/wd.png"  />
@@ -109,8 +109,11 @@
 		<!-- 详情页面 -->
 		<mt-popup v-model="roomDetail" class="pop">
 			<div class="detail-content">
-				<div class="tit">抓取记录</div>
-				<div class="grab-list">
+				<div class="tit">
+					<span @click="detailTab = 1">抓取记录</span>
+					<span @click="detailTab = 2">娃娃大图</span>
+				</div>
+				<div class="grab-list" v-show="detailTab == 1">
 					<Pagination :render="render" :param="pagination"  ref="pagination" uri="/dm-api/doll/log/room" >
 						<div class="grab-item" v-for="(item, index) in pagination.content" :key="index">
 							<img class="avatar" :src="item.avatar" />
@@ -128,6 +131,9 @@
 				            <div>暂无抓取数据~</div>
 					    </div>	   
 					</Pagination>
+				</div>
+				<div class="toy-imgs" v-show="detailTab == 2">
+					<img :src="item" v-for="(item, index) in toyImgs" :key="index"  />
 				</div>
 				<img src="../../static/image/x.png" class="close" @click="closeGrabList" />	
 			</div>
@@ -184,7 +190,7 @@ export default {
 	    	failStatus: false, 				// 没有抓到娃娃,
 			endTime: 3,						// 抓取结果展示倒计时
 			remainGold: storage.get('remain_gold'),	// 剩余金币
-			avatar: storage.get('headUrl'), // 头像
+			avatar: '', // 头像
 			
 			machineSn: undefined,			// 设备编号
       		sock: undefined,				// socket handler
@@ -220,6 +226,7 @@ export default {
 			webIMChatroomId: undefined, // 环信房间编号
 			
 			roomDetail: false,   	 	// 房间抓取详情
+			detailTab: 1,
 			nickname: storage.get('user').nickname,	// 昵称
 			
 			//分页参数
@@ -279,7 +286,7 @@ export default {
 		 */
 		initWebIM() {
 			this.$api.enterRoom({machineSn: this.machineSn}).then((response) => {
-//				this.toyImgs = response.
+				this.toyImgs = response.data.imgs
 				this.webIMConn = new WebIM.connection({
 					isMultiLoginSessions: WebIM.config.isMultiLoginSessions,
 					https: typeof WebIM.config.https === 'boolean' ? WebIM.config.https : location.protocol === 'https:',
@@ -800,7 +807,7 @@ export default {
 		getGold() {
 			this.$api.userInfo().then(response => {
 				this.remainGold = response.data.money
-				this.avatar = response.data.avatar
+//				this.avatar = response.data.avatar
 			})
 		},
 
@@ -1225,8 +1232,13 @@ export default {
 	position: relative;
 	.tit{
 		text-align: center;
-		padding: 0.2rem 0 0.25rem;
+		padding: 0 0.6rem;
 		background: #fff;
+		display: flex;
+		span{
+			flex: 1;
+			padding: 0.2rem 0 0.25rem;
+		}
 	}
 	.grab-list{
 		background: #fff;
@@ -1250,6 +1262,18 @@ export default {
 	        	flex: 1;
 	        	overflow: hidden;
 	        }
+		}
+	}
+	.toy-imgs{
+		background: #fff;
+		flex: 1;
+		border-radius: 0 0 0.2rem 0.2rem;
+		overflow-y: auto;
+		padding: 0.4rem 0.5rem;
+		img{
+			display: block;
+			width: 100%;
+			margin-bottom: 0.3rem;
 		}
 	}
 	.close{

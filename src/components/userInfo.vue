@@ -16,7 +16,7 @@
       </div>
       <div class="head" style="border-bottom: solid 1px #f2f2f2;">
         <label for="user_name">昵称</label>
-        <input type="text" class="nickname-text" name="user_name" @input="inputEmoji" placeholder="请输入昵称" v-model="nickname">
+        <input type="text" class="nickname-text" name="user_name" placeholder="请输入昵称" v-model="nickname">
         <div>
           <img src="../../static/image/wdd.png" class="guide">
         </div>

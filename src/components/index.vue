@@ -94,7 +94,7 @@ export default {
 	        }
 	    },
 	    
-	    avatar: '../../static/image/avatar.png',  //头像
+	    avatar: '../../static/image/vvv.png',  //头像
 	    
 	    musicSwitch: true,  //背景音乐
     }
@@ -112,7 +112,7 @@ export default {
   },
   activated() {
   	
-  	this.avatar = this.$storage.get('headUrl') || '../../static/image/avatar.png'
+  	this.avatar = this.$storage.get('headUrl') || '../../static/image/vvv.png'
   	//背景音乐
   	if (this.$storage.get('music_switch') != null) {
 			this.musicSwitch = this.$storage.get('music_switch')

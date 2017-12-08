@@ -21,9 +21,8 @@
                             </video>
                             <img src="../../static/image/weed.png" @click="play"  class="play_img">
                         </div>
-                        <div class="img_body none-video" v-if="!grabInfo.url">
-                        	<img class="none-img" src="../../static/image/none-video.png"  />
-                        	<p class="none-text">暂无视频</p>
+                        <div class="img_body" v-if="!grabInfo.url">
+                        	<img :src="grabInfo.img" class="fullEle"  />
                         </div>
                         <div class="grabDetails_msg">
                             <div>{{grabInfo.productName}}</div>
