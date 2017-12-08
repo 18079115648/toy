@@ -33,21 +33,25 @@
                         </div>
                     </div>
                 </div>
-                <div class="appear-info" v-if="grabInfo.status == 1 && grabInfo.appeal">
-                	<div class="status">
-                		<span class="tit">申诉状态：</span>
-                		<span class="text" v-if="grabInfo.appeal.status == 0">申诉中</span>
-                		<span class="text" v-if="grabInfo.appeal.status == 1">申诉成功</span>
-                		<span class="text" v-if="grabInfo.appeal.status == 2">申诉失败</span>
-                	</div>
-                	<div class="reason">
-                		<span class="tit">申诉原因：</span>
-                		<span class="text">{{grabInfo.appeal.reason}}</span>
-                		
-                	</div>
-                </div>
+                
             </div>
-
+			<div class="appear-info" v-if="grabInfo.status == 1 && grabInfo.appeal">
+            	<div class="status">
+            		<span class="tit">申诉状态：</span>
+            		<span class="text" v-if="grabInfo.appeal.status == 0">申诉中</span>
+            		<span class="text" v-if="grabInfo.appeal.status == 1">申诉成功</span>
+            		<span class="text" v-if="grabInfo.appeal.status == 2">申诉失败</span>
+            	</div>
+            	<div class="reason">
+            		<span class="tit">申诉原因：</span>
+            		<span class="text">{{grabInfo.appeal.reason}}</span>
+            		
+            	</div>
+            </div>
+            <div class="appear-result" v-if="grabInfo.status == 1 && grabInfo.appeal && grabInfo.appeal.result">
+            	<span>处理结果：</span>
+            	<span class="result">{{grabInfo.appeal.result}}</span>
+            </div>
             <div class="appeal_body"  v-if="grabInfo.status == 1 && !grabInfo.appeal ">
 				<div class="btn-default btn-hover" @click="Actionsheet = true">我要申诉</div>
                 <div class="problem">
@@ -175,8 +179,9 @@ export default {
     
 }
 .appear-info{
-	padding: 0.3rem 0 0.2rem;
-	border-top:1px solid #f2f2f2;
+	padding: 0.3rem;
+	background: #fff;
+	border-radius: 0.15rem;
 	&>div{
 		display: flex;
 	}
@@ -293,5 +298,16 @@ export default {
     z-index: 11;
     border-radius: 0.15rem;
 }
-
+.appear-result{
+	padding: 0.3rem 0.3rem;
+	background: #fff;
+	border-radius: 0.15rem;
+	margin-top: 0.3rem;
+	span{
+		color: #aaa;
+	}
+	.result{
+		color: #fa7296;
+	}
+}
 </style>

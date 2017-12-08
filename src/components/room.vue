@@ -76,7 +76,7 @@
 					<p class="succ-tip">太棒了，抓到娃娃了耶！</p>
 					<a class="check-goods shadow-text" @click="toToysPocket">立即查看</a>
 					<p class="operate-btn">
-						<span class="btn-hover">分享好友</span>
+						<!--<span class="btn-hover">分享好友</span>-->
 						<span class="btn-hover" @click="beginGame">再次挑战</span>
 					</p>
 					<p class="time" v-if="endTime >= 1">倒计时 {{endTime}}秒</p>
@@ -91,7 +91,7 @@
 				<div class="shadow-text" style="text-align: center; color: #fff;">
 					<p class="succ-tip">很遗憾，差点就抓到了！</p>
 					<p class="operate-btn">
-						<span class="btn-hover">分享好友</span>
+						<!--<span class="btn-hover">分享好友</span>-->
 						<span class="btn-hover" @click="beginGame">再次挑战</span>
 					</p>
 					<p class="time" v-if="endTime >= 1">倒计时 {{endTime}}秒</p>
@@ -232,6 +232,7 @@ export default {
 		        	machineId: this.$route.query.machineId
 		        }
 		    },
+		    toyImgs: [],            //娃娃大图
 		    
 //		    rechargeStatus: false,  //充值
 //		    rechargeList: []
@@ -240,6 +241,8 @@ export default {
 	created() {	
 		// 机器编号
 		this.machineSn = this.$route.query.machineSn 	
+		//房间号
+		this.zegoRoomId = this.$route.query.liveRoomCode
 		// 抓取价格
 		this.price = parseInt(this.$route.query.price)
 		// 获取金币
@@ -285,6 +288,7 @@ export default {
 		 */
 		initWebIM() { 
 			this.$api.enterRoom({machineSn: this.machineSn}).then((response) => {
+//				this.toyImgs = response.
 				this.webIMConn = new WebIM.connection({
 					isMultiLoginSessions: WebIM.config.isMultiLoginSessions,
 					https: typeof WebIM.config.https === 'boolean' ? WebIM.config.https : location.protocol === 'https:',
@@ -644,13 +648,13 @@ export default {
 		moveDirection(direction) {
 			if (this.showSide) {
 				if (direction === 1) {
-					direction = 4
-				} else if (direction === 2) {
 					direction = 3
+				} else if (direction === 2) {
+					direction = 4
 				} else if (direction === 3) {
-					direction = 1
-				} else if (direction === 4) {
 					direction = 2
+				} else if (direction === 4) {
+					direction = 1
 				}
 			}
 
@@ -828,8 +832,9 @@ export default {
 			}
 
 			// 背景音乐
-			this.$root.bgAudio.paused && this.$root.bgAudio.play()
-
+			if(this.musicSwitch) {
+				this.$root.bgAudio.paused && this.$root.bgAudio.play()
+			}
 			// 点击音效
 			this.clickAudio = document.getElementById('click-audio')
 
@@ -1209,6 +1214,8 @@ export default {
 }
 .fail-content{
 	padding: 2rem 0;
+	width: 5.4rem;
+	position: relative;
 }
 .close{
 	position: absolute;

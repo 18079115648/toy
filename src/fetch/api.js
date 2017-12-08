@@ -91,6 +91,10 @@ export function fetchPost(url, params, needToken, multiple) {
             		if(response.data.errCode == 0) {
             			resolve(response.data) 
             		}else {
+            			if (response.data.errCode === 20002) {
+							router.replace('/login')
+							return
+						}
             			reject(response)
             			Toast({
 						  message: response.data.errMsg,
@@ -196,12 +200,12 @@ export default {
 	
 	//首页标签
 	homeTags(params) {
-		return fetchGet('/dm-api/tags', params, true)
+		return fetchGet('/dm-api/tags', params, false)
 	},
 	
 	//标签获取房间列表
 	TagRooms(params) {
-		return fetchGet('/dm-api/home/tag', params, true)
+		return fetchGet('/dm-api/home/tag', params, false)
 	},
 	
 	//首页banner
@@ -322,6 +326,10 @@ export default {
     //	接受邀请
 	invite(params) {
 		return fetchPost('/dm-api/invite/code', params, true)
+	},
+	//	微信分享
+	wxShare(params) {
+		return fetchGet('/dm-api/wechat/getjsapi/signpackage', params, true)
 	},
 	// 进入房间
 	enterRoom(params) {

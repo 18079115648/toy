@@ -3,6 +3,7 @@
     	<div class="top">
     		<div class="bg"></div>
     		<img src="../../static/image/vv.png"  />
+    		<div class="miss" @click="miss">跳过</div>
     	</div>
     	<div class="bottom">
     		<p class="login-tit">选择登录方式</p>
@@ -28,6 +29,9 @@ export default {
 		}
 	},
 	methods: {
+		miss() {
+			this.$router.replace('/index')
+		},
 		mobileLogin() {
 			this.$router.replace('/mobileLogin')
 		},
@@ -111,5 +115,13 @@ export default {
 		
 	}
 } 
-
+.miss{
+	position: fixed;
+	right: 0.1rem;
+	top: 0.2rem;
+	font-size: 0.3rem;
+	color: #704a06;
+	z-index: 10;
+	padding: 0.2rem;
+}
 </style>

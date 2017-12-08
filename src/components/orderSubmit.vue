@@ -21,8 +21,8 @@
 		</div>
 		<div class="price-content">
 			<div class="price-item">
-				<span>我的砖石</span>
-				<span class="price"><img src="../../static/image/wd.png" />9999</span>
+				<span>我的钻石</span>
+				<span class="price"><img src="../../static/image/wd.png" />{{money}}</span>
 			</div>
 			<div class="price-item">
 				<span>配送费用</span>
@@ -41,6 +41,7 @@ export default {
         hasAddr: false,
         toysList: [],
         expressMoney: 0,
+        money: 0,
         addrInfo: {},
         disabledBtn: false
     }
@@ -51,6 +52,11 @@ export default {
 				this.hasAddr = true
 				this.addrInfo = res.data
 			}
+    }, err => {
+    	
+    })
+  	this.$api.userInfo().then(res => {
+			this.money = res.data.money
     }, err => {
     	
     })

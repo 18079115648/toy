@@ -14,10 +14,11 @@
     			<div @click="getCode" class="captcha-btn" :class="{'disabled': disableSend}">{{captchaLabel}}</div>
     		</div>
     		<p class="tip">
-    			未注册疯狂抓娃娃的手机号，登录时将自动注册且代表您已经同意遵守<a> 用户协议及隐私条款 </a>
+    			未注册优抓的手机号，登录时将自动注册且代表您已经同意遵守<router-link to="/agree"> 用户协议及隐私条款 </router-link>
     		</p>
     	</div>
     	<div class="btn-default btn-hover btn-login" @click="login">登录</div>
+    	
     </div>
 </template>
 
@@ -107,6 +108,7 @@ export default {
 				self.$token.refreshToken(accessToken.accessToken, accessToken.refreshToken, accessToken.expireTime)
 				this.$storage.set('hx', {id: res.data.hxId, password: res.data.hxPwd})
 				this.$storage.set('user', res.data)
+				this.$storage.set('headUrl', res.data.avatar || '../../static/image/avatar.png')
 				this.loginSuccess()
 	        }, err => {
 	        	

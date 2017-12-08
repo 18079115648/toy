@@ -11,7 +11,7 @@
                     <div>{{item.desc}}</div>
                 </div>
                 <div class="recharge_right">
-                    &yen; {{item.price}}
+                    &yen; {{item.price.toFixed(2)}}
                 </div>
             </div>
         </div>

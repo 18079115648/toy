@@ -70,8 +70,7 @@ export default {
 
     //退出登录
     loginOut() {
-        this.$storage.remove('token')
-        this.$storage.remove('history_url')
+        window.localStorage.clear()
         this.$router.replace('/login')
     }
   }

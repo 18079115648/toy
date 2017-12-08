@@ -22,6 +22,9 @@ Vue.prototype.$token = token
 import api from '@/fetch/api'
 Vue.prototype.$api = api
 
+import { loadJssdk } from '@/fetch/tool'
+Vue.prototype.$loadJssdk = loadJssdk
+
 import weixin from '@/fetch/weixin'
 Vue.prototype.$weixin = weixin
 
@@ -30,6 +33,9 @@ Vue.component('Header', Header)
 
 import Pagination from '@/components/common/Pagination'
 Vue.component('Pagination', Pagination)
+
+import shareTip from '@/components/common/shareTip'
+Vue.component('shareTip', shareTip)
 
 import confirmModal from '@/components/common/confirmModal'
 

@@ -2,7 +2,7 @@
     <div class="content">
         <Header title="订单中心"></Header>
 	    <div class="pagination-content">
-	    	<Pagination :render="render" :param="pagination"  ref="pagination" uri="/dm-api/order/list" >
+	    	<Pagination :render="render" :param="pagination" :autoload="false"  ref="pagination" uri="/dm-api/order/list" >
 				<div class="order-list" v-show="pagination.content.length > 0">
 					<router-link :to="'/orderDetails/' + item.orderSn" class="orderList_body" v-for="(item, index) in pagination.content" :key="index">
 			            <div class="orderList_title">
@@ -48,8 +48,8 @@ export default {
 	    },
     }
   },
-  created(){
-
+  mounted(){
+	this.$refs.pagination.refresh()
   },
   methods: {
   	render(res) {

@@ -16,31 +16,61 @@
         	<div class="invite-code" >
         		<span v-for="(item, index) in code" :key="index">{{item}}</span>
         	</div>
-        	<div class="receive btn-hover">分享邀请好友</div>
+        	<div class="receive btn-hover" @click="show = true">分享邀请好友</div>
         </div>
+        <share-tip v-show="show" @shareCancel="show = false"></share-tip>
     </div>
 </template>
 
 <script>
+import wx from 'weixin-js-sdk'
 import { Toast } from 'mint-ui'
 export default {
   data () {
     return {
 		isWinxin: this.$common.isWeixin(),
 		inviteCode: '',
-		code:[]
+		code:[],
+		
+		show: false
     }
   },
   created() {
   	if(this.$common.isWeixin()) {
   		this.$api.userInfo().then(res => {
 			this.code = res.data.inviteCode.split('')
+			this.lineLink = 'http://' + location.host + '/#/share/' + res.data.inviteCode
+			this.imgUrl = 'https://yingdd.oss-cn-hangzhou.aliyuncs.com/0d25d14de142d89f5af33b0b53ecc7b0.png'
+			this.shareTitle = '优抓娃娃机'
+			this.descContent = '欢乐抓娃娃，分享奖励多多！'
+			this.wxShare(this.lineLink, this.imgUrl, this.shareTitle, this.descContent)	
 	    }, err => {
 	    	
 	    })
   	}
   },
   methods: {
+  	wxShare(lineLink, imgUrl, shareTitle, descContent) {
+		let self = this
+		this.$api.wxShare({
+			url: window.location.href.split('#')[0]
+		}).then((res) => {
+			console.log(res)
+			wx.config({
+				debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+				appId: res.data.appId, // 必填，公众号的唯一标识
+				timestamp: parseInt(res.data.timestamp), // 必填，生成签名的时间戳
+				nonceStr: res.data.nonceStr, // 必填，生成签名的随机串
+				signature: res.data.signature, // 必填，签名，见附录1
+				jsApiList: ['uploadImage', 'getLocation', 'chooseImage', 'previewImage', 'uploadImage', 'scanQRCode', 'chooseWXPay', 'onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareQZone'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+			})
+			wx.ready(function() {
+				self.$loadJssdk(lineLink, imgUrl, shareTitle, descContent, self.wxShare)
+			})
+		}).catch((err) => {
+			console.log(err)
+		})
+	},
     receive() {
     	if(!this.inviteCode) {
     		Toast({
@@ -86,14 +116,14 @@ export default {
 		height: 0.7rem;
 		border-radius: 0.7rem;
 		background: #ffe889;
-		padding:0 0.5rem;
+		padding:0.15rem 0.5rem;
 		input{
 			background: transparent;
 			height: 100%;
 			width: 100%;
 			text-align: center;
 			color: #f3ad00;
-			line-height: 0.7rem;
+			line-height: 0.4rem;
 		}
 		input::-webkit-input-placeholder{
 			color: #f3ad00;

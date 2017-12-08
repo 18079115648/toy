@@ -9,7 +9,7 @@
     		<div class="sign-process">
     			<div class="one-level">
     				<div class="sign-item" :class="{'active': signList[0].status}">
-    					<div>
+    					<div class="unsign">
     						<img class="icon" src="../../static/image/wd.png"  />
     						<p class="shadow-text">{{signList[0].points}}</p>
     					</div>
@@ -19,7 +19,7 @@
     				</div>
     				<img class="arror" src="../../static/image/566gg.png"  />
     				<div class="sign-item" :class="{'active': signList[1].status}">
-    					<div>
+    					<div class="unsign">
     						<img class="icon" src="../../static/image/wd.png"  />
     						<p class="shadow-text">{{signList[1].points}}</p>
     					</div>
@@ -29,7 +29,7 @@
     				</div>
     				<img class="arror" src="../../static/image/566gg.png"  />
     				<div class="sign-item" :class="{'active': signList[2].status}">
-    					<div>
+    					<div class="unsign">
     						<img class="icon" src="../../static/image/wd.png"  />
     						<p class="shadow-text">{{signList[2].points}}</p>
     					</div>
@@ -43,7 +43,7 @@
     			</div>
     			<div class="one-level">
     				<div class="sign-item" :class="{'active': signList[5].status}">
-    					<div>
+    					<div class="unsign">
     						<img class="icon" src="../../static/image/wd.png"  />
     						<p class="shadow-text">{{signList[5].points}}</p>
     					</div>
@@ -53,7 +53,7 @@
     				</div>
     				<img class="arror" src="../../static/image/gghhh.png"  />
     				<div class="sign-item" :class="{'active': signList[4].status}">
-    					<div>
+    					<div class="unsign">
     						<img class="icon" src="../../static/image/wd.png"  />
     						<p class="shadow-text">{{signList[4].points}}</p>
     					</div>
@@ -63,7 +63,7 @@
     				</div>
     				<img class="arror" src="../../static/image/gghhh.png"  />
     				<div class="sign-item" :class="{'active': signList[3].status}">
-    					<div>
+    					<div class="unsign">
     						<img class="icon" src="../../static/image/wd.png"  />
     						<p class="shadow-text">{{signList[3].points}}</p>
     					</div>
@@ -75,7 +75,7 @@
     			<div class="three-level">
     				<img src="../../static/image/34dd.png"  />
     				<div class="sign-item" :class="{'active': signList[6].status}">
-    					<div>
+    					<div class="unsign">
     						<img class="icon" src="../../static/image/wd.png"  />
     						<p class="shadow-text">{{signList[6].points}}</p>
     					</div>
@@ -85,7 +85,8 @@
     				</div>
     			</div>
     			<div class="sign-btn btn-hover" :class="{'signed': !signStatus}" @click="sign">
-    				我要签到
+    				<span v-show="signStatus">我要签到</span>
+    				<span v-show="!signStatus">已签到</span>
     			</div>
     		</div>
     	</div>
@@ -211,9 +212,18 @@ export default {
 	&.active{
 		background-image: url(../../static/image/sw3444.png);
 		display: block;
+		.signed{
+			display: none;
+		}
+		.unsign{
+			display: block;
+		}
+	}
+	.unsign{
+		display: none;
 	}
 	.signed{
-		display: none;
+		display: block;
 		color: #fff;
 		font-size: 0.32rem;
 		line-height: 1.3;

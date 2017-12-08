@@ -19,6 +19,7 @@ export default {
             self.$token.refreshToken(accessToken.accessToken, accessToken.refreshToken, accessToken.expireTime)
             this.$storage.set('hx', {id: res.data.hxId, password: res.data.hxPwd})
             this.$storage.set('user', res.data)
+            this.$storage.set('headUrl', res.data.avatar || '../../static/image/avatar.png')
 			this.loginSuccess()
 	    }, err => {
 	    	
@@ -30,7 +31,8 @@ export default {
             if (this.$storage.get('history_url') && this.$storage.get('history_url') != '/login') {
                 redirectURI = this.$storage.get('history_url')
             }
-            this.$router.replace(redirectURI)
+            window.location.replace('http://' + window.location.host + '/#/index')
+//          this.$router.replace(redirectURI)
 		}
     }
 }
