@@ -232,6 +232,7 @@ export default {
 		        	machineId: this.$route.query.machineId
 		        }
 		    },
+		    toyImgs: [],            //娃娃大图
 		    
 //		    rechargeStatus: false,  //充值
 //		    rechargeList: []
@@ -278,6 +279,7 @@ export default {
 		 */
 		initWebIM() {
 			this.$api.enterRoom({machineSn: this.machineSn}).then((response) => {
+//				this.toyImgs = response.
 				this.webIMConn = new WebIM.connection({
 					isMultiLoginSessions: WebIM.config.isMultiLoginSessions,
 					https: typeof WebIM.config.https === 'boolean' ? WebIM.config.https : location.protocol === 'https:',

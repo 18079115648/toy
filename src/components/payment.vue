@@ -81,7 +81,7 @@ export default {
 		        type: 2,
 		        tradeType: 'MWEB'
 		    }).then(res => {
-
+				window.location.replace(res.data.mweb_url + '&redirect_url=http://' + window.location.host + '/#/index')
 		    }, err => {
 		        
 	        })
