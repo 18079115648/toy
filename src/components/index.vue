@@ -100,7 +100,7 @@ export default {
     }
   },
   created() {
-  	
+  	console.log(this.$token.getAccessToken())
   	this.$api.homeBanner().then(res => {
 			this.banner = res.data
     }, err => {
@@ -168,6 +168,10 @@ export default {
 
     // 进入房间
     enterRoom(room) {
+    	if(!this.$token.getAccessToken()) {
+    		this.$router.replace('/login')
+    		return
+    	}
     	if(room.status == 2) {
     		Toast({
 					message: '机器维护中，请选择其他房间吧',
@@ -176,11 +180,11 @@ export default {
 				})
     		return
     	}
-//  	if(this.musicSwitch) {
-//  		this.$root.bgAudio.paused && this.$root.bgAudio.play()
-//  	}
+    	if(this.musicSwitch) {
+    		this.$root.bgAudio.paused && this.$root.bgAudio.play()
+    	}
         
-        this.$router.push({path: '/room', query: {machineSn: room.machineSn, num: room.num, price: room.price, machineId: room.machineId, liveRoomCode: room.liveRoomCode}})
+      this.$router.push({path: '/room', query: {machineSn: room.machineSn, num: room.num, price: room.price, machineId: room.machineId, liveRoomCode: room.liveRoomCode}})
     }
   }
 }

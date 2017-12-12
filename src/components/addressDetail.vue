@@ -32,7 +32,7 @@
             <textarea v-model.trim="detail" placeholder="请填写详细地址~" class="trueAddress"></textarea>
             
         </div>
-		<div class="default-content">
+		<!--<div class="default-content">
     		<div class="left">
     			<p>设为默认地址</p>
     		</div>
@@ -40,7 +40,7 @@
     			<mt-switch v-model="is_default"></mt-switch>
     		</div>
     		
-    	</div>
+    	</div>-->
 
         <div class="confirm" @click="addAddress">保存</div>
     </div>
