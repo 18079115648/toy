@@ -171,7 +171,7 @@ import accessToken from '../fetch/accessToken'
 import storage from '../fetch/storage'
 import common from '../fetch/common'
 import * as SockJS from 'sockjs-client'
-import {} from '../../static/js/jZego-1.0.0'
+//import {} from '../../static/js/jZego-1.0.3.min'
 // console.info(WebIM)
 // import '../../static/js/webim/webim.config'
 // import '../../static/js/webim/strophe-1.2.8.min'
@@ -502,10 +502,10 @@ export default {
 						if (item.stream_id.endsWith('_2')) {
 							parent.sideStreamId = item.stream_id
 							// 只有游戏中才开始播放侧边视频流，观众模式播放侧边视频流
-							this.isGame && parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'))
+							this.isGame && parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'), 1)
 						} else {
 							parent.frontStreamId = item.stream_id
-							parent.zg.startPlayingStream(item.stream_id, document.getElementById('frontview'))
+							parent.zg.startPlayingStream(item.stream_id, document.getElementById('frontview'), 1)
 						}
 					})
 				}, (error) => {
@@ -869,7 +869,7 @@ export default {
 		 * 播放侧边视频
 		 */
 		startSideStream() {
-			this.zg.startPlayingStream(this.sideStreamId, document.getElementById('sideview'))
+			this.zg.startPlayingStream(this.sideStreamId, document.getElementById('sideview'), 1)
 			this.zg.setPlayVolume(this.sideStreamId, 0)
 		},
 
