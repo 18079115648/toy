@@ -2,6 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 Vue.use(Router)
+const test = r => require.ensure([], () => r(require('../components/test.vue')), 'test')
+
+
 const index = r => require.ensure([], () => r(require('../components/index.vue')), 'index')
 const room = r => require.ensure([], () => r(require('../components/room.vue')), 'room')
 
@@ -69,6 +72,10 @@ const router = new Router({
   routes: [
     { path: '/',
       redirect: '/index' 
+    },
+    {
+      path: '/test',
+      component: test
     },
     {
       path: '/live',

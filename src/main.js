@@ -47,6 +47,7 @@ Vue.use(VueRouter)
 Vue.use(mint)
 Vue.config.productionTip = false
 
+
 router.beforeEach((to, from, next) => {
     if (to.meta.requireAuth && !token.getAccessToken()) {
         storage.set('history_url', to.fullPath)

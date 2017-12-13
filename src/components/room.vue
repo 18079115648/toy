@@ -1,7 +1,7 @@
 <template> 
-    <div class="app" :style="{ height: wH + 'px' }">
-		<canvas id="frontview" :class="{show:showFront}" :style="{ height: wH + 'px' }"></canvas>
-      	<canvas id="sideview" :class="{show:showSide}" :style="{ height: wH + 'px' }"></canvas>
+    <div class="app" :style="{ height: wH }">
+		<canvas id="frontview" :class="{show:showFront}" :style="canvasStyle"></canvas>
+      	<canvas id="sideview" :class="{show:showSide}" :style="canvasStyle"></canvas>
     	<div class="room-top">
 			<div v-if="isGame" class="back-position"></div>
     		<img v-if="!isGame" class="back" src="../../static/image/ss44.png" @click="back" />
@@ -12,7 +12,7 @@
     			<span class="shadow-text">{{remainGold}}</span>
     		</div>
     	</div>
-    	<img class="view-change" v-if="isGame" @click="changeView" src="../../static/image/dd33.png"  />
+    	<img class="view-change"  @click="changeView" src="../../static/image/dd33.png"  />
     	<div class="room-bottom" v-show="!operateShow">
     		<div class="detail" @click="goGrabList">
     			<img src="../../static/image/d122.png"  />
@@ -167,6 +167,8 @@
 
 <script>
 import { Toast, MessageBox } from 'mint-ui'
+import axios from 'axios'
+import qs from 'qs'
 import accessToken from '../fetch/accessToken'
 import storage from '../fetch/storage'
 import common from '../fetch/common'
@@ -177,10 +179,15 @@ import {} from '../../static/js/jZego-1.0.0'
 // import '../../static/js/webim/strophe-1.2.8.min'
 import '../../static/js/webim/websdk-1.4.13'
 
+
+import DynamicKey5 from '../../static/js/DynamicKey5'
+
 export default {
 	data() {
 	    return {
 	    	wH: 0,							// 页面高度
+	    	wW: 0,							// 页面宽度
+	    	canvasStyle: {},                //canvas旋转
 	    	readyStatus: false, 			//readyGO 倒计时3秒弹框
 	    	readyTime: 3,					// 准备倒计时（3秒）
 	    	operateShow: false, 			// 操作区域显示标志位
@@ -206,6 +213,14 @@ export default {
 			zegoNickName: 'U' + accessToken.getAccessToken(),	// 昵称
 			showFront: true,							// 显示正摄像头
 			showSide: false,							// 显示副摄像头
+			
+			// 声网
+			agoAppid: 'dad6aa43944a44e3aaa8ab8cdddccc06',
+			agoAppCertificate: 'bf16c7f2152745e38fa856a3f47d8496',
+			agoChannel: '1111',
+			agoPlayer: {},
+			agoKey: '',
+			
 
 			frontStreamId: undefined,		// 正面视频流编号
 			sideStreamId: undefined,		// 侧面视频流编号
@@ -246,6 +261,7 @@ export default {
 	    }
 	},
 	created() {	
+		
 		// 机器编号
 		this.machineSn = this.$route.query.machineSn 	
 		//房间号
@@ -254,18 +270,26 @@ export default {
 		this.price = parseInt(this.$route.query.price)
 		// 获取金币
 		this.getGold()
-		// 初始化socket
-		this.initWebSocket()
-		// 即构推流初始化
-		this.initZego()
+//		// 初始化socket
+//		this.initWebSocket()
+//		// 即构推流初始化
+//		this.initZego()
+		
+		//声网推流初始化
+		this.initAgo()
+		this.initKey()
 		
 		// 阻止缩放
 		this.preventScale()
 	},
 	mounted() {	
 		let self = this
-		this.wH = document.getElementById('app').offsetHeight
-
+		this.wH = document.getElementById('app').offsetHeight + 'px'
+		this.wW = document.getElementById('app').offsetWidth + 'px'
+		this.canvasStyle = {
+			width: this.wH,
+			height: this.wW
+		}
 		// 加载音频资源
 		this.loadAudios()
 
@@ -478,6 +502,61 @@ export default {
 			this.sock.onclose = () => {
 				console.info('关闭socket')
 			}
+		},
+		
+		//声网推流初始化
+		initAgo() {
+			this.getStreamInfo().then((res) => {
+				this.agoPlayer.playerFront = new JSMpeg.Player(res.cameras.main, {
+		            canvas: document.getElementById('frontview'),
+		            audio: false,
+		            autoplay: false,
+		            decodeFirstFrame: true,
+		            agora_id: 1,
+		            onStartDecoding: function () {
+		                
+		            }
+		        })
+				this.agoPlayer.playerSide = new JSMpeg.Player(res.cameras.sub, {
+		            canvas: document.getElementById('sideview'),
+		            audio: false,
+		            autoplay: false,
+		            decodeFirstFrame: true,
+		            agora_id: 2,
+		        })
+			})
+		},
+		
+		//获取流信息
+		getStreamInfo() {
+			this.agoKey = this.initKey()
+			console.log(this.agoKey)
+			return new Promise((resolve, reject) => {
+	            axios.post('https://h5cs-1.agoraio.cn:7668/geth5gw/jsonp',{
+					cname: this.agoChannel,
+					key: this.agoAppid
+				},{
+					headers:{
+						"Content-type": "application/json; charset=utf-8"
+					},
+				}).then((res) => {
+				    axios.post("https://" + res.data.gateway_addr[0] + "/v1/machine",qs.stringify({
+						appid:this.agoAppid,
+						channel:this.agoChannel,
+						key: this.agoKey,
+						uid1:1,
+						uid2:2
+					})).then((msg) => {
+						resolve(msg.data) 
+				    })
+			    })
+		    })
+			
+		},
+		initKey() {
+			var ts = Math.floor(new Date() / 1000);
+			var r = Math.floor(Math.random() * 0xFFFFFFFF);
+			return DynamicKey5.generateMediaChannelKey(this.agoAppid, this.agoAppCertificate, this.agoChannel, ts, r, 0, 0)
 		},
 
 		// 即构推流初始化
@@ -1002,13 +1081,14 @@ export default {
 
 #frontview, #sideview {
 	width: 100%;
-	z-index: -2;
+	z-index: 1;
 	position: absolute;
-	left: 0;
-	top: 0;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%) rotate(90deg);
 }
 #frontview.show, #sideview.show {
-	z-index: 0;
+	z-index: 2;
 }
 .app{
 	background: #6d6481 !important;
@@ -1027,6 +1107,7 @@ export default {
 	align-items: center;
 	padding: 0.2rem;
 	color: #fff;
+	z-index: 10;
 	// background: #6d6481;
 	.back{
 		width: 1rem;
@@ -1063,9 +1144,11 @@ export default {
 	right: 0.2rem;
 	top: 40%;
 	width: 1.05rem;
+	z-index: 10;
 }
 .room-bottom{
 	position: absolute;
+	z-index: 10;
 	width: 100%;
 	bottom: 0;
 	display: flex;
@@ -1135,6 +1218,7 @@ export default {
 	left: 0;
 	bottom: 0;
 	justify-content: space-between;
+	z-index: 10;
 	.operate-direc{
 		width: 4rem;
 		height: 2.8rem;
