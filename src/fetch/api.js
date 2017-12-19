@@ -29,7 +29,7 @@ function buildURL(url, needToken) {
     }
     if (!token) {
     	storage.set('history_url', router.history.current.path)
-        router.replace('/login')
+        router.replace('/mobileLogin')
         return false
     }
     return url + (url.indexOf('?') >= 0 ? '&' : '?') + "accessToken=" + token
@@ -54,7 +54,7 @@ export function fetchPost(url, params, needToken, multiple) {
 	            			resolve(response.data) 
 	            		}else {
 							if (response.data.errCode === 20002) {
-								router.replace('/login')
+								router.replace('/mobileLogin')
 								return
 							}
 	            			reject(response)
@@ -92,7 +92,7 @@ export function fetchPost(url, params, needToken, multiple) {
             			resolve(response.data) 
             		}else {
             			if (response.data.errCode === 20002) {
-							router.replace('/login')
+							router.replace('/mobileLogin')
 							return
 						}
             			reject(response)
@@ -139,7 +139,7 @@ export function fetchGet(url, params, needToken) {
             			resolve(response.data) 
             		}else {
 						if (response.data.errCode === 20002) {
-							router.replace('/login')
+							router.replace('/mobileLogin')
 							return
 						}
             			reject(response)

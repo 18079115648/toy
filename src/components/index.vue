@@ -4,7 +4,7 @@
     	<router-link to="/user" class="user-link link">
     		<img :src="avatar" style="border-radius: 50%;"  class="fullEle" />
     	</router-link>
-    	<img class="logo-text" src="../../static/image/logo-text.png" />
+    	<img class="logo-text" src="../../static/image/aoin.png" />
     	<span style="width: 0.85rem;"></span>
     </div>
     <div class="navbar">
@@ -169,7 +169,7 @@ export default {
     // 进入房间
     enterRoom(room) {
     	if(!this.$token.getAccessToken()) {
-    		this.$router.replace('/login')
+    		this.$router.replace('/mobileLogin')
     		return
     	}
     	if(room.status == 2) {
@@ -230,7 +230,7 @@ export default {
 		}
 	}*/
 	.logo-text{
-		height: 0.66rem;
+		height: 0.46rem;
 	}
 }
 .navbar{

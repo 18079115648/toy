@@ -71,7 +71,7 @@ export default {
     //退出登录
     loginOut() {
         window.localStorage.clear()
-        this.$router.replace('/login')
+        this.$router.replace('/mobileLogin')
     }
   }
 }

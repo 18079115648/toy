@@ -8,30 +8,30 @@
     		</div>
     		<div class="sign-process">
     			<div class="one-level">
-    				<div class="sign-item" :class="{'active': signList[0].status}">
+    				<div class="sign-item" :class="{'active': signItem_1.status}">
     					<div class="unsign">
     						<img class="icon" src="../../static/image/wd.png"  />
-    						<p class="shadow-text">{{signList[0].points}}</p>
+    						<p class="shadow-text">{{signItem_1.points}}</p>
     					</div>
     					<div class="shadow-text signed">
     						已<br />签
     					</div>
     				</div>
     				<img class="arror" src="../../static/image/566gg.png"  />
-    				<div class="sign-item" :class="{'active': signList[1].status}">
+    				<div class="sign-item" :class="{'active': signItem_2.status}">
     					<div class="unsign">
     						<img class="icon" src="../../static/image/wd.png"  />
-    						<p class="shadow-text">{{signList[1].points}}</p>
+    						<p class="shadow-text">{{signItem_2.points}}</p>
     					</div>
     					<div class="shadow-text signed">
     						已<br />签
     					</div>
     				</div>
     				<img class="arror" src="../../static/image/566gg.png"  />
-    				<div class="sign-item" :class="{'active': signList[2].status}">
+    				<div class="sign-item" :class="{'active': signItem_3.status}">
     					<div class="unsign">
     						<img class="icon" src="../../static/image/wd.png"  />
-    						<p class="shadow-text">{{signList[2].points}}</p>
+    						<p class="shadow-text">{{signItem_3.points}}</p>
     					</div>
     					<div class="shadow-text signed">
     						已<br />签
@@ -42,30 +42,30 @@
     				<img src="../../static/image/344c.png"  />
     			</div>
     			<div class="one-level">
-    				<div class="sign-item" :class="{'active': signList[5].status}">
+    				<div class="sign-item" :class="{'active': signItem_6.status}">
     					<div class="unsign">
     						<img class="icon" src="../../static/image/wd.png"  />
-    						<p class="shadow-text">{{signList[5].points}}</p>
+    						<p class="shadow-text">{{signItem_6.points}}</p>
     					</div>
     					<div class="shadow-text signed">
     						已<br />签
     					</div>
     				</div>
     				<img class="arror" src="../../static/image/gghhh.png"  />
-    				<div class="sign-item" :class="{'active': signList[4].status}">
+    				<div class="sign-item" :class="{'active': signItem_5.status}">
     					<div class="unsign">
     						<img class="icon" src="../../static/image/wd.png"  />
-    						<p class="shadow-text">{{signList[4].points}}</p>
+    						<p class="shadow-text">{{signItem_5.points}}</p>
     					</div>
     					<div class="shadow-text signed">
     						已<br />签
     					</div>
     				</div>
     				<img class="arror" src="../../static/image/gghhh.png"  />
-    				<div class="sign-item" :class="{'active': signList[3].status}">
+    				<div class="sign-item" :class="{'active': signItem_4.status}">
     					<div class="unsign">
     						<img class="icon" src="../../static/image/wd.png"  />
-    						<p class="shadow-text">{{signList[3].points}}</p>
+    						<p class="shadow-text">{{signItem_4.points}}</p>
     					</div>
     					<div class="shadow-text signed">
     						已<br />签
@@ -74,10 +74,10 @@
     			</div>
     			<div class="three-level">
     				<img src="../../static/image/34dd.png"  />
-    				<div class="sign-item" :class="{'active': signList[6].status}">
+    				<div class="sign-item" :class="{'active': signItem_7.status}">
     					<div class="unsign">
     						<img class="icon" src="../../static/image/wd.png"  />
-    						<p class="shadow-text">{{signList[6].points}}</p>
+    						<p class="shadow-text">{{signItem_7.points}}</p>
     					</div>
     					<div class="shadow-text signed">
     						已<br />签
@@ -98,7 +98,13 @@ import {Toast, Indicator } from 'mint-ui'
 export default {
 	data() {
 	    return {
-	    	signList: [],
+	    	signItem_1: {},
+		    signItem_2: {},
+		    signItem_3: {},
+		    signItem_4: {},
+		    signItem_5: {},
+		    signItem_6: {},
+		    signItem_7: {},
 	    	signStatus: null
 	    }
 	},
@@ -108,7 +114,14 @@ export default {
 	methods: {
 		initData() {
 			this.$api.signList().then(res => {
-				this.signList = res.data.list
+				this.signItem_1 = res.data.list[0]
+				this.signItem_2 = res.data.list[1]
+				this.signItem_3 = res.data.list[2]
+				this.signItem_4 = res.data.list[3]
+				this.signItem_5 = res.data.list[4]
+				this.signItem_6 = res.data.list[5]
+				this.signItem_7 = res.data.list[6]
+				this.signStatus = res.data.status
 				this.signStatus = res.data.status
 		    }, err => {
 

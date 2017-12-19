@@ -41,7 +41,7 @@ export default {
 			this.code = res.data.inviteCode.split('')
 			this.lineLink = 'http://' + location.host + '/#/share/' + res.data.inviteCode
 			this.imgUrl = 'https://yingdd.oss-cn-hangzhou.aliyuncs.com/0d25d14de142d89f5af33b0b53ecc7b0.png'
-			this.shareTitle = '优抓娃娃机'
+			this.shareTitle = '澳IN娱乐'
 			this.descContent = '欢乐抓娃娃，分享奖励多多！'
 			this.wxShare(this.lineLink, this.imgUrl, this.shareTitle, this.descContent)	
 	    }, err => {

@@ -6,7 +6,7 @@
         	<div class="invite-code" >
         		<span v-for="(item, index) in code" :key="index">{{item}}</span>
         	</div>
-        	<div class="btn-default btn-hover go-index" @click="goIndex">开启优抓</div>
+        	<div class="btn-default btn-hover go-index" @click="goIndex">开启澳IN娱乐</div>
         </div>
     </div>
 </template>
