@@ -19,9 +19,6 @@
     	</div>
     	<div class="btn-default btn-hover btn-login" @click="login">登录</div>
     	
-    	
-    	<input type="file" @change="change" />
-    	
     </div>
 </template>
 
@@ -43,53 +40,6 @@ export default {
 		this.wH = document.getElementById('app').offsetHeight
 	},
 	methods: {
-		change(e) {
-			const self = this
-			  var file = event.target.files[0];
-			  var reader = new FileReader();
-			  reader.onload = function(event) {
-			    // 文件里的文本会在这里被打印出来
-			    console.log(event.target.result)
-			    self.renderFun(event.target.result);
-			  };
-			
-			  reader.readAsDataURL(file);
-		},
-		renderFun(src) {
-			const MAX_HEIGHT = 10
-		    // 创建一个 Image 对象
-		    var image = new Image();
-		    // 绑定 load 事件处理器，加载完成后执行
-		    image.onload = function() {
-		        // 获取 canvas DOM 对象
-		        var canvas = document.createElement("canvas");
-		        // 如果高度超标
-		        if (image.height > MAX_HEIGHT) {
-		            // 宽度等比例缩放 *=
-		            image.width *= MAX_HEIGHT / image.height;
-		            image.height = MAX_HEIGHT;
-		        }
-		        // 获取 canvas的 2d 环境对象,
-		        // 可以理解Context是管理员，canvas是房子
-		        var ctx = canvas.getContext("2d");
-		        // canvas清屏
-		        ctx.clearRect(0, 0, canvas.width, canvas.height);
-		        // 重置canvas宽高
-		        canvas.width = image.width;
-		        canvas.height = image.height;
-		        // 将图像绘制到canvas上
-		        ctx.drawImage(image, 0, 0, image.width, image.height);
-		        // !!! 注意，image 没有加入到 dom之中
-		//        document.getElementById('img').src = canvas.toDataURL("image/png");
-				console.log(canvas.toDataURL("image/png"))
-//		        var blob = dataURLtoBlob(canvas.toDataURL("image/png"));
-//		        var fd = new FormData();
-//		        fd.append("image", blob, "image.png");
-//		        imgCompressUpload(canvas.toDataURL("image/png"));
-		       
-		    };
-		    image.src = src;
-		},
 		inputNumber() {
 			if (!/^\d*$/.test(this.phone)) {	
 	            this.phone = this.phone.replace(/\D+/g,'')            
