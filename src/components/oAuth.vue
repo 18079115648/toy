@@ -28,7 +28,8 @@ export default {
     methods: {
     	loginSuccess() {
 			let redirectURI = '/index'
-            this.$router.replace(redirectURI)
+			window.location.replace('http://' + window.location.host + '/#/index')
+//          this.$router.replace(redirectURI)
 		}
     }
 }
