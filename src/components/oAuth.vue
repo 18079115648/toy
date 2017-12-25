@@ -28,11 +28,7 @@ export default {
     methods: {
     	loginSuccess() {
 			let redirectURI = '/index'
-            if (this.$storage.get('history_url') && this.$storage.get('history_url') != '/login') {
-                redirectURI = this.$storage.get('history_url')
-            }
-            window.location.replace('http://' + window.location.host + '/#/index')
-//          this.$router.replace(redirectURI)
+            this.$router.replace(redirectURI)
 		}
     }
 }

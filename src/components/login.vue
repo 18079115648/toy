@@ -1,5 +1,5 @@
 <template>
-    <div class="app">
+    <!--<div class="app">
     	<div class="top">
     		<div class="bg"></div>
     		<img src="../../static/image/vv.png"  />
@@ -12,7 +12,7 @@
     			<img src="../../static/image/ff.png" @click="mobileLogin" />
     		</div>
     	</div>
-    </div>
+    </div>-->
 </template>
 
 <script>
@@ -24,13 +24,16 @@ export default {
 	    }
 	},
 	created() {
+		this.$storage.remove('token')
 		if(!this.$common.isWeixin()) {
 			this.$router.replace('/mobileLogin')
+		}else {
+			this.$weixin.authorize()
 		}
 	},
 	methods: {
 		miss() {
-			this.$router.replace('/index')
+			this.$router.go(-1)
 		},
 		mobileLogin() {
 			this.$router.replace('/mobileLogin')

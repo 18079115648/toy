@@ -48,9 +48,9 @@ Vue.use(mint)
 Vue.config.productionTip = false
 
 router.beforeEach((to, from, next) => {
-    if (to.meta.requireAuth && !token.getAccessToken()) {
+    if (to.meta.requireAuth && !token.getAccessToken() && common.isWeixin()) {
         storage.set('history_url', to.fullPath)
-        next('/mobileLogin')
+        next('/login')
     } else {
     	next()
     }   

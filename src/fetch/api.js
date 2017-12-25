@@ -29,7 +29,7 @@ function buildURL(url, needToken) {
     }
     if (!token) {
     	storage.set('history_url', router.history.current.path)
-        router.replace('/mobileLogin')
+        router.replace('/login')
         return false
     }
     return url + (url.indexOf('?') >= 0 ? '&' : '?') + "accessToken=" + token
@@ -53,11 +53,12 @@ export function fetchPost(url, params, needToken, multiple) {
 	            		if(response.data.errCode == 0) {
 	            			resolve(response.data) 
 	            		}else {
+	            			reject(response)
 							if (response.data.errCode === 20002) {
-								router.replace('/mobileLogin')
+								router.replace('/login')
 								return
 							}
-	            			reject(response)
+	            			
 	            			Toast({
 							  message: response.data.errMsg,
 							  position: 'bottom',
@@ -91,11 +92,12 @@ export function fetchPost(url, params, needToken, multiple) {
             		if(response.data.errCode == 0) {
             			resolve(response.data) 
             		}else {
+            			reject(response)
             			if (response.data.errCode === 20002) {
-							router.replace('/mobileLogin')
+							router.replace('/login')
 							return
 						}
-            			reject(response)
+            			
             			Toast({
 						  message: response.data.errMsg,
 						  position: 'bottom',
@@ -138,11 +140,12 @@ export function fetchGet(url, params, needToken) {
             		if(response.data.errCode == undefined || response.data.errCode == 0) {
             			resolve(response.data) 
             		}else {
+            			reject(response)
 						if (response.data.errCode === 20002) {
-							router.replace('/mobileLogin')
+							router.replace('/login')
 							return
 						}
-            			reject(response)
+            			
             			Toast({
 						  message: response.data.errMsg,
 						  position: 'bottom',
