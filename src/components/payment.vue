@@ -73,7 +73,7 @@ export default {
 				           "appId": res.data.app_id,     //公众号名称，由商户传入     
 				           "timeStamp": res.data.time_stamp,       //时间戳，自1970年以来的秒数     
 				           "nonceStr": res.data.nonce_str,  //随机串     
-				           "package": res.data.prepay_id,      
+				           "package": 'prepay_id=' + res.data.prepay_id,      
 				           "signType":res.data.sign_type,         //微信签名方式：     
 				           "paySign": res.data.pay_sign //微信签名 
 				        },
