@@ -74,7 +74,7 @@ export default {
 				           "timeStamp": res.data.time_stamp,       //时间戳，自1970年以来的秒数     
 				           "nonceStr": res.data.nonce_str,  //随机串     
 				           "package": 'prepay_id=' + res.data.prepay_id,      
-				           "signType":res.data.sign_type,         //微信签名方式：     
+				           "signType":'MD5',         //微信签名方式：     
 				           "paySign": res.data.pay_sign //微信签名 
 				        },
 						function(res) {
