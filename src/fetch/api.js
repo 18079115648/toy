@@ -186,6 +186,10 @@ export default {
 	getZegoToken(appId, idName) {
 		return fetchGet('http://106.15.41.49:8181/token?app_id=' + appId + '&id_name=' + idName, {}, false)
 	},
+	// 获取即构初始化数据
+	getZegoInitData(params) {
+		return fetchGet('/dm-api/zego/init', params, true)
+	},
 	 
 	//获取验证码
 	getCaptcha(params) {

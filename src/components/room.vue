@@ -201,6 +201,7 @@ export default {
 			zg: undefined,								// zego对象
 			zegoRoomId: 'sander_21312312312',			// 房间号
 			zegoAppId: 3177435262,						// 应用编号
+			zegoToken: '',                              //zego登录token
 			zegoServer: 'ws://106.15.41.49:8181/ws',	// 服务器地址
 			zegoIdName: accessToken.getAccessToken(),			// 用户编号
 			zegoNickName: 'U' + accessToken.getAccessToken(),	// 昵称
@@ -257,7 +258,7 @@ export default {
 		// 初始化socket
 		this.initWebSocket()
 		// 即构推流初始化
-		this.initZego()
+		this.getInitZegoData()
 		
 		// 阻止缩放
 		this.preventScale()
@@ -479,8 +480,17 @@ export default {
 				console.info('关闭socket')
 			}
 		},
-
 		// 即构推流初始化
+		getInitZegoData() {
+			this.$api.getZegoInitData().then(res => {
+				this.zegoAppId = res.data.appId
+				this.zegoServer = res.data.server
+				this.zegoToken = res.data.zegoToken
+				this.initZego()
+		    }, err => {
+		    	
+		    })
+		},
 		initZego() {
 			this.zg = new ZegoClient()
 			this.zg.config({
@@ -492,25 +502,22 @@ export default {
 
 			const parent = this
 
-			// 获取token
-			this.$api.getZegoToken(this.zegoAppId, this.zegoIdName).then((token) => {
-				// 登录房间
-				this.zg.login(this.zegoRoomId, 1, token, (streamList) => {
-					streamList.forEach((item) => {
-						// 设置音量0
-						parent.zg.setPlayVolume(item.stream_id, 0)
-						if (item.stream_id.endsWith('_2')) {
-							parent.sideStreamId = item.stream_id
-							// 只有游戏中才开始播放侧边视频流，观众模式播放侧边视频流
-							this.isGame && parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'), 1)
-						} else {
-							parent.frontStreamId = item.stream_id
-							parent.zg.startPlayingStream(item.stream_id, document.getElementById('frontview'), 1)
-						}
-					})
-				}, (error) => {
-					console.error('连接失败:' + error.msg)
+			// 登录房间
+			this.zg.login(this.zegoRoomId, 1, this.zegoToken, (streamList) => {
+				streamList.forEach((item) => {
+					// 设置音量0
+					parent.zg.setPlayVolume(item.stream_id, 0)
+					if (item.stream_id.endsWith('_2')) {
+						parent.sideStreamId = item.stream_id
+						// 只有游戏中才开始播放侧边视频流，观众模式播放侧边视频流
+						this.isGame && parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'), 1)
+					} else {
+						parent.frontStreamId = item.stream_id
+						parent.zg.startPlayingStream(item.stream_id, document.getElementById('frontview'), 1)
+					}
 				})
+			}, (error) => {
+				console.error('连接失败:' + error.msg)
 			})
 
 			// 房间连接断开通知
