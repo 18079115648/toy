@@ -494,7 +494,7 @@ export default {
 		initZego() {
 			this.zg = new ZegoClient()
 			this.zg.config({
-				appid: this.zegoAppId,
+				appid: parseInt(this.zegoAppId),
 				server: this.zegoServer,
 				idName: this.zegoIdName,
 				nickName: this.zegoNickName
