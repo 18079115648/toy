@@ -504,7 +504,7 @@ export default {
 			const parent = this
 
 			// 登录房间
-			this.zg.login(this.zegoRoomId, 1, this.zegoToken, (streamList) => {
+			this.zg.login(this.zegoRoomId, 2, this.zegoToken, (streamList) => {
 				streamList.forEach((item) => {
 					// 设置音量0
 					parent.zg.setPlayVolume(item.stream_id, 0)
