@@ -47,6 +47,22 @@ Vue.use(VueRouter)
 Vue.use(mint)
 Vue.config.productionTip = false
 
+function getKey(name) {
+	var reg = new RegExp('^' + name + '=([^&]*)(&|$)');
+//	          new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+    var param=window.location.search.substring(1).split('/')[0];
+    if(!param){
+    	return false
+    }
+    var r = param.match(reg)
+    console.log(r)
+    console.log(r[1])
+    if (r != null) return decodeURI(r[1])
+    return false
+}
+
+storage.set('operatorKey', getKey('key'))
+
 router.beforeEach((to, from, next) => {
     if (to.meta.requireAuth && !token.getAccessToken() && common.isWeixin()) {
         storage.set('history_url', to.fullPath)

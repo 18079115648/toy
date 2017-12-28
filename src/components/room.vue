@@ -12,7 +12,8 @@
     			<span class="shadow-text">{{remainGold}}</span>
     		</div>
     	</div>
-    	<img class="view-change" v-if="isGame" @click="changeView" src="../../static/image/dd33.png"  />
+    	<!--<img class="view-change" v-if="isGame" @click="changeView" src="../../static/image/dd33.png"  />-->
+    	<img class="view-change"  @click="changeView" src="../../static/image/dd33.png"  />
     	<div class="room-bottom" v-show="!operateShow">
     		<div class="detail" @click="goGrabList">
     			<img src="../../static/image/d122.png"  />
@@ -416,7 +417,7 @@ export default {
 							this.operateTime = data.remainSecond
 							this.operateShow = true
 							this.isGame = true
-							this.startSideStream()
+//							this.startSideStream()
 							this.operateCountDown(data.remainSecond)
 						}
 
@@ -441,7 +442,7 @@ export default {
 							this.failStatus = false
 							this.operateShow = true
 							this.isGame = true
-							this.startSideStream()
+//							this.startSideStream()
 							this.pauseSuccessAudio()
 							this.pauseFailureAudio()
 							this.readyGo()	
@@ -459,7 +460,7 @@ export default {
 						console.debug('抓取' + (data.value === 1 ? '成功' : '失败'))
 						this.operateShow = false
 						this.isGame = false
-						this.closeSideStream()
+//						this.closeSideStream()
 						this.showFront = true
 						this.showSide = false
 						clearInterval(this.operationTimer)
@@ -512,7 +513,8 @@ export default {
 					if (item.stream_id.endsWith('_2')) {
 						parent.sideStreamId = item.stream_id
 						// 只有游戏中才开始播放侧边视频流，观众模式播放侧边视频流
-						this.isGame && parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'), 1)
+//						this.isGame && parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'), 1)
+						parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'), 1)
 					} else {
 						parent.frontStreamId = item.stream_id
 						parent.zg.startPlayingStream(item.stream_id, document.getElementById('frontview'), 1)

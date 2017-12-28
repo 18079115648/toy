@@ -169,7 +169,7 @@ export default {
     // 进入房间
     enterRoom(room) {
     	if(!this.$token.getAccessToken()) {
-    		this.$router.replace('/login')
+    		this.$router.push('/login')
     		return
     	}
     	if(room.status == 2) {
