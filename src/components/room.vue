@@ -298,6 +298,7 @@ export default {
 		initWebIM() { 
 			this.$api.enterRoom({machineSn: this.machineSn}).then((response) => {
 				this.toyImgs = response.data.imgs
+				this.webIMChatroomId = response.data.chatRoom
 				this.webIMConn = new WebIM.connection({
 					isMultiLoginSessions: WebIM.config.isMultiLoginSessions,
 					https: typeof WebIM.config.https === 'boolean' ? WebIM.config.https : location.protocol === 'https:',
@@ -326,7 +327,7 @@ export default {
 						parent.createDanmu(message.data)
 					},
 					onPresence: function ( message ) {
-						parent.webIMChatroomId = message.from
+
 						console.info(message)
 					}
 				})

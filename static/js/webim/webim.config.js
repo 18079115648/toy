@@ -18,7 +18,7 @@ WebIM.config = {
     /*
      * Application AppKey
      */
-    appkey: '1125171123178631#wawaj',
+    appkey: '1131171228178278#allin',
 
     /*
      * Whether to use wss
