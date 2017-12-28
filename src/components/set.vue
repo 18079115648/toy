@@ -70,8 +70,10 @@ export default {
 
     //退出登录
     loginOut() {
+    	let operatorKey = storage.get('operatorKey') ? storage.get('operatorKey') : false
         window.localStorage.clear()
         this.$router.replace('/login')
+        storage.set('operatorKey', operatorKey)
     }
   }
 }

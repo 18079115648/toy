@@ -51,13 +51,20 @@ function getKey(name) {
 	var reg = new RegExp('^' + name + '=([^&]*)(&|$)');
 //	          new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
     var param=window.location.search.substring(1).split('/')[0];
+    var currKey = storage.get('operatorKey')
     if(!param){
     	return false
     }
     var r = param.match(reg)
     console.log(r)
     console.log(r[1])
-    if (r != null) return decodeURI(r[1])
+    if (r != null && r[1] == currKey) {
+    	return decodeURI(r[1])
+    }
+    if (r != null && r[1] != currKey) {
+    	storage.remove('token')
+    	return decodeURI(r[1])
+    }
     return false
 }
 
