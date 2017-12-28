@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
     	'/dm-api/': {    //将www.exaple.com印射为/apis
-          target: 'http://121.41.101.63:8088/dm-api/',  // 接口域名
+          target: 'https://wawa.ftgame.com.cn/dm-api/',  // 接口域名
           changeOrigin: true,  //是否跨域
           pathRewrite: {
                 '^/dm-api/': ''   //需要rewrite的,
