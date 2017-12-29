@@ -27,8 +27,9 @@ export default {
     },
     methods: {
     	loginSuccess() {
+    		let key = this.$storage.get('operatorKey') ? '/?key=' + this.$storage.get('operatorKey') : ''
 			let redirectURI = '/index'
-			window.location.replace('http://' + window.location.host + '/#/index')
+			window.location.replace('http://' + window.location.host + key + '/#/index')
 //          this.$router.replace(redirectURI)
 		}
     }

@@ -182,10 +182,7 @@ const router = new Router({
     },
     {
       path: '/mobileLogin',
-      component: mobileLogin,
-      meta: {
-      	keepAlive: true
-      }
+      component: mobileLogin
     },
     {
       path: '/agree',

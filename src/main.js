@@ -56,14 +56,12 @@ function getKey(name) {
     	return false
     }
     var r = param.match(reg)
-    console.log(r)
-    console.log(r[1])
     if (r != null && r[1] == currKey) {
-    	return decodeURI(r[1])
+    	return r[1]
     }
     if (r != null && r[1] != currKey) {
     	storage.remove('token')
-    	return decodeURI(r[1])
+    	return r[1]
     }
     return false
 }

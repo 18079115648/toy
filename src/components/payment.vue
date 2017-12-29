@@ -106,27 +106,27 @@ export default {
 		        
 	        })
     	}else {
-    		if(this.payWay == 1) {
-    			this.$api.payment({
-			        id: this.id,
-			        type: 3,
-			        returnUrl: 'http://' + window.location.host + '/#/index'
-			    }).then(res => {
-		            document.write(res.data)
-			    }, err => {
-			        
-		        })
-			    return
-    		}
-    		this.$api.payment({
-		        id: this.id,
-		        type: 2,
-		        tradeType: 'MWEB'
-		    }).then(res => {
-				window.location.replace(res.data.mweb_url + '&redirect_url=http://' + window.location.host + '/#/index')
-		    }, err => {
-		        
-	        })
+//  		if(this.payWay == 1) {
+//  			this.$api.payment({
+//			        id: this.id,
+//			        type: 3,
+//			        returnUrl: 'http://' + window.location.host + '/#/index'
+//			    }).then(res => {
+//		            document.write(res.data)
+//			    }, err => {
+//			        
+//		        })
+//			    return
+//  		}
+//  		this.$api.payment({
+//		        id: this.id,
+//		        type: 2,
+//		        tradeType: 'MWEB'
+//		    }).then(res => {
+//				window.location.replace(res.data.mweb_url + '&redirect_url=http://' + window.location.host + '/#/index')
+//		    }, err => {
+//		        
+//	        })
     	}
 	    	
         
@@ -204,7 +204,8 @@ export default {
     		font-size: 0.3rem;
     	}
     	.select-icon{
-    		width: 0.36rem;
+    		width: 0.4rem;
+    		margin-right: 0.14rem;
     	}
     }
 }

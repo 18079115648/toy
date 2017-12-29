@@ -8,7 +8,8 @@ const APP_SECRET = process.env.WEIXIN.APP_SECRET
 export default {
     // 认证
     authorize() {
-        let redirect = process.env.WEIXIN.REDIRECT_URI
+    	let key = storage.get('operatorKey') ? '?key=' + storage.get('operatorKey') : ''
+        let redirect = process.env.WEIXIN.REDIRECT_URI + key + '#/oauth'
         let authURI = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + APP_ID + '&redirect_uri=' + encodeURIComponent(redirect) + '&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
         window.location.replace(authURI)
     },

@@ -38,8 +38,9 @@ export default {
   created() {
   	if(this.$common.isWeixin()) {
   		this.$api.userInfo().then(res => {
+  			let key = this.$storage.get('operatorKey') ? '?key=' + this.$storage.get('operatorKey') : ''
 			this.code = res.data.inviteCode.split('')
-			this.lineLink = 'http://' + location.host + '/#/share/' + res.data.inviteCode
+			this.lineLink = 'http://' + location.host + '/' + key + '/#/share/' + res.data.inviteCode
 			this.imgUrl = 'https://yingdd.oss-cn-hangzhou.aliyuncs.com/0d25d14de142d89f5af33b0b53ecc7b0.png'
 			this.shareTitle = '澳IN娱乐'
 			this.descContent = '欢乐抓娃娃，分享奖励多多！'
