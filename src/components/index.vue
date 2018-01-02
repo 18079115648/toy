@@ -140,13 +140,13 @@ export default {
   		}
   		this.tagChange(item.id)
   	},
-  	bannerLink(item) {
-  		if(item.type == 1) {
-  			
-  		}else if(item.type == 2) {
-			this.$router.push('/recharge')
+  	bannerLink(room) {
+  		if(room.type == 1) {
+  			this.$router.push({path: '/room', query: {machineSn: room.machineSn, num: room.num, price: room.price, machineId: room.machineId, liveRoomCode: room.liveRoomCode}})
+  		}else if(room.type == 2) {
+				this.$router.push('/recharge')
   		}else {
-  			window.location.href = item.url
+  			window.location.href = room.url
   		}
   	},
   	render(res) {
@@ -230,7 +230,7 @@ export default {
 		}
 	}*/
 	.logo-text{
-		height: 0.46rem;
+		height: 0.52rem;
 	}
 }
 .navbar{
