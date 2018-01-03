@@ -149,8 +149,8 @@ export default {
 } 
 .logo-text{
 	position: fixed;
-	height: 0.52rem;
-	top: 0.16rem;
+	height: 0.7rem;
+	top: 0.08rem;
 	left: 50%;
 	transform: translateX(-50%);
 	z-index: 15;

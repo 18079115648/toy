@@ -230,7 +230,7 @@ export default {
 		}
 	}*/
 	.logo-text{
-		height: 0.52rem;
+		height: 0.7rem;
 	}
 }
 .navbar{
