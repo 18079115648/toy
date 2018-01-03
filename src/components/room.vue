@@ -71,7 +71,7 @@
 		<mt-popup v-model="succStatus" class="pop" :closeOnClickModal="false">
 			<div class="succ-content">
 				<div class="goods-img">
-					<img src="../../static/image/wrwr.png"  />
+					<img :src="winImg"  />
 				</div>
 				<div class="shadow-text" style="text-align: center; color: #fff;">
 					<p class="succ-tip">太棒了，抓到娃娃了耶！</p>
@@ -243,6 +243,7 @@ export default {
 		        }
 		    },
 		    toyImgs: [],            //娃娃大图
+		    winImg: ''
 		    
 //		    rechargeStatus: false,  //充值
 //		    rechargeList: []
@@ -299,6 +300,7 @@ export default {
 		initWebIM() { 
 			this.$api.enterRoom({machineSn: this.machineSn}).then((response) => {
 				this.toyImgs = response.data.imgs
+				this.winImg = response.data.winImg
 				this.webIMChatroomId = response.data.chatRoom
 				this.webIMConn = new WebIM.connection({
 					isMultiLoginSessions: WebIM.config.isMultiLoginSessions,
