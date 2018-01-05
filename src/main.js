@@ -9,10 +9,8 @@ import 'mint-ui/lib/style.css'
 import '../static/js/webim/webim.config'
 import '../static/js/webim/strophe-1.2.8.min'
 
-
-import fastclick from 'fastclick'
-
-fastclick.attach(document.body)
+import vueTap from 'v-tap';
+Vue.use(vueTap);
 
 import storage from '@/fetch/storage'
 Vue.prototype.$storage = storage

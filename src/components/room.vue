@@ -1,5 +1,5 @@
 <template> 
-    <div class="app" :style="{ height: wH + 'px' }">
+    <div class="app" id="fastClick" :style="{ height: wH + 'px' }">
     	<div class="room-loading" v-show="loadingStatus">
     		<div class="progress-content">
     			<img class="logo" src="../../static/image/aoin.png"  />
@@ -13,7 +13,7 @@
       	<canvas id="sideview" :class="{show:showSide}" :style="{ height: wH + 'px' }"></canvas>
     	<div class="room-top">
 			<div v-if="isGame" class="back-position"></div>
-    		<img v-if="!isGame" class="back" src="../../static/image/ss44.png" @click="back" />
+    		<img v-if="!isGame" class="back" src="../../static/image/ss44.png" v-tap.prevent="{ methods : back }"/>
     		<img v-show="avatar" class="avatar" :src="avatar"  />
     		<div class="room-count shadow-text"></div>
     		<div class="price">
@@ -21,21 +21,21 @@
     			<span class="shadow-text">{{remainGold}}</span>
     		</div>
     	</div>
-    	<!--<img class="view-change" v-if="isGame" @click="changeView" src="../../static/image/dd33.png"  />-->
-    	<img class="view-change"  @click="changeView" src="../../static/image/dd33.png"  />
+    	<!--<img class="view-change" v-if="isGame" v-tap.prevent="{ methods : changeView }" src="../../static/image/dd33.png"  />-->
+    	<img class="view-change" v-tap.prevent="{ methods : changeView }" src="../../static/image/dd33.png"  />
     	<div class="room-bottom" v-show="!operateShow">
-    		<div class="detail" @click="goGrabList">
+    		<div class="detail" v-tap.prevent="{ methods : goGrabList }">
     			<img src="../../static/image/d122.png"  />
     			<p class="shadow-text">详情</p>
     		</div>
-    		<div class="begin btn-hover" @click="beginGame">
+    		<div class="begin btn-hover" v-tap.prevent="{ methods : beginGame }">
     			<p class="price">
     				<img src="../../static/image/wd.png"  />
     				<span class="shadow-text">{{price}}</span>
     			</p>
     			<p class="shadow-text begin-text" :class="{enabled: roomStatus == 0}">开始游戏</p>
     		</div>
-    		<div class="rechatge" @click="goRecharge">
+    		<div class="rechatge" v-tap.prevent="{ methods : goRecharge }">
     			<img src="../../static/image/ccc3.png"  />
     			<p class="shadow-text">充值</p>
     		</div>
@@ -61,7 +61,7 @@
     				<img class="fullEle active" src="../../static/image/wrqe.png"  />
     			</div>
     		</div>
-    		<div class="operate-click has-box" @click="grab">
+    		<div class="operate-click has-box" v-tap.prevent="{ methods : grab }">
     			<img class="fullEle com" src="../../static/image/adada.png"  />
     			<img class="fullEle active" src="../../static/image/wfwfc.png"  />
     		</div>
@@ -84,14 +84,14 @@
 				</div>
 				<div class="shadow-text" style="text-align: center; color: #fff;">
 					<p class="succ-tip">太棒了，抓到娃娃了耶！</p>
-					<a class="check-goods shadow-text" @click="toToysPocket">立即查看</a>
+					<a class="check-goods shadow-text" v-tap.prevent="{ methods : toToysPocket }">立即查看</a>
 					<p class="operate-btn">
 						<!--<span class="btn-hover">分享好友</span>-->
-						<span class="btn-hover" @click="beginGame">再次挑战</span>
+						<span class="btn-hover" v-tap.prevent="{ methods : beginGame }">再次挑战</span>
 					</p>
 					<p class="time" v-show="endTime >= 1">倒计时 {{endTime}}秒</p>
 				</div>
-				<img src="../../static/image/qe.png" class="close" @click="closePop"/>	
+				<img src="../../static/image/qe.png" class="close" v-tap.prevent="{ methods : closePop }"/>	
 			</div>
 		</mt-popup>
 		
@@ -102,11 +102,11 @@
 					<p class="succ-tip">很遗憾，差点就抓到了！</p>
 					<p class="operate-btn">
 						<!--<span class="btn-hover">分享好友</span>-->
-						<span class="btn-hover" @click="beginGame">再次挑战</span>
+						<span class="btn-hover" v-tap.prevent="{ methods : beginGame }">再次挑战</span>
 					</p>
 					<p class="time" v-show="endTime >= 1">倒计时 {{endTime}}秒</p>
 				</div>
-				<img src="../../static/image/qe.png" class="close" @click="closePop" />	
+				<img src="../../static/image/qe.png" class="close" v-tap.prevent="{ methods : closePop }" />	
 			</div>
 		</mt-popup>
 
@@ -145,7 +145,7 @@
 				<div class="toy-imgs" v-show="detailTab == 2">
 					<img :src="item" v-for="(item, index) in toyImgs" :key="index"  />
 				</div>
-				<img src="../../static/image/x.png" class="close" @click="closeGrabList" />	
+				<img src="../../static/image/x.png" class="close" v-tap.prevent="{ methods : closeGrabList }" />	
 			</div>
 		</mt-popup>
 		
@@ -262,6 +262,8 @@ export default {
 	    }
 	},
 	created() {	
+		
+		
 		// 机器编号
 		this.machineSn = this.$route.query.machineSn 	
 		//房间号
@@ -522,7 +524,7 @@ export default {
 
 			// 登录房间
 			this.zg.login(this.zegoRoomId, 2, this.zegoToken, (streamList) => {
-				clearInterval(parent.progressTime)
+				
 				
 				
 				streamList.forEach((item) => {
@@ -540,8 +542,9 @@ export default {
 				})
 				
 				setTimeout(() => {
+					clearInterval(parent.progressTime)
 					parent.loadingStatus = false
-				}, 200)
+				}, 600)
 			}, (error) => {
 				console.error('连接失败:' + error.msg)
 			})
