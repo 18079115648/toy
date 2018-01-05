@@ -4,7 +4,7 @@
     	<router-link to="/user" class="user-link link">
     		<img :src="avatar" style="border-radius: 50%;"  class="fullEle" />
     	</router-link>
-    	<img class="logo-text" src="../../static/image/aoin.png" />
+    	<img class="logo-text"  src="../../static/image/aoin.png" />
     	<span style="width: 0.85rem;"></span>
     </div>
     <div class="navbar">
@@ -90,7 +90,7 @@ export default {
 	        loadEnd: false,
 	        data: {
 	        	page: 1,
-	        	pageSize: 10
+	        	pageSize: 20
 	        }
 	    },
 	    
@@ -131,6 +131,7 @@ export default {
   },
   methods: {
   	tagChange(id) {
+  		this.pagination.data.page = 1
   		this.pagination.data.type = id
   		this.$refs.pagination.refresh() 
   	},
@@ -298,6 +299,7 @@ export default {
 .toys-content{
 	flex: 1;
 	overflow-y: auto;
+	-webkit-overflow-scrolling : touch;
 }
 .toys-list{
 	padding: 0.2rem 0.1rem 0;
@@ -313,6 +315,7 @@ export default {
 		overflow: hidden;
 		
 		.toys-img{
+			border-radius: 0.3rem;
 			position: absolute;
 			top:50%;
 			left: 50%;

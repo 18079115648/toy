@@ -10,6 +10,7 @@
 </template>
 
 <script>
+
 export default {
 	mounted() {
 		this.$root.bgAudio = document.getElementById('bg-audio')
@@ -32,6 +33,7 @@ export default {
 		top: 0.85rem;
 		bottom: 0;
 		overflow-y: auto;
+		-webkit-overflow-scrolling : touch;
 	}
 	.mint-loadmore{
 		min-height: 100% !important;

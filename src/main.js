@@ -10,6 +10,10 @@ import '../static/js/webim/webim.config'
 import '../static/js/webim/strophe-1.2.8.min'
 
 
+import fastclick from 'fastclick'
+
+fastclick.attach(document.body)
+
 import storage from '@/fetch/storage'
 Vue.prototype.$storage = storage
 
@@ -43,6 +47,7 @@ import confirmModal from '@/components/common/confirmModal'
 Vue.component('confirmModal', confirmModal)
 
 Vue.use(VueRouter)
+
 
 Vue.use(mint)
 Vue.config.productionTip = false

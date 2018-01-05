@@ -1,5 +1,14 @@
 <template> 
     <div class="app" :style="{ height: wH + 'px' }">
+    	<div class="room-loading" v-show="loadingStatus">
+    		<div class="progress-content">
+    			<img class="logo" src="../../static/image/aoin.png"  />
+    			<div class="progress-box">
+    				<div class="progress-finish" :style="{ width: progress + '%' }">{{progress}}%</div>
+    			</div>
+    		</div>
+    		
+    	</div>
 		<canvas id="frontview" :class="{show:showFront}" :style="{ height: wH + 'px' }"></canvas>
       	<canvas id="sideview" :class="{show:showSide}" :style="{ height: wH + 'px' }"></canvas>
     	<div class="room-top">
@@ -35,19 +44,19 @@
 		<!-- 操作区域 -->
     	<div class="operate-area" v-show="operateShow">
     		<div class="operate-direc">
-    			<div class="direction-item left has-box" @click="moveDirection(3)">
+    			<div class="direction-item left has-box" @touchstart="touchstart(3, $event)" @touchend="touchend">
     				<img class="fullEle com" src="../../static/image/sss33.png"  />
     				<img class="fullEle active" src="../../static/image/qdd.png"  />
     			</div>
-    			<div class="direction-item top has-box" @click="moveDirection(1)">
+    			<div class="direction-item top has-box" @touchstart="touchstart(1, $event)" @touchend="touchend">
     				<img class="fullEle com" src="../../static/image/fff33.png"  />
     				<img class="fullEle active" src="../../static/image/dd112.png"  />
     			</div>
-    			<div class="direction-item right has-box" @click="moveDirection(4)">
+    			<div class="direction-item right has-box" @touchstart="touchstart(4, $event)" @touchend="touchend">
     				<img class="fullEle com" src="../../static/image/wfff.png"  />
     				<img class="fullEle active" src="../../static/image/wrwf.png"  />
     			</div>
-    			<div class="direction-item bottom has-box" @click="moveDirection(2)">
+    			<div class="direction-item bottom has-box" @touchstart="touchstart(2, $event)" @touchend="touchend">
     				<img class="fullEle com" src="../../static/image/adad.png"  />
     				<img class="fullEle active" src="../../static/image/wrqe.png"  />
     			</div>
@@ -80,7 +89,7 @@
 						<!--<span class="btn-hover">分享好友</span>-->
 						<span class="btn-hover" @click="beginGame">再次挑战</span>
 					</p>
-					<p class="time" v-if="endTime >= 1">倒计时 {{endTime}}秒</p>
+					<p class="time" v-show="endTime >= 1">倒计时 {{endTime}}秒</p>
 				</div>
 				<img src="../../static/image/qe.png" class="close" @click="closePop"/>	
 			</div>
@@ -95,7 +104,7 @@
 						<!--<span class="btn-hover">分享好友</span>-->
 						<span class="btn-hover" @click="beginGame">再次挑战</span>
 					</p>
-					<p class="time" v-if="endTime >= 1">倒计时 {{endTime}}秒</p>
+					<p class="time" v-show="endTime >= 1">倒计时 {{endTime}}秒</p>
 				</div>
 				<img src="../../static/image/qe.png" class="close" @click="closePop" />	
 			</div>
@@ -243,7 +252,10 @@ export default {
 		        }
 		    },
 		    toyImgs: [],            //娃娃大图
-		    winImg: ''
+		    winImg: '',
+		    
+		    loadingStatus: true,    //loading
+		    progress: 0,            //进度
 		    
 //		    rechargeStatus: false,  //充值
 //		    rechargeList: []
@@ -276,13 +288,6 @@ export default {
 		// 初始化环信
 		this.initWebIM()
 
-		// setInterval(() => {
-		// 	this.createDanmu(1)
-		// }, 3000);
-
-		// setInterval(() => {
-		// 	this.createDanmu(2)
-		// }, 1500);
 	},
 	methods: {
 		/**
@@ -487,6 +492,14 @@ export default {
 		},
 		// 即构推流初始化
 		getInitZegoData() {
+			this.progress = 0
+			this.progressTime = setInterval(() => {
+				if(this.progress >= 99) {
+					clearInterval(this.progressTime)
+					return
+				}
+				this.progress+=11
+			}, 90)
 			this.$api.getZegoInitData().then(res => {
 				this.zegoAppId = res.data.appId
 				this.zegoServer = res.data.server
@@ -509,6 +522,9 @@ export default {
 
 			// 登录房间
 			this.zg.login(this.zegoRoomId, 2, this.zegoToken, (streamList) => {
+				clearInterval(parent.progressTime)
+				
+				
 				streamList.forEach((item) => {
 					// 设置音量0
 					parent.zg.setPlayVolume(item.stream_id, 0)
@@ -522,6 +538,10 @@ export default {
 						parent.zg.startPlayingStream(item.stream_id, document.getElementById('frontview'), 1)
 					}
 				})
+				
+				setTimeout(() => {
+					parent.loadingStatus = false
+				}, 200)
 			}, (error) => {
 				console.error('连接失败:' + error.msg)
 			})
@@ -665,6 +685,21 @@ export default {
 		/**
 		 * 移动方向（1前2后3左4右）
 		 */
+		touchstart(direction, e) {
+    	let self = this
+    	self.moveDirection(direction)
+			this.timeInter = setInterval(() => {
+				console.log('move')
+				self.moveDirection(direction)
+			},1000)
+		 	e.preventDefault()
+		},
+		touchend(){
+			this.playClickAudio()
+	   	clearInterval(this.timeInter)
+	   	this.timeInter = 0
+			return false 
+		},
 		moveDirection(direction) {
 			if (this.showSide) {
 				if (direction === 1) {
@@ -678,7 +713,7 @@ export default {
 				}
 			}
 
-			this.playClickAudio()
+//			this.playClickAudio()
 			if (this.sock == undefined) {
 				alert('服务器连接失败，请重试')
 				return
@@ -789,7 +824,7 @@ export default {
 			function timeout() {
 				setTimeout(() => {
 					if (parent.endTime === 1) {
-						// parent.succStatus = false
+						 parent.succStatus = false
 						parent.endTime--
 						return
 					}
@@ -811,7 +846,7 @@ export default {
 			function timeout() {
 				setTimeout(function() {
 					if (parent.endTime === 1) {
-						// parent.failStatus = false
+						 parent.failStatus = false
 						parent.endTime--
 						return
 					}
@@ -1012,7 +1047,85 @@ export default {
     transform: translateX(-100%);
   }
 }
+@-webkit-keyframes progress-bar-stripes {
+	from {
+		background-position: 40px 0
+	}
+	to {
+		background-position: 0 0
+	}
+}
 
+@-o-keyframes progress-bar-stripes {
+	from {
+		background-position: 40px 0
+	}
+	to {
+		background-position: 0 0
+	}
+}
+
+@keyframes progress-bar-stripes {
+	from {
+		background-position: 40px 0
+	}
+	to {
+		background-position: 0 0
+	}
+}
+.room-loading{
+	position: absolute;
+	width: 100%;
+	z-index: 9999;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	background: #fff;
+	.progress-content{
+		position: absolute;
+		left: 50%;
+		top: 42%;
+		transform: translate(-50%, -50%);
+		.logo{
+			display: block;
+			width: 4.8rem;
+			margin: 0 auto;
+			margin-bottom: 0.36rem;
+		}
+		.progress-box{
+			width: 5.6rem;
+			height: 0.3rem;
+	    overflow: hidden;
+	    background-color: #F5F5F9;
+	    border-radius: 0.3rem;
+	    -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+	    box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+	    .progress-finish{
+	    	float: left;
+	    	width: 1rem;
+	    	height: 100%;
+				font-size: 12px;
+				line-height: 0.32rem;
+				color: #fff;
+				text-align: center;
+				background-color: #5cb85c;
+				-webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
+				box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
+				-webkit-transition: width .6s ease;
+				-o-transition: width .6s ease;
+				transition: width .6s ease;
+				background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+				background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+				background-image: linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+				-webkit-background-size: 40px 40px;
+				background-size: 40px 40px;
+				-webkit-animation: progress-bar-stripes 2s linear infinite;
+				-o-animation: progress-bar-stripes 2s linear infinite;
+				animation: progress-bar-stripes 2s linear infinite
+	    }
+		}
+	}
+}
 #frontview, #sideview {
 	width: 100%;
 	z-index: -2;
