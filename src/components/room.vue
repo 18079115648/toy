@@ -12,10 +12,14 @@
 		<canvas id="frontview" :class="{show:showFront}" :style="{ height: wH + 'px' }"></canvas>
       	<canvas id="sideview" :class="{show:showSide}" :style="{ height: wH + 'px' }"></canvas>
     	<div class="room-top">
-			<div v-if="isGame" class="back-position"></div>
-    		<img v-if="!isGame" class="back" src="../../static/image/ss44.png" v-tap.prevent="{ methods : back }"/>
+			<div v-show="isGame" class="back-position"></div>
+    		<img v-show="!isGame" class="back" src="../../static/image/ss44.png" v-tap.prevent="{ methods : back }"/>
     		<img v-show="avatar" class="avatar" :src="avatar"  />
-    		<div class="room-count shadow-text"></div>
+    		<div v-show="!avatar" class="avatar-position"></div>
+    		<div class="room-count shadow-text">
+    			<p>当前房间人数</p>
+    			<p>{{roomNum}}</p>
+    		</div>
     		<div class="price">
     			<img src="../../static/image/wd.png"  />
     			<span class="shadow-text">{{remainGold}}</span>
@@ -201,7 +205,9 @@ export default {
 	    	failStatus: false, 				// 没有抓到娃娃,
 			endTime: 3,						// 抓取结果展示倒计时
 			remainGold: storage.get('remain_gold'),	// 剩余金币
-			avatar: '', // 头像
+			avatar: '', // 当前操作用户头像
+			userAvatar: '',  //登录用户头像
+			roomNum: 0,  //房间人数
 			
 			machineSn: undefined,			// 设备编号
       		sock: undefined,				// socket handler
@@ -262,8 +268,8 @@ export default {
 	    }
 	},
 	created() {	
-		
-		
+		//房间人数
+		this.roomNum = this.$route.query.num
 		// 机器编号
 		this.machineSn = this.$route.query.machineSn 	
 		//房间号
@@ -276,22 +282,19 @@ export default {
 		this.initWebSocket()
 		// 即构推流初始化
 		this.getInitZegoData()
-		
 		// 阻止缩放
 		this.preventScale()
 	},
 	mounted() {	
 		let self = this
 		this.wH = document.getElementById('app').offsetHeight
-
 		// 加载音频资源
 		this.loadAudios()
-
 		// 初始化环信
 		this.initWebIM()
-
 	},
 	methods: {
+		
 		/**
 		 * 房间抓取记录
 		 */
@@ -442,11 +445,14 @@ export default {
 						this.roomStatus = data.gameStatus
 						if (data.gameStatus === 1) {
 							data.headUrl && (this.avatar = data.headUrl)
+						}else {
+							this.avatar = ''
 						}
 						break;
 					case 'start_r':
 						console.debug('游戏开始状态')
 						if (!this.isGame && data.status === 200) {
+							this.avatar = this.userAvatar
 							this.succStatus = false
 							this.failStatus = false
 							this.operateShow = true
@@ -544,7 +550,7 @@ export default {
 				setTimeout(() => {
 					clearInterval(parent.progressTime)
 					parent.loadingStatus = false
-				}, 600)
+				}, 1000)
 			}, (error) => {
 				console.error('连接失败:' + error.msg)
 			})
@@ -689,8 +695,8 @@ export default {
 		 * 移动方向（1前2后3左4右）
 		 */
 		touchstart(direction, e) {
-    	let self = this
-    	self.moveDirection(direction)
+	    	let self = this
+	    	self.moveDirection(direction)
 			this.timeInter = setInterval(() => {
 				console.log('move')
 				self.moveDirection(direction)
@@ -699,8 +705,8 @@ export default {
 		},
 		touchend(){
 			this.playClickAudio()
-	   	clearInterval(this.timeInter)
-	   	this.timeInter = 0
+		   	clearInterval(this.timeInter)
+		   	this.timeInter = 0
 			return false 
 		},
 		moveDirection(direction) {
@@ -866,7 +872,7 @@ export default {
 		getGold() {
 			this.$api.userInfo().then(response => {
 				this.remainGold = response.data.money
-//				this.avatar = response.data.avatar
+				this.userAvatar = response.data.avatar || '../../static/image/vvv.png'
 			})
 		},
 
@@ -1161,7 +1167,7 @@ export default {
 		width: 1rem;
 		margin-right: 0.2rem;
 	}
-	.avatar{
+	.avatar, .avatar-position{
 		width: 0.7rem;
 		height: 0.7rem;
 		border-radius: 50%;
