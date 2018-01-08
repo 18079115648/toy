@@ -25,11 +25,12 @@ export default {
 	},
 	created() {
 		this.$storage.remove('token')
-		if(!this.$common.isWeixin()) {
-			this.$router.replace('/mobileLogin')
-		}else {
-			this.$weixin.authorize()
-		}
+		this.$router.replace('/mobileLogin')
+//		if(!this.$common.isWeixin()) {
+//			this.$router.replace('/mobileLogin')
+//		}else {
+//			this.$weixin.authorize()
+//		}
 	},
 	methods: {
 		miss() {

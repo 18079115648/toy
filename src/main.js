@@ -71,8 +71,16 @@ function getKey(name) {
 
 storage.set('operatorKey', getKey('key'))
 
+//router.beforeEach((to, from, next) => {
+//  if (to.meta.requireAuth && !token.getAccessToken() && common.isWeixin()) {
+//      storage.set('history_url', to.fullPath)
+//      next('/login')
+//  } else {
+//  	next()
+//  }   
+//})
 router.beforeEach((to, from, next) => {
-    if (to.meta.requireAuth && !token.getAccessToken() && common.isWeixin()) {
+    if (to.meta.requireAuth && !token.getAccessToken()) {
         storage.set('history_url', to.fullPath)
         next('/login')
     } else {

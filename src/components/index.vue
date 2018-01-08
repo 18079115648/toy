@@ -111,7 +111,9 @@ export default {
     // }, false);  
   },
   activated() {
-  	
+  	if(!this.$token.getAccessToken()) {
+  		this.$storage.remove('headUrl')
+  	}
   	this.avatar = this.$storage.get('headUrl') || '../../static/image/vvv.png'
   	//背景音乐
   	if (this.$storage.get('music_switch') != null) {
