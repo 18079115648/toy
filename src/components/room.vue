@@ -266,6 +266,9 @@ export default {
 		    grabProcess: false,     //点击抓取后的一段禁止操作时间
 		    moveDisabled: false,    //方向键禁止连续点击
 		    
+		    startMoveTime: undefined, //点击移动开始时间
+		    stopMoveTime: undefined, //点击移动结束时间
+		    
 //		    rechargeStatus: false,  //充值
 //		    rechargeList: []
 	    }
@@ -708,10 +711,6 @@ export default {
 			}
 	    	let self = this
 	    	self.moveDirection(direction)
-			this.timeInter = setInterval(() => {
-				console.log('move')
-				self.moveDirection(direction)
-			},300)
 		 	e.preventDefault()
 		},
 		touchend(){
@@ -723,8 +722,7 @@ export default {
 				this.moveDisabled = false
 			},300)
 			this.playClickAudio()
-		   	clearInterval(this.timeInter)
-		   	this.timeInter = 0
+			this.stopMove()
 			return false 
 		},
 		moveDirection(direction) {
@@ -745,13 +743,87 @@ export default {
 				alert('服务器连接失败，请重试')
 				return
 			}
-
+			this.startMoveTime = new Date().getTime()
 			this.sock.send(JSON.stringify({
-				cmd: 'move',
+				cmd: 'move_direction',
 				vmc_no: this.machineSn,
 				direction: direction
 			}))
 		},
+		stopMove() {
+			if (this.sock == undefined) {
+				alert('服务器连接失败，请重试')
+				return
+			}
+			this.stopMoveTime = new Date().getTime()
+			var timeDiff = this.stopMoveTime - this.startMoveTime
+			if(timeDiff < 300) {
+				setTimeout(() => {
+					this.sock.send(JSON.stringify({
+						cmd: 'stop',
+						vmc_no: this.machineSn
+					}))
+				}, 400 - timeDiff)
+				return
+			}
+			this.sock.send(JSON.stringify({
+				cmd: 'stop',
+				vmc_no: this.machineSn
+			}))
+		},
+//		touchstart(direction, e) {
+//			if(this.moveDisabled) {
+//				return
+//			}
+//			if(this.grabProcess) {
+//				return
+//			}
+//	    	let self = this
+//	    	self.moveDirection(direction)
+//			this.timeInter = setInterval(() => {
+//				console.log('move')
+//				self.moveDirection(direction)
+//			},300)
+//		 	e.preventDefault()
+//		},
+//		touchend(){
+//			if(this.grabProcess) {
+//				return
+//			}
+//			this.moveDisabled = true
+//			setTimeout(() => {
+//				this.moveDisabled = false
+//			},300)
+//			this.playClickAudio()
+//		   	clearInterval(this.timeInter)
+//		   	this.timeInter = 0
+//			return false 
+//		},
+//		moveDirection(direction) {
+//			if (this.showSide) {
+//				if (direction === 1) {
+//					direction = 3
+//				} else if (direction === 2) {
+//					direction = 4
+//				} else if (direction === 3) {
+//					direction = 2
+//				} else if (direction === 4) {
+//					direction = 1
+//				}
+//			}
+//
+////			this.playClickAudio()
+//			if (this.sock == undefined) {
+//				alert('服务器连接失败，请重试')
+//				return
+//			}
+//
+//			this.sock.send(JSON.stringify({
+//				cmd: 'move',
+//				vmc_no: this.machineSn,
+//				direction: direction
+//			}))
+//		},
 
 		/**
 		 * 抓取
