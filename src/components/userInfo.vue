@@ -37,7 +37,7 @@ import { Toast,Indicator } from 'mint-ui';
 export default {
   data () {
     return {
-      avatar:'../../static/image/vvv.png',
+      avatar:'',
       nickname:'',
       inviteCode: '',
       disabledBtn: false
