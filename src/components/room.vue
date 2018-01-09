@@ -203,7 +203,7 @@ export default {
 			operationTimer: undefined,		// 抓取操作倒计时句柄
 	    	succStatus: false, 				// 成功抓到娃娃,
 	    	failStatus: false, 				// 没有抓到娃娃,
-			endTime: 3,						// 抓取结果展示倒计时
+			endTime: 5,						// 抓取结果展示倒计时
 			remainGold: storage.get('remain_gold'),	// 剩余金币
 			avatar: '', // 当前操作用户头像
 			userAvatar: '',  //登录用户头像
@@ -634,7 +634,7 @@ export default {
 		
 		//退出计时
 		resultGo() {
-			this.endTime = 3
+			this.endTime = 5
 			this.endTimer = setInterval(() => {
 				this.endTime--
 				if(this.endTime === 1) {
@@ -929,12 +929,12 @@ export default {
 		grabSucces() {
 			this.succStatus = true
 			this.playSuccessAudio()
-			this.endTime = 3
+			this.endTime = 5
 			const parent = this
 			function timeout() {
 				setTimeout(() => {
 					if (parent.endTime === 1) {
-						 parent.succStatus = false
+//						 parent.succStatus = false
 						parent.endTime--
 						return
 					}
@@ -951,12 +951,12 @@ export default {
 		grabFailure() {
 			this.failStatus = true
 			this.playFailureAudio()
-			this.endTime = 3
+			this.endTime = 5
 			const parent = this
 			function timeout() {
 				setTimeout(function() {
 					if (parent.endTime === 1) {
-						 parent.failStatus = false
+//						 parent.failStatus = false
 						parent.endTime--
 						return
 					}
@@ -1447,10 +1447,12 @@ export default {
 		position: relative;
 		img{
 			position: absolute;
-			width: 2.5rem;
+			min-width: 1.2rem;
 			left: 50%;
 			top: 50%;
 			transform: translate(-50%, -50%);
+			max-height: 100%;
+			max-width: 100%;
 		}
 	}
 	
