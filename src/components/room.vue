@@ -632,6 +632,7 @@ export default {
 			}, 1000)
 		},
 		
+		
 		//退出计时
 		resultGo() {
 			this.endTime = 5
