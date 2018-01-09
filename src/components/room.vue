@@ -444,7 +444,7 @@ export default {
 						console.debug('游戏状态更新')
 						this.roomStatus = data.gameStatus
 						if (data.gameStatus === 1) {
-							data.headUrl && (this.avatar = data.headUrl)
+							data.headUrl ? this.avatar = data.headUrl : this.avatar = '../../static/image/vvv.png'
 						}else {
 							this.avatar = ''
 						}
@@ -700,7 +700,7 @@ export default {
 			this.timeInter = setInterval(() => {
 				console.log('move')
 				self.moveDirection(direction)
-			},1000)
+			},300)
 		 	e.preventDefault()
 		},
 		touchend(){
