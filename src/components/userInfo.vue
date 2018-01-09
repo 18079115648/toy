@@ -37,7 +37,7 @@ import { Toast,Indicator } from 'mint-ui';
 export default {
   data () {
     return {
-      avatar:'../../static/image/avatar.png',
+      avatar:'../../static/image/vvv.png',
       nickname:'',
       inviteCode: '',
       disabledBtn: false
@@ -46,7 +46,7 @@ export default {
   created(){
     // this.saveImg()
     this.$api.userInfo().then(res => {
-      this.avatar = res.data.avatar ? res.data.avatar : '../../static/image/avatar.png'
+      this.avatar = res.data.avatar ? res.data.avatar : '../../static/image/vvv.png'
       this.nickname = res.data.nickname
       this.inviteCode = res.data.inviteCode
     }, err => {

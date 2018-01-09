@@ -444,7 +444,7 @@ export default {
 						console.debug('游戏状态更新')
 						this.roomStatus = data.gameStatus
 						if (data.gameStatus === 1) {
-							data.headUrl && (this.avatar = data.headUrl)
+							data.headUrl ? this.avatar = data.headUrl : this.avatar = '../../static/image/vvv.png'
 						}else {
 							this.avatar = ''
 						}
@@ -550,7 +550,7 @@ export default {
 				setTimeout(() => {
 					clearInterval(parent.progressTime)
 					parent.loadingStatus = false
-				}, 1000)
+				}, 200)
 			}, (error) => {
 				console.error('连接失败:' + error.msg)
 			})
