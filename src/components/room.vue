@@ -263,6 +263,9 @@ export default {
 		    loadingStatus: true,    //loading
 		    progress: 0,            //进度
 		    
+		    grabProcess: false,     //点击抓取后的一段禁止操作时间
+		    moveDisabled: false,    //方向键禁止连续点击
+		    
 //		    rechargeStatus: false,  //充值
 //		    rechargeList: []
 	    }
@@ -423,7 +426,7 @@ export default {
 						}
 
 						this.roomStatus = data.room_status
-						// this.avatar = data.headUrl
+						this.avatar = data.headUrl
 
 						if (data.isGame === 1) {
 							this.operateTime = data.remainSecond
@@ -479,6 +482,7 @@ export default {
 						this.showFront = true
 						this.showSide = false
 						clearInterval(this.operationTimer)
+						this.grabProcess = false
 						if (data.value === 1) {
 							// 抓取成功
 							this.sendWebIMMessage(this.nickname + ' 抓中了娃娃')
@@ -530,9 +534,6 @@ export default {
 
 			// 登录房间
 			this.zg.login(this.zegoRoomId, 2, this.zegoToken, (streamList) => {
-				
-				
-				
 				streamList.forEach((item) => {
 					// 设置音量0
 					parent.zg.setPlayVolume(item.stream_id, 0)
@@ -546,11 +547,6 @@ export default {
 						parent.zg.startPlayingStream(item.stream_id, document.getElementById('frontview'), 1)
 					}
 				})
-				
-				setTimeout(() => {
-					clearInterval(parent.progressTime)
-					parent.loadingStatus = false
-				}, 200)
 			}, (error) => {
 				console.error('连接失败:' + error.msg)
 			})
@@ -583,6 +579,10 @@ export default {
 
 			// 流信息变更通知
 			this.zg.onPlayStateUpdate = (type, streamId) => {
+				setTimeout(() => {
+					clearInterval(parent.progressTime)
+					parent.loadingStatus = false
+				}, 600)
 				console.info('流' + streamId + ', 状态：' + type)
 			}
 		},
@@ -695,15 +695,28 @@ export default {
 		 * 移动方向（1前2后3左4右）
 		 */
 		touchstart(direction, e) {
+			if(this.moveDisabled) {
+				return
+			}
+			if(this.grabProcess) {
+				return
+			}
 	    	let self = this
 	    	self.moveDirection(direction)
 			this.timeInter = setInterval(() => {
 				console.log('move')
 				self.moveDirection(direction)
-			},1000)
+			},300)
 		 	e.preventDefault()
 		},
 		touchend(){
+			if(this.grabProcess) {
+				return
+			}
+			this.moveDisabled = true
+			setTimeout(() => {
+				this.moveDisabled = false
+			},300)
 			this.playClickAudio()
 		   	clearInterval(this.timeInter)
 		   	this.timeInter = 0
@@ -743,7 +756,10 @@ export default {
 				alert('服务器连接失败，请重试')
 				return
 			}
-
+			if(this.grabProcess) {
+				return
+			}
+			this.grabProcess = true
 			const parent = this
 			setTimeout(() => {
 				parent.takeAudio.play()
