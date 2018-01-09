@@ -48,19 +48,19 @@
 		<!-- 操作区域 -->
     	<div class="operate-area" v-show="operateShow">
     		<div class="operate-direc">
-    			<div class="direction-item left has-box" @touchstart="touchstart(3, $event)" @touchend="touchend">
+    			<div class="direction-item left has-box" @touchstart="touchstart(3, $event)" @touchend="touchend(3)">
     				<img class="fullEle com" src="../../static/image/sss33.png"  />
     				<img class="fullEle active" src="../../static/image/qdd.png"  />
     			</div>
-    			<div class="direction-item top has-box" @touchstart="touchstart(1, $event)" @touchend="touchend">
+    			<div class="direction-item top has-box" @touchstart="touchstart(1, $event)" @touchend="touchend(1)">
     				<img class="fullEle com" src="../../static/image/fff33.png"  />
     				<img class="fullEle active" src="../../static/image/dd112.png"  />
     			</div>
-    			<div class="direction-item right has-box" @touchstart="touchstart(4, $event)" @touchend="touchend">
+    			<div class="direction-item right has-box" @touchstart="touchstart(4, $event)" @touchend="touchend(4)">
     				<img class="fullEle com" src="../../static/image/wfff.png"  />
     				<img class="fullEle active" src="../../static/image/wrwf.png"  />
     			</div>
-    			<div class="direction-item bottom has-box" @touchstart="touchstart(2, $event)" @touchend="touchend">
+    			<div class="direction-item bottom has-box" @touchstart="touchstart(2, $event)" @touchend="touchend(2)">
     				<img class="fullEle com" src="../../static/image/adad.png"  />
     				<img class="fullEle active" src="../../static/image/wrqe.png"  />
     			</div>
@@ -203,7 +203,7 @@ export default {
 			operationTimer: undefined,		// 抓取操作倒计时句柄
 	    	succStatus: false, 				// 成功抓到娃娃,
 	    	failStatus: false, 				// 没有抓到娃娃,
-			endTime: 3,						// 抓取结果展示倒计时
+			endTime: 5,						// 抓取结果展示倒计时
 			remainGold: storage.get('remain_gold'),	// 剩余金币
 			avatar: '', // 当前操作用户头像
 			userAvatar: '',  //登录用户头像
@@ -639,7 +639,7 @@ export default {
 		
 		//退出计时
 		resultGo() {
-			this.endTime = 3
+			this.endTime = 5
 			this.endTimer = setInterval(() => {
 				this.endTime--
 				if(this.endTime === 1) {
@@ -713,7 +713,7 @@ export default {
 	    	self.moveDirection(direction)
 		 	e.preventDefault()
 		},
-		touchend(){
+		touchend(direction){
 			if(this.grabProcess) {
 				return
 			}
@@ -722,7 +722,7 @@ export default {
 				this.moveDisabled = false
 			},300)
 			this.playClickAudio()
-			this.stopMove()
+			this.stopMove(direction)
 			return false 
 		},
 		moveDirection(direction) {
@@ -750,25 +750,38 @@ export default {
 				direction: direction
 			}))
 		},
-		stopMove() {
+		stopMove(direction) {
 			if (this.sock == undefined) {
 				alert('服务器连接失败，请重试')
 				return
 			}
+			if (this.showSide) {
+				if (direction === 1) {
+					direction = 3
+				} else if (direction === 2) {
+					direction = 4
+				} else if (direction === 3) {
+					direction = 2
+				} else if (direction === 4) {
+					direction = 1
+				}
+			}
 			this.stopMoveTime = new Date().getTime()
 			var timeDiff = this.stopMoveTime - this.startMoveTime
-			if(timeDiff < 300) {
+			if(timeDiff < 200) {
 				setTimeout(() => {
 					this.sock.send(JSON.stringify({
 						cmd: 'stop',
-						vmc_no: this.machineSn
+						vmc_no: this.machineSn,
+						direction: direction
 					}))
-				}, 400 - timeDiff)
+				}, 200 - timeDiff)
 				return
 			}
 			this.sock.send(JSON.stringify({
 				cmd: 'stop',
-				vmc_no: this.machineSn
+				vmc_no: this.machineSn,
+				direction: direction
 			}))
 		},
 //		touchstart(direction, e) {
@@ -921,12 +934,12 @@ export default {
 		grabSucces() {
 			this.succStatus = true
 			this.playSuccessAudio()
-			this.endTime = 3
+			this.endTime = 5
 			const parent = this
 			function timeout() {
 				setTimeout(() => {
 					if (parent.endTime === 1) {
-						 parent.succStatus = false
+//						 parent.succStatus = false
 						parent.endTime--
 						return
 					}
@@ -943,12 +956,12 @@ export default {
 		grabFailure() {
 			this.failStatus = true
 			this.playFailureAudio()
-			this.endTime = 3
+			this.endTime = 5
 			const parent = this
 			function timeout() {
 				setTimeout(function() {
 					if (parent.endTime === 1) {
-						 parent.failStatus = false
+//						 parent.failStatus = false
 						parent.endTime--
 						return
 					}
@@ -1439,10 +1452,12 @@ export default {
 		position: relative;
 		img{
 			position: absolute;
-			width: 2.5rem;
+			min-width: 1.2rem;
 			left: 50%;
 			top: 50%;
 			transform: translate(-50%, -50%);
+			max-height: 100%;
+			max-width: 100%;
 		}
 	}
 	
