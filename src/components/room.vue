@@ -271,6 +271,8 @@ export default {
 		    delayStopMove: undefined, //点击不足200ms延时定时器
 		    delayStopMoveFlag: true,  //点击不足200ms延时定时器是否执行
 		    currDirection: null,  //当前移动方向
+		    currStopDirection: null, //最近一次停止方向
+		    multiTouch: false,   //是否多点触摸
 		    
 //		    rechargeStatus: false,  //充值
 //		    rechargeList: []
@@ -720,15 +722,25 @@ export default {
 				}
 			}
 			var changeDirect = (this.currDirection == direction)
-			
+			var changeStopDirect = (this.currStopDirection == direction)
+			var currDirect = this.currDirection
 	    	let self = this
 	    	this.startMoveTime = new Date().getTime()
+	    	this.currDirection = direction
 	    	e.preventDefault()
 	    	if(this.stopMoveTime) {
 	    		var diffTime = this.startMoveTime - this.stopMoveTime
-	    		if(diffTime < 200 && !changeDirect) {
+	    		if(diffTime < 200 && changeDirect) {
 	    			this.delayStopMoveFlag = false
 	    			return
+	    		}
+	    		if(diffTime < 200 && !changeDirect) {
+	    			this.delayStopMoveFlag = false
+	    			this.sock.send(JSON.stringify({
+						cmd: 'stop',
+						vmc_no: this.machineSn,
+						direction: currDirect
+					}))
 	    		}
 	    		self.moveDirection(direction)
 	    	}else {
