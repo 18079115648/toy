@@ -5,7 +5,7 @@
 	</keep-alive>
 	<router-view v-if="!$route.meta.keepAlive"></router-view>
 
-	<audio id="bg-audio" src='../static/audio/bgm02.mp3' preload loop></audio>
+	<audio id="bg-audio" src='../static/audio/bgm03.mp3' preload loop></audio>
   </div>
 </template>
 

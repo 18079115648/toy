@@ -116,7 +116,6 @@
 
 		<audio id="take-audio" src='../static/audio/take.mp3' preload></audio>
 		<audio id="click-audio" src='../static/audio/startClickItem.mp3' preload></audio>
-		<audio id="move-audio" src='../static/audio/move.mp3' preload></audio>
 		<audio id="ready-audio" src='../static/audio/readygo.mp3' preload></audio>
 		<audio id="success-audio" src='../static/audio/result_succeed.mp3' preload></audio>
 		<audio id="failure-audio" src='../static/audio/result_failed.mp3' preload></audio>
@@ -224,7 +223,6 @@ export default {
 			sideStreamId: undefined,		// 侧面视频流编号
 
 			clickAudio: undefined,		// 点击音效
-			moveAudio: undefined,		// 移动音效
 			readyGoAudio: undefined, 	// 准备音效
 			successAudio: undefined, 	// 抓取成功音效
 			failureAudio: undefined,	// 抓取失败音效
@@ -332,7 +330,7 @@ export default {
 			this.sock.onopen = () => {
 				this.sock.send(JSON.stringify({
 					cmd: 'conn',
-//					headUrl: storage.get('headUrl'),
+					headUrl: storage.get('headUrl'),
 					token: accessToken.getAccessToken(),
 					vmc_no: this.machineSn
 				}))
@@ -357,7 +355,7 @@ export default {
 
 						this.roomStatus = data.room_status
 						this.avatar = data.headUrl
-						this.roomNum = data.member_count
+
 						if (data.isGame === 1) {
 							this.operateTime = data.remainSecond
 							this.operateShow = true
@@ -372,11 +370,9 @@ export default {
 						break;
 					case 'hb_r':
 						console.debug('心跳包答复')
-						this.roomNum = data.member_count
 						break;
 					case 'status':
 						console.debug('游戏状态更新')
-						this.roomNum = data.member_count
 						this.roomStatus = data.gameStatus
 						if (data.gameStatus === 1) {
 							data.headUrl ? this.avatar = data.headUrl : this.avatar = '../../static/image/vvv.png'
@@ -384,28 +380,10 @@ export default {
 							this.avatar = ''
 						}
 						break;
-					case 'into_room':
-						console.debug('进入房间通知')
-						this.roomNum = data.member_count
-						
-						break;
-					case 'leave_room':
-						console.debug('退出房间通知')
-						this.roomNum = data.member_count
-						break;
-					case 'system':
-						console.debug('系统通知')
-						this.roomNum = data.member_count
-						break;
-					case 'other_grab':
-						console.debug('其他玩家抓取结果通知')
-						this.roomNum = data.member_count
-						break;
 					case 'start_r':
 						console.debug('游戏开始状态')
 						if (!this.isGame && data.status === 200) {
 							this.avatar = this.userAvatar
-							this.roomNum = data.member_count
 							this.succStatus = false
 							this.failStatus = false
 							this.operateShow = true
@@ -417,16 +395,15 @@ export default {
 							this.remainGold = data.remainGold
 							storage.set('remain_gold', data.remainGold)
 						} else {
-//							Toast({
-//								message: data.msg,
-//								position: 'middle',
-//								duration: 1500
-//							})
+							Toast({
+								message: data.msg,
+								position: 'middle',
+								duration: 1500
+							})
 						}
 						break;
 					case 'grab_r':
 						console.debug('抓取' + (data.value === 1 ? '成功' : '失败'))
-						this.roomNum = data.member_count
 						this.operateShow = false
 						this.isGame = false
 //						this.closeSideStream()
@@ -659,7 +636,6 @@ export default {
 					direction = 1
 				}
 			}
-			console.info("移动方向：" + this.currDirection+","+ direction)
 			var changeDirect = (this.currDirection != direction)
 			var currDirect = this.currDirection
 	    	let self = this
@@ -669,12 +645,10 @@ export default {
 	    	if(this.stopMoveTime) {
 	    		var diffTime = this.startMoveTime - this.stopMoveTime
 	    		if(diffTime < 200 && !changeDirect) {
-	    			clearTimeout(this.delayStopMove)
 	    			this.delayStopMoveFlag = false
 	    			return
 	    		}
 	    		if(diffTime < 200 && changeDirect) {
-	    			clearTimeout(this.delayStopMove)
 	    			this.delayStopMoveFlag = false
 	    			this.sock.send(JSON.stringify({
 						cmd: 'stop',
@@ -682,7 +656,6 @@ export default {
 						direction: currDirect
 					}))
 	    		}
-	    		
 	    		self.moveDirection(direction)
 	    	}else {
 	    		self.moveDirection(direction)
@@ -705,7 +678,7 @@ export default {
 				}
 			}
 			this.stopMoveTime = new Date().getTime()
-			this.moveClickAudio()
+			this.playClickAudio()
 			this.stopMove(direction)
 			return false 
 		},
@@ -730,7 +703,6 @@ export default {
 			}
 			
 			var timeDiff = this.stopMoveTime - this.startMoveTime
-			this.delayStopMoveFlag = true
 			if(timeDiff < 200) {
 				this.delayStopMove = setTimeout(() => {
 					if(this.delayStopMoveFlag) {
@@ -739,9 +711,8 @@ export default {
 							vmc_no: this.machineSn,
 							direction: direction
 						}))
-						
+						this.delayStopMoveFlag = false
 					}	
-					
 				}, 200)
 				return
 			}
@@ -829,20 +800,6 @@ export default {
 		},
 		
 		/**
-		 * 离开房间
-		 */
-		leaveRoom() {
-			if (this.sock == undefined) {
-				alert('服务器连接失败，请重试')
-				return
-			}
-			this.sock.send(JSON.stringify({
-				cmd: 'leave',
-				vmc_no: this.machineSn,
-			}))
-		},
-		
-		/**
 		 * 切换视角
 		 */
 		changeView() {
@@ -856,13 +813,6 @@ export default {
 		 */
 		playClickAudio() {
 			this.soundSwitch && this.clickAudio.play()
-		},
-		
-		/**
-		 * 移动点击音效
-		 */
-		moveClickAudio() {
-			this.soundSwitch && this.moveAudio.play()
 		},
 
 		/**
@@ -995,9 +945,6 @@ export default {
 			}
 			// 点击音效
 			this.clickAudio = document.getElementById('click-audio')
-			
-			// 移动音效
-			this.moveAudio = document.getElementById('move-audio')
 
 			// 准备音效
 			this.readyGoAudio = document.getElementById('ready-audio')
@@ -1106,7 +1053,7 @@ export default {
 	beforeDestroy() {
 		// 关闭背景音量
 		this.$root.bgAudio && !this.$root.bgAudio.paused && this.$root.bgAudio.pause()
-		this.leaveRoom()
+
 		this.zg.release()
 	}
 
