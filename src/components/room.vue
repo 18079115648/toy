@@ -2,7 +2,7 @@
     <div class="app" id="fastClick" :style="{ height: wH + 'px' }">
     	<div class="room-loading" v-show="loadingStatus">
     		<div class="progress-content">
-    			<img class="logo" src="../../static/image/aoin.png"  />
+    			<img class="logo" src="../../static/image/logo-text.png"  />
     			<div class="progress-box">
     				<div class="progress-finish" :style="{ width: progress + '%' }">{{progress}}%</div>
     			</div>
@@ -268,6 +268,9 @@ export default {
 		    
 		    startMoveTime: undefined, //点击移动开始时间
 		    stopMoveTime: undefined, //点击移动结束时间
+		    delayStopMove: undefined, //点击不足200ms延时定时器
+		    delayStopMoveFlag: true,  //点击不足200ms延时定时器是否执行
+		    currDirection: null,  //当前移动方向
 		    
 //		    rechargeStatus: false,  //充值
 //		    rechargeList: []
@@ -425,6 +428,9 @@ export default {
 								position: 'middle',
 								duration: 1500
 							})
+							if(data.status == 201) {
+								parent.$router.replace('/mobileLogin')
+							}
 							return;
 						}
 
@@ -699,29 +705,9 @@ export default {
 		 * 移动方向（1前2后3左4右）
 		 */
 		touchstart(direction, e) {
-			if(this.moveDisabled) {
-				return
-			}
 			if(this.grabProcess) {
 				return
 			}
-	    	let self = this
-	    	self.moveDirection(direction)
-		 	e.preventDefault()
-		},
-		touchend(direction){
-			if(this.grabProcess) {
-				return
-			}
-			this.moveDisabled = true
-			setTimeout(() => {
-				this.moveDisabled = false
-			},300)
-			this.playClickAudio()
-			this.stopMove(direction)
-			return false 
-		},
-		moveDirection(direction) {
 			if (this.showSide) {
 				if (direction === 1) {
 					direction = 3
@@ -733,22 +719,25 @@ export default {
 					direction = 1
 				}
 			}
-
-//			this.playClickAudio()
-			if (this.sock == undefined) {
-				alert('服务器连接失败，请重试')
-				return
-			}
-			this.startMoveTime = new Date().getTime()
-			this.sock.send(JSON.stringify({
-				cmd: 'move_direction',
-				vmc_no: this.machineSn,
-				direction: direction
-			}))
+			var changeDirect = (this.currDirection == direction)
+			
+	    	let self = this
+	    	this.startMoveTime = new Date().getTime()
+	    	e.preventDefault()
+	    	if(this.stopMoveTime) {
+	    		var diffTime = this.startMoveTime - this.stopMoveTime
+	    		if(diffTime < 200 && !changeDirect) {
+	    			this.delayStopMoveFlag = false
+	    			return
+	    		}
+	    		self.moveDirection(direction)
+	    	}else {
+	    		self.moveDirection(direction)
+	    	}
+	    	
 		},
-		stopMove(direction) {
-			if (this.sock == undefined) {
-				alert('服务器连接失败，请重试')
+		touchend(direction){
+			if(this.grabProcess) {
 				return
 			}
 			if (this.showSide) {
@@ -763,15 +752,42 @@ export default {
 				}
 			}
 			this.stopMoveTime = new Date().getTime()
+			this.playClickAudio()
+			this.stopMove(direction)
+			return false 
+		},
+		moveDirection(direction) {
+			
+
+//			this.playClickAudio()
+			if (this.sock == undefined) {
+				alert('服务器连接失败，请重试')
+				return
+			}
+			this.sock.send(JSON.stringify({
+				cmd: 'move_direction',
+				vmc_no: this.machineSn,
+				direction: direction
+			}))
+		},
+		stopMove(direction) {
+			if (this.sock == undefined) {
+				alert('服务器连接失败，请重试')
+				return
+			}
+			
 			var timeDiff = this.stopMoveTime - this.startMoveTime
 			if(timeDiff < 200) {
-				setTimeout(() => {
-					this.sock.send(JSON.stringify({
-						cmd: 'stop',
-						vmc_no: this.machineSn,
-						direction: direction
-					}))
-				}, 200 - timeDiff)
+				this.delayStopMove = setTimeout(() => {
+					if(this.delayStopMoveFlag) {
+						this.sock.send(JSON.stringify({
+							cmd: 'stop',
+							vmc_no: this.machineSn,
+							direction: direction
+						}))
+					}
+					this.delayStopMoveFlag = true	
+				}, 200)
 				return
 			}
 			this.sock.send(JSON.stringify({
@@ -1199,7 +1215,7 @@ export default {
 		transform: translate(-50%, -50%);
 		.logo{
 			display: block;
-			width: 4.8rem;
+			width: 2.6rem;
 			margin: 0 auto;
 			margin-bottom: 0.36rem;
 		}

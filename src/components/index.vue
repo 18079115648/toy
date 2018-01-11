@@ -4,7 +4,7 @@
     	<router-link to="/user" class="user-link link">
     		<img :src="avatar" style="border-radius: 50%;"  class="fullEle" />
     	</router-link>
-    	<img class="logo-text"  src="../../static/image/aoin.png" />
+    	<img class="logo-text"  src="../../static/image/logo-text.png" />
     	<span style="width: 0.85rem;"></span>
     </div>
     <div class="navbar">
