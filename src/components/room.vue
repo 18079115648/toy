@@ -539,6 +539,8 @@ export default {
 		//点击开始游戏
 		beginGame() {
 			this.playClickAudio()
+			this.succStatus = false
+			this.failStatus = false
 			this.startGame()
 		},
 
