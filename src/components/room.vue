@@ -28,18 +28,29 @@
     	<!--<img class="view-change" v-if="isGame" v-tap.prevent="{ methods : changeView }" src="../../static/image/dd33.png"  />-->
     	<img class="view-change" v-tap.prevent="{ methods : changeView }" src="../../static/image/dd33.png"  />
     	<div class="room-bottom" v-show="!operateShow">
-    		<div class="detail" v-tap.prevent="{ methods : goGrabList }">
+    		<div class="room-news-content" v-show="roomNewsList.length > 0">
+    			<div class="room-news-list" v-show="toggleStatus">
+    				<div class="room-news-item" v-for="(item, index) in roomNewsList" :id="'news-item-' + index" :key="index">
+    					<span class="tit">{{item.tit}}：</span>
+    					<span class="text">{{item.text}}</span>
+    				</div>
+    			</div>
+    			<div class="toggle-news-list" v-tap.prevent="{ methods : toggleNews }">
+    				<div class="toggle-icon" :class="{active: toggleStatus}"></div>
+    			</div>
+    		</div>
+    		<div class="detail child" v-tap.prevent="{ methods : goGrabList }">
     			<img src="../../static/image/d122.png"  />
     			<p class="shadow-text">详情</p>
     		</div>
-    		<div class="begin btn-hover" v-tap.prevent="{ methods : beginGame }">
+    		<div class="begin btn-hover child" v-tap.prevent="{ methods : beginGame }">
     			<p class="price">
     				<img src="../../static/image/wd.png"  />
     				<span class="shadow-text">{{price}}</span>
     			</p>
     			<p class="shadow-text begin-text" :class="{enabled: roomStatus == 0}">开始游戏</p>
     		</div>
-    		<div class="rechatge" v-tap.prevent="{ methods : goRecharge }">
+    		<div class="rechatge child" v-tap.prevent="{ methods : goRecharge }">
     			<img src="../../static/image/ccc3.png"  />
     			<p class="shadow-text">充值</p>
     		</div>
@@ -266,6 +277,9 @@ export default {
 		    delayStopMoveFlag: true,  //点击不足200ms延时定时器是否执行
 		    currDirection: null,  //当前移动方向
 		    
+		    toggleStatus: true,   //消息列表显示状态
+		    roomNewsList: [],     //消息列表
+		    
 //		    rechargeStatus: false,  //充值
 //		    rechargeList: []
 	    }
@@ -295,6 +309,14 @@ export default {
 		this.wH = document.getElementById('app').offsetHeight
 		// 加载音频资源
 		this.loadAudios()
+	},
+	updated() {
+		let length = this.roomNewsList.length
+		if(length > 1) {
+			length = length - 1
+			document.getElementById(`news-item-${length}`).scrollIntoView();
+		}
+		
 	},
 	methods: {
 		
@@ -356,7 +378,8 @@ export default {
 						}
 
 						this.roomStatus = data.room_status
-						this.avatar = data.headUrl
+						data.room_status && (this.avatar = data.headUrl)
+						
 						this.roomNum = data.member_count
 						if (data.isGame === 1) {
 							this.operateTime = data.remainSecond
@@ -387,19 +410,53 @@ export default {
 					case 'into_room':
 						console.debug('进入房间通知')
 						this.roomNum = data.member_count
+						var news = {
+							tit: data.nickname,
+							text: '进来了！！！'
+						}
+						this.roomNewsList.push(news)
 						
 						break;
 					case 'leave_room':
 						console.debug('退出房间通知')
 						this.roomNum = data.member_count
+						var news = {
+							tit: data.nickname,
+							text: '离开了房间'
+						}
+						this.roomNewsList.push(news)
 						break;
 					case 'system':
 						console.debug('系统通知')
 						this.roomNum = data.member_count
+						var news = {
+							tit: '系统消息',
+							text: data.content
+						}
+						this.roomNewsList.push(news)
+						break;
+					case 'maintain':
+						console.debug('设备维护通知')
+						MessageBox.alert('设备维护中， 请切换到其他房间').then(action => {
+							this.$router.replace('/index')
+						})
+						this.succStatus = false
+						this.failStatus = false
+						this.operateShow = false
+						clearInterval(this.endTimer)
+						
 						break;
 					case 'other_grab':
 						console.debug('其他玩家抓取结果通知')
 						this.roomNum = data.member_count
+						if(data.value == 1) {
+							var news = {
+								tit: data.nickname,
+								text: '抓中了娃娃！！！'
+							}
+							this.roomNewsList.push(news)
+						}
+						
 						break;
 					case 'start_r':
 						console.debug('游戏开始状态')
@@ -504,7 +561,7 @@ export default {
 			this.zg.onDisconnect = (err) => {
 				console.error('房间断开连接[code: ' + err.code + ' , msg: ' + err.msg + ']')
 				MessageBox.alert('连接断开，退出房间').then(action => {
-					this.$router.push('/index')
+					this.$router.replace('/index')
 				})
 			}
 
@@ -512,7 +569,7 @@ export default {
 			this.zg.onKickOut = (err) => {
 				console.error('被踢下线通知[code: ' + err.code + ' , msg: ' + err.msg + ']')
 				MessageBox.alert('账号冲突，退出房间').then(action => {
-					this.$router.push('/index')
+					this.$router.replace('/index')
 				})
 			}
 
@@ -605,6 +662,11 @@ export default {
 		// 返回
 		back() {
 			this.$router.go(-1)
+		},
+		
+		//消息列表显示或隐藏
+		toggleNews() {
+			this.toggleStatus = !this.toggleStatus
 		},
 
 		/**
@@ -1304,7 +1366,7 @@ export default {
 	color: #fff;
 	font-size: 0.3rem;
 	// background: #6d6481;
-	&>div{
+	&>div.child{
 		background: rgba(0,0,0,0.2);
 		border-radius: 0.2rem;
 		height: 1.1rem;
@@ -1318,6 +1380,52 @@ export default {
 		}
 		&>p{
 			padding-bottom: 0.06rem;
+		}
+	}
+	.room-news-content{
+		position: absolute;
+		bottom: 130%;
+		left: 0.18rem;
+		max-width: 3.5rem;
+		.room-news-list{
+			overflow-y: auto;
+			height: 2.9rem;
+		}
+		.room-news-item{
+			font-size: 0.24rem;
+			font-weight: normal;
+			color: #fff;
+			background: rgba(0,0,0,0.2);
+			padding: 0.06rem 0.1rem;
+			border-radius: 0.1rem;
+			line-height: 1.4;
+			margin-bottom: 0.14rem;
+			.tit{
+				color: #ffe86e;
+			}
+		}
+		.toggle-news-list{
+			margin-top: 0.2rem;
+			width: 0.6rem;
+			height: 0.4rem;
+			border-radius: 0.1rem;
+			background: rgba(0,0,0,0.2);
+			position: relative;
+			.toggle-icon{
+				position: absolute;
+				width: 0.46rem;
+				height: 0.22rem;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, -50%);
+				background-image: url(../../static/image/toggle.png);
+				background-size: 100% auto;
+				background-repeat: no-repeat;
+				background-position-y: -0.22rem;
+			}
+			.toggle-icon.active{
+				background-position-y: 0;
+			}
 		}
 	}
 	.detail, .rechatge{
