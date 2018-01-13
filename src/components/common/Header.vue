@@ -54,8 +54,7 @@
     .headPart{
         width: 100%;
         height: 0.85rem;
-        background: url(../../../static/image/www.png) no-repeat center;
-        background-size: 100%;
+        background: #00bc71;
         overflow: hidden;
         position: fixed;
         z-index: 10;
@@ -79,7 +78,7 @@
     }
     .headCont div.back span{
         color: #FFFFFF;
-        width: 0.22rem;
+        width: 0.4rem;
         height: 0.38rem;
         background: url(../../../static/image/SSSD.png);
         background-size: 100% 100%;
@@ -92,7 +91,7 @@
     	position: absolute;
     	width: 100%;
     	height: 100%;
-        color: #704a06;
+        color: #fff;
         font-size: 0.3rem;
         font-weight: 700;
         left: 0;

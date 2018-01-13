@@ -9,7 +9,7 @@
 		                    <img :src="item.img">
 		                </div>
 		                <div class="list_content">
-		                    <div>{{item.name}}</div>
+		                    <div style="padding: 0.08rem 0;">{{item.name}}</div>
 		                    <div class="succeed" v-if="item.status == 0">抓取成功</div>
 		                    <div class="fail" v-if="item.status == 1">
 		                    	抓取失败
@@ -75,7 +75,7 @@ export default {
 }
 .grabList{
     width: 100%;
-    height: 2.4rem;
+    height: 2.2rem;
     background-color: #fff;
     border-radius: 0.15rem;
     padding: .3rem;
@@ -84,8 +84,8 @@ export default {
     margin-bottom: .3rem;
 }
 .left_img{
-    width: 1.8rem;
-    height: 1.8rem;
+    width: 1.6rem;
+    height: 1.6rem;
     border-radius: 10px;
     position: relative;
     overflow: hidden;

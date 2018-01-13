@@ -20,7 +20,7 @@ export default {
 
 <style lang="scss">
 	#app{
-		background: #f5f5f9;
+		background: #00bc71;
 		min-height: 100vh;
 		position: relative;
 		-webkit-font-smoothing: antialiased;
@@ -46,16 +46,24 @@ export default {
 		height: 0.8rem;
 		line-height: 0.8rem;
 		text-align: center;
-		color: #333;
-		font-size: 0.32rem;
+		color: #555;
+		font-size: 0.3rem;
 		margin: 0 auto;
-		background: #fdd152;
+		background: #fff;
 		border-radius: 0.8rem;
 		letter-spacing: 2px;
 		font-weight: 700;
 	}
 	.btn-hover:active{
 		opacity: 0.7;
+	}
+	input::-webkit-input-placeholder,
+  textarea::-webkit-input-placeholder {
+        color: #ccc;
+  }
+  input::-webkit-search-decoration,
+	input::-webkit-search-cancel-button {
+			display: none;
 	}
 	.shadow-text{
 		text-shadow: 1px 0 0 #000,0 1px 0 #000,-1px 0 0 #000,0 -1px 0 #000;
@@ -105,6 +113,10 @@ export default {
   }
   .mint-actionsheet-listitem{
   	border-color: #eee !important;
+  }
+  .mint-swipe-indicator.is-active{
+  	background: #ff385a !important;
+  	opacity: 1 !important;
   }
 
 </style>

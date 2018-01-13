@@ -33,7 +33,7 @@
 	        </div>
 		</div>
 	        
-        <router-link to="/addAddress" class="btn-default btn-hover add">+ 新增收货地址</router-link>
+        <router-link to="/addAddress" class="btn-default btn-hover add">新增收货地址</router-link>
 
         <confirm-modal :show="deleteShow" @confirm_modal="addrDelete" @closeModal="deleteShow = false" message="确定删除该地址?"></confirm-modal>	
     </div>

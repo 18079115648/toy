@@ -275,7 +275,7 @@ export default {
 	},
 	//申诉
 	appeal(params) {
-		return fetchPost('/dm-api/doll/appeal', params, true)
+		return fetchPost('/dm-api/doll/appeal/v15', params, true)
 	},
 	//收货地址列表
 	address(params) {

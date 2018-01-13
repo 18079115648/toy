@@ -52,19 +52,31 @@
             	<span class="result">{{grabInfo.appeal.result}}</span>
             </div>
             <div class="appeal_body"  v-if="grabInfo.status == 1 && !grabInfo.appeal ">
-				<div class="btn-default btn-hover" @click="Actionsheet = true">我要申诉</div>
+				<div class="btn-default btn-hover" @click="diaActionsStatus = true">申请退钻</div>
                 <div class="problem">
-                    <p>如果在游戏中遇到以下问题：</p>
+                    <p>如果在游戏中遇到以下问题，可以申请退还钻石：</p>
                     <p>1. 画面黑屏或定格</p>
                     <p>2. 按键操作失灵</p>
                     <p>3. 爪子卡住动不了</p>
                     <p>4. 游戏中工作人员补货</p>
                 </div>
             </div>
+            <div class="appeal_body"  v-if="grabInfo.status == 1 && !grabInfo.appeal ">
+				<div class="btn-default btn-hover" @click="toyActionsStatus = true">申请娃娃</div>
+                <div class="problem">
+                    <p>如果在游戏中遇到以下问题， 可以申诉：</p>
+                    <p>1. 抓取成功后系统判定失败</p>
+                    <p>2. 抓取成功后系统没有反应</p>
+                </div>
+            </div>
         </div>
         <mt-actionsheet
-        :actions="actions"
-        v-model="Actionsheet">
+	        :actions="diaActions"
+	        v-model="diaActionsStatus">
+        </mt-actionsheet>
+        <mt-actionsheet
+	        :actions="toyActions"
+	        v-model="toyActionsStatus">
         </mt-actionsheet>
 
         
@@ -77,14 +89,20 @@ import { Actionsheet,Indicator } from 'mint-ui';
 export default {
   data () {
     return {
-	    Actionsheet: false,
-	    id:this.$route.params.id,
-	    actions:[
+	    diaActionsStatus: false,
+	    diaActions:[
 	        {name:'画面黑屏或定格',method:this.add},
 	        {name:'按键操作失灵',method:this.add},
 	        {name:'爪子卡住动不了',method:this.add},
-	        {name:'游戏中工作人员补货',method:this.add},
+	        {name:'游戏中工作人员补货',method:this.add}
         ],
+        toyActionsStatus: false,
+	    toyActions:[
+	        {name:'抓取成功后系统判定失败',method:this.add},
+	        {name:'抓取成功后系统没有反应',method:this.add}
+        ],
+	    id:this.$route.params.id,
+	    
         // status:'',
         grabInfo: {},
     }
@@ -119,10 +137,13 @@ export default {
         
     },
     add(actions,index) {
+    	var type = this.diaActionsStatus ? 1 : 2
+    	console.log(type)
     	Indicator.open()
         this.$api.appeal({
             id: this.id,
-            reason: actions.name
+            reason: actions.name,
+            type: type
         }).then(res => {
             this.initData()
             setTimeout(() => {
@@ -130,8 +151,7 @@ export default {
             },200)
             
         }, err => {
-            Indicator.close()
-            
+            Indicator.close()  
         })
         
     },
@@ -198,8 +218,8 @@ export default {
 }
 .puppets_img{
     .img_body{
-        width: 1.8rem;
-        height: 1.8rem;
+        width: 1.6rem;
+        height: 1.6rem;
         border-radius: 0.15rem;
         margin-right: .3rem;
         position: relative;
@@ -279,10 +299,10 @@ export default {
 	padding-top: 0.5rem;
 }
 .problem{
-    margin-top: .5rem;
+    margin-top: .3rem;
     padding: 0 .35rem;
-    color: #999999;
-    font-size: 0.26rem;
+    color: #fff;
+    font-size: 0.24rem;
     p{
         margin-bottom: .1rem;
     }

@@ -5,19 +5,15 @@
     		<img :src="avatar" style="border-radius: 50%;"  class="fullEle" />
     	</router-link>
     	<img class="logo-text"  src="../../static/image/logo-text.png" />
-    	<span style="width: 0.85rem;"></span>
+    	<router-link to="/toysBox" class="user-link link">
+    		<img src="../../static/image/toys-box.png"  class="fullEle" />
+    	</router-link>
     </div>
-    <div class="navbar">
-    	<div @click="changeTag(item)" v-for="(item, index) in navbar" :class="currTags == item.id ? 'active' : ''"  class="nav-item">
-    		<div class="text">{{item.name}}</div>
-    	</div>
-    </div>
-    <div class="nav-content">
-    	<div class="toys-content">
-    		<Pagination :render="render" :needToken="false" :param="pagination" :autoload="false" ref="pagination" uri="/dm-api/home/tag" >
-					<div class="home-data" v-show="firstTag == currTags">
-		    		<div class="banner">
-				    	<mt-swipe :auto="4000">
+    <div class="home-pagination-content">
+    	<Pagination :render="render" :needToken="false" :param="pagination" :autoload="false" ref="pagination" uri="/dm-api/home/tag" >
+	    	<div class="home-data">
+					<div class="banner">
+				    	<mt-swipe :auto="4000" class="swipe-content">
 								<mt-swipe-item v-for="(item,index) in banner" :key="index">
 									<div class="fullEle" @click="bannerLink(item)">
 										<img :src="item.imgUrl" class="fullEle" />
@@ -26,34 +22,52 @@
 							</mt-swipe>
 				    </div>
 				    <div class="homebar">
-				    	<router-link :to="item.link" class="nav-item" v-for="(item,index) in homebar" :key="index">
-				    		<div class="icon">
-				    			<img :src="item.icon"  />
-				    		</div>
-				    		<p>{{item.text}}</p>
-				    	</router-link>
+				    	<div class="homebar-content">
+				    		<router-link :to="item.link" class="nav-item" v-for="(item,index) in homebar" :key="index">
+					    		<div class="icon">
+					    			<img :src="item.icon"  />
+					    		</div>
+					    		<p>{{item.text}}</p>
+					    	</router-link>
+				    	</div>
+					    	
 				    </div>
-		    	</div>	
-				<div class="toys-list" v-show="pagination.content.length>0">
-			    	<div @click="enterRoom(item)" class="toys-item" v-for="(item, index) in pagination.content" :key="index">
-			    		<img class="toys-img" :src="item.imgs[0]"  />
-			    		<div class="toys-status" :class="[item.statusClass]">{{item.statusText}}</div>
-			    		<div class="toys-info">
-			    			<p class="join-count">
-				    			<img class="icon" src="../../static/image/wd.png" />
-				    			<span class="shadow-text">{{parseInt(item.price)}}</span>
-				    		</p>
-				    		<p class="toys-name shadow-text">{{item.name}}</p>
-			    		</div>	
-			    	</div>
-			    </div>
-				<div class="no_msg" v-show="pagination.content.length<1 && pagination.loadEnd">
-					<img src="../../static/image/ewd.png"  />
-					<div>没有商品信息~</div>
 				</div>	
-			</Pagination>
-    	</div>
+				<div class="home-toys-content">
+					<div class="home-toys-list">
+						<div class="navbar">
+				    	<div @click="changeTag(item)" v-for="(item, index) in navbar" :class="currTags == item.id ? 'active' : ''"  class="nav-item">
+				    		<div class="text">{{item.name}}</div>
+				    	</div>
+				    </div>
+				    <div class="nav-content">
+				    	<div class="toys-content">
+									<div class="toys-list" v-show="pagination.content.length>0">
+								    	<div @click="enterRoom(item)" class="toys-item" v-for="(item, index) in pagination.content" :key="index">
+								    		<img class="toys-img" :src="item.imgs[0]"  />
+								    		<div class="toys-status" :class="[item.statusClass]">{{item.statusText}}</div>
+								    		<p class="join-count">
+									    			<span class="shadow-text">{{parseInt(item.price)}}</span>
+									    		</p>
+								    		<div class="toys-info">
+									    		<p class="toys-name shadow-text">{{item.name}}</p>
+								    		</div>	
+								    	</div>
+								   </div>	
+				    	</div>
+				    	<div class="no_msg" style="padding-bottom: 1rem;" v-show="pagination.content.length<1 && pagination.loadEnd">
+								<img src="../../static/image/ewd.png"  />
+								<div>没有商品信息~</div>
+						  </div>	
+				    </div>
+					</div>
+						
+				</div>
+							
+		  </Pagination>
     </div>
+	    
+	    
   </div>
 </template>
 
@@ -63,21 +77,21 @@ export default {
   data () { 
     return {
     	homebar: [{
-      	text: '签到',
-      	icon: '../../static/image/saaa.png',
-      	link: '/signIn'
-      },{
-      	text: '邀请好友',
-      	icon: '../../static/image/2333d.png',
-      	link: '/invite'
-      },{
-      	text: '娃娃盒',
-      	icon: '../../static/image/222.png',
-      	link: '/toysBox'
-      },{
-      	text: '积分商城',
-      	icon: '../../static/image/111.png',
+      	text: '福利中心',
+      	icon: '../../static/image/112344.png',
       	link: ''
+      },{
+      	text: '排行榜',
+      	icon: '../../static/image/d44f.png',
+      	link: ''
+      },{
+      	text: '积分抽奖',
+      	icon: '../../static/image/34dxf.png',
+      	link: ''
+      },{
+      	text: '充值中心',
+      	icon: '../../static/image/344fs.png',
+      	link: '/recharge'
       }],
       banner: [],
       
@@ -197,7 +211,7 @@ export default {
 <style lang="scss" scoped>
 .header{
 	height: 0.85rem;
-	background: #ffe86e;
+	background: #00bc71;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -209,7 +223,7 @@ export default {
 		background-repeat: no-repeat;
 		background-size: 55%;*/
 		position: relative;
-		padding: 0.15rem;
+		padding: 0.18rem;
 	}
 	/*.user-link{
 		background-image: url(../../static/image/vvv.png);
@@ -236,66 +250,95 @@ export default {
 		height: 0.7rem;
 	}
 }
+.home-pagination-content{
+	position: absolute;
+	width: 100%;
+	left: 0;
+	top: 0.85rem;
+	bottom: 0;
+	overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.3rem;
+}
 .navbar{
-	height: 0.66rem;
+	height: 0.8rem;
 	display: flex;
-	background: #ffe86e;
+	overflow-x: auto;
+	border-bottom: 1px solid #eee;
 	.nav-item{
 		flex: 1;
 		display: flex;
 		justify-content: center;
-		line-height: 0.66rem;
+		line-height: 0.8rem;
+		min-width: 1.42rem;
+		position: relative;
 		.text{
-			color: #cb8c32;
+			color: #666;
 			font-size: 0.28rem;
 			transition: all 0.1s;
 		}
 		&.active{
 			.text{
-				color: #704a06;
-				padding: 0 0.06rem;
-				border-bottom: 2px solid #704a06;
+				color: #00bc71;
+				padding: 0 0.1rem;
+				border-bottom: 2px solid #00bc71;
+				
 			}
 		}
 	}
 }
 .nav-content{
-	position: absolute;
-	width: 100%;
-	left: 0;
-	top: 1.51rem;
-	bottom: 0;
-	overflow-y: auto;
+	
 	display: flex;
 	flex-direction: column;
+	margin: 0 -0.12rem;
 }
 .banner{
-	height: 2.7rem;
-	background: #ddd;
+	height: 3.2rem;
+	padding: 0 0.2rem;
+	.swipe-content{	
+		overflow: hidden;
+		img{
+			border-radius: 0.2rem;
+		}
+	}
 }
-.homebar{
-	height: 1.6rem;
-	display: flex;
-	background: #fff;
-	padding-top: 0.12rem;
+.homebar{	
+	padding: 0.3rem 0.2rem;
+	.homebar-content{
+		background: #fff;
+		display: flex;
+		height: 1.4rem;
+		border-radius: 0.2rem;
+	}
 	.nav-item{
 		flex: 1;
 		display: flex;
 		flex-direction: column;
     align-items: center;
+    padding: 0.06rem 0;
+    
 		.icon{
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			height: 0.75rem;
-			margin-bottom: 0.15rem;
+			height: 0.8rem;
 			img{
-				width: 0.5rem;
+				height: 0.46rem;
 			}
 		}
 		p{
-			color: #666;
+			color: #000;
 		}
+	}
+}
+.home-toys-content{
+	padding: 0 0.2rem;
+	.home-toys-list{
+		background: #fff;
+		border-radius: 0.2rem;
+		overflow: hidden;
+		padding: 0 0.25rem;
 	}
 }
 .toys-content{
@@ -304,13 +347,13 @@ export default {
 	-webkit-overflow-scrolling : touch;
 }
 .toys-list{
-	padding: 0.2rem 0.1rem 0;
+	padding-top: 0.24rem;
 	display: flex;
 		flex-wrap: wrap;
 	.toys-item{
-		margin: 0 0.1rem 0.2rem;
-		width: 3.45rem;
-		height: 3.45rem;
+		margin: 0 0.12rem 0.24rem;
+		width: 3.18rem;
+		height: 3.18rem;
 		background: #fff;
 		position: relative;
 		border-radius: 0.3rem;
@@ -346,6 +389,26 @@ export default {
 				background: #c7c8c8;
 			}
 		}
+		.join-count{
+			position: absolute;
+			left: 0.2rem;
+			top: 0.12rem;
+			width: 1.1rem;
+			height: 0.5rem;
+			line-height: 0.5rem;
+			background-image: url(../../static/image/66fg.png);
+			background-size: 100% 100%;
+			.shadow-text{
+				position: absolute;
+				right: 0.1rem;
+				left: 0.5rem;
+				text-align: center;
+				top: 50%;
+				font-size: 0.24rem;
+				color: #8dff98;
+				transform: translateY(-46%);
+			}
+		}
 		.toys-info{
 			position: absolute;
 			left: 0.2rem;
@@ -355,16 +418,7 @@ export default {
 			color: #fff;
 			font-weight: 700;
 			font-size: 0.28rem;
-			.join-count{
-				display: flex;
-				align-items: center;
-				font-weight: normal;
-				padding-bottom: 0.1rem;
-				.icon{
-					width: 0.26rem;
-					margin-right: 0.16rem;
-				}
-			}
+			
 		}
 	}
 }

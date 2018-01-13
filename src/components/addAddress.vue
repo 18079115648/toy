@@ -158,6 +158,8 @@ export default {
 <style lang="scss" scoped>
 .content{
 	padding-bottom: 0.8rem;
+	height: 100vh;
+	background: #F5F5F9;
 }
 .addAddress_body{
     width: 100%;
@@ -233,7 +235,7 @@ export default {
 	z-index: 10;
 	text-align: center;
 	line-height: 0.85rem;
-	color: #704a06;
+	color: #fff;
     font-size: 0.28rem;
     /*font-weight: 700;*/
 }
