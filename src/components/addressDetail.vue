@@ -5,7 +5,7 @@
         <div class="addAddress_body">
             <div class="addAddress_msg">
                 <label for="people">联系人</label>
-                <input type="text" v-model.trim="name" name="people" placeholder="请输入姓名">
+                <input type="text" maxlength="20" v-model.trim="name" name="people" placeholder="请输入姓名">
             </div>
             <div class="addAddress_msg">
                 <label for="phone">联系电话</label>

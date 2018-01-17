@@ -3,7 +3,7 @@
 		<div class="modal-box" v-show="show">
 	    	<div class="modal-bg" @click="cancel"></div>
 	    	<div class="modal-content">
-	    		<div class="modal-header" v-if="!has_icon">提示</div>
+	    		<div class="modal-header" v-if="!has_icon" v-html="title"></div>
 	    		<div class="modal-body">
 	    			<div class="modal-icon" :class="has_icon" v-if="has_icon"></div>
 	    			<div class="modal-message" v-html="message"></div>
@@ -23,6 +23,10 @@ export default {
 	props: {
         show: {
             type: Boolean
+        },
+        title: {
+        	type: String,
+        	default: '提示'
         },
         message: {
         	type: String
@@ -147,5 +151,6 @@ export default {
 }
 .modal-footer .confirm-btn{
     width: 50%;
+    color: #00BC71;
 }
 </style>

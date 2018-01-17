@@ -22,8 +22,8 @@
 		                <img src="../../static/image/wdd.png" class="guide">
 		            </div>
 		        </div>  
-		        <div class="no_msg" v-if="pagination.content.length<1 && pagination.loadEnd">
-		            <img src="../../static/image/wfdfc.png">
+		        <div class="no_msg bg-color" v-if="pagination.content.length<1 && pagination.loadEnd">
+		            <img src="../../static/image/none-grab.png">
 		            <div>暂无抓取记录~</div>
 		        </div>
 			</Pagination>

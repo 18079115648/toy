@@ -2,14 +2,16 @@
     <div class="header">
 	    <div class="headPart">
 	        <div class="headCont" >
-	            <div @click="goBack" class="back" v-if="!hiddenBack">
-	                <span class="fl"></span>
+	            <div v-tap="{ methods : goBack }" class="back" v-if="!hiddenBack">
+	                <i class="iconfont icon-zuojiantou"></i>
 	            </div>
-	            <p class="right">{{title}}</p>
+	            <slot>
+	            	<p class="defalut-slot">{{title}}</p>
+	            </slot>
 	        </div>
 	    </div>
 	    <div class="menu-blank" style="height: 0.85rem;"></div>
-	    <slot></slot>
+	    
     </div>
 </template>
 
@@ -47,14 +49,15 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+	@import "../../../static/css/style.scss";
     .header, .headPart {
         z-index: 10;
     }
     .headPart{
         width: 100%;
         height: 0.85rem;
-        background: #00bc71;
+        background: $header-color;
         overflow: hidden;
         position: fixed;
         z-index: 10;
@@ -76,18 +79,18 @@
         top:0;
         z-index: 10;
     }
-    .headCont div.back span{
-        color: #FFFFFF;
+    .headCont div.back .iconfont{
+        color: $header-back-color;
+        font-size: 0.36rem;
+        line-height: 0.4rem;
         width: 0.4rem;
-        height: 0.38rem;
-        background: url(../../../static/image/SSSD.png);
-        background-size: 100% 100%;
+        height: 0.4rem;
         position: absolute;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
     }
-    .headCont p{
+    .headCont p.defalut-slot{
     	position: absolute;
     	width: 100%;
     	height: 100%;

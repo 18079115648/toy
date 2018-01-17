@@ -5,11 +5,13 @@
     	</Header>
     	<div class="login-content">
     		<div class="input-item">
-    			<img class="icon phone" src="../../static/image/5.png" />
+    			<i class="icon iconfont icon-phone_icon"></i>
+    			<!--<img class="icon phone" src="../../static/image/5.png" />-->
     			<input v-model="phone" @input="inputNumber" class="phone" type="tel" maxlength="11" placeholder="手机号码" />
     		</div>
     		<div class="input-item">
-    			<img class="icon" src="../../static/image/55.png" />
+    			<i class="icon iconfont icon-yanzhengma3"></i>
+    			<!--<img class="icon" src="../../static/image/55.png" />-->
     			<input v-model="code" @input="inputCode" class="code" type="tel " maxlength="6" placeholder="验证码" />
     			<div @click="getCode" class="captcha-btn" :class="{'disabled': disableSend}">{{captchaLabel}}</div>
     		</div>
@@ -142,6 +144,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../static/css/style.scss";
 .app{
 	background: #fff !important;
 	position: relative;
@@ -165,11 +168,13 @@ export default {
 		align-items: center;
 		padding-left: 1rem;
 		.icon{
-			width: 0.3rem;
+			color: $bg-color;
+			font-size: 0.36rem;
+			line-height: 1;
 			position: absolute;
 			left: 0.3rem;
 			top: 50%;
-			transform: translateY(-50%);
+			transform: translateY(-53%);
 			&.phone{
 				width: 0.26rem;
 			}
@@ -184,7 +189,7 @@ export default {
 		.captcha-btn{
 			width: 2rem;
 			text-align: center;
-			color: #fdaa10;
+			color: $bg-color;
 			/*font-weight: 700;*/
 			&.disabled{
 				color: #ccc;
@@ -203,5 +208,7 @@ export default {
 }
 .btn-login{
 	width: 5.6rem;
+	background: $bg-color;
+	color: $bg-text-color;
 }
 </style>

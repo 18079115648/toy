@@ -15,7 +15,7 @@
 					<div class="banner">
 				    	<mt-swipe :auto="4000" class="swipe-content">
 								<mt-swipe-item v-for="(item,index) in banner" :key="index">
-									<div class="fullEle" @click="bannerLink(item)">
+									<div class="fullEle" v-tap="{ methods : bannerLink, item: item }">
 										<img :src="item.imgUrl" class="fullEle" />
 									</div>
 								</mt-swipe-item>
@@ -36,14 +36,14 @@
 				<div class="home-toys-content">
 					<div class="home-toys-list">
 						<div class="navbar">
-				    	<div @click="changeTag(item)" v-for="(item, index) in navbar" :class="currTags == item.id ? 'active' : ''"  class="nav-item">
+				    	<div v-tap="{ methods : changeTag, item: item }" v-for="(item, index) in navbar" :class="currTags == item.id ? 'active' : ''"  class="nav-item">
 				    		<div class="text">{{item.name}}</div>
 				    	</div>
 				    </div>
 				    <div class="nav-content">
 				    	<div class="toys-content">
 									<div class="toys-list" v-show="pagination.content.length>0">
-								    	<div @click="enterRoom(item)" class="toys-item" v-for="(item, index) in pagination.content" :key="index">
+								    	<div v-tap="{ methods : enterRoom, item: item }" class="toys-item img-mask" v-for="(item, index) in pagination.content" :key="index">
 								    		<img class="toys-img" :src="item.imgs[0]"  />
 								    		<div class="toys-status" :class="[item.statusClass]">{{item.statusText}}</div>
 								    		<p class="join-count">
@@ -151,13 +151,15 @@ export default {
   		this.pagination.data.type = id
   		this.$refs.pagination.refresh() 
   	},
-  	changeTag(item) {
+  	changeTag(params) {
+  		let item = params.item
   		if(this.currTags == item.id) {
   			return
   		}
   		this.tagChange(item.id)
   	},
-  	bannerLink(room) {
+  	bannerLink(params) {
+  		let room = params.item
   		if(room.type == 1) {
   			this.$router.push({path: '/room', query: {machineSn: room.machineSn, num: room.num, price: room.price, machineId: room.machineId, liveRoomCode: room.liveRoomCode}})
   		}else if(room.type == 2) {
@@ -168,23 +170,24 @@ export default {
   	},
   	render(res) {
 			this.currTags = this.pagination.data.type
-  			res.data.forEach((item) => {
-  				if(item.status == 0) {
-  					item.statusText = '空闲中'
-  					item.statusClass = 'none'
-  				}else if(item.status == 1) {
-  					item.statusText = '游戏中'
-  					item.statusClass = 'ing'
-  				}else if(item.status == 2) {
-  					item.statusText = '维护中'
-  					item.statusClass = 'end'
-  				}
+			res.data.forEach((item) => {
+				if(item.status == 0) {
+					item.statusText = '空闲中'
+					item.statusClass = 'none'
+				}else if(item.status == 1) {
+					item.statusText = '游戏中'
+					item.statusClass = 'ing'
+				}else if(item.status == 2) {
+					item.statusText = '维护中'
+					item.statusClass = 'end'
+				}
         	this.pagination.content.push(item)
         })
     },
 
     // 进入房间
-    enterRoom(room) {
+    enterRoom(params) {
+    	let room = params.item
     	if(!this.$token.getAccessToken()) {
     		this.$router.push('/login')
     		return
@@ -292,6 +295,7 @@ export default {
 	display: flex;
 	flex-direction: column;
 	margin: 0 -0.12rem;
+	min-height: 4.9rem;
 }
 .banner{
 	height: 3.2rem;

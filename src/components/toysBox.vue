@@ -1,21 +1,43 @@
 <template>
   <div class="content">
-  	<Header title="娃娃盒"></Header>
-    <div class="toys-list" v-show="toysList.length > 0">
-    	<div class="toys-item" v-for="(item, index) in toysList" :key="index">
-    		<img class="toys-img" :src="item.img"  />
-    		<div class="toys-info shadow-text">
-    			<span>{{item.name}}</span>
-    			<span>x{{item.num}}</span>
-    		</div>	
-    	</div>
-    	
-    </div>
-    <div class="no_msg" v-show="toysList.length < 1">
-        <img src="../../static/image/ewd.png"  />
+  	<Header title="娃娃袋"></Header>
+  	<div class="toys-content" v-show="toysList.length > 0">
+  		<p class="total-dia">当前娃娃总价值为：
+  			<img src="../../static/image/erdd.png"  />
+	    	<span class="shadow-text">{{ total}}</span>
+  		</p>
+  		
+  		<div class="toys-list">
+	    	<div class="toys-item" v-for="(item, index) in toysList" :key="index">
+	    		<img class="toys-img" :src="item.img"  />
+	    		<div class="toys-info">
+	    			<p>{{item.name}}</p>
+	    			<p>x{{item.num}}</p>
+	    			<p></p>
+	    		</div>	
+	    		<div class="change-num">
+	    			<img src="../../static/image/erdd.png"  />
+	    			{{item.diamonds}}
+	    		</div>
+	    	</div>
+	    	
+	    	
+	    </div>
+	    
+	    <p class="tip">
+	  		<span class="tit">温馨提示：</span><span class="text">抓中娃娃后15天内未领取，系统将自动兑换成钻石</span>
+	  	</p>
+  	</div>
+  	<div class="no_msg bg-color" v-show="toysList.length < 1">
+        <img src="../../static/image/none-toy.png"  />
         <div>您还没有抓到娃娃~</div>
     </div>
-    <router-link v-show="toysList.length > 0" to="/orderSubmit" class="btn-default btn-hover btn-receive">立即领取</router-link>
+	  <div class="toys-operate" v-show="toysList.length > 0">
+	  	<div class="charge-btn btn-operate btn-hover" @click="chargeShow = true">兑换钻石</div>
+	  	<div class="get-btn btn-operate btn-hover">立即领取</div>
+	  </div>  
+	  <confirm-modal :show="chargeShow" @confirm_modal="charge" title="兑换钻石确认" @closeModal="chargeShow = false" :message="message"></confirm-modal>	
+    <!--<router-link v-show="toysList.length > 0" to="/orderSubmit" class="btn-default btn-hover btn-receive">立即领取</router-link>-->
   </div>
 </template>
 
@@ -23,71 +45,131 @@
 export default {
   data () {
     return {
-			toysList: []
+			toysList: [],
+			total: 0,  //兑换总钻石数
+			chargeShow: false,
+			message: ''
     }
   },
   created() {
   	this.$api.toysWin().then(res => {
-		this.toysList = res.data.data
+			this.toysList = res.data.data
+			this.total = res.data.total
+			this.message = '当前所有娃娃可兑换 <span style="color: #00bc71;">' + this.total + '</span> 钻石'
     }, err => {
     	
     })
   },
   methods: {
-  	
+  	charge() {
+  		
+  	}
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-.content{
-
+.toys-content{
+	position: absolute;
+	left: 0;
+	top: 0.85rem;
+	bottom: 1rem;
+	width: 100%;
+	
+	padding: 0.3rem 0.2rem 1.5rem;
+	.tip{
+		position: absolute;
+		left: 0.4rem;
+		right: 0.4rem;
+		bottom: 0.4rem;
+		color: #fff;
+		display: flex;
+		.tit{
+			width: 1.4rem;
+		}
+		.text{
+			flex: 1;
+			overflow: hidden;
+		}
+		
+	}
+}
+.total-dia{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #fff;
+	font-size: 0.3rem;
+	padding-bottom: 0.4rem;
+	img{
+		width: 0.4rem;
+		margin-left: 0.2rem;
+		margin-right: 0.06rem;
+	}
 }
 .toys-list{
 	position: absolute;
-	width: 100%;
-	top: 0.85rem;
-	bottom: 1.8rem;
-	left: 0;
+	left: 0.2rem;
+	right: 0.2rem;
+	top: 1.04rem;
+	bottom: 1.4rem;
 	overflow-y: auto;
-	padding: 0.2rem 0.1rem 0;
-	display: flex;
-	flex-wrap: wrap;
+	-webkit-overflow-scrolling: touch;
 	.toys-item{
-		margin: 0 0.1rem 0.2rem;
-		width: 3.45rem;
-		height: 3.45rem;
 		background: #fff;
 		position: relative;
-		border-radius: 0.3rem;
+		border-radius: 0.2rem;
 		overflow: hidden;
-		
+		display: flex;
+		align-items: center;
+		padding: 0.3rem;
+		margin-bottom: 0.3rem;
 		.toys-img{
-			position: absolute;
-			top:50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-			width: 100%;
-			height: 100%;
+			width: 1.6rem;
+			height: 1.6rem;
+			border-radius: 0.2rem;
 		}
 		.toys-info{
-			position: absolute;
-			left: 0.25rem;
-			right: 0.25rem;
-			bottom: 0.2rem;
-			z-index: 3;
-			color: #fff;
-			font-weight: 700;
+			height: 1.6rem;
+			flex: 1;
+			padding-left: 0.2rem;
 			font-size: 0.28rem;
+			p{
+				padding: 0.06rem 0;
+				color: #333;
+			}
+		}
+		.change-num{
 			display: flex;
-			justify-content: space-between;
+			align-items: center;
+			font-size: 0.3rem;
+			font-weight: 600;
+			img{
+				width: 0.4rem;
+				margin-right: 0.1rem;
+			}
 		}
 	}
 }
-.btn-receive{
+.toys-operate{
 	position: absolute;
-	left: 0.3rem ;
-	bottom: 0.5rem;
+	width: 100%;
+	left: 0;
+	bottom: 0;
+	height: 1rem;
+	display: flex;
+	background: #fff;
+	.btn-operate{
+		flex: 1;
+		text-align: center;
+		line-height: 1rem;
+		font-size: 0.28rem;
+		color: #00BC71;
+		&.get-btn{
+			background: #efefef;
+			color: #000;
+		}
+	}
 }
 </style>

@@ -10,7 +10,7 @@
 </template>
 
 <script>
-
+import "../static/css/font/iconfont.css"
 export default {
 	mounted() {
 		this.$root.bgAudio = document.getElementById('bg-audio')
@@ -19,8 +19,9 @@ export default {
 </script>
 
 <style lang="scss">
+	@import "../static/css/style.scss";
 	#app{
-		background: #00bc71;
+		background: $bg-color;
 		min-height: 100vh;
 		position: relative;
 		-webkit-font-smoothing: antialiased;
@@ -46,10 +47,10 @@ export default {
 		height: 0.8rem;
 		line-height: 0.8rem;
 		text-align: center;
-		color: #555;
+		color: $btn-default-color;
 		font-size: 0.3rem;
 		margin: 0 auto;
-		background: #fff;
+		background: $btn-default-bgcolor;
 		border-radius: 0.8rem;
 		letter-spacing: 2px;
 		font-weight: 700;
@@ -88,9 +89,12 @@ export default {
 	.v-modal{
 		opacity: 0.7 !important;
 	}
+	.mint-popup, .mint-indicator{
+		transition: none !important;
+	}
 	.mint-switch-input:checked + .mint-switch-core {
-	    border-color: #fdd152 !important;
-	    background-color: #fdd152 !important;
+	    border-color: $bg-color !important;
+	    background-color: $bg-color !important;
 	}
 	.no_msg{
     display: flex;
@@ -99,8 +103,11 @@ export default {
     color: #C9CACA;
     font-size: .3rem;
     padding-top: 1.4rem;
+    &.bg-color{
+    	color: $bg-text-color;
+    }
     img{
-        width: 2rem;
+        width: 1.8rem;
         display: block;
         margin-bottom: .6rem;
     }
@@ -118,5 +125,17 @@ export default {
   	background: #ff385a !important;
   	opacity: 1 !important;
   }
-
+	.img-mask{
+		position: relative;
+		&:before{
+			content: '';
+			position: absolute;
+			z-index: 3;
+			left: 0;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			background: transparent;
+		}
+	}
 </style>

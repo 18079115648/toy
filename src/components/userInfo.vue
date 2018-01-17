@@ -16,7 +16,7 @@
       </div>
       <div class="head" style="border-bottom: solid 1px #f2f2f2;">
         <label for="user_name">昵称</label>
-        <input type="text" class="nickname-text" name="user_name" placeholder="请输入昵称" v-model="nickname">
+        <input type="text" class="nickname-text" maxlength="20" name="user_name" placeholder="请输入昵称" v-model="nickname">
         <div>
           <img src="../../static/image/wdd.png" class="guide">
         </div>
@@ -113,6 +113,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../static/css/style.scss";
+.content{
+	min-height: 100vh;
+	background: #F5F5F9;
+}
 .save{
 	position: absolute;
 	width: 1.2rem;
@@ -123,8 +128,8 @@ export default {
 	z-index: 10;
 	text-align: center;
 	line-height: 0.85rem;
-	color: #704a06;
-    font-size: 0.28rem;
+	color: $header-text-color;
+  font-size: 0.28rem;
     /*font-weight: 700;*/
 }
 .userInfo_body{

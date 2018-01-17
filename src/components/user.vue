@@ -1,56 +1,88 @@
 <template>
   <div class="content">
     <Header title="我的"></Header>
-    <router-link to="/set" class="set-up"></router-link>
-    <router-link to="/userInfo" class="user-info-link">
-    	<img class="avatar" :src="userInfo.avatar"  />
-    	<p class="nick-name">{{userInfo.nickname}}</p>
-    	<img class="more" src="../../static/image/QEQ.png"  />
-    </router-link>
-    <div class="navbar">
-    	<div class="nav-item diamount">
-    		<p class="count" style="color: #f8b62d;">{{userInfo.money}}</p>
-    		<p class="text">钻石</p>
-    	</div>
-    	<div class="nav-item">
-    		<p class="count" style="color: #22ac38;">{{userInfo.points}}</p>
-    		<p class="text">积分</p>
-    	</div>
+    <div class="user-info">
+    	<router-link to="/userInfo" class="user-info-link">
+	    	<img class="avatar" :src="userInfo.avatar"  />
+	    	<div class="user-info-text">
+	    		<p class="nick-name">{{userInfo.nickname}}</p>
+	    		<p class="user-record">
+	    			<span>抓中 8</span>
+	    			<i></i>
+	    			<span>总排位 200</span>
+	    		</p>
+	    	</div>
+	    	<i class="more iconfont icon-iconfontjiantou5"></i>
+	    	<!--<img class="more" src="../../static/image/QEQ.png"  />-->
+	    </router-link>
     </div>
-    <div class="link-list">
-    	<router-link to="/recharge" class="link-item">
-    		<img src="../../static/image/3333.png" class="icon" />
-    		<p class="text">钻石充值</p>
-    		<div class="recharge-btn">充值</div>
-    	</router-link>
-    	<router-link to="/paymentList" class="link-item">
-    		<img src="../../static/image/wwww.png" class="icon" />
-    		<p class="text">充值记录</p>
-    		<img src="../../static/image/wdd.png" class="more"  />
-    	</router-link>
-    </div>
-    <div class="link-list">
-    	<router-link to="/invite" class="link-item">
-    		<img src="../../static/image/1233.png" class="icon" />
-    		<p class="text">邀请好友</p>
-    		<img src="../../static/image/wdd.png" class="more"  />
-    	</router-link>
-    	<router-link to="/grabList" class="link-item">
-    		<img src="../../static/image/ff233.png" class="icon" />
-    		<p class="text">抓取记录</p>
-    		<img src="../../static/image/wdd.png" class="more"  />
-    	</router-link>
-    	<router-link to="/orderList" class="link-item">
-    		<img src="../../static/image/4455.png" class="icon" />
-    		<p class="text">订单中心</p>
-    		<img src="../../static/image/wdd.png" class="more"  />
-    	</router-link>
-    	<router-link to="/address/unselect" class="link-item">
-    		<img src="../../static/image/2223ed.png" class="icon" />
-    		<p class="text">地址管理</p>
-    		<img src="../../static/image/wdd.png" class="more"  />
-    	</router-link>
-    </div>
+	  <div class="user-bottom">
+	  	<div class="navbar">
+	    	<router-link to="/recharge" class="nav-item right bottom">
+	    		<p class="count">
+	    			<img class="nav-icon" src="../../static/image/18@3x.png" />
+	    			{{userInfo.money}}
+	    		</p>
+	    		<p class="text">我的钻石</p>
+	    	</router-link>
+	    	<router-link to="/recharge" class="nav-item bottom">
+	    		<p class="count">
+	    			<img class="nav-icon" src="../../static/image/16@3x.png" />
+	    			{{userInfo.points}}
+	    		</p>
+	    		<p class="text">积分抽奖</p>
+	    	</router-link>
+	    	<router-link to="/grabList" class="nav-item right top">
+	    		<p class="count">
+	    			<img class="nav-icon" src="../../static/image/15@3x.png" />
+	    			{{userInfo.points}}
+	    		</p>
+	    		<p class="text">抓取记录</p>
+	    	</router-link>
+	    	<router-link to="/toysBox" class="nav-item top">
+	    		<p class="count">
+	    			<img class="nav-icon" src="../../static/image/17@3x.png" />
+	    			{{userInfo.points}}
+	    		</p>
+	    		<p class="text">娃娃袋</p>
+	    	</router-link>
+	    </div>
+	    <div class="link-list">
+	    	<router-link to="/recharge" class="link-item">
+	    		<img src="../../static/image/14@3x.png" style="width: 0.44rem; left: -0.04rem; margin-right: 0.26rem;" class="icon" />
+	    		<p class="text">会员卡中心</p>
+	    		<div class="recharge-btn">2017-12-01 <span>到期</span></div>
+	    		<img src="../../static/image/wdd.png" class="more"  />
+	    	</router-link>
+	    </div>
+	    <div class="link-list">
+	    	<router-link to="/orderList" class="link-item">
+	    		<img src="../../static/image/12@3x.png" class="icon" />
+	    		<p class="text">订单中心</p>
+	    		<img src="../../static/image/wdd.png" class="more"  />
+	    	</router-link>
+	    	<router-link to="/address/unselect" class="link-item">
+	    		<img src="../../static/image/113@3x.png" class="icon" />
+	    		<p class="text">地址管理</p>
+	    		<img src="../../static/image/wdd.png" class="more"  />
+	    	</router-link>
+	    	<router-link to="/invite" class="link-item">
+	    		<img src="../../static/image/11@3x.png" class="icon" />
+	    		<p class="text">邀请有礼</p>
+	    		<img src="../../static/image/wdd.png" class="more"  />
+	    	</router-link>
+	    	
+	    	
+	    </div>
+	    <div class="link-list">
+	    	<router-link to="/set" class="link-item">
+	    		<img src="../../static/image/10@3x.png" class="icon" />
+	    		<p class="text">设置</p>
+	    		<img src="../../static/image/wdd.png" class="more"  />
+	    	</router-link>
+	    </div>
+	  </div>  
+	    
   </div>
 </template>
 
@@ -60,15 +92,15 @@ import storage from '../fetch/storage'
 export default {
   data () {
     return {
-    	isWinxin: this.$common.isWeixin(),
+      isWinxin: this.$common.isWeixin(),
       userInfo:{}
     }
   },
   created() {
   	this.$api.userInfo().then(res => {
-			this.userInfo = res.data
-			this.userInfo.avatar = this.userInfo.avatar ? this.userInfo.avatar : '../../static/image/vvv.png'
-			storage.set('headUrl', this.userInfo.avatar)
+		this.userInfo = res.data
+		this.userInfo.avatar = this.userInfo.avatar ? this.userInfo.avatar : '../../static/image/vvv.png'
+		storage.set('headUrl', this.userInfo.avatar)
     }, err => {
     	
     })
@@ -81,75 +113,138 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+@import "../../static/css/style.scss";
 .content{
 	padding-bottom: 0.6rem;
+	min-height: 100vh;
+	background: #F5F5F9;
 }
-.set-up{
-	position: fixed;
-	width: 0.85rem;
-	height: 0.85rem;
-	right: 0.1rem;
-	top: 0;
-	background: url(../../static/image/d112.png) no-repeat center;
-	background-size: 50%;
-	z-index: 15;
+.user-info{
+	height: 2.4rem;
+	background: $header-color;
+	padding: 0.3rem 0;
+	padding-bottom: 0.9rem
+}
+.user-bottom{
+	padding: 0 0.25rem;
+	position: relative;
+	padding-top: 2.7rem;
+	& > div {
+		background: #fff;
+		border-radius: 0.2rem;
+	}
 }
 .user-info-link{
-	height: 2rem;
+	height: 100%;
 	display: flex;
 	align-items: center;
-	background: #fff;
-	padding: 0 0.3rem 0.2rem;
-	color: #333;
+	padding: 0 0.5rem;
+	color: #fff;
 	font-size: 0.3rem;
-	background-image: url(../../static/image/derr.png);
-	background-size: 100%;
-	background-position: bottom;
-	background-repeat: no-repeat;
 	.avatar{
-		width: 1.25rem;
-		height: 1.25rem;
+		width: 1.2rem;
+		height: 1.2rem;
 		border-radius: 50%;
+		background: #fff;
 		
 	}
-	.nick-name{
+	.user-info-text{
 		flex: 1;
-		overflow: hidden;
 		padding-left: 0.3rem;
+		& > p{
+			padding: 0.06rem 0;
+		}
+		.user-record{
+			font-size: 0.24rem;
+			display: flex;
+			align-items: center;
+			i{
+				border-left: 1px solid #fff;
+				height: 0.26rem;
+				margin: 0 0.28rem;
+			}
+		}
+	}
+	.nick-name{
+		
+		overflow: hidden;
+		
 	}
 	.more{
-		width: 0.16rem;
+		font-size: 0.32rem;
+		color: $header-back-color;
 	}
 }
 .navbar{
-	height: 1.36rem;
+	padding: 0.36rem 0.3rem;
 	display: flex;
 	background: #fff;
-	padding-top: 0.26rem;
+	flex-wrap: wrap;
+	position: absolute;
+	right: 0.25rem;
+	left: 0.25rem;
+	top: -0.6rem;
 	.nav-item{
-		flex: 1;
 		text-align: center;
 		position: relative;
-		.count{
-			font-size: 0.48rem;
-			font-weight: 700;
-			line-height: 1;
-			padding-bottom: 0.1rem;
-			
-		}
-		&.diamount:after{
+		width: 50%;
+		position: relative;
+		overflow: hidden;
+		color: #969696;
+		&.right:before{
 			content: '';
+			border-right: 1px dashed #e5e5e5;
 			position: absolute;
-			width: 0;
-			border-right: 1px solid #f2f2f2;
 			right: 0;
 			top: 0;
-			bottom: 0.4rem;
+			bottom: 0;
+			transform: scaleY(2.5);
+		}
+		&.top:after{
+			content: '';
+			border-top: 1px dashed #e5e5e5;
+			position: absolute;
+			right: 0;
+			top: 0;
+			left: 0;
+			transform: scaleX(2.5);
+		}
+		.count{
+			font-size: 0.3rem;
+			font-weight: 700;
+			line-height: 1;
+			color: #333;
+			padding-bottom: 0.18rem;
+			padding-top: 0.4rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			.nav-icon{
+				height: 0.4rem;
+				margin-right: 0.2rem;
+			}
+			
+		}
+		&.bottom{
+			.count{
+				padding-top: 0;
+			}
+			
+		}
+		.text{
+			padding-bottom: 0.36rem;
+		}
+		&.top{
+			.text{
+				padding-bottom: 0;
+			}
+			
 		}
 	}
 }
 .link-list{
 	padding-left: 0.3rem;
+	padding-right: 0.3rem;
 	background: #fff;
 	margin-top: 0.4rem;
 	.link-item{
@@ -157,10 +252,10 @@ export default {
 		display: flex;
 		align-items: center;
 	  border-bottom: 1px solid #f2f2f2;
-	  padding-right: 0.3rem;
 	  .icon{
 	  	width: 0.36rem;
 	  	margin-right: 0.3rem;
+	  	position: relative;
 	  }
 	  .text{
 	  	flex: 1;
@@ -177,10 +272,9 @@ export default {
 	}
 }
 .recharge-btn{
-	height: 0.5rem;
-	line-height: 0.5rem;
-	border-radius: 0.5rem;
-	background: #fdd152;
-	padding: 0 0.34rem;
+	padding-right: 0.2rem;
+	span{
+		color: #00BC71;
+	}
 }
 </style>

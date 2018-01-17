@@ -80,6 +80,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.content{
+	background: #F5F5F9;
+	min-height: 100vh;
+}
 .set_body{
     padding-top: 0.3rem;
 }

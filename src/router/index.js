@@ -29,6 +29,8 @@ const grabDetails = r => require.ensure([], () => r(require('../components/grabD
 const recharge = r => require.ensure([], () => r(require('../components/recharge.vue')), 'recharge')
 //确认支付
 const payment = r => require.ensure([], () => r(require('../components/payment.vue')), 'payment')
+//会员确认支付
+const paymentMember = r => require.ensure([], () => r(require('../components/paymentMember.vue')), 'paymentMember')
 //充值记录
 const paymentList = r => require.ensure([], () => r(require('../components/paymentList.vue')), 'paymentList')
 //订单中心
@@ -45,6 +47,16 @@ const addressDetail = r => require.ensure([], () => r(require('../components/add
 const set = r => require.ensure([], () => r(require('../components/set.vue')), 'set')
 //关于我们
 const aboutUs = r => require.ensure([], () => r(require('../components/aboutUs.vue')), 'aboutUs')
+//排行榜
+const rankList = r => require.ensure([], () => r(require('../components/rankList.vue')), 'rankList')
+//排行榜用户详情
+const rankDetail = r => require.ensure([], () => r(require('../components/rankDetail.vue')), 'rankDetail')
+//积分商城
+const intergalMall = r => require.ensure([], () => r(require('../components/intergalMall.vue')), 'intergalMall')
+//商城商品详情
+const goodsDetail = r => require.ensure([], () => r(require('../components/goodsDetail.vue')), 'goodsDetail')
+//兑换记录
+const convertList = r => require.ensure([], () => r(require('../components/convertList.vue')), 'convertList')
 
 
 
@@ -124,14 +136,50 @@ const router = new Router({
       	requireAuth: true
       }
     },{
+      path: '/intergalMall',
+      component: intergalMall,
+      meta: {
+      	requireAuth: true
+      }
+    },{
+      path: '/goodsDetail',
+      component: goodsDetail,
+      meta: {
+      	requireAuth: true
+      }
+    },{
+      path: '/convertList',
+      component: convertList,
+      meta: {
+      	requireAuth: true
+      }
+    },{
       path: '/payment/:id',
       component: payment,
       meta: {
       	requireAuth: true
       }
     },{
+      path: '/paymentMember/:id',
+      component: paymentMember,
+      meta: {
+      	requireAuth: true
+      }
+    },{
       path: '/paymentList',
       component: paymentList,
+      meta: {
+      	requireAuth: true
+      }
+    },{
+      path: '/rankList',
+      component: rankList,
+      meta: {
+      	requireAuth: true
+      }
+    },{
+      path: '/rankDetail',
+      component: rankDetail,
       meta: {
       	requireAuth: true
       }

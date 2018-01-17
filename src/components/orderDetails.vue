@@ -6,8 +6,8 @@
                 <div class="express">
                     <div class="express_img"></div>
                     <div class="orderDetails_msg">
-                        <div class="wait" style="color: #00913a;" v-if="orderDetail.status == 1">等待发货</div>
-                        <div class="wait" style="color:#fa7296" v-if="orderDetail.status == 0">已发货</div>
+                        <div class="wait" style="color: #fd485c;" v-if="orderDetail.status == 1">等待发货</div>
+                        <div class="wait" style="color:#00bc71" v-if="orderDetail.status == 0">已发货</div>
                         <div class="orderDetails_text" v-if="orderDetail.status == 0"> 
                         	<span>{{orderDetail.expressName}}</span>
                         	<span>{{orderDetail.expressNo}}</span>

@@ -93,15 +93,15 @@
 					<img :src="winImg"  />
 				</div>
 				<div class="shadow-text" style="text-align: center; color: #fff;">
-					<p class="succ-tip">太棒了，抓到娃娃了耶！</p>
+					<p class="succ-tip shadow-text">太棒了，抓到娃娃了耶！</p>
 					<a class="check-goods shadow-text" v-tap.prevent="{ methods : toToysPocket }">立即查看</a>
 					<p class="operate-btn">
 						<!--<span class="btn-hover">分享好友</span>-->
-						<span class="btn-hover" v-tap.prevent="{ methods : beginGame }">再次挑战</span>
+						<span class="btn-hover shadow-text" v-tap.prevent="{ methods : beginGame }">再次挑战</span>
 					</p>
-					<p class="time" v-show="endTime >= 1">倒计时 {{endTime}}秒</p>
+					<p class="again-time shadow-text" :class="{show: endTime >= 1}">倒计时 {{endTime}}秒</p>
 				</div>
-				<img src="../../static/image/qe.png" class="close" v-tap.prevent="{ methods : closePop }"/>	
+				<img src="../../static/image/2@2x.png" class="close" v-tap.prevent="{ methods : closePop }"/>	
 			</div>
 		</mt-popup>
 		
@@ -109,14 +109,15 @@
 		<mt-popup v-model="failStatus" class="pop" :closeOnClickModal="false">
 			<div class="fail-content">
 				<div class="shadow-text" style="text-align: center; color: #fff;">
-					<p class="succ-tip">很遗憾，差点就抓到了！</p>
+					<img class="fail-img" src="../../static/image/61@2x.png"  />
+					<p class="succ-tip shadow-text">很遗憾，差点就抓到了！</p>
 					<p class="operate-btn">
 						<!--<span class="btn-hover">分享好友</span>-->
-						<span class="btn-hover" v-tap.prevent="{ methods : beginGame }">再次挑战</span>
+						<span class="btn-hover shadow-text" v-tap.prevent="{ methods : beginGame }">再次挑战</span>
 					</p>
-					<p class="time" v-show="endTime >= 1">倒计时 {{endTime}}秒</p>
+					<p class="again-time shadow-text" :class="{show: endTime >= 1}">倒计时 {{endTime}}秒</p>
 				</div>
-				<img src="../../static/image/qe.png" class="close" v-tap.prevent="{ methods : closePop }" />	
+				<img src="../../static/image/2@2x.png" class="close" v-tap.prevent="{ methods : closePop }" />	
 			</div>
 		</mt-popup>
 
@@ -396,7 +397,7 @@ export default {
 						
 						var news = {
 							tit: this.nickname,
-							text: '进来了！！！'
+							text: '进入了房间！'
 						}
 						this.roomNewsList.push(news)
 
@@ -423,7 +424,7 @@ export default {
 						this.roomNum = data.member_count
 						var news = {
 							tit: data.nickname,
-							text: '进来了！！！'
+							text: '进入了房间！'
 						}
 						this.roomNewsList.push(news)
 						
@@ -472,7 +473,13 @@ export default {
 						if(data.value == 1) {
 							var news = {
 								tit: data.nickname,
-								text: '抓中了娃娃！！！'
+								text: '抓中了娃娃！'
+							}
+							this.roomNewsList.push(news)
+						}else {
+							var news = {
+								tit: data.nickname,
+								text: '差点就抓到了'
 							}
 							this.roomNewsList.push(news)
 						}
@@ -514,9 +521,19 @@ export default {
 						if (data.value === 1) {
 							// 抓取成功
 							this.grabSucces()
+							var news = {
+								tit: this.nickname,
+								text: '抓中了娃娃！'
+							}
+							this.roomNewsList.push(news)
 						} else {
 							// 抓取失败
 							this.grabFailure()
+							var news = {
+								tit: this.nickname,
+								text: '差点就抓到了'
+							}
+							this.roomNewsList.push(news)
 						}
 						break;
 					default:
@@ -1249,67 +1266,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.danmu {
-  	position: fixed;
-  	left: 100%;
-  	top: 100px;
- 	font-size: .4rem;
-	font-weight: bold;
-  	width: 4rem;
-  	color: white;
-  	animation: danmu 5s linear 0s 1;
-	text-shadow: 0 0 .03rem #fff064
-}
-
-.danmu.green {
-	text-stroke: .02rem #a1c843;
-	-webkit-text-stroke: .02rem #a1c843;	
-}
-.danmu.yellow {
-	text-stroke: .02rem #f2b02d;
-	-webkit-text-stroke: .02rem #f2b02d;
-}
-.danmu.purple {
-	text-stroke: .02rem #ff808e;
-	-webkit-text-stroke: .02rem #ff808e;
-}
-
-@keyframes danmu {
-  from {
-    left: 100%;
-    transform: translateX(0);
-  }
-  to {
-    left: 0;
-    transform: translateX(-100%);
-  }
-}
-@-webkit-keyframes progress-bar-stripes {
-	from {
-		background-position: 40px 0
-	}
-	to {
-		background-position: 0 0
-	}
-}
-
-@-o-keyframes progress-bar-stripes {
-	from {
-		background-position: 40px 0
-	}
-	to {
-		background-position: 0 0
-	}
-}
-
-@keyframes progress-bar-stripes {
-	from {
-		background-position: 40px 0
-	}
-	to {
-		background-position: 0 0
-	}
-}
+@import "../../static/css/style.scss";
 .room-loading{
 	position: absolute;
 	width: 100%;
@@ -1459,13 +1416,13 @@ export default {
 		position: absolute;
 		bottom: 130%;
 		left: 0.18rem;
-		max-width: 3.5rem;
+		width: 3.8rem;
 		.room-news-list{
 			overflow-y: auto;
 			height: 2.9rem;
 		}
 		.room-news-item{
-			font-size: 0.24rem;
+			font-size: 0.22rem;
 			font-weight: normal;
 			color: #fff;
 			background: rgba(0,0,0,0.2);
@@ -1473,6 +1430,9 @@ export default {
 			border-radius: 0.1rem;
 			line-height: 1.4;
 			margin-bottom: 0.14rem;
+			display: inline-block;
+			min-width: 60%;
+			max-width: 100%;
 			.tit{
 				color: #f7ed00;
 			}
@@ -1620,9 +1580,14 @@ export default {
 	
 }
 .fail-content{
-	padding: 2rem 0;
 	width: 5.4rem;
+	padding: 1.3rem 0 1rem;
 	position: relative;
+	.fail-img{
+		display: block;
+		width: 2.6rem;
+		margin: 0 auto 0.5rem;
+	}
 }
 .close{
 	position: absolute;
@@ -1630,9 +1595,13 @@ export default {
 	top: 0;
 	width: 0.6rem;
 }
-.time{
+.again-time{
 	padding-top: 0.5rem;
 	font-size: 0.3rem;
+	opacity: 0;
+	&.show{
+		opacity: 1;
+	}
 }
 .succ-tip{
 	font-size: 0.44rem;
@@ -1653,7 +1622,7 @@ export default {
 		width: 2rem;
 		height: 0.9rem;
 		border-radius: 0.1rem;
-		background: #fdd152;
+		background: $bg-color;
 		line-height: 0.9rem;
 		font-size: 0.3rem;
 		margin:  0 0.5rem;

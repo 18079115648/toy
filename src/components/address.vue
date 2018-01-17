@@ -10,7 +10,8 @@
 	            <div class="address_img">
 	                <div class="address">
 	                    <div class="img_body" @click="defaultChange(item)">
-	                        <img src="../../static/image/bbb.png" v-show="item.isDefault">
+	                    	<i class="default iconfont icon-xuanze" v-show="item.isDefault"></i>
+	                        <!--<img src="../../static/image/bbb.png" v-show="item.isDefault">-->
 	                        <img src="../../static/image/rrrr.png" v-show="!item.isDefault">
 	                        <div>默认地址</div>
 	                    </div>
@@ -27,8 +28,8 @@
 	                </div>
 	            </div>
 	        </div>
-	        <div class="no_msg" v-show="addressList.length < 1">
-	            <img src="../../static/image/wfffwf.png">
+	        <div class="no_msg bg-color" v-show="addressList.length < 1">
+	            <img src="../../static/image/none-addr.png">
 	            <div>暂无收货地址~</div>
 	        </div>
 		</div>
@@ -161,6 +162,14 @@ export default {
             height: .4rem;
             display: block;
             margin-right: .15rem;
+        }
+        .default{
+        	width: .4rem;
+            height: .4rem;
+            margin-right: .15rem;
+            line-height: 0.4rem;
+            font-size: 0.4rem;
+            color: #00BC71;
         }
         div{
             color: #666;

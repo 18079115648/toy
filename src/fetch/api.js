@@ -232,12 +232,12 @@ export default {
 	
 	//娃娃袋
 	toysWin(params) {
-		return fetchGet('/dm-api/doll/list', params, true)
+		return fetchGet('/dm-api/doll/giftBox', params, true)
 	},
 	
 	//用户信息
 	userInfo(params) {
-		return fetchGet('/dm-api/user/info', params, true)
+		return fetchGet('/dm-api/user/info/v15', params, true)
 	},
 	
 	//消息列表
@@ -247,7 +247,7 @@ export default {
 
 	//充值选项列表
 	recharge(params) {
-		return fetchGet('/dm-api/charge/list', params, true)
+		return fetchGet('/dm-api/charge/list/v15', params, true)
 	},
 	//充值下单
 	payment(params) {
@@ -255,7 +255,7 @@ export default {
 	},
 	//充值记录
 	paymentList(params) {
-		return fetchGet('/dm-api/charge/log', params, true)
+		return fetchGet('/dm-api/charge/log/v15', params, true)
 	},
 	//订单列表
 	orderList(params) {
@@ -313,10 +313,6 @@ export default {
 	//下单
 	submitOrder(params) {
 		return fetchPost('/dm-api/order/', params, true)
-	},
-	//个人中新信息
-	userInfo(params) {
-		return fetchGet('/dm-api/user/info', params, true)
 	},
 	//修改个人
 	saveUser(params) {

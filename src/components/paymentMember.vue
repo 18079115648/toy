@@ -1,19 +1,28 @@
 <template>
-
     <div class="content">
         <Header title="订单确认"></Header>
+        
         <div class="payment_body">
             <div class="payment">
                 <div class="payment_left">
-                    <img class="diamond-icon" src="../../static/image/erdd.png">
-                    <span class="payment_left_text shadow-text">{{payment.money}}</span>
+                    <p class="payment-name shadow-text">体验周卡</p>
+                    <p class="desc">立即到账280钻，每天可领取20钻</p>
                 </div>
-                <div class="desc">{{payment.desc}}</div>
                 <div class="payment_right">
                     <div>&yen; {{parseFloat(payment.price).toFixed(2)}}</div>
                 </div>
             </div>
-
+						<div class="payment-kind-desc">
+							<p class="desc-text">
+								开通28元阿达，金卡大哭大叫哈卡觉得很阿卡丽的哈卡的圣诞节啊都会
+							</p>
+							<div class="member-profit-process">
+								<p class="tit">领取说明：</p>
+								<p>1、个人中心 → 会员中心 → 领取钻石</p>
+								<p>2、首页 → 福利中心 → 领取钻石</p>
+								<p>3、当日钻石必须当然领取，逾期失效</p>
+							</div>
+						</div>
             <div class="payment_way">
             	<div class="pay-item" @click="payWay = 2">
             		<img class="pay-icon" src="../../static/image/555.png">
@@ -29,6 +38,14 @@
             	</div>
 	              
             </div>
+            <div class="agree">
+            	<div class="agree-icon" @click="agree = !agree">
+            		<i class="default select-icon iconfont icon-xuanze" v-show="agree" ></i>
+            		<i class="default select-icon iconfont icon-weixuanzhong-01" v-show="!agree" ></i>
+            	</div>
+	            	
+            	我已阅读并同意 <router-link to="/agree"> 会员卡购买规则 </router-link>
+            </div>
 
             <div class="btn-default btn-hover recharge" @click="recharge">确认充值</div>
         </div>
@@ -41,15 +58,16 @@ import { Toast } from 'mint-ui';
 export default {
   data () {
     return {
-    	isWinxin: this.$common.isWeixin(),
+    	  isWinxin: this.$common.isWeixin(),
         id:this.$route.params.id,
         payment:{},
         payWay: 2,   //1 支付宝   2 微信
+        agree: true
     }
   },
   created(){
     this.$api.recharge().then(res => {
-        res.data.normal.forEach((item) => {
+        res.data.forEach((item) => {
         	if(item.id == this.id) {
         		this.payment = item
         		return
@@ -136,50 +154,38 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .payment_body{
     width: 100%;
     height: auto;
-    padding: .3rem .2rem;
+    padding: .3rem .2rem 0.5rem;
     
 }
 .payment{
     width: 100%;
-    height: 1rem;
     background: #fff;
     border-radius: 0.15rem;
     display: flex;
     justify-content: space-between;
-    padding: 0 .3rem;
+    padding: 0.15rem .3rem;
     align-items: center;
-    margin-bottom: .5rem;
     font-size: .32rem;
     font-weight: 700;
+    
+}
+.payment_left{
+    color: #fff;
+    .payment-name{
+    	/*font-weight: normal;*/
+    	font-size: 0.3rem;
+    	color: #ededed;
+    }
     .desc{
     	text-align: center;
     	color: #969696;
     	font-weight: normal;
-    	font-size: 0.26rem;
-    }
-}
-.payment_left{
-    display: flex;
-    align-items: center;
-    div{
-        width: .34rem;
-        height: .5rem;
-        margin-right: .2rem;
-        img{
-            width: 100%;
-            height: 100%;
-        }
-    }
-    .payment_left_text{
-        color: #eee;
-    }
-    
-    .diamond-icon{
-    	width: 0.4rem;
-    	margin-right: 0.2rem;
+    	font-size: 0.24rem;
+    	padding-top: 0.06rem;
     }
     
 }
@@ -188,8 +194,18 @@ export default {
     font-size: .32rem;
     line-height: .6rem;
 }
+.payment-kind-desc{
+	color: #fff;
+	padding: 0.3rem;
+	font-size: 0.24rem;
+	.desc-text{
+		padding-bottom: 0.3rem;
+	}
+	.member-profit-process{
+		line-height: 1.7;
+	}
+}
 .payment_way{
-    margin-bottom: 1.6rem;
     border-radius: 0.15rem;
     padding: 0.15rem 0.3rem;
     background: #fff;
@@ -219,5 +235,29 @@ export default {
     	}
     }
 }
-
+.agree{
+	padding: 0.2rem 0.15rem 1.2rem;
+	color: #fff;
+	display: flex;
+	align-items: center;
+	.agree-icon{
+		width: 0.8rem;
+		height: 0.8rem;
+		position: relative;
+		.select-icon{
+			font-size: 0.36rem;
+    	line-height: 1;
+    	width: 0.36rem;
+    	position: absolute;
+    	left: 50%;
+    	top: 50%;
+    	transform: translate(-50%, -50%);
+		}
+	}
+	a{
+		color: #fff;
+		text-decoration: underline;
+		margin-left: 0.08rem;
+	}
+}
 </style>

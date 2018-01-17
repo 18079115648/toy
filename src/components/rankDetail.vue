@@ -1,0 +1,187 @@
+<template>
+    <div class="content">
+        <Header title="土豪主页"></Header>
+        <div class="rank-user-info">
+		    	<div class="user-info-link">
+			    	<img class="avatar" src="../../static/image/17@3x.png"  />
+			    	<div class="user-info-text">
+			    		<p class="nick-name">土豪</p>
+			    		<p class="user-record">
+			    			<span>抓中 8</span>
+			    			<i></i>
+			    			<span>总排位 200</span>
+			    		</p>
+			    	</div>
+			    </div>
+		    </div>
+	      <div class="rank-page">
+	      	<div class="rank-record">
+	      		<div class="rank-item">
+	      			<div class="rank-info-media">
+	      				<img class="fullEle" src="../../static/image/1233.png"  />
+	      			</div>
+	      			<div class="rank-info-text">
+	      				<p class="rank-goods-name">大公仔</p>
+	      				<p class="rank-time">2017</p>
+	      				<a class="rank-enter">进入游戏</a>
+	      			</div>
+	      		</div>
+	      		<div class="rank-item">
+	      			<div class="rank-info-media">
+	      				<img class="fullEle" src="../../static/image/1233.png"  />
+	      			</div>
+	      			<div class="rank-info-text">
+	      				<p class="rank-goods-name">大公仔</p>
+	      				<p class="rank-time">大公仔</p>
+	      				<a class="rank-enter">进入游戏</a>
+	      			</div>
+	      		</div>
+	      		<div class="rank-item">
+	      			<div class="rank-info-media">
+	      				<img class="fullEle" src="../../static/image/1233.png"  />
+	      			</div>
+	      			<div class="rank-info-text">
+	      				<p class="rank-goods-name">大公仔</p>
+	      				<p class="rank-time">大公仔</p>
+	      				<a class="rank-enter">进入游戏</a>
+	      			</div>
+	      		</div>
+	      		<div class="rank-item">
+	      			<div class="rank-info-media">
+	      				<img class="fullEle" src="../../static/image/1233.png"  />
+	      			</div>
+	      			<div class="rank-info-text">
+	      				<p class="rank-goods-name">大公仔</p>
+	      				<p class="rank-time">大公仔</p>
+	      				<a class="rank-enter">进入游戏</a>
+	      			</div>
+	      		</div>
+	      	</div>
+	      </div> 
+		        
+
+		        
+    </div>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+        pagination: {
+	        content: [],
+	        loadEnd: false,
+	        data: {
+	        	page: 1,
+	        	pageSize: 15
+	        }
+	    },
+    }
+  },
+  mounted(){
+    this.$refs.pagination.refresh()
+  },
+  methods: {
+  	render(res) {
+		res.data.forEach((item) => {
+	    	this.pagination.content.push(item)
+    	})
+    },
+    
+  }
+  
+}
+</script>
+
+<style lang="scss" scoped>
+@import "../../static/css/style.scss";
+.content{
+	min-height: 100vh;
+	background: #F5F5F9;
+}
+.rank-user-info{
+	height: 2.4rem;
+	background: $header-color;
+	padding: 0.3rem 0;
+	padding-bottom: 0.9rem;
+		.user-info-link{
+		height: 100%;
+		display: flex;
+		align-items: center;
+		padding: 0 0.5rem;
+		color: #fff;
+		font-size: 0.3rem;
+		.avatar{
+			width: 1.2rem;
+			height: 1.2rem;
+			border-radius: 50%;
+			background: #fff;
+			
+		}
+		.user-info-text{
+			flex: 1;
+			padding-left: 0.3rem;
+			& > p{
+				padding: 0.06rem 0;
+			}
+			.user-record{
+				font-size: 0.24rem;
+				display: flex;
+				align-items: center;
+				i{
+					border-left: 1px solid #fff;
+					height: 0.26rem;
+					margin: 0 0.28rem;
+				}
+			}
+		}
+		.nick-name{
+			
+			overflow: hidden;
+			
+		}
+	}
+}
+.rank-page{
+	position: absolute;
+	left: 0.2rem;
+	right: 0.2rem;
+	top: 2.55rem;
+	bottom: 0.3rem;
+	background: #fff;
+	border-radius: 0.2rem;
+	overflow-y: auto;
+	-webkit-overflow-scrolling : touch;
+	padding: 0.4rem 0.2rem 0;
+	.rank-record{
+		display: flex;
+		flex-wrap: wrap;
+		.rank-item{
+			width: 2.95rem;
+			margin: 0 0.2rem 0.5rem;
+			.rank-info-media{
+				width: 100%;
+				height: 2.95rem;
+				border-radius: 0.3rem;
+				overflow: hidden;
+				img{
+					border-radius: 0.3rem;
+				}
+			}
+			.rank-info-text{
+				padding-top: 0.2rem;
+				text-align: center;
+				color: #000;
+				.rank-time{
+					color: #969696;
+				}
+				.rank-enter{
+					display: block;
+					text-decoration: underline;
+					color: #00BC71;
+				}
+			}
+		}
+	}
+}
+</style>
