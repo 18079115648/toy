@@ -34,7 +34,7 @@
     </div>
 	  <div class="toys-operate" v-show="toysList.length > 0">
 	  	<div class="charge-btn btn-operate btn-hover" @click="chargeShow = true">兑换钻石</div>
-	  	<div class="get-btn btn-operate btn-hover">立即领取</div>
+	  	<router-link to="/orderSubmit" v-tap class="get-btn btn-operate btn-hover">立即领取</router-link>
 	  </div>  
 	  <confirm-modal :show="chargeShow" @confirm_modal="charge" title="兑换钻石确认" @closeModal="chargeShow = false" :message="message"></confirm-modal>	
     <!--<router-link v-show="toysList.length > 0" to="/orderSubmit" class="btn-default btn-hover btn-receive">立即领取</router-link>-->
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import {Toast, Indicator } from 'mint-ui'
 export default {
   data () {
     return {
@@ -64,7 +65,19 @@ export default {
   },
   methods: {
   	charge() {
-  		
+  		this.$api.convertDiamond().then(res => {
+	  		Toast({
+				  message: '兑换成功',
+				  position: 'middle',
+				  iconClass: 'toast-icon icon-success',
+				  duration: 800
+				})
+	  		setTimeout(() => {
+	  			this.$router.replace('/index')
+	  		}, 1000)
+	    }, err => {
+	    	
+	    })
   	}
   }
 }

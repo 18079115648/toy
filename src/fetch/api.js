@@ -344,7 +344,7 @@ export default {
 	},
 	// 积分商城商品兑换
 	goodsExchange(params) {
-		return fetchGet('/dm-api/pm/exchange', params, true)
+		return fetchPost('/dm-api/pm/exchange', params, true)
 	},
 	// 会员中心
 	memberCenter(params) {
@@ -365,5 +365,13 @@ export default {
 	// 任务列表
 	taskList(params) {
 		return fetchGet('/dm-api/task/list', params, true)
+	},
+	// 领取任务奖励
+	receiveTask(params) {
+		return fetchGet('/dm-api/task/receive', params, true)
+	},
+	// 娃娃盒娃娃兑换
+	convertDiamond(params) {
+		return fetchPost('/dm-api/doll/diamond/exchange', params, true)
 	},
 }

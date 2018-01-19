@@ -101,7 +101,6 @@ const router = new Router({
       component: index,
       meta: {
       	keepAlive: true,
-      	requireAuth: true
       }
     },
     {
@@ -153,6 +152,7 @@ const router = new Router({
       path: '/goodsDetail/:id',
       component: goodsDetail,
       meta: {
+      	keepAlive: true,
       	requireAuth: true
       }
     },{

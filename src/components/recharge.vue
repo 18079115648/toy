@@ -19,7 +19,7 @@
             		</router-link>
             	</div>
             </div>
-            <div class="diamond-charge">
+            <div class="diamond-charge" v-show="diamondCharge.length > 0">
             	<p class="diamond-tit kind-tit">钻石充值</p>
             	<div class="charge-list">
             		<router-link :to="'/payment/' + item.id" v-tap class="charge-item diamond" v-for="(item, index) in diamondCharge" :key="index">

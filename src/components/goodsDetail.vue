@@ -55,9 +55,9 @@ import { Toast, Indicator } from 'mint-ui'
 export default {
   data () {
     return {
-    	goodsId: this.$route.params.id,
+    	goodsId: undefined,
     	goodsInfo: {},
-    	userPoints: 100, //用户积分
+    	userPoints: 0, //用户积分
         convertStatus: false,
         num: 1,   //兑换数量
         
@@ -73,24 +73,37 @@ export default {
   		return (this.userPoints < totalPoints ? true : false )
   	}
   },
-  created(){
-  	Indicator.open('加载中...')
-    this.$api.goodsDetail(this.goodsId).then(res => {
-    	setTimeout(() => {
-    		Indicator.close()
-    	},200)
-    	
-        this.goodsInfo = res.data
-    }, err => {
-    	Indicator.close()
-    })
-    this.$api.userInfo().then(res => {
-//		this.userPoints = res.data
+  created(){	
+    
+  },
+  activated() {
+  	if(this.goodsId != this.$route.params.id) {
+  		this.goodsId = this.$route.params.id
+  		this.initData()	
+  	}
+  	this.$api.userInfo().then(res => {
+		this.userPoints = res.data.points
     }, err => {
     	
     })
   },
+  deactivated() {
+  	this.convertStatus = false
+  	this.num = 1
+  },
   methods: {
+  	initData() {
+  		Indicator.open('加载中...')
+	    this.$api.goodsDetail(this.goodsId).then(res => {
+	    	setTimeout(() => {
+	    		Indicator.close()
+	    	},200)
+	    	
+	        this.goodsInfo = res.data
+	    }, err => {
+	    	Indicator.close()
+	    })
+  	},
     openConvert() {
     	this.num = 1
     	this.convertStatus = true

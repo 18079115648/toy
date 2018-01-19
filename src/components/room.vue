@@ -27,15 +27,16 @@
     	
     	<div class="room-side">
     		<div class="view-change" v-tap="{ methods : changeView }" ></div>
-    		<div class="audio-change img-mask" v-tap="{ methods : changeAudio }">
-    			<img class="fullEle" src="../../static/image/46@2x.png"  />
+    		<div class="audio-change img-mask" v-tap="{ methods : changeAudio, status: musicSwitch && soundSwitch }">
+    			<img class="fullEle" src="../../static/image/46@2x.png" v-show="musicSwitch && soundSwitch"  />
+    			<img class="fullEle" src="../../static/image/47@2x.png" v-show="!(musicSwitch && soundSwitch)"  />
     		</div>
     	</div>
     	<div class="room-bottom" v-show="!operateShow">
-    		<div class="room-news-content">
+    		<div class="room-news-content" v-show="roomNewsList.length > 0">
     			<div class="room-news-list" v-show="toggleStatus">
     				<div class="room-news-item" v-for="(item, index) in roomNewsList" :id="'news-item-' + index" :key="index">
-    					<span class="tit">{{item.tit}}：</span>
+    					<span class="tit">{{item.tit}} </span>
     					<span class="text">{{item.text}}</span>
     				</div>
     			</div>
@@ -45,7 +46,7 @@
     			</div>
     		</div>
     		<div class="chat-input" v-show="chatStatus">
-    			<input type="text" id="chat-input"  @blur="chatStatus = false" @focus="chatFocus($event)" ref="Input" placeholder="输入发言内容(最多30字)" maxlength="30" v-model="chatText" />
+    			<input type="text" id="chat-input"  @blur="chatStatus = false" @keyup.enter="sendChat" @focus="chatFocus($event)" ref="Input" placeholder="输入发言内容(最多30字)" maxlength="30" v-model="chatText" />
     			<span class="chat-send btn-hover" @click="sendChat">发送</span>
     		</div>
     		<div class="btn-hover open-chat child" v-tap.prevent="{ methods : openChat }"></div>
@@ -127,12 +128,12 @@
 			</div>
 		</mt-popup>
 
-		<audio id="take-audio" src='../static/audio/take.mp3' preload></audio>
+		<audio id="take-audio" src='https://yingdd.oss-cn-hangzhou.aliyuncs.com/9b38b54c6af6f4113a476df225043a01.mp3' preload></audio>
 		<audio id="click-audio" src='../static/audio/startClickItem.mp3' preload></audio>
 		<audio id="move-audio" src='../static/audio/move.mp3' preload></audio>
 		<audio id="ready-audio" src='../static/audio/readygo.mp3' preload></audio>
-		<audio id="success-audio" src='../static/audio/result_succeed.mp3' preload></audio>
-		<audio id="failure-audio" src='../static/audio/result_failed.mp3' preload></audio>
+		<audio id="success-audio" src='https://yingdd.oss-cn-hangzhou.aliyuncs.com/fa81942687d7d259c7f4979a00367a48.mp3' preload></audio>
+		<audio id="failure-audio" src='https://yingdd.oss-cn-hangzhou.aliyuncs.com/e95cb5cc6a8070f063b09ce9f6843b18.mp3' preload></audio>
 
 		<!-- 详情页面 -->
 		<mt-popup v-model="roomDetail" class="pop">
@@ -158,12 +159,14 @@
 							<img class="avatar" :src="item.avatar || '../../static/image/vvv.png'" />
 							<div class="grab-text">
 								<p class="name">{{item.nickname}}</p>
-								<p class="status">
-									<span v-if="item.status">抓取失败</span>
-									<span v-if="!item.status" style="color: #EA7B97;">抓取成功</span>
+								<p class="status" style="color: #999; font-size: 0.24rem;">
+									{{item.createTime}}
 								</p>
 							</div>
-							<div class="grab-time">{{item.createTime.split(' ')[0]}}<br>{{item.createTime.split(' ')[1]}}</div>
+							<div class="grab-time">
+								<span v-if="item.status">抓取失败</span>
+								<span v-if="!item.status" style="color: #EA7B97;">抓取成功</span>
+							</div>
 						</div>
 						<div class="no_msg" v-show="pagination.content.length<1 && pagination.loadEnd">
 					        <img src="../../static/image/wfdfc.png">
@@ -403,7 +406,7 @@ export default {
 						
 						var news = {
 							tit: this.nickname,
-							text: '进入了房间！'
+							text: '进入了房间！！！'
 						}
 						this.roomNewsList.push(news)
 
@@ -430,7 +433,7 @@ export default {
 						this.roomNum = data.member_count
 						var news = {
 							tit: data.nickname,
-							text: '进入了房间！'
+							text: '进入了房间！！！'
 						}
 						this.roomNewsList.push(news)
 						
@@ -440,7 +443,7 @@ export default {
 						this.roomNum = data.member_count
 						var news = {
 							tit: data.nickname,
-							text: '离开了房间'
+							text: '离开了房间~~~'
 						}
 						this.roomNewsList.push(news)
 						break;
@@ -448,7 +451,7 @@ export default {
 						console.debug('系统通知')
 						this.roomNum = data.member_count
 						var news = {
-							tit: '系统消息',
+							tit: '系统消息：',
 							text: data.content
 						}
 						this.roomNewsList.push(news)
@@ -457,7 +460,7 @@ export default {
 						console.debug('聊天消息')
 						this.roomNum = data.member_count
 						var news = {
-							tit: data.sender,
+							tit: data.sender + '：',
 							text: data.content
 						}
 						this.roomNewsList.push(news)
@@ -479,13 +482,13 @@ export default {
 						if(data.value == 1) {
 							var news = {
 								tit: data.nickname,
-								text: '抓中了娃娃！'
+								text: '抓中了娃娃！！！'
 							}
 							this.roomNewsList.push(news)
 						}else {
 							var news = {
 								tit: data.nickname,
-								text: '差点就抓到了'
+								text: '差点就抓到了~~~'
 							}
 							this.roomNewsList.push(news)
 						}
@@ -529,7 +532,7 @@ export default {
 							this.grabSucces()
 							var news = {
 								tit: this.nickname,
-								text: '抓中了娃娃！'
+								text: '抓中了娃娃！！！'
 							}
 							this.roomNewsList.push(news)
 						} else {
@@ -537,7 +540,7 @@ export default {
 							this.grabFailure()
 							var news = {
 								tit: this.nickname,
-								text: '差点就抓到了'
+								text: '差点就抓到了~~~'
 							}
 							this.roomNewsList.push(news)
 						}
@@ -709,20 +712,17 @@ export default {
 			this.chatStatus = true
 			this.$nextTick(function() {
 				this.$refs.Input.focus()
+				this.$refs.Input.scrollIntoView()
 			})
 		},
 		//聊天input出现在屏幕内
 		chatFocus(event) {
-			setTimeout(() => {
-				event.target.scrollIntoView();
-			}, 400)
+			event.target.scrollIntoView();
 			
 		},
 		//聊天input出现在屏幕内
 		chatClick(params) {
-			setTimeout(() => {
-				params.event.target.scrollIntoView();
-			}, 400)
+			params.event.target.scrollIntoView();
 			
 		},
 		
@@ -745,7 +745,7 @@ export default {
 				content: this.chatText
 			}))
 			var news = {
-				tit: this.nickname,
+				tit: this.nickname + '：',
 				text: this.chatText
 			}
 			this.roomNewsList.push(news)
@@ -999,12 +999,19 @@ export default {
 		},
 		
 		//切换声音
-		changeAudio() {
-//			this.musicSwitch = !this.musicSwitch
-//			this.soundSwitch = !this.soundSwitch
-//			this.musicSwitch = storage.get('music_switch')
-//			this.soundSwitch = storage.get('sound_switch')
-//			this.$root.bgAudio.paused && this.$root.bgAudio.play()
+		changeAudio(params) {
+			this.playClickAudio()
+			const status = !params.status
+			console.log(status)
+			this.musicSwitch = this.soundSwitch = status
+			storage.set('music_switch', status)
+			storage.set('sound_switch', status)
+			if(status) {
+				this.$root.bgAudio && this.$root.bgAudio.paused && this.$root.bgAudio.play()
+				
+			}else {
+				this.$root.bgAudio && !this.$root.bgAudio.paused && this.$root.bgAudio.pause()
+			}
 		},
 
 		/**
@@ -1289,7 +1296,7 @@ export default {
 	left: 0;
 	top: 0;
 	bottom: 0;
-	background: url(../../static/image/22dfff.jpg) no-repeat center;
+	background: url(https://yingdd.oss-cn-hangzhou.aliyuncs.com/90530c7ba350e128fa64cee4d4aee58a.jpg) no-repeat center;
 	background-color: #a6a2a1;
 	background-size: 100% auto;
 }

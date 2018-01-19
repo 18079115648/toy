@@ -8,7 +8,7 @@
         </Header>
         <div class="rank-content">
         	<div class="rank-list-select">
-	        	<span :class="{'active': rankTime == 'day'}" v-tap="{ methods : changeRankTime, time: 'day' }">日榜</span>
+	        	<span :class="{'active': rankTime == 'day'}" v-tap="{ methods : changeRankTime, time: 'day' }">月榜</span>
         		<span :class="{'active': rankTime == 'total'}" v-tap="{ methods : changeRankTime, time: 'total' }">总榜</span>
 	        </div>
 			<div class="page-content" id="page-content">
@@ -216,7 +216,7 @@ export default {
 			b{
 				position: absolute;
 				left: 50%;
-				bottom: 0.04rem;
+				bottom: 0.1rem;
 				transform: translateX(-50%);
 				color: #fff;
 				font-size: 0.22rem;

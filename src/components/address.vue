@@ -53,14 +53,18 @@ export default {
   },
   created(){
     //获取地址列表
+    Indicator.open('加载中...')
     this.$api.address({
         page: 1,
         pageSize: 100
     }).then(res => {
         this.addressList = res.data.data
         this.loadEnd = true
+        setTimeout(() => {
+        	Indicator.close()
+        },200)
     }, err => {
-        
+        Indicator.close()
     })
   },
 
@@ -186,6 +190,7 @@ export default {
 }
 .address_operation{
     display: flex;
+    white-space: nowrap;
     div{
         display: flex;
         align-items: center;

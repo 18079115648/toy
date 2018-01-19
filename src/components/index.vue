@@ -85,7 +85,7 @@ export default {
       	icon: '../../static/image/d44f.png',
       	link: '/rankList'
       },{
-      	text: '积分兑换',
+      	text: '积分商城',
       	icon: '../../static/image/34dxf.png',
       	link: '/intergalMall'
       },{
@@ -226,7 +226,7 @@ export default {
 		background-repeat: no-repeat;
 		background-size: 55%;*/
 		position: relative;
-		padding: 0.18rem;
+		padding: 0.15rem;
 	}
 	/*.user-link{
 		background-image: url(../../static/image/vvv.png);

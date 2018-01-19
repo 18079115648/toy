@@ -59,10 +59,14 @@ export default {
     }
   },
   created() {
+  	Indicator.open()
   	this.$api.memberCenter().then(res => {
 		this.memberCart = res.data
+		setTimeout(() => {
+			Indicator.close()
+		}, 200)
     }, err => {
-    	
+    	Indicator.close()
     })
   },
   mounted(){

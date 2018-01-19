@@ -18,7 +18,10 @@
     					</div>
         			</div>
         		</div>
-        		<div class="sign-btn border-btn btn-hover " :class="{'disabled-btn': !signList.receiveStatus}">立即领取</div>
+        		<div class="sign-btn border-btn btn-hover " :class="{'disabled-btn': signList.receiveStatus}" v-tap="{ methods : sign, status: signList.receiveStatus }">
+        			<span v-show="!signList.receiveStatus">签到领取</span>
+        			<span v-show="signList.receiveStatus">已领取</span>
+        		</div>
         	</div>
         	<div class="member-content" v-if="chargeCard">
         		<p class="welfare-tit">
@@ -38,50 +41,36 @@
         				</div>
         			</div>
         		</div>
-        		<div class="border-btn btn-hover" :class="{'disabled-btn': !chargeCard.receiveStatus}">立即领取</div>
+        		<div class="border-btn btn-hover" :class="{'disabled-btn': chargeCard.receiveStatus}" v-tap="{ methods : receiveCard, status: chargeCard.receiveStatus }">
+        			<span v-show="!signList.receiveStatus">立即领取</span>
+        			<span v-show="signList.receiveStatus">已领取</span>
+        		</div>
         	</div>
-        	<div class="daily-task-content">
+        	<div class="daily-task-content" v-if="dailyList">
         		<p class="welfare-tit">
-        			<span class="tit">每日任务礼包</span>
+        			<span class="tit">{{dailyList.title}}</span>
         			<span class="tip">当前全部完成才可领取</span>
         		</p>
         		<div class="daily-list">
-        			<div class="daily-list-item">
+        			<div class="daily-list-item" v-for="(item, index) in dailyList.data" :key="index">
         				<div class="daily-task-icon flex-center">
-        					<img src="../../static/image/43@3x.png"  />
+        					<img :src="item.icon"  />
         				</div>
-        				<p class="text finish">分享APP/1</p>
-        			</div>
-        			<span class="process">---</span>
-        			<div class="daily-list-item">
-        				<div class="daily-task-icon flex-center">
-        					<img src="../../static/image/42@3x.png"  />
-        				</div>
-        				<p class="text">邀请好友/1</p>
-        			</div>
-        			<span class="process">---</span>
-        			<div class="daily-list-item">
-        				<div class="daily-task-icon flex-center">
-        					<img src="../../static/image/41@3x.png"  />
-        				</div>
-        				<p class="text">积分抽奖/1</p>
-        			</div>
-        			<span class="process">---</span>
-        			<div class="daily-list-item">
-        				<div class="daily-task-icon flex-center">
-        					<img src="../../static/image/40@3x.png"  />
-        				</div>
-        				<p class="text">抓取商品 1/3</p>
+        				<p class="text" :class="{'finish': item.reached}">{{item.title}}/{{item.goal}}</p>
+        				<span class="process">---</span>
         			</div>
         		</div>
         		<div class="tasks-rate flex-center">
-        			<div class="rate">进度 <span class="bold">1/4</span></div>
+        			<div class="rate">进度 <span class="bold">{{dailyList.reachedCount}}/{{dailyList.data.length}}</span></div>
         			<div class="profit flex-center">奖励 &nbsp;
         				<img class="dia-icon" src="../../static/image/erdd.png"  />
-        				<span class="bold">15</span>
+        				<span class="bold">{{dailyList.reward}}</span>
         			</div>
         		</div>
-        		<div class="border-btn btn-hover">立即领取</div>
+        		<div v-tap="{ methods : receiveTask, status: dailyList.receiveStatus || (dailyList.data.length > dailyList.reachedCount), key: dailyList.key, item: dailyList }" class="border-btn btn-hover" :class="{'disabled-btn': dailyList.receiveStatus || (dailyList.data.length > dailyList.reachedCount)}">
+        			<span v-show="!dailyList.receiveStatus">立即领取</span>
+        			<span v-show="dailyList.receiveStatus">已领取</span>
+        		</div>
         	</div>
         	<div class="grab-content" v-if="grabList">
         		<p class="welfare-tit">
@@ -94,36 +83,52 @@
         						<img class="dia-icon" src="../../static/image/erdd.png"  />
         						<span class="num">+{{item.reward}}</span>
         					</p>
-        					<p class="rate">当前进度：{{item.progress}}/100</p>
+        					<p class="rate">当前进度：{{item.progress > item.goal ? item.goal : item.progress}}/{{item.goal}}</p>
         				</div>
-        				<div class="task-btn border-btn btn-hover">立即领取</div>
+        				<div v-tap="{ methods : receiveTask, status: item.receiveStatus || (item.goal > item.progress), key: grabList.key, item: item  }" class="task-btn border-btn btn-hover" :class="{'disabled-btn': item.receiveStatus || (item.goal > item.progress)}">
+        					<span v-show="!item.receiveStatus">立即领取</span>
+        					<span v-show="item.receiveStatus">已领取</span>
+        				</div>
         			</div>
         		</div>
         	</div>
-        	<div class="grab-content">
+        	<div class="grab-content" v-if="grabSuccList">
         		<p class="welfare-tit">
-        			<span class="tit">充值奖励礼包</span>
+        			<span class="tit">{{grabSuccList.title}}</span>
         		</p>
         		<div class="tasks-list">
-        			<div class="tasks-list-item">
+        			<div class="tasks-list-item" v-for="(item, index) in grabSuccList.data" :key="index">
         				<div class="tesks-info">
-        					<p class="text">累计充值满20次
+        					<p class="text">{{item.title}}
         						<img class="dia-icon" src="../../static/image/erdd.png"  />
-        						<span class="num">+10</span>
+        						<span class="num">+{{item.reward}}</span>
         					</p>
-        					<p class="rate">当前进度：10/100</p>
+        					<p class="rate">当前进度：{{item.progress > item.goal ? item.goal : item.progress}}/{{item.goal}}</p>
         				</div>
-        				<div class="task-btn border-btn btn-hover">立即领取</div>
+        				<div v-tap="{ methods : receiveTask, status: item.receiveStatus || (item.goal > item.progress), key: grabSuccList.key, item: item  }" class="task-btn border-btn btn-hover" :class="{'disabled-btn': item.receiveStatus || item.goal > item.progress}">
+        					<span v-show="!item.receiveStatus">立即领取</span>
+        					<span v-show="item.receiveStatus">已领取</span>
+        				</div>
         			</div>
-        			<div class="tasks-list-item">
+        		</div>
+        	</div>
+        	<div class="grab-content" v-if="exchargeList">
+        		<p class="welfare-tit">
+        			<span class="tit">{{exchargeList.title}}</span>
+        		</p>
+        		<div class="tasks-list">
+        			<div class="tasks-list-item" v-for="(item, index) in exchargeList.data" :key="index">
         				<div class="tesks-info">
-        					<p class="text">累计充值满20次
+        					<p class="text">{{item.title}}
         						<img class="dia-icon" src="../../static/image/erdd.png"  />
-        						<span class="num">+10</span>
+        						<span class="num">+{{item.reward}}</span>
         					</p>
-        					<p class="rate">当前进度：10/100</p>
+        					<p class="rate">当前进度：{{item.progress > item.goal ? item.goal : item.progress}}/{{item.goal}}</p>
         				</div>
-        				<div class="task-btn border-btn btn-hover">立即领取</div>
+        				<div v-tap="{ methods : receiveTask, status: item.receiveStatus || (item.goal > item.progress), key: exchargeList.key, item: item  }" class="task-btn border-btn btn-hover" :class="{'disabled-btn': item.receiveStatus || item.goal > item.progress}">
+        					<span v-show="!item.receiveStatus">立即领取</span>
+        					<span v-show="item.receiveStatus">已领取</span>
+        				</div>
         			</div>
         		</div>
         	</div>
@@ -133,35 +138,116 @@
 </template>
 
 <script>
+import {Toast, Indicator } from 'mint-ui'
 export default {
   data () {
     return {
         signList: undefined,      //签到
         chargeCard: undefined,    //会员卡
         grabList: undefined,      //抓取奖励
+        grabSuccList: undefined,      //抓取成功奖励
+        exchargeList: undefined,      //充值奖励
+        dailyList: undefined,       //每日任务奖励
     }
   },
   created(){
-	this.$api.taskList().then(res => {
-		res.data.forEach((item) => {
-			switch(item.key) {
-				case 'sign':
-					this.signList = item
-					break;
-				case 'charge_card':
-					this.chargeCard = item
-					break;
-				case 'grab_reward':
-					this.grabList = item
-					break;
-			}
-		})
-    }, err => {
-    	
-    })
+	this.initData()
   },
   methods: {
-  	
+  	initData() {
+  		Indicator.open()
+  		this.$api.taskList().then(res => {
+			res.data.forEach((item) => {
+				switch(item.key) {
+					case 'sign':
+						this.signList = item
+						break;
+					case 'charge_card':
+						this.chargeCard = item
+						break;
+					case 'grab_reward':
+						this.grabList = item
+						break;
+					case 'grab_success_reward':
+						this.grabSuccList = item
+						break;
+					case 'charge_reward':
+						this.exchargeList = item
+						break;
+					case 'day_task':
+						this.dailyList = item
+						break;
+				}
+			})
+			setTimeout(() => {
+				Indicator.close()
+			},200)
+	    }, err => {
+	    	Indicator.close()
+	    })
+  	},
+  	//签到
+  	sign(params) {
+		if(params.status) {
+			return
+		}
+		Indicator.open()
+		this.$api.sign().then(res => {
+			this.signList.receiveStatus = 1
+			this.initData()
+	    }, err => {
+	    	Indicator.close()
+	    })
+	},
+//	领取会员卡奖励
+  	receiveCard(params) {
+		if(params.status) {
+			return
+		}
+		Indicator.open()
+		let length = 0
+		let receiveLength = 0
+		this.chargeCard.data.forEach((item) => {
+			if(!item.receiveStatus) {
+				length++
+				this.$api.receiveCard({
+		  			type: item.type
+		  		}).then(res => {
+		  			receiveLength++
+		  			item.receiveStatus = 1
+		  			if(receiveLength == length) {
+		  				setTimeout(() => {
+		  				  this.chargeCard.receiveStatus = 1
+			  			  Indicator.close()
+						}, 200);
+		  			}
+			  			
+			    }, err => {
+			    	Indicator.close()
+			    })
+			}
+		})
+  	},
+//	领取任务奖励
+  	receiveTask(params) {
+  		console.log(params)
+  		if(params.status) {
+			return
+		}
+  		Indicator.open()
+		this.$api.receiveTask({
+			childId: params.item.childId,
+			taskKey: params.key
+		}).then(res => {
+			setTimeout(() => {
+			  params.item.receiveStatus = 1
+  			  Indicator.close()
+			}, 200);
+	  			
+	    }, err => {
+	    	Indicator.close()
+	    })
+  	},
 
   }
 }
@@ -298,15 +384,26 @@ export default {
 			display: flex;
 			padding: 0.2rem 0 0.3rem;
 			text-align: center;
-			.process{
-				width: 0.5rem;
-				font-weight: 700;
-				color: #743828;
-				font-size: 0.32rem;
-				line-height: 1rem;
-			}
+			margin: 0 -0.1rem;	
 			.daily-list-item{
 				flex: 1;
+				position: relative;
+				&:last-of-type{
+					.process{
+						display: none;
+					}
+				}
+				.process{
+					position: absolute;
+					right: 0;
+					top: 0.5rem;
+					transform: translate(50%, -50%);
+					width: 0.5rem;
+					font-weight: 700;
+					color: #743828;
+					font-size: 0.32rem;
+					line-height: 1rem;
+				}
 				.daily-task-icon{
 					border: 2px solid #743828;
 					width: 1rem;
@@ -319,8 +416,8 @@ export default {
 				}
 				.text{
 					margin: 0 -0.2rem;
-					font-size: 0.24rem;
-					padding-top: 0.14rem;
+					font-size: 0.22rem;
+					padding-top: 0.12rem;
 					&.finish{
 						color: #f39800;
 					}
@@ -331,7 +428,7 @@ export default {
 			padding-bottom: 0.35rem;
 			.bold{
 				color: #000;
-				font-size: 0.32rem;
+				font-size: 0.28rem;
 				font-weight: 700;
 			}
 			& > div{

@@ -30,7 +30,7 @@
 	    			<img class="nav-icon" src="../../static/image/16@3x.png" />
 	    			{{userInfo.points}}
 	    		</p>
-	    		<p class="text">积分抽奖</p>
+	    		<p class="text">积分商城</p>
 	    	</router-link>
 	    	<router-link to="/grabList" v-tap class="nav-item right top">
 	    		<p class="count">
