@@ -69,25 +69,23 @@ function getKey(name) {
 
 storage.set('operatorKey', getKey('key'))
 
-//storage.set('token', {"accessToken":"337f01014ed58ee4de283ae2556caa5c","refreshToken":"b0c1703bd76cc87750f3ad73b5c145bc","expired":1517536840})
-storage.set('token', {"accessToken":"b0e1b6e1bf3ecf383f1d036e786a47b6","refreshToken":"90e6e97d6ee187d9c35b03cdcaeedbcf","expired":1517556005})
 
-//router.beforeEach((to, from, next) => {
-//  if (to.meta.requireAuth && !token.getAccessToken() && common.isWeixin()) {
-//      storage.set('history_url', to.fullPath)
-//      next('/login')
-//  } else {
-//  	next()
-//  }   
-//})
 router.beforeEach((to, from, next) => {
-    if (to.meta.requireAuth && !token.getAccessToken()) {
+    if (to.meta.requireAuth && !token.getAccessToken() && common.isWeixin()) {
         storage.set('history_url', to.fullPath)
         next('/login')
     } else {
     	next()
     }   
 })
+//router.beforeEach((to, from, next) => {
+//  if (to.meta.requireAuth && !token.getAccessToken()) {
+//      storage.set('history_url', to.fullPath)
+//      next('/login')
+//  } else {
+//  	next()
+//  }   
+//})
 
 /* eslint-disable no-new */
 new Vue({

@@ -27,6 +27,14 @@ export default {
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 	}
+	.flex-center{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.dia-icon{
+		width: 0.38rem;
+	}
 	.pagination-content{
 		position: absolute;
 		width: 100%;
@@ -41,6 +49,9 @@ export default {
 	}
 	.mint-loadmore-bottom{
 		display: none !important;
+	}
+	.mint-toast{
+		z-index: 2100 !important;
 	}
 	.btn-default{
 		width: 6.9rem;
@@ -96,6 +107,9 @@ export default {
 	    border-color: $bg-color !important;
 	    background-color: $bg-color !important;
 	}
+	.mint-indicator-wrapper{
+		z-index: 1000;
+	}
 	.no_msg{
     display: flex;
     flex-direction: column;
@@ -120,6 +134,12 @@ export default {
   }
   .mint-actionsheet-listitem{
   	border-color: #eee !important;
+  }
+  .member-list .mint-swipe-indicator.is-active{
+  	background: #fff !important;
+  }
+  .mint-swipe-indicators{
+  	bottom: 0.1rem !important;
   }
   .mint-swipe-indicator.is-active{
   	background: #ff385a !important;

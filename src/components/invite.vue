@@ -1,7 +1,8 @@
 <template>
     <div class="content">
-        <Header title="邀请好友"></Header>
-        <div class="invite-receive">
+        <Header title="邀请好友" headClass="invite-header"></Header>
+        <img class="bg-img" src="../../static/image/44@2x.jpg"  />
+        <!--<div class="invite-receive">
         	<div class="invite-input">
         		<input type="tel" v-model="inviteCode" maxlength="20" placeholder="输入好友邀请码" />
         	</div>
@@ -17,6 +18,26 @@
         		<span v-for="(item, index) in code" :key="index">{{item}}</span>
         	</div>
         	<div class="receive btn-hover" @click="show = true">分享邀请好友</div>
+        </div>-->
+        <div class="invite-content">
+        	<p class="invite-tip">
+        		邀请好友加入，好友兑换邀请码后，您和好友将获得一定数量的钻石
+        	</p>
+        	<div class="invite-bottom">
+        		<div class="invite-receive">
+		        	<div class="invite-input">
+		        		<input type="tel" v-model="inviteCode" maxlength="20" placeholder="输入好友邀请码" />
+		        	</div>
+		        	<div class="receive btn-hover" v-tap="{ methods : receive }">立即兑换</div>
+		        </div>
+		        <div class="invite-my" >
+		        	<p class="tit">我的邀请码</p>
+		        	<div class="invite-code" >
+		        		<span v-for="(item, index) in code" :key="index">{{item}}</span>
+		        	</div>
+		        	<div v-show="isWinxin" class="receive btn-hover" @click="show = true">分享邀请好友</div>
+		        </div>
+        	</div>
         </div>
         <share-tip v-show="show" @shareCancel="show = false"></share-tip>
     </div>
@@ -36,19 +57,20 @@ export default {
     }
   },
   created() {
-  	if(this.$common.isWeixin()) {
-  		this.$api.userInfo().then(res => {
-  			let key = this.$storage.get('operatorKey') ? '?key=' + this.$storage.get('operatorKey') : ''
-			this.code = res.data.inviteCode.split('')
-			this.lineLink = 'http://' + location.host + '/' + key + '/#/share/' + res.data.inviteCode
-			this.imgUrl = 'https://yingdd.oss-cn-hangzhou.aliyuncs.com/0d25d14de142d89f5af33b0b53ecc7b0.png'
-			this.shareTitle = '澳IN娱乐'
-			this.descContent = '欢乐抓娃娃，分享奖励多多！'
-			this.wxShare(this.lineLink, this.imgUrl, this.shareTitle, this.descContent)	
-	    }, err => {
-	    	
-	    })
-  	}
+	this.$api.userInfo().then(res => {
+		this.code = res.data.inviteCode.split('')
+		if(!this.$common.isWeixin()) {
+			return
+		}
+		let key = this.$storage.get('operatorKey') ? '?key=' + this.$storage.get('operatorKey') : ''
+		this.lineLink = 'http://' + location.host + '/' + key + '/#/share/' + res.data.inviteCode
+		this.imgUrl = 'https://yingdd.oss-cn-hangzhou.aliyuncs.com/0d25d14de142d89f5af33b0b53ecc7b0.png'
+		this.shareTitle = '澳IN娱乐'
+		this.descContent = '欢乐抓娃娃，分享奖励多多！'
+		this.wxShare(this.lineLink, this.imgUrl, this.shareTitle, this.descContent)	
+    }, err => {
+    	
+    })
   },
   methods: {
   	wxShare(lineLink, imgUrl, shareTitle, descContent) {
@@ -101,90 +123,93 @@ export default {
 
 <style lang="scss" scoped>
 .content{
-	padding: 0.4rem 0.8rem;
+	min-height: 100vh;
+	background: #fdf2b7;
+	padding: 3.3rem 0.25rem 0.2rem;
 }
-.invite-receive{
-	height: 5.6rem;
-	background: url(../../static/image/d33.png) no-repeat center;
-	background-size: 100% 100%;
-	padding: 0.6rem;
-	position: relative;
-	.invite-input{
-		position: absolute;
-		width: 4.7rem;
-		left: 0.6rem;
-		top: 8%;
-		height: 0.7rem;
-		border-radius: 0.7rem;
-		background: #ffe889;
-		padding:0.15rem 0.5rem;
-		input{
-			background: transparent;
-			height: 100%;
-			width: 100%;
-			text-align: center;
-			color: #f3ad00;
-			line-height: 0.4rem;
-		}
-		input::-webkit-input-placeholder{
-			color: #f3ad00;
-		}
-	}
-	.invite-tip{
-		position: absolute;
-		width: 4.7rem;
-		left: 0.6rem;
-		top: 40%;
-		h3{
-			font-size: 0.28rem;
-		}
-		p{
-			font-size: 0.24rem;
-		}
-	}
-	.receive{
-		position: absolute;
-		width: 4.7rem;
-		left: 0.6rem;
-		top: 77%;
-	}
+.bg-img{
+	position: absolute;
+	z-index: 0;
+	left: 0;
+	top: -0.3rem;
+	width: 100%;
 }
 .receive{
-	width: 4.7rem;
-	height: 0.66rem;
-	line-height: 0.66rem;
-	border-radius: 0.66rem;
-	background: #f97295;
+	height: 0.68rem;
+	line-height: 0.68rem;
+	border-radius: 0.68rem;
+	background: #fd485c;
 	text-align: center;
 	color: #fff;
 	margin: 0 auto;
 }
 .invite-content{
-	background: #FFFFFF;
-	border-radius: 0.2rem;
-	margin-top: 0.6rem;
-	padding-bottom: 0.5rem;
-	.tit{
-		color: #000000;
-		text-align: center;
-		padding: 0.4rem 0 0.6rem;
-		font-size: 0.3rem;
+	.invite-tip{
+		padding: 0.1rem 0.3rem 0.2rem;
+		color: #946134;
 	}
-	.invite-code{
-		display: flex;
-		justify-content: center;
-		margin-bottom: 1rem;
-		span{
-			width: 0.46rem;
-			height: 0.56rem;
-			text-align: center;
-			line-height: 0.56rem;
-			border-radius: 0.06rem;
-			background: #946134;
-			color: #fff;
-			font-size: 0.3rem;
-			margin: 0 0.06rem;
+	.invite-bottom{
+		height: 7.6rem;
+		background: url(../../static/image/45@2x.png) no-repeat;
+		background-size: 100% auto;
+		position: relative;
+		.invite-receive{
+			position: absolute;
+			width: 3.8rem;
+			left: 50%;
+			transform: translateX(-50%);
+			top: 0.9rem;
+			.invite-input{
+				height: 0.68rem;
+				border-radius: 0.68rem;
+				background: #fff;
+				padding:0.1rem 0.5rem;
+				margin-bottom: 0.4rem;
+				input{
+					background: transparent;
+					height: 100%;
+					width: 100%;
+					text-align: center;
+					color: #333;
+					line-height: 0.48rem;
+					font-size: 0.28rem;
+				}
+				input::-webkit-input-placeholder{
+					color: #ddd;
+				}
+			}
+		}
+		.invite-my{
+			position: absolute;
+			width: 3.8rem;
+			left: 50%;
+			transform: translateX(-50%);
+			top: 50%;
+			.tit{
+				color: #ab5608;
+				text-align: center;
+				padding-bottom: 0.3rem;
+				font-size: 0.3rem;
+			}
+			.invite-code{
+				display: flex;
+				justify-content: center;
+				margin-bottom: 0.5rem;
+				span{
+					width: 0.46rem;
+					height: 0.56rem;
+					text-align: center;
+					line-height: 0.56rem;
+					border-radius: 0.06rem;
+					background: #946134;
+					color: #fff;
+					font-size: 0.3rem;
+					margin: 0 0.06rem;
+				}
+			}
 		}
 	}
+			
+			
 }
 </style>

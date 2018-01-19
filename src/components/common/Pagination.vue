@@ -53,6 +53,7 @@ export default {
         },
         // 刷新
         refresh() {
+        	this.param.data.page = 1
             this.loadPage(true)
         },
         // 加载分页

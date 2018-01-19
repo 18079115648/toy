@@ -28,7 +28,7 @@
 	                </div>
 	            </div>
 	        </div>
-	        <div class="no_msg bg-color" v-show="addressList.length < 1">
+	        <div class="no_msg bg-color" v-show="addressList.length < 1 && loadEnd">
 	            <img src="../../static/image/none-addr.png">
 	            <div>暂无收货地址~</div>
 	        </div>
@@ -46,6 +46,7 @@ export default {
   data () {
     return {
         addressList:[],
+        loadEnd: false,
         
         deleteShow: false
     }
@@ -57,6 +58,7 @@ export default {
         pageSize: 100
     }).then(res => {
         this.addressList = res.data.data
+        this.loadEnd = true
     }, err => {
         
     })

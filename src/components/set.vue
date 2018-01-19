@@ -17,14 +17,14 @@
                 </div>
             </div>
             <div class="set_second">
-                <div class="set_list" style="border:none;" @click="intoUs">
+                <router-link to="/aboutUs" v-tap class="set_list" style="border:none;">
                     <div>关于我们</div>
                     <div>
                         <img src="../../static/image/wdd.png" class="set_last_img">
                     </div>
-                </div>
+                </router-link>
             </div>
-            <div class="btn-default btn-hover login-out" @click="loginOut">退出登录</div>
+            <div class="btn-default btn-hover login-out" v-tap="{ methods : loginOut }">退出登录</div>
         </div>
         
     </div>
@@ -64,9 +64,6 @@ export default {
         storage.set('sound_switch', this.sound)
     },
 
-    intoUs(){
-        this.$router.push('/aboutUs')
-    },
 
     //退出登录
     loginOut() {

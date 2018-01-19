@@ -13,20 +13,20 @@
 		<div class="toys-list">
 			<div class="toys-item" v-for="(item, index) in toysList" :key="index">
 				<img class="toy-img" :src="item.img"  />
-				<p class="toys-info">
-					<span class="name">{{item.name}}</span>
-					<span class="count">x{{item.num}}</span>
-				</p>
+				<div class="toys-info">
+					<p class="name">{{item.name}}</p>
+					<p class="count">x{{item.num}}</p>
+				</div>
 			</div>
 		</div>
 		<div class="price-content">
 			<div class="price-item">
 				<span>我的钻石</span>
-				<span class="price"><img src="../../static/image/wd.png" />{{money}}</span>
+				<span class="price"><img src="../../static/image/erdd.png" />{{money.toFixed(2)}}</span>
 			</div>
 			<div class="price-item">
 				<span>配送费用</span>
-				<span class="price"><img src="../../static/image/wd.png" />{{expressMoney}}</span>
+				<span class="price"><img src="../../static/image/erdd.png" />{{expressMoney.toFixed(2)}}</span>
 			</div>
 		</div>
 		<div class="btn-default btn-hover submit" @click="paySubmit">支付并配送</div>
@@ -48,21 +48,21 @@ export default {
   },
   created(){
   	this.$api.getDefaultAddress().then(res => {
-			if(res.data) {
-				this.hasAddr = true
-				this.addrInfo = res.data
-			}
+		if(res.data) {
+			this.hasAddr = true
+			this.addrInfo = res.data
+		}
     }, err => {
     	
     })
   	this.$api.userInfo().then(res => {
-			this.money = res.data.money
+		this.money = res.data.money
     }, err => {
     	
     })
     this.$api.toysWin().then(res => {
-			this.toysList = res.data.data
-			this.expressMoney = res.data.expressMoney
+		this.toysList = res.data.data
+		this.expressMoney = res.data.expressMoney
     }, err => {
     	
     })
@@ -86,7 +86,7 @@ export default {
   			addressId: this.addrInfo.id
   		}).then(res => {
   			this.disabledBtn = false
-				this.$router.replace('/orderList')
+			this.$router.replace('/orderList')
 	    }, err => {
 	    	this.disabledBtn = false
 	    })
@@ -100,6 +100,7 @@ export default {
 .content{
 	position: relative;
 	min-height: 100vh;
+	background: #F5F5F9;
 	padding-bottom: 1.7rem;
 }
 .address-content{
@@ -147,20 +148,16 @@ export default {
 		}
 		img.toy-img{
 			width: 1.8rem;
-			margin-right: 0.4rem;
+			margin-right: 0.3rem;
 			border-radius: 0.1rem;
 		}
 		.toys-info{
 			flex: 1;
 			color: #000;
 			overflow: hidden;
-			display: flex;
-			justify-content: space-between;
-			padding-top: 0.2rem;
+			padding-top: 0.1rem;
 			.name{
-				flex: 1;
-				overflow: hidden;
-				padding-right: 0.3rem;
+				padding-bottom: 0.15rem;
 			}
 		}
 	}
@@ -180,8 +177,9 @@ export default {
 		.price{
 			display: flex;
 			align-items: center;
+			font-size: 0.32rem;
 			img{
-				width: 0.24rem;
+				width: 0.36rem;
 				margin-right: 0.14rem;
 			}
 		}

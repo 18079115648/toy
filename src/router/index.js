@@ -57,6 +57,12 @@ const intergalMall = r => require.ensure([], () => r(require('../components/inte
 const goodsDetail = r => require.ensure([], () => r(require('../components/goodsDetail.vue')), 'goodsDetail')
 //兑换记录
 const convertList = r => require.ensure([], () => r(require('../components/convertList.vue')), 'convertList')
+//会员卡中心
+const memberCenter = r => require.ensure([], () => r(require('../components/memberCenter.vue')), 'memberCenter')
+//奖励明细
+const rewardList = r => require.ensure([], () => r(require('../components/rewardList.vue')), 'rewardList')
+//福利中心
+const welfareCenter = r => require.ensure([], () => r(require('../components/welfareCenter.vue')), 'welfareCenter')
 
 
 
@@ -95,6 +101,7 @@ const router = new Router({
       component: index,
       meta: {
       	keepAlive: true,
+      	requireAuth: true
       }
     },
     {
@@ -139,11 +146,31 @@ const router = new Router({
       path: '/intergalMall',
       component: intergalMall,
       meta: {
+      	keepAlive: true,
       	requireAuth: true
       }
     },{
-      path: '/goodsDetail',
+      path: '/goodsDetail/:id',
       component: goodsDetail,
+      meta: {
+      	requireAuth: true
+      }
+    },{
+      path: '/memberCenter',
+      component: memberCenter,
+      meta: {
+      	requireAuth: true
+      }
+    },{
+      path: '/rewardList/:type',
+      component: rewardList,
+      meta: {
+      	requireAuth: true
+      }
+    }
+    ,{
+      path: '/welfareCenter',
+      component: welfareCenter,
       meta: {
       	requireAuth: true
       }
@@ -160,7 +187,7 @@ const router = new Router({
       	requireAuth: true
       }
     },{
-      path: '/paymentMember/:id',
+      path: '/paymentMember/:type',
       component: paymentMember,
       meta: {
       	requireAuth: true
@@ -175,10 +202,11 @@ const router = new Router({
       path: '/rankList',
       component: rankList,
       meta: {
-      	requireAuth: true
+      	requireAuth: true,
+      	keepAlive: true,
       }
     },{
-      path: '/rankDetail',
+      path: '/rankDetail/:id',
       component: rankDetail,
       meta: {
       	requireAuth: true

@@ -24,7 +24,13 @@
     		</div>
     	</div>
     	<!--<img class="view-change" v-if="isGame" v-tap.prevent="{ methods : changeView }" src="../../static/image/dd33.png"  />-->
-    	<div class="view-change" @touchstart="changeView" ></div>
+    	
+    	<div class="room-side">
+    		<div class="view-change" v-tap="{ methods : changeView }" ></div>
+    		<div class="audio-change img-mask" v-tap="{ methods : changeAudio }">
+    			<img class="fullEle" src="../../static/image/46@2x.png"  />
+    		</div>
+    	</div>
     	<div class="room-bottom" v-show="!operateShow">
     		<div class="room-news-content">
     			<div class="room-news-list" v-show="toggleStatus">
@@ -991,6 +997,15 @@ export default {
 			this.showSide = !this.showSide
 			this.playClickAudio()
 		},
+		
+		//切换声音
+		changeAudio() {
+//			this.musicSwitch = !this.musicSwitch
+//			this.soundSwitch = !this.soundSwitch
+//			this.musicSwitch = storage.get('music_switch')
+//			this.soundSwitch = storage.get('sound_switch')
+//			this.$root.bgAudio.paused && this.$root.bgAudio.play()
+		},
 
 		/**
 		 * 播放点击音效
@@ -1345,14 +1360,22 @@ export default {
 		line-height: 1.2;
 	}
 }
-.view-change{
+.room-side{
 	position: absolute;
 	right: 0.2rem;
 	top: 40%;
-	width: 1.05rem;
-	height: 1.05rem;
+	width: 0.9rem;
+}
+.view-change{
+	height: 0.9rem;
+	width: 0.9rem;
+	margin-bottom: 0.25rem;
 	background: url(../../static/image/dd33.png) no-repeat center;
 	background-size: 100% 100%;
+}
+.audio-change{
+	height: 0.9rem;
+	width: 0.9rem;
 }
 .room-bottom{
 	position: absolute;

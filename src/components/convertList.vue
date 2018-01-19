@@ -1,31 +1,31 @@
 <template>
     <div class="content">
-        <Header title="订单中心"></Header>
+        <Header title="兑换记录"></Header>
 	    <div class="pagination-content">
-	    	<Pagination :render="render" :param="pagination" :autoload="false"  ref="pagination" uri="/dm-api/order/list" >
+	    	<Pagination :render="render" :param="pagination" :autoload="false"  ref="pagination" uri="/dm-api/pm/exchanges" >
 				<div class="order-list" v-show="pagination.content.length > 0">
-					<router-link :to="'/orderDetails/' + item.orderSn" class="orderList_body" v-for="(item, index) in pagination.content" :key="index">
+					<div class="orderList_body" v-for="(item, index) in pagination.content" :key="index">
 			            <div class="orderList_title">
-			                <div><span style="color:#888">订单号：</span>{{item.orderSn}}</div>
-			                <div style="color: #fd485c;" v-if="item.status == 1">待发货</div>
-			                <div style="color:#00bc71" v-if="item.status == 0">已发货</div>
+			                <div><span style="color:#999">{{item.create_time}}</span></div>
+			                <div style="color:#00bc71">已兑换</div>
 			            </div>
 			            <div class="puppets_img">
-			                <div class="puppetsList" v-for="list in item.productList" >
+			                <div class="puppetsList">
 			                    <div class="img_body">
-			                        <img :src="list.img">
+			                        <img :src="item.goods_thumb">
 			                    </div>
-			                    <div>
-			                        <div style="margin-bottom: .1rem;">{{list.name}}</div>
-			                        <div>x{{list.num}}</div>
+			                    <div class="convert-info">
+			                        <div style="color: #000;">{{item.goods_name}}</div>
+			                        <div style="color: #000;">x{{item.quantity}}</div>
+			                        <div style="margin-top: 0.1rem;"><span class="points">{{item.goods_points}}</span>积分</div>
 			                    </div>
 			                </div>
 			            </div>
-			        </router-link>
+			        </div>
 				</div>
 				<div class="no_msg bg-color" v-show="pagination.content.length<1 && pagination.loadEnd">
 			        <img style="width: 1.4rem;" src="../../static/image/none-record.png">
-		            <div>暂无订单数据~</div>
+		            <div>暂无兑换记录~</div>
 			    </div>	   
 			</Pagination>
 		    
@@ -100,9 +100,25 @@ export default {
 .puppetsList{
     display: flex;
     padding: .15rem 0;
+    align-items: center;
 }
 .succeed{
     color: #EB6E8F;
 }
-
+.convert-info{
+	flex: 1;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 0.06rem 0;
+	min-height: 1.8rem;
+	line-height: 1.4;
+	.points{
+		font-weight: 700;
+	    font-size: 0.3rem;
+	    color: #fd485c;
+	    margin-right: 0.04rem;
+	}
+}
 </style>

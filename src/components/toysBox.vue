@@ -28,7 +28,7 @@
 	  		<span class="tit">温馨提示：</span><span class="text">抓中娃娃后15天内未领取，系统将自动兑换成钻石</span>
 	  	</p>
   	</div>
-  	<div class="no_msg bg-color" v-show="toysList.length < 1">
+  	<div class="no_msg bg-color" v-show="toysList.length < 1 && loadEnd">
         <img src="../../static/image/none-toy.png"  />
         <div>您还没有抓到娃娃~</div>
     </div>
@@ -48,11 +48,13 @@ export default {
 			toysList: [],
 			total: 0,  //兑换总钻石数
 			chargeShow: false,
-			message: ''
+			message: '',
+			loadEnd: false
     }
   },
   created() {
   	this.$api.toysWin().then(res => {
+  		this.loadEnd = true
 			this.toysList = res.data.data
 			this.total = res.data.total
 			this.message = '当前所有娃娃可兑换 <span style="color: #00bc71;">' + this.total + '</span> 钻石'

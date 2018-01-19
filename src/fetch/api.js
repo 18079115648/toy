@@ -337,5 +337,33 @@ export default {
 	// 进入房间
 	enterRoom(params) {
 		return fetchPost('/dm-api/enter/room', params, true)
-	}
+	},
+	// 积分商城商品详情
+	goodsDetail(goodsId) {
+		return fetchGet('/dm-api/pm/goods/' + goodsId, null, true)
+	},
+	// 积分商城商品兑换
+	goodsExchange(params) {
+		return fetchGet('/dm-api/pm/exchange', params, true)
+	},
+	// 会员中心
+	memberCenter(params) {
+		return fetchGet('/dm-api/member/center/v15', params, true)
+	},
+	// 获取充值会员卡详情
+	memberCardInfo(params) {
+		return fetchGet('/dm-api/charge/card/v15', params, true)
+	},
+	// 会员卡购买
+	changeCard(params) {
+		return fetchPost('/dm-api/charge/card/v15', params, true)
+	},
+	// 会员卡中心领取奖励
+	receiveCard(params) {
+		return fetchGet('/dm-api/task/receiveCard', params, true)
+	},
+	// 任务列表
+	taskList(params) {
+		return fetchGet('/dm-api/task/list', params, true)
+	},
 }

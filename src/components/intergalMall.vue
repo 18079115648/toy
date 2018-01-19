@@ -1,20 +1,26 @@
 <template>
     <div class="content">
         <Header title="积分商城"></Header>
-        <router-link class="recharge-record-link btn-hover" to="/paymentList">兑换记录</router-link>
+        <router-link class="recharge-record-link btn-hover" to="/convertList">兑换记录</router-link>
         <div class="pagination-content">
-            <div class="convert-list">
-            	<div class="convert-list-item">
-            		<div class="convert-goods-img img-mask">
-            			<img class="fullEle" src="../../static/image/12.png"  />
-            		</div>
-            		<div class="convert-goods-info">
-            			<p class="convert-goods-name">娃娃</p>
-            			<p class="convert-goods-price"><span>1500</span>积分</p>
-            		</div>
-            	</div>
-            	
-            </div>
+        	<Pagination :render="render" :param="pagination" :autoload="false"  ref="pagination" uri="/dm-api/pm/goods" >
+		        <div class="convert-list" v-show="pagination.content.length > 0">
+	            	<router-link :to="'/goodsDetail/' + item.goods_id" v-tap class="convert-list-item" v-for="(item, index) in pagination.content" :key="index">
+	            		<div class="convert-goods-img img-mask">
+	            			<img class="fullEle" :src="item.thumb"  />
+	            		</div>
+	            		<div class="convert-goods-info">
+	            			<p class="convert-goods-name">{{item.name}}</p>
+	            			<p class="convert-goods-price"><span>{{item.points}}</span>积分</p>
+	            		</div>
+	            	</router-link>
+	            </div>
+		        <div class="no_msg" v-if="pagination.content.length<1 && pagination.loadEnd">
+		            <img src="../../static/image/ewd.png">
+		            <div>暂无商品~</div>
+		        </div>
+			</Pagination>
+	            
         </div>
     </div>
 </template>
@@ -24,22 +30,25 @@
 export default {
   data () {
     return {
-    	menberCharge: [],
-        diamondCharge:[],
+    	pagination: {
+	        content: [],
+	        loadEnd: false,
+	        data: {
+	        	page: 1,
+	        	pageSize: 12
+	        }
+	    },
     }
   },
-  created(){
-    this.$api.recharge().then(res => {
-        this.diamondCharge = res.data.normal
-        this.menberCharge = res.data.week
-    }, err => {
-    	
-    })
+  mounted(){
+	this.$refs.pagination.refresh()
   },
   methods: {
-    infoPayment(id){
-        this.$router.push('/payment/'+id)
-    }
+  	render(res) {
+		res.data.forEach((item) => {
+	    	this.pagination.content.push(item)
+    	})
+    },  
   }
 }
 </script>

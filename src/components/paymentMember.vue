@@ -5,24 +5,24 @@
         <div class="payment_body">
             <div class="payment">
                 <div class="payment_left">
-                    <p class="payment-name shadow-text">体验周卡</p>
-                    <p class="desc">立即到账280钻，每天可领取20钻</p>
+                    <p class="payment-name shadow-text">{{cardInfo.title}}</p>
+                    <p class="desc">{{cardInfo.desc}}</p>
                 </div>
                 <div class="payment_right">
-                    <div>&yen; {{parseFloat(payment.price).toFixed(2)}}</div>
+                    <div>&yen; {{parseFloat(cardInfo.price).toFixed(2)}}</div>
                 </div>
             </div>
-						<div class="payment-kind-desc">
-							<p class="desc-text">
-								开通28元阿达，金卡大哭大叫哈卡觉得很阿卡丽的哈卡的圣诞节啊都会
-							</p>
-							<div class="member-profit-process">
-								<p class="tit">领取说明：</p>
-								<p>1、个人中心 → 会员中心 → 领取钻石</p>
-								<p>2、首页 → 福利中心 → 领取钻石</p>
-								<p>3、当日钻石必须当然领取，逾期失效</p>
-							</div>
-						</div>
+			<div class="payment-kind-desc">
+				<p class="desc-text">
+					{{cardInfo.detail}}
+				</p>
+				<div class="member-profit-process">
+					<p class="tit">领取说明：</p>
+					<p>1、个人中心 → 会员中心 → 领取钻石</p>
+					<p>2、首页 → 福利中心 → 领取钻石</p>
+					<p>3、当日钻石必须当天领取，逾期失效</p>
+				</div>
+			</div>
             <div class="payment_way">
             	<div class="pay-item" @click="payWay = 2">
             		<img class="pay-icon" src="../../static/image/555.png">
@@ -47,7 +47,7 @@
             	我已阅读并同意 <router-link to="/agree"> 会员卡购买规则 </router-link>
             </div>
 
-            <div class="btn-default btn-hover recharge" @click="recharge">确认充值</div>
+            <div class="btn-default btn-hover recharge" :class="{'disabled': !agree}" v-tap="{ methods : recharge }">确认充值</div>
         </div>
     </div>
 </template>
@@ -58,94 +58,101 @@ import { Toast } from 'mint-ui';
 export default {
   data () {
     return {
-    	  isWinxin: this.$common.isWeixin(),
-        id:this.$route.params.id,
-        payment:{},
+    	isWinxin: this.$common.isWeixin(),
+        type:this.$route.params.type,
+        cardInfo:{
+        	price: 0
+        },
         payWay: 2,   //1 支付宝   2 微信
         agree: true
     }
   },
   created(){
-    this.$api.recharge().then(res => {
-        res.data.forEach((item) => {
-        	if(item.id == this.id) {
-        		this.payment = item
-        		return
-        	}
-        })
+    this.$api.memberCardInfo({
+    	type: this.type
+    }).then(res => {
+        this.cardInfo = res.data
     }, err => {
     	
     })
   },
   methods: {
     recharge() {
-    	if(this.isWinxin) {
-    		this.$api.payment({
-		        id: this.id,
-		        type: 2,
-		        tradeType: 'JSAPI'
-		    }).then(res => {
-				function onBridgeReady() {
-					WeixinJSBridge.invoke(
-						'getBrandWCPayRequest', {
-				           "appId": res.data.app_id,     //公众号名称，由商户传入     
-				           "timeStamp": res.data.time_stamp,       //时间戳，自1970年以来的秒数     
-				           "nonceStr": res.data.nonce_str,  //随机串     
-				           "package": 'prepay_id=' + res.data.prepay_id,      
-				           "signType":'MD5',         //微信签名方式：     
-				           "paySign": res.data.pay_sign //微信签名 
-				        },
-						function(res) {
-							if(res.err_msg == "get_brand_wcpay_request:ok") {
-								Toast({
-									message: '充值成功',
-									position: 'middle',
-									iconClass: 'toast-icon icon-success',
-									duration: 1000
-								})
-								setTimeout(() => {
-									self.$router.go(-1)
-								}, 500)
-							}
-						}
-					);
-				}
-				if(typeof WeixinJSBridge == "undefined") {
-					if(document.addEventListener) {
-						document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
-					} else if(document.attachEvent) {
-						document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
-						document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
-					}
-				} else {
-					onBridgeReady();
-				}
-		    }, err => {
-		        
-	        })
-    	}else {
-    		if(this.payWay == 1) {
-    			this.$api.payment({
-			        id: this.id,
-			        type: 3,
-			        returnUrl: 'http://' + window.location.host + '/#/index'
-			    }).then(res => {
-		            document.write(res.data)
-			    }, err => {
-			        
-		        })
-			    return
-    		}
-    		this.$api.payment({
-		        id: this.id,
-		        type: 2,
-		        tradeType: 'MWEB'
-		    }).then(res => {
-				window.location.replace(res.data.mweb_url + '&redirect_url=http://' + window.location.host + '/#/index')
-		    }, err => {
-		        
-	        })
-    	}
+    	this.$api.changeCard({
+	    	buyType: this.type,
+	    	type: this.payWay
+	    }).then(res => {
+//	        this.cardInfo = res.data
+	    }, err => {
+	    	
+	    })
+//  	if(this.isWinxin) {
+//  		this.$api.payment({
+//		        id: this.id,
+//		        type: 2,
+//		        tradeType: 'JSAPI'
+//		    }).then(res => {
+//				function onBridgeReady() {
+//					WeixinJSBridge.invoke(
+//						'getBrandWCPayRequest', {
+//				           "appId": res.data.app_id,     //公众号名称，由商户传入     
+//				           "timeStamp": res.data.time_stamp,       //时间戳，自1970年以来的秒数     
+//				           "nonceStr": res.data.nonce_str,  //随机串     
+//				           "package": 'prepay_id=' + res.data.prepay_id,      
+//				           "signType":'MD5',         //微信签名方式：     
+//				           "paySign": res.data.pay_sign //微信签名 
+//				        },
+//						function(res) {
+//							if(res.err_msg == "get_brand_wcpay_request:ok") {
+//								Toast({
+//									message: '充值成功',
+//									position: 'middle',
+//									iconClass: 'toast-icon icon-success',
+//									duration: 1000
+//								})
+//								setTimeout(() => {
+//									self.$router.go(-1)
+//								}, 500)
+//							}
+//						}
+//					);
+//				}
+//				if(typeof WeixinJSBridge == "undefined") {
+//					if(document.addEventListener) {
+//						document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+//					} else if(document.attachEvent) {
+//						document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+//						document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+//					}
+//				} else {
+//					onBridgeReady();
+//				}
+//		    }, err => {
+//		        
+//	        })
+//  	}else {
+//  		if(this.payWay == 1) {
+//  			this.$api.payment({
+//			        id: this.id,
+//			        type: 3,
+//			        returnUrl: 'http://' + window.location.host + '/#/index'
+//			    }).then(res => {
+//		            document.write(res.data)
+//			    }, err => {
+//			        
+//		        })
+//			    return
+//  		}
+//  		this.$api.payment({
+//		        id: this.id,
+//		        type: 2,
+//		        tradeType: 'MWEB'
+//		    }).then(res => {
+//				window.location.replace(res.data.mweb_url + '&redirect_url=http://' + window.location.host + '/#/index')
+//		    }, err => {
+//		        
+//	        })
+//  	}
 	    	
         
     }
@@ -167,7 +174,7 @@ export default {
     border-radius: 0.15rem;
     display: flex;
     justify-content: space-between;
-    padding: 0.15rem .3rem;
+    padding: 0.24rem .3rem;
     align-items: center;
     font-size: .32rem;
     font-weight: 700;
@@ -199,7 +206,7 @@ export default {
 	padding: 0.3rem;
 	font-size: 0.24rem;
 	.desc-text{
-		padding-bottom: 0.3rem;
+		padding-bottom: 0.2rem;
 	}
 	.member-profit-process{
 		line-height: 1.7;
@@ -259,5 +266,9 @@ export default {
 		text-decoration: underline;
 		margin-left: 0.08rem;
 	}
+}
+.recharge.disabled{
+	background: #eee;
+	color: #ccc;
 }
 </style>

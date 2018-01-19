@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-	    <div class="headPart">
+	    <div class="headPart" :class="headClass">
 	        <div class="headCont" >
 	            <div v-tap="{ methods : goBack }" class="back" v-if="!hiddenBack">
 	                <i class="iconfont icon-zuojiantou"></i>
@@ -20,9 +20,13 @@
         props: {
             title: {
                 type: String,
-                required: true
+                required: false
             },
             back: {
+                type: String,
+                required: false
+            },
+            headClass: {
                 type: String,
                 required: false
             }
@@ -63,6 +67,13 @@
         z-index: 10;
         left: 0;
         top: 0;
+    }
+    .welfare-header{
+    	background: #fbcb44;
+    }
+    .invite-header{
+    	background: url(../../../static/image/invite-header.png) no-repeat center;
+    	background-size: 100% 100%;
     }
     .headCont{
     	position: absolute;

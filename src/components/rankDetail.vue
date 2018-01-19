@@ -1,62 +1,38 @@
 <template>
     <div class="content">
-        <Header title="土豪主页"></Header>
+        <Header :title="memberInfo.nickName + '的主页'"></Header>
         <div class="rank-user-info">
 		    	<div class="user-info-link">
-			    	<img class="avatar" src="../../static/image/17@3x.png"  />
+			    	<img class="avatar" :src="memberInfo.avatar"  />
 			    	<div class="user-info-text">
-			    		<p class="nick-name">土豪</p>
+			    		<p class="nick-name">{{memberInfo.nickName}}</p>
 			    		<p class="user-record">
-			    			<span>抓中 8</span>
+			    			<span>抓中 {{memberInfo.successTimes}}</span>
 			    			<i></i>
-			    			<span>总排位 200</span>
+			    			<span>总排位 {{memberInfo.rank}}</span>
 			    		</p>
 			    	</div>
 			    </div>
 		    </div>
-	      <div class="rank-page">
-	      	<div class="rank-record">
-	      		<div class="rank-item">
-	      			<div class="rank-info-media">
-	      				<img class="fullEle" src="../../static/image/1233.png"  />
-	      			</div>
-	      			<div class="rank-info-text">
-	      				<p class="rank-goods-name">大公仔</p>
-	      				<p class="rank-time">2017</p>
-	      				<a class="rank-enter">进入游戏</a>
-	      			</div>
-	      		</div>
-	      		<div class="rank-item">
-	      			<div class="rank-info-media">
-	      				<img class="fullEle" src="../../static/image/1233.png"  />
-	      			</div>
-	      			<div class="rank-info-text">
-	      				<p class="rank-goods-name">大公仔</p>
-	      				<p class="rank-time">大公仔</p>
-	      				<a class="rank-enter">进入游戏</a>
-	      			</div>
-	      		</div>
-	      		<div class="rank-item">
-	      			<div class="rank-info-media">
-	      				<img class="fullEle" src="../../static/image/1233.png"  />
-	      			</div>
-	      			<div class="rank-info-text">
-	      				<p class="rank-goods-name">大公仔</p>
-	      				<p class="rank-time">大公仔</p>
-	      				<a class="rank-enter">进入游戏</a>
-	      			</div>
-	      		</div>
-	      		<div class="rank-item">
-	      			<div class="rank-info-media">
-	      				<img class="fullEle" src="../../static/image/1233.png"  />
-	      			</div>
-	      			<div class="rank-info-text">
-	      				<p class="rank-goods-name">大公仔</p>
-	      				<p class="rank-time">大公仔</p>
-	      				<a class="rank-enter">进入游戏</a>
-	      			</div>
-	      		</div>
-	      	</div>
+	      <div class="rank-page">  	
+	      	<Pagination :render="render" :param="pagination" :autoload="false"  ref="pagination" uri="/dm-api/doll//log/success" >
+				<div class="rank-record" v-show="pagination.content.length > 0">
+		      		<div class="rank-item" v-for="(item, index) in pagination.content" :key="index">
+		      			<div class="rank-info-media">
+		      				<img class="fullEle" src="../../static/image/1233.png"  />
+		      			</div>
+		      			<div class="rank-info-text">
+		      				<p class="rank-goods-name">大公仔</p>
+		      				<p class="rank-time">2017</p>
+		      				<a class="rank-enter">进入游戏</a>
+		      			</div>
+		      		</div>
+		      	</div>
+		        <div class="no_msg" v-show="pagination.content.length < 1 && pagination.loadEnd">
+		            <!--<img style="width: 1.5rem;" src="../../static/image/none-charge.png">-->
+		            <div>暂时没有抓中过哦！~</div>
+		        </div>
+			</Pagination>
 	      </div> 
 		        
 
@@ -73,9 +49,11 @@ export default {
 	        loadEnd: false,
 	        data: {
 	        	page: 1,
-	        	pageSize: 15
+	        	pageSize: 15,
+	        	memberId: this.$route.params.id
 	        }
 	    },
+	    memberInfo: {}
     }
   },
   mounted(){
@@ -83,7 +61,8 @@ export default {
   },
   methods: {
   	render(res) {
-		res.data.forEach((item) => {
+  		this.memberInfo = res.data.info
+		res.data.list.forEach((item) => {
 	    	this.pagination.content.push(item)
     	})
     },

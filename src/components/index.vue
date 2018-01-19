@@ -79,15 +79,15 @@ export default {
     	homebar: [{
       	text: '福利中心',
       	icon: '../../static/image/112344.png',
-      	link: ''
+      	link: '/welfareCenter'
       },{
       	text: '排行榜',
       	icon: '../../static/image/d44f.png',
-      	link: ''
+      	link: '/rankList'
       },{
-      	text: '积分抽奖',
+      	text: '积分兑换',
       	icon: '../../static/image/34dxf.png',
-      	link: ''
+      	link: '/intergalMall'
       },{
       	text: '充值中心',
       	icon: '../../static/image/344fs.png',

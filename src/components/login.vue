@@ -2,7 +2,7 @@
     <!--<div class="app">
     	<div class="top">
     		<div class="bg"></div>
-    		<img src="../../static/image/vv.png"  />
+    		<img src="../../static/image/45534.jpg"  />
     		<div class="miss" @click="miss">跳过</div>
     	</div>
     	<div class="bottom">
@@ -57,14 +57,14 @@ export default {
 	.top{
 		position: absolute;
 		width: 100%;
-		height: 65vh;
+		bottom: 3.1rem;
 		left:0;
 		top:0;
 		
 		.bg{
-			background: #ffed8d;
+			background: #9ac84e;
 			width: 100%;
-			height: 50vh;
+			height: 100%;
 		}
 		img{
 			position: absolute;
@@ -77,10 +77,10 @@ export default {
 	.bottom{
 		position: absolute;
 		width: 100%;
-		height: 35vh;
+		height: 3.1rem;
 		left:0;
 		bottom:0;
-		padding: 1rem 2rem 0;
+		padding: 0 2rem 0;
 		.login-tit{
 			text-align: center;
 			color: #222;
@@ -124,7 +124,7 @@ export default {
 	right: 0.1rem;
 	top: 0.2rem;
 	font-size: 0.3rem;
-	color: #704a06;
+	color: #fff;
 	z-index: 10;
 	padding: 0.2rem;
 }

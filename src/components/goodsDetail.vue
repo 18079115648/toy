@@ -2,24 +2,32 @@
     <div class="content">
         <Header title="商品详情"></Header>
         <div class="goods-detail-content">
-        	<div class="goods-img img-mask">
-        		<img src="../../static/image/12.png" class="fullEle" />
-        	</div>
+        	<div class="goods-banner">
+		    	<mt-swipe :auto="4000" class="swipe-content">
+					<mt-swipe-item v-for="(item,index) in goodsInfo.pics" :key="index">
+						<div class="goods-img img-mask">
+			        		<img :src="item.pic" class="fullEle" />
+			        	</div>
+					</mt-swipe-item>
+				</mt-swipe>
+		    </div>
+        	
         	<div class="goods-detail-text">
         		<div class="goods-name">
         			<span class="new">新品</span>
-        			<span class="text">娃娃娃娃</span>
+        			<span class="text">{{goodsInfo.name}}</span>
         		</div>
         		<div class="goods-operate">
         			<div class="goods-price">
-        				<span>1500</span>积分
+        				<span>{{goodsInfo.points}}</span>积分
         			</div>
-        			<div class="convert-btn btn-hover" v-tap="{ methods : openConvert }">立即兑换</div>
+        			<div class="convert-btn btn-hover"  v-tap="{ methods : openConvert }">立即兑换</div>
         		</div>
+        		<p class="tip" v-if="goodsInfo.goods_id == 1">提示：兑换的娃娃商品可在娃娃袋中查看</p>
         	</div>
         	<div class="goods-image-text">
         		<p class="tit">商品介绍</p>
-        		<div class="goods-rich-content">
+        		<div class="goods-rich-content" v-html="goodsInfo.description">
         			
         		</div>
         	</div>
@@ -32,10 +40,10 @@
 				<div class="convert-body">
 					<span class="minus" v-tap="{ methods : minus }">-</span>
 					<span class="num">{{num}}</span>
-					<span class="plus" v-tap="{ methods : plus }">+</span>
+					<span class="plus" :class="{disabled : checkPlus}" v-tap="{ methods : plus }">+</span>
 				</div>
 				<div class="convert-footer">
-					<div class="convert-confirm btn-hover">确定兑换</div>
+					<div class="convert-confirm btn-hover" :class="{disabled : checkConvert}" v-tap="{ methods : convertConfirm }">确定兑换</div>
 				</div>
 			</div>
 		</mt-popup>
@@ -43,20 +51,41 @@
 </template>
 
 <script>
-
+import { Toast, Indicator } from 'mint-ui'
 export default {
   data () {
     return {
-    	menberCharge: [],
-        diamondCharge:[],
+    	goodsId: this.$route.params.id,
+    	goodsInfo: {},
+    	userPoints: 100, //用户积分
         convertStatus: false,
         num: 1,   //兑换数量
+        
     }
   },
+  computed: {
+  	checkConvert: function() {
+  		let totalPoints = parseInt(this.goodsInfo.points) * this.num
+  		return (this.userPoints < totalPoints ? true : false )
+  	},
+  	checkPlus: function() {
+  		let totalPoints = parseInt(this.goodsInfo.points) * (this.num + 1)
+  		return (this.userPoints < totalPoints ? true : false )
+  	}
+  },
   created(){
-    this.$api.recharge().then(res => {
-        this.diamondCharge = res.data.normal
-        this.menberCharge = res.data.week
+  	Indicator.open('加载中...')
+    this.$api.goodsDetail(this.goodsId).then(res => {
+    	setTimeout(() => {
+    		Indicator.close()
+    	},200)
+    	
+        this.goodsInfo = res.data
+    }, err => {
+    	Indicator.close()
+    })
+    this.$api.userInfo().then(res => {
+//		this.userPoints = res.data
     }, err => {
     	
     })
@@ -70,7 +99,37 @@ export default {
     	this.num > 1 && this.num--
     },
     plus() {
-    	this.num++
+    	if(this.checkPlus) {
+    		Toast({
+			  message: '当前积分不足',
+			  position: 'bottom',
+			  duration: 1500
+			});
+    		return
+    	}
+    	this.num++	
+    },
+    convertConfirm() {
+    	this.convertStatus = false
+    	Indicator.open()
+    	this.$api.goodsExchange({
+    		goods_id: this.goodsId,
+    		quantity: this.num
+    	}).then(res => {
+    		Indicator.close()
+			Toast({
+			  message: '兑换成功',
+			  position: 'middle',
+			  iconClass: 'toast-icon icon-success',
+			  duration: 800
+			})
+			setTimeout(() => {
+			  this.$router.push('/convertList')
+			}, 1000);
+	    }, err => {
+	    	Indicator.close()
+	    })
+    	
     }
   }
 }
@@ -82,7 +141,7 @@ export default {
 	background: #f5f5f9;
 	min-height: 100vh;
 }
-.goods-img{
+.goods-banner,.goods-img{
 	width: 100%;
 	height: 7.5rem;
 	background: #fff;
@@ -131,6 +190,11 @@ export default {
 			line-height: 0.62rem;
 			border-radius: 0.58rem;
 		}
+	}
+	.tip{
+		padding-top: 0.25rem;
+		color: #bbb;
+		font-size: 0.24rem;
 	}
 }
 .goods-image-text{
@@ -182,6 +246,11 @@ export default {
 				color: $btn-default-bgcolor;
 				background: $bg-color;
 				border-color: $bg-color;
+				&.disabled{
+					background: #eee;
+					border-color: #eee;
+					color: #ccc;
+				}
 			}
 		}
 	}
@@ -191,6 +260,10 @@ export default {
 		border-radius: 0.62rem;
 		background: $bg-color;
 		color: $btn-default-bgcolor;
+		&.disabled{
+			background: #eee;
+			color: #ccc;
+		}
 	}
 }
 </style>

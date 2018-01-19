@@ -3,20 +3,20 @@
         <Header title="充值"></Header>
         <router-link class="recharge-record-link btn-hover" to="/paymentList">充值记录</router-link>
         <div class="recharge_body">
-            <div class="member-charge">
+            <div class="member-charge" v-if="menberCharge.week || menberCharge.month">
             	<p class="menber-tit kind-tit">超值会员</p>
             	<div class="charge-list">
-            		<div class="charge-item" >
+            		<router-link to="/paymentMember/1" v-tap class="charge-item" v-if="menberCharge.week">
             			<img class="pop" src="../../static/image/7@2x.png"  />
-            			<p class="tit shadow-text">体验周卡</p>
-            			<p class="desc">阿基拉德加拉打开阿昆大利空的</p>
-            			<p class="price">&yen;90.00</p>
-            		</div>
-            		<div class="charge-item">
-            			<p class="tit shadow-text">体验周卡</p>
-            			<p class="desc">阿基拉德加拉打开阿昆大利空的</p>
-            			<p class="price btn-hover">&yen;90.00</p>
-            		</div>
+            			<p class="tit shadow-text">{{menberCharge.week.title}}</p>
+            			<p class="desc">{{menberCharge.week.desc}}</p>
+            			<p class="price">&yen;{{menberCharge.week.price.toFixed(2)}}</p>
+            		</router-link>
+            		<router-link to="/paymentMember/1" v-tap class="charge-item" v-if="menberCharge.month">
+            			<p class="tit shadow-text">{{menberCharge.week.title}}</p>
+            			<p class="desc">{{menberCharge.week.desc}}</p>
+            			<p class="price">&yen;{{menberCharge.week.price.toFixed(2)}}</p>
+            		</router-link>
             	</div>
             </div>
             <div class="diamond-charge">
@@ -42,22 +42,24 @@
 export default {
   data () {
     return {
-    	menberCharge: [],
+    	menberCharge: {
+    		week:null,
+    		month: null
+    	},
         diamondCharge:[],
     }
   },
   created(){
     this.$api.recharge().then(res => {
         this.diamondCharge = res.data.normal
-        this.menberCharge = res.data.week
+        res.data.week && (this.menberCharge.week = res.data.week)
+        res.data.month && (this.menberCharge.month = res.data.month)
     }, err => {
     	
     })
   },
   methods: {
-    infoPayment(id){
-        this.$router.push('/payment/'+id)
-    }
+
   }
 }
 </script>
@@ -83,7 +85,7 @@ export default {
 	overflow-y: auto;
     -webkit-overflow-scrolling : touch;
     width: 100%;
-    padding: 0 .2rem;
+    padding: 0.2rem .2rem 0;
     & > div{
     	background: #fff;
     	border-radius: 0.2rem;
