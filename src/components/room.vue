@@ -1,25 +1,8 @@
 <template> 
-    <div class="app" id="fastClick" :style="{ height: wH + 'px' }">
+    <div class="app" id="fastClick" :style="{'height': wH + 'px'}">
     	<div class="room-loading" v-show="loadingStatus"></div>
-    	<!--<Header>
-        	<div class="room-top">
-	    		<img v-show="avatar" class="avatar" :src="avatar"  />
-	    		<div v-show="!avatar" class="avatar-position"></div>
-	    		<div class="room-count">
-	    			<p>当前房间 {{roomNum}} 人</p>
-	    		</div>
-	    		<div class="room-price" style="margin-right: 0.52rem;">
-	    			<img src="../../static/image/erdd.png"  />
-	    			{{price}}
-	    		</div>
-	    		<div class="room-price">
-	    			<img src="../../static/image/34cd.png"  />
-	    			{{remainGold}}
-	    		</div>
-	    	</div>
-        </Header>-->
         <div class="room-top">
-        	<div class="back">
+        	<div class="back" v-tap="{ methods : back }">
         		<i class="iconfont icon-zuojiantou"></i>
         	</div>
     		<img v-show="avatar" class="avatar" :src="avatar"  />
@@ -36,14 +19,28 @@
     			{{remainGold}}
     		</div>
     	</div>
-        <div class="video-content">
-        	<canvas id="frontview" :class="{show:showFront}"></canvas>
-	      	<canvas id="sideview" :class="{show:showSide}"></canvas>
+        <div class="video-content" id="video-content">
+        	<div class="video-box" id="video-box" :style="{'width': videoW + 'px'}" >
+        		<canvas id="frontview" :class="{show:showFront}"></canvas>
+	      		<canvas id="sideview" :class="{show:showSide}"></canvas>
+        	</div>
+        	
+	      	
+	      	<!--<img class="view-change" v-if="isGame" v-tap.prevent="{ methods : changeView }" src="../../static/image/dd33.png"  />-->
+	    	<div class="audio-change img-mask child" v-tap="{ methods : changeAudio, status: musicSwitch && soundSwitch }">
+				<img class="fullEle" src="../../static/image/73@3x.png" v-show="musicSwitch && soundSwitch"  />
+				<img class="fullEle" src="../../static/image/74@3x.png" v-show="!(musicSwitch && soundSwitch)"  />
+			</div>
+	    	<div class="room-side">
+	    		<div class="view-change child" v-tap="{ methods : changeView }" ></div>
+	    		<div class="btn-hover open-detail child" v-tap="{ methods : goRoomDatail }"></div>
+	    		<div class="btn-hover open-record child" v-tap="{ methods : goGrabList }"></div>
+	    	</div>
 	      	
 	      	<!--聊天列表-->
 	      	<div class="room-news-content" v-show="roomNewsList.length > 0">
-    			<div class="room-news-list" v-show="toggleStatus">
-    				<div class="room-news-item" v-for="(item, index) in roomNewsList" :id="'news-item-' + index" :key="index">
+    			<div class="room-news-list" id="chat-content" v-show="toggleStatus">
+    				<div class="room-news-item" v-for="(item, index) in roomNewsList" :key="index">
     					<span class="tit">{{item.tit}} </span>
     					<span class="text">{{item.text}}</span>
     				</div>
@@ -54,26 +51,45 @@
     			</div>
     		</div>
         </div>
-    	<!--<img class="view-change" v-if="isGame" v-tap.prevent="{ methods : changeView }" src="../../static/image/dd33.png"  />-->
-    	<div class="audio-change img-mask child" v-tap="{ methods : changeAudio, status: musicSwitch && soundSwitch }">
-			<img class="fullEle" src="../../static/image/73@3x.png" v-show="musicSwitch && soundSwitch"  />
-			<img class="fullEle" src="../../static/image/74@3x.png" v-show="!(musicSwitch && soundSwitch)"  />
-		</div>
-    	<div class="room-side">
-    		<div class="view-change child" v-tap="{ methods : changeView }" ></div>
-    		<div class="btn-hover open-detail child" v-tap.prevent="{ methods : openChat }"></div>
-    		<div class="btn-hover open-record child" v-tap.prevent="{ methods : goGrabList }"></div>
-    	</div>
+    	
     	<div class="room-bottom" v-show="!operateShow">
-    		<div class="open-chat com" @touchstart="depress($event)" @touchend="loosen($event)">
-    			<!--<img src=""-->
+    		<div class="open-chat com img-mask" v-tap="{ methods : openChat }" @touchstart="depress($event)" @touchend="loosen($event)">
+    			<img src="../../static/image/111-1.png" class="fullEle comm"  />
+    			<img src="../../static/image/111-2.png" class="fullEle active"  />
+    			<div class="content">
+    				<img src="../../static/image/77@2x.png" class="icon"  />
+    				<p class="shadow-text">发言</p>
+    			</div>
+    			
     		</div>
-    		<div class="begin">
-    			<p>
-    			</p>
+    		<div class="begin img-mask" v-tap="{ methods : beginGame }" @touchstart="depress($event)" @touchend="loosen($event)">
+    			<img src="../../static/image/112-1.png" class="fullEle comm"  />
+    			<img src="../../static/image/112-2.png" class="fullEle active"  />
+    			<div class="content">
+    				<p class="shadow-text price">
+    					<img src="../../static/image/71@2x.png" class="icon"  />
+    					{{price}}
+    				</p>
+    				<p class="shadow-text status">
+    					<span v-show="roomStatus != 1" style="color: #8dff98;">开始游戏</span>
+    					<span v-show="roomStatus == 1" style="color: #ff617f;">使用中</span>
+    				</p>
+    			</div>
     		</div>
-    		<div class="open-recharge com"></div>
+    		<div class="open-recharge com img-mask" @touchstart="depress($event)" @touchend="loosen($event)" v-tap="{ methods : goRecharge }">
+    			<img src="../../static/image/111-1.png" class="fullEle comm"  />
+    			<img src="../../static/image/111-2.png" class="fullEle active"  />
+    			<div class="content">
+    				<img src="../../static/image/70@2x.png" class="icon"  />
+    				<p class="shadow-text">充值</p>
+    			</div>
+    			
+    		</div>
     	</div>
+    	<div class="chat-input" v-show="chatStatus">
+			<input type="text" id="chat-input"  @blur="chatStatus = false" @keyup.enter="sendChat" @focus="chatFocus($event)" ref="Input" placeholder="输入发言内容(最多30字)" maxlength="30" v-model="chatText" />
+			<span class="chat-send btn-hover" @click="sendChat">发送</span>
+		</div>
     	<!--<div class="room-bottom" v-show="!operateShow">
     		
     		<div class="chat-input" v-show="chatStatus">
@@ -92,26 +108,26 @@
 		<!-- 操作区域 -->
     	<div class="operate-area" v-show="operateShow">
     		<div class="operate-direc">
-    			<div class="direction-item left has-box" @touchstart="touchstart(3, $event)" @touchend="touchend(3)">
-    				<img class="fullEle com" src="../../static/image/sss33.png"  />
-    				<img class="fullEle active" src="../../static/image/qdd.png"  />
+    			<div class="direction-item left has-box " @touchstart="touchstart(3, $event)" @touchend="touchend(3, $event)">
+    				<img class="fullEle com" src="../../static/image/left-1.png"  />
+    				<img class="fullEle active" src="../../static/image/left-2.png"  />
     			</div>
-    			<div class="direction-item top has-box" @touchstart="touchstart(1, $event)" @touchend="touchend(1)">
-    				<img class="fullEle com" src="../../static/image/fff33.png"  />
-    				<img class="fullEle active" src="../../static/image/dd112.png"  />
+    			<div class="direction-item top has-box" @touchstart="touchstart(1, $event)" @touchend="touchend(1, $event)">
+    				<img class="fullEle com" src="../../static/image/up-1.png"  />
+    				<img class="fullEle active" src="../../static/image/up-2.png"  />
     			</div>
-    			<div class="direction-item right has-box" @touchstart="touchstart(4, $event)" @touchend="touchend(4)">
-    				<img class="fullEle com" src="../../static/image/wfff.png"  />
-    				<img class="fullEle active" src="../../static/image/wrwf.png"  />
+    			<div class="direction-item right has-box" @touchstart="touchstart(4, $event)" @touchend="touchend(4, $event)">
+    				<img class="fullEle com" src="../../static/image/right-1.png"  />
+    				<img class="fullEle active" src="../../static/image/right-2.png"  />
     			</div>
-    			<div class="direction-item bottom has-box" @touchstart="touchstart(2, $event)" @touchend="touchend(2)">
-    				<img class="fullEle com" src="../../static/image/adad.png"  />
-    				<img class="fullEle active" src="../../static/image/wrqe.png"  />
+    			<div class="direction-item bottom has-box" @touchstart="touchstart(2, $event)" @touchend="touchend(2, $event)">
+    				<img class="fullEle com" src="../../static/image/down-1.png"  />
+    				<img class="fullEle active" src="../../static/image/down-2.png"  />
     			</div>
     		</div>
-    		<div class="operate-click has-box" v-tap.prevent="{ methods : grab }">
-    			<img class="fullEle com" src="../../static/image/adada.png"  />
-    			<img class="fullEle active" src="../../static/image/wfwfc.png"  />
+    		<div class="operate-click has-box" v-tap.prevent="{ methods : grab }" @touchstart="depress($event)" @touchend="loosen($event)">
+    			<img class="fullEle com" src="../../static/image/76-1@2x.png"  />
+    			<img class="fullEle active" src="../../static/image/76-2@2x.png"  />
     		</div>
     		<div class="count-dowm shadow-text">倒计时 {{operateTime}}秒</div>
     	</div>
@@ -246,6 +262,7 @@ export default {
 	data() {
 	    return {
 	    	wH: 0,							// 页面高度
+	    	videoW: 0,						// 视频宽度高度
 	    	readyStatus: false, 			//readyGO 倒计时3秒弹框
 	    	readyTime: 3,					// 准备倒计时（3秒）
 	    	operateShow: false, 			// 操作区域显示标志位
@@ -352,21 +369,20 @@ export default {
 		this.preventScale()
 	},
 	mounted() {	
-		let self = this
+		document.documentElement.scrollTop = 0
 		this.wH = document.getElementById('app').offsetHeight
+		this.$nextTick(function() {
+			this.videoW = parseFloat(document.getElementById('video-content').offsetHeight) * 0.75
+			
+		})
+		
 		// 加载音频资源
 		this.loadAudios()
 	},
 	updated() {
-		let length = this.roomNewsList.length
-		if(length > 1) {
-			length = length - 1
-			document.getElementById(`news-item-${length}`).scrollIntoView();
-		}
-		
+//		this.chatContent.scrollTop = this.chatContent.scrollHeight;	
 	},
 	methods: {
-		
 		depress(event) {
 			event.target.classList.add("active")
 		},
@@ -831,6 +847,7 @@ export default {
 		 * 移动方向（1前2后3左4右）
 		 */
 		touchstart(direction, e) {
+			this.depress(e)
 			if(this.grabProcess) {
 				return
 			}
@@ -875,7 +892,8 @@ export default {
 	    	}
 	    	
 		},
-		touchend(direction){
+		touchend(direction, e){
+			this.loosen(e)
 			if(this.grabProcess) {
 				return
 			}
@@ -1234,7 +1252,7 @@ export default {
 		 * 播放侧边视频
 		 */
 		startSideStream() {
-			this.zg.startPlayingStream(this.sideStreamId, document.getElementById('sideview'), 1)
+			this.zg.startPlayingStream(this.sideStreamId, document.getElementById('sideview'), 0)
 			this.zg.setPlayVolume(this.sideStreamId, 0)
 		},
 
@@ -1340,10 +1358,21 @@ export default {
 	background-size: 100% 100%;
 }
 .video-content{
-	width: 100%;
-	height: 9.3333333rem;
+	position: absolute;
+	left: 0.25rem;
+	top: 0.85rem;
+	bottom: 2.7rem;
+	right: 0.25rem;
 	border-radius: 0.2rem;
-	position: relative;
+	background: #c1c7c6;
+}
+.video-box{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%,-50%);	
 }
 #frontview, #sideview {
 	width: 100%;
@@ -1354,25 +1383,24 @@ export default {
 	bottom: 0;
 	right: 0;
 	z-index: -2;
-	border-radius: 0.2rem;
 }
 #frontview.show, #sideview.show {
 	z-index: 0;
 }
 .app{
 	position: relative;
-	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
 	font-weight: 700;
-	padding: 0 0.25rem;
 } 
 .room-top{
+	position: absolute;
+	left: 0;
+	top: 0;
 	height: 0.85rem;
 	display: flex;
 	align-items: center;
 	color: #fff;
-	margin-left: -0.25rem;
+	width: 100%;
+	padding-right: 0.25rem;
 	.back{
 		width: 0.85rem;
 		height: 0.85rem;
@@ -1418,16 +1446,16 @@ export default {
 	}
 }
 .audio-change{
-	position: fixed;
+	position: absolute;
 	width: 0.9rem;
 	height: 0.9rem;
-	right: 0.35rem;
-	top: 1rem;
+	right: 0.1rem;
+	top: 0.15rem;
 }
 .room-side{
 	position: absolute;
-	right: 0.2rem;
-	top: 40%;
+	right: 0.1rem;
+	bottom: 0.1rem;
 	width: 0.9rem;
 	& > .child{
 		width: 100%;
@@ -1485,29 +1513,119 @@ export default {
 		font-weight: normal;
 	}
 }
+.chat-input{
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	background: #fff;
+	z-index: 500;
+	width: 100%;
+	padding: 0.15rem 0.15rem;
+	display: flex;
+	font-size: 0.28rem;
+	font-weight: normal;
+	input{
+		height: 0.8rem;
+		padding: 0.2rem;
+		border: 1px solid #ddd;
+		border-radius: 0.1rem;
+		line-height: 0.4rem;
+		flex: 1;
+	}
+	.chat-send{
+		background: #00BC71;
+		border-radius: 0.1rem;
+		line-height: 0.8rem;
+		width: 1.2rem;
+		text-align: center;
+		margin-left: 0.15rem;
+		color: #fff;
+	}
+}
+/*@media (max-width: 350px) {
+	.room-bottom{
+		padding: 0.5rem 0 !important;
+	}
+	
+}*/
 .room-bottom{
+	position: absolute;
+	left: 0;
+	bottom: 0;
 	width: 100%;
 	display: flex;
-	padding: 0.74rem 0;
+	/*padding: 0.65rem 0;*/
+	height: 2.7rem;
 	color: #fff;
 	font-size: 0.3rem;
 	justify-content: space-around;
 	align-items: center;
+	&>div{
+		overflow: hidden;
+		position: relative;
+		.fullEle{
+			position: absolute;
+			left: 0;
+			top: 0;
+			z-index: 0;
+		}
+		.active{
+			display: none;
+		}
+		&.active{
+			.active{
+				display: block;
+			}
+			.comm{
+				display: none;
+			}
+			.content{
+				top: 1px;
+			}
+		}
+		.content{
+			position: relative;
+			width: 100%;
+			height: 100%;
+			z-index: 2;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-direction: column;
+			font-size: 0.28rem;
+			.icon{
+				height: 0.38rem;
+			}
+			
+		}
+		
+	}
 	&>div.com{
 		height: 1.32rem;
 		width: 1.26rem;
-		background-size: 100% 100%;
-		overflow: hidden;
-		background-image: url(../../static/image/111-1.png);
-		&.active{
-			background-image: url(../../static/image/111-2.png);
+		.shadow-text{
+			padding-bottom: 0.14rem;
+			padding-top: 0.04rem;
 		}
 	}
 	&>div.begin{
 		width: 2.96rem;
 		height: 1.32rem;
-		background-size: 100% 100%;
-		background-image: url(../../static/image/11222.png);
+		.price{
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 0.3rem;
+		    .icon{
+		    	margin-right: 0.06rem;
+		    	height: 0.36rem;
+		    }
+		    
+		    
+		}
+		.status{
+	    	padding-bottom: 0.14rem;
+	    }
 	}
 	
 }
@@ -1528,22 +1646,22 @@ export default {
 	}
 }
 .operate-area{
-	display: flex;
 	position: absolute;
-	width: 100%;
-	align-items: center;
-	padding: 0.2rem 0.3rem;
 	left: 0;
 	bottom: 0;
+	display: flex;
+	width: 100%;
+	align-items: center;
 	justify-content: space-between;
+	padding: 0.2rem 0.4rem;
 	.operate-direc{
-		width: 4rem;
-		height: 2.8rem;
+		width: 3.2rem;
+		height: 2.3rem;
 		position: relative;
 		.direction-item{
 			position: absolute;
-			width: 1.08rem;
-			height: 1.08rem;
+			width: 0.88rem;
+			height: 0.88rem;
 			&.left{
 				left: 0;
 				top: 50%;
@@ -1574,9 +1692,9 @@ export default {
 	}
 	.count-dowm{
 		position: absolute;
-		right: 0.36rem;
+		right: 0.48rem;
 		color: #fff;
-		bottom: 0.26rem;
+		bottom: 0.1rem;
 	}
 }
 .has-box{
@@ -1584,7 +1702,7 @@ export default {
 	img.active{
 		display: none;
 	}
-	&:active{
+	&.active{
 		img.active{
 			display: block;
 		}
@@ -1598,7 +1716,7 @@ export default {
 	position: absolute;
 	width: 100%;
 	height: 100%;
-	z-index: 100;
+	z-index: 5;
 	left: 0;
 	top: 0;
 }

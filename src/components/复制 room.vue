@@ -1,73 +1,130 @@
 <template> 
-    <div class="app" id="fastClick" :style="{ height: wH + 'px' }">
-    	<div class="room-loading" v-show="loadingStatus">
-    		<div class="progress-content">
-    			<img class="logo" src="../../static/image/logo-text.png"  />
-    			<div class="progress-box">
-    				<div class="progress-finish" :style="{ width: progress + '%' }">{{progress}}%</div>
-    			</div>
-    		</div>
-    		
-    	</div>
-		<canvas id="frontview" :class="{show:showFront}" :style="{ height: wH + 'px' }"></canvas>
-      	<canvas id="sideview" :class="{show:showSide}" :style="{ height: wH + 'px' }"></canvas>
-    	<div class="room-top">
-			<div v-show="isGame" class="back-position"></div>
-    		<img v-show="!isGame" class="back" src="../../static/image/ss44.png" v-tap.prevent="{ methods : back }"/>
+    <div class="app" id="fastClick">
+    	<div class="room-loading" v-show="loadingStatus"></div>
+        <div class="room-top">
+        	<div class="back" v-tap="{ methods : back }">
+        		<i class="iconfont icon-zuojiantou"></i>
+        	</div>
     		<img v-show="avatar" class="avatar" :src="avatar"  />
     		<div v-show="!avatar" class="avatar-position"></div>
-    		<div class="room-count shadow-text">
-    			<p>当前房间人数</p>
-    			<p>{{roomNum}}</p>
+    		<div class="room-count">
+    			<p>当前房间 {{roomNum}} 人</p>
     		</div>
-    		<div class="price">
-    			<img src="../../static/image/wd.png"  />
-    			<span class="shadow-text">{{remainGold}}</span>
+    		<div class="room-price" style="margin-right: 0.52rem;">
+    			<img src="../../static/image/erdd.png"  />
+    			{{price}}
+    		</div>
+    		<div class="room-price">
+    			<img src="../../static/image/34cd.png"  />
+    			{{remainGold}}
     		</div>
     	</div>
-    	<!--<img class="view-change" v-if="isGame" v-tap.prevent="{ methods : changeView }" src="../../static/image/dd33.png"  />-->
-    	<img class="view-change" v-tap.prevent="{ methods : changeView }" src="../../static/image/dd33.png"  />
+        <div class="video-content">
+        	<canvas id="frontview" :class="{show:showFront}"></canvas>
+	      	<canvas id="sideview" :class="{show:showSide}"></canvas>
+	      	
+	      	<!--<img class="view-change" v-if="isGame" v-tap.prevent="{ methods : changeView }" src="../../static/image/dd33.png"  />-->
+	    	<div class="audio-change img-mask child" v-tap="{ methods : changeAudio, status: musicSwitch && soundSwitch }">
+				<img class="fullEle" src="../../static/image/73@3x.png" v-show="musicSwitch && soundSwitch"  />
+				<img class="fullEle" src="../../static/image/74@3x.png" v-show="!(musicSwitch && soundSwitch)"  />
+			</div>
+	    	<div class="room-side">
+	    		<div class="view-change child" v-tap="{ methods : changeView }" ></div>
+	    		<div class="btn-hover open-detail child" v-tap="{ methods : goRoomDatail }"></div>
+	    		<div class="btn-hover open-record child" v-tap="{ methods : goGrabList }"></div>
+	    	</div>
+	      	
+	      	<!--聊天列表-->
+	      	<div class="room-news-content" v-show="roomNewsList.length > 0">
+    			<div class="room-news-list" id="chat-content" v-show="toggleStatus">
+    				<div class="room-news-item" v-for="(item, index) in roomNewsList" :key="index">
+    					<span class="tit">{{item.tit}} </span>
+    					<span class="text">{{item.text}}</span>
+    				</div>
+    			</div>
+    			<div class="toggle-news-list" @touchstart="toggleNews">
+    				<span v-show="!toggleStatus">展开</span>
+    				<span v-show="toggleStatus">隐藏</span>
+    			</div>
+    		</div>
+        </div>
+    	
     	<div class="room-bottom" v-show="!operateShow">
-    		<div class="detail" v-tap.prevent="{ methods : goGrabList }">
-    			<img src="../../static/image/d122.png"  />
-    			<p class="shadow-text">详情</p>
+    		<div class="open-chat com img-mask" v-tap="{ methods : openChat }" @touchstart="depress($event)" @touchend="loosen($event)">
+    			<img src="../../static/image/111-1.png" class="fullEle comm"  />
+    			<img src="../../static/image/111-2.png" class="fullEle active"  />
+    			<div class="content">
+    				<img src="../../static/image/77@2x.png" class="icon"  />
+    				<p class="shadow-text">发言</p>
+    			</div>
+    			
     		</div>
-    		<div class="begin btn-hover" v-tap.prevent="{ methods : beginGame }">
-    			<p class="price">
-    				<img src="../../static/image/wd.png"  />
-    				<span class="shadow-text">{{price}}</span>
-    			</p>
-    			<p class="shadow-text begin-text" :class="{enabled: roomStatus == 0}">开始游戏</p>
+    		<div class="begin img-mask" v-tap="{ methods : beginGame }" @touchstart="depress($event)" @touchend="loosen($event)">
+    			<img src="../../static/image/112-1.png" class="fullEle comm"  />
+    			<img src="../../static/image/112-2.png" class="fullEle active"  />
+    			<div class="content">
+    				<p class="shadow-text price">
+    					<img src="../../static/image/71@2x.png" class="icon"  />
+    					{{price}}
+    				</p>
+    				<p class="shadow-text status">
+    					<span v-show="roomStatus != 1" style="color: #8dff98;">开始游戏</span>
+    					<span v-show="roomStatus == 1" style="color: #ff617f;">使用中</span>
+    				</p>
+    			</div>
     		</div>
-    		<div class="rechatge" v-tap.prevent="{ methods : goRecharge }">
-    			<img src="../../static/image/ccc3.png"  />
-    			<p class="shadow-text">充值</p>
+    		<div class="open-recharge com img-mask" @touchstart="depress($event)" @touchend="loosen($event)" v-tap="{ methods : goRecharge }">
+    			<img src="../../static/image/111-1.png" class="fullEle comm"  />
+    			<img src="../../static/image/111-2.png" class="fullEle active"  />
+    			<div class="content">
+    				<img src="../../static/image/70@2x.png" class="icon"  />
+    				<p class="shadow-text">充值</p>
+    			</div>
+    			
     		</div>
     	</div>
+    	<div class="chat-input" v-show="chatStatus">
+			<input type="text" id="chat-input"  @blur="chatStatus = false" @keyup.enter="sendChat" @focus="chatFocus($event)" ref="Input" placeholder="输入发言内容(最多30字)" maxlength="30" v-model="chatText" />
+			<span class="chat-send btn-hover" @click="sendChat">发送</span>
+		</div>
+    	<!--<div class="room-bottom" v-show="!operateShow">
+    		
+    		<div class="chat-input" v-show="chatStatus">
+    			<input type="text" id="chat-input"  @blur="chatStatus = false" @keyup.enter="sendChat" @focus="chatFocus($event)" ref="Input" placeholder="输入发言内容(最多30字)" maxlength="30" v-model="chatText" />
+    			<span class="chat-send btn-hover" @click="sendChat">发送</span>
+    		</div>
+    		<div class="btn-hover open-chat child" v-tap.prevent="{ methods : openChat }"></div>
+    		<div class="btn-hover open-detail child" v-tap.prevent="{ methods : goRoomDatail }" ></div>
+    		<div class="btn-hover begin" v-tap.prevent="{ methods : beginGame }" :class="{enabled: roomStatus == 1}">
+    			<span class="price shadow-text">{{price}}</span>
+    		</div>
+    		<div class="btn-hover open-record child" v-tap.prevent="{ methods : goGrabList }"></div>
+    		<div class="btn-hover open-recharge child" v-tap.prevent="{ methods : goRecharge }"></div>
+    	</div>-->
 
 		<!-- 操作区域 -->
     	<div class="operate-area" v-show="operateShow">
     		<div class="operate-direc">
-    			<div class="direction-item left has-box" @touchstart="touchstart(3, $event)" @touchend="touchend(3)">
-    				<img class="fullEle com" src="../../static/image/sss33.png"  />
-    				<img class="fullEle active" src="../../static/image/qdd.png"  />
+    			<div class="direction-item left has-box " @touchstart="touchstart(3, $event)" @touchend="touchend(3, $event)">
+    				<img class="fullEle com" src="../../static/image/left-1.png"  />
+    				<img class="fullEle active" src="../../static/image/left-2.png"  />
     			</div>
-    			<div class="direction-item top has-box" @touchstart="touchstart(1, $event)" @touchend="touchend(1)">
-    				<img class="fullEle com" src="../../static/image/fff33.png"  />
-    				<img class="fullEle active" src="../../static/image/dd112.png"  />
+    			<div class="direction-item top has-box" @touchstart="touchstart(1, $event)" @touchend="touchend(1, $event)">
+    				<img class="fullEle com" src="../../static/image/up-1.png"  />
+    				<img class="fullEle active" src="../../static/image/up-2.png"  />
     			</div>
-    			<div class="direction-item right has-box" @touchstart="touchstart(4, $event)" @touchend="touchend(4)">
-    				<img class="fullEle com" src="../../static/image/wfff.png"  />
-    				<img class="fullEle active" src="../../static/image/wrwf.png"  />
+    			<div class="direction-item right has-box" @touchstart="touchstart(4, $event)" @touchend="touchend(4, $event)">
+    				<img class="fullEle com" src="../../static/image/right-1.png"  />
+    				<img class="fullEle active" src="../../static/image/right-2.png"  />
     			</div>
-    			<div class="direction-item bottom has-box" @touchstart="touchstart(2, $event)" @touchend="touchend(2)">
-    				<img class="fullEle com" src="../../static/image/adad.png"  />
-    				<img class="fullEle active" src="../../static/image/wrqe.png"  />
+    			<div class="direction-item bottom has-box" @touchstart="touchstart(2, $event)" @touchend="touchend(2, $event)">
+    				<img class="fullEle com" src="../../static/image/down-1.png"  />
+    				<img class="fullEle active" src="../../static/image/down-2.png"  />
     			</div>
     		</div>
-    		<div class="operate-click has-box" v-tap.prevent="{ methods : grab }">
-    			<img class="fullEle com" src="../../static/image/adada.png"  />
-    			<img class="fullEle active" src="../../static/image/wfwfc.png"  />
+    		<div class="operate-click has-box" v-tap.prevent="{ methods : grab }" @touchstart="depress($event)" @touchend="loosen($event)">
+    			<img class="fullEle com" src="../../static/image/76-1@2x.png"  />
+    			<img class="fullEle active" src="../../static/image/76-2@2x.png"  />
     		</div>
     		<div class="count-dowm shadow-text">倒计时 {{operateTime}}秒</div>
     	</div>
@@ -87,15 +144,15 @@
 					<img :src="winImg"  />
 				</div>
 				<div class="shadow-text" style="text-align: center; color: #fff;">
-					<p class="succ-tip">太棒了，抓到娃娃了耶！</p>
+					<p class="succ-tip shadow-text">太棒了，抓到娃娃了耶！</p>
 					<a class="check-goods shadow-text" v-tap.prevent="{ methods : toToysPocket }">立即查看</a>
 					<p class="operate-btn">
 						<!--<span class="btn-hover">分享好友</span>-->
-						<span class="btn-hover" v-tap.prevent="{ methods : beginGame }">再次挑战</span>
+						<span class="btn-hover shadow-text" v-tap.prevent="{ methods : beginGame }">再次挑战</span>
 					</p>
-					<p class="time" v-show="endTime >= 1">倒计时 {{endTime}}秒</p>
+					<p class="again-time shadow-text" :class="{show: endTime >= 1}">倒计时 {{endTime}}秒</p>
 				</div>
-				<img src="../../static/image/qe.png" class="close" v-tap.prevent="{ methods : closePop }"/>	
+				<img src="../../static/image/2@2x.png" class="close" v-tap.prevent="{ methods : closePop }"/>	
 			</div>
 		</mt-popup>
 		
@@ -103,51 +160,63 @@
 		<mt-popup v-model="failStatus" class="pop" :closeOnClickModal="false">
 			<div class="fail-content">
 				<div class="shadow-text" style="text-align: center; color: #fff;">
-					<p class="succ-tip">很遗憾，差点就抓到了！</p>
+					<img class="fail-img" src="../../static/image/61@2x.png"  />
+					<p class="succ-tip shadow-text">很遗憾，差点就抓到了！</p>
 					<p class="operate-btn">
 						<!--<span class="btn-hover">分享好友</span>-->
-						<span class="btn-hover" v-tap.prevent="{ methods : beginGame }">再次挑战</span>
+						<span class="btn-hover shadow-text" v-tap.prevent="{ methods : beginGame }">再次挑战</span>
 					</p>
-					<p class="time" v-show="endTime >= 1">倒计时 {{endTime}}秒</p>
+					<p class="again-time shadow-text" :class="{show: endTime >= 1}">倒计时 {{endTime}}秒</p>
 				</div>
-				<img src="../../static/image/qe.png" class="close" v-tap.prevent="{ methods : closePop }" />	
+				<img src="../../static/image/2@2x.png" class="close" v-tap.prevent="{ methods : closePop }" />	
 			</div>
 		</mt-popup>
 
-		<audio id="take-audio" src='../static/audio/take.mp3' preload></audio>
+		<audio id="take-audio" src='https://yingdd.oss-cn-hangzhou.aliyuncs.com/9b38b54c6af6f4113a476df225043a01.mp3' preload></audio>
 		<audio id="click-audio" src='../static/audio/startClickItem.mp3' preload></audio>
+		<audio id="move-audio" src='../static/audio/move.mp3' preload></audio>
 		<audio id="ready-audio" src='../static/audio/readygo.mp3' preload></audio>
-		<audio id="success-audio" src='../static/audio/result_succeed.mp3' preload></audio>
-		<audio id="failure-audio" src='../static/audio/result_failed.mp3' preload></audio>
+		<audio id="success-audio" src='https://yingdd.oss-cn-hangzhou.aliyuncs.com/fa81942687d7d259c7f4979a00367a48.mp3' preload></audio>
+		<audio id="failure-audio" src='https://yingdd.oss-cn-hangzhou.aliyuncs.com/e95cb5cc6a8070f063b09ce9f6843b18.mp3' preload></audio>
 
 		<!-- 详情页面 -->
 		<mt-popup v-model="roomDetail" class="pop">
 			<div class="detail-content">
 				<div class="tit">
-					<span @click="detailTab = 1">抓取记录</span>
-					<span @click="detailTab = 2">娃娃大图</span>
+					<span>娃娃详情</span>
 				</div>
-				<div class="grab-list" v-show="detailTab == 1">
+				<div class="toy-imgs">
+					<img :src="item" v-for="(item, index) in toyImgs" :key="index"  />
+				</div>
+				<img src="../../static/image/x.png" class="close" v-tap.prevent="{ methods : closeGrabList }" />	
+			</div>
+		</mt-popup>
+		<!--抓中记录-->
+		<mt-popup v-model="grabList" class="pop">
+			<div class="detail-content">
+				<div class="tit">
+					<span>抓取记录</span>
+				</div>
+				<div class="grab-list">
 					<Pagination :render="render" :param="pagination"  ref="pagination" uri="/dm-api/doll/log/room" >
 						<div class="grab-item" v-for="(item, index) in pagination.content" :key="index">
-							<img class="avatar" :src="item.avatar" />
+							<img class="avatar" :src="item.avatar || '../../static/image/vvv.png'" />
 							<div class="grab-text">
 								<p class="name">{{item.nickname}}</p>
-								<p class="status">
-									<span v-if="item.status">抓取失败</span>
-									<span v-if="!item.status" style="color: #EA7B97;">抓取成功</span>
+								<p class="status" style="color: #999; font-size: 0.24rem;">
+									{{item.createTime}}
 								</p>
 							</div>
-							<div class="grab-time">{{item.createTime.split(' ')[0]}}<br>{{item.createTime.split(' ')[1]}}</div>
+							<div class="grab-time">
+								<span v-if="item.status">抓取失败</span>
+								<span v-if="!item.status" style="color: #EA7B97;">抓取成功</span>
+							</div>
 						</div>
 						<div class="no_msg" v-show="pagination.content.length<1 && pagination.loadEnd">
 					        <img src="../../static/image/wfdfc.png">
 				            <div>暂无抓取数据~</div>
 					    </div>	   
 					</Pagination>
-				</div>
-				<div class="toy-imgs" v-show="detailTab == 2">
-					<img :src="item" v-for="(item, index) in toyImgs" :key="index"  />
 				</div>
 				<img src="../../static/image/x.png" class="close" v-tap.prevent="{ methods : closeGrabList }" />	
 			</div>
@@ -223,6 +292,7 @@ export default {
 			sideStreamId: undefined,		// 侧面视频流编号
 
 			clickAudio: undefined,		// 点击音效
+			moveAudio: undefined,		// 移动音效
 			readyGoAudio: undefined, 	// 准备音效
 			successAudio: undefined, 	// 抓取成功音效
 			failureAudio: undefined,	// 抓取失败音效
@@ -235,8 +305,8 @@ export default {
 			soundSwitch: true,			// 背景音效开关
 
 			
-			roomDetail: false,   	 	// 房间抓取详情
-			detailTab: 1,
+			roomDetail: false,   	 	// 房间娃娃详情
+			grabList: false,             //抓取记录
 			nickname: storage.get('user').nickname,	// 昵称
 			
 			//分页参数
@@ -253,7 +323,6 @@ export default {
 		    winImg: '',
 		    
 		    loadingStatus: true,    //loading
-		    progress: 0,            //进度
 		    
 		    grabProcess: false,     //点击抓取后的一段禁止操作时间
 		    moveDisabled: false,    //方向键禁止连续点击
@@ -264,11 +333,18 @@ export default {
 		    delayStopMoveFlag: true,  //点击不足200ms延时定时器是否执行
 		    currDirection: null,  //当前移动方向
 		    
+		    toggleStatus: true,   //消息列表显示状态
+		    roomNewsList: [],     //消息列表
+		    
+		    chatText: '',        //发言内容
+		    chatStatus: false,   //聊天input显示状态
+		    
 //		    rechargeStatus: false,  //充值
 //		    rechargeList: []
 	    }
 	},
 	created() {	
+		this.machineId = this.$route.query.machineId
 		//房间人数
 		this.roomNum = this.$route.query.num
 		// 机器编号
@@ -289,12 +365,24 @@ export default {
 		this.preventScale()
 	},
 	mounted() {	
+		document.documentElement.scrollTop = 0
 		let self = this
 		this.wH = document.getElementById('app').offsetHeight
 		// 加载音频资源
 		this.loadAudios()
+		this.chatContent = document.getElementById('chat-content')
+	},
+	updated() {
+		this.chatContent.scrollTop = this.chatContent.scrollHeight;
+		
 	},
 	methods: {
+		depress(event) {
+			event.target.classList.add("active")
+		},
+		loosen(event) {
+			event.target.classList.remove("active")
+		},
 		
 		/**
 		 * 房间抓取记录
@@ -309,7 +397,7 @@ export default {
 		 * 初始化环信
 		 */
 		enterRoom() { 
-			this.$api.enterRoom({machineSn: this.machineSn}).then((response) => {
+			this.$api.enterRoom({machineId: this.$route.query.machineId}).then((response) => {
 				this.toyImgs = response.data.imgs
 				this.winImg = response.data.winImg
 				
@@ -330,7 +418,7 @@ export default {
 			this.sock.onopen = () => {
 				this.sock.send(JSON.stringify({
 					cmd: 'conn',
-					headUrl: storage.get('headUrl'),
+//					headUrl: storage.get('headUrl'),
 					token: accessToken.getAccessToken(),
 					vmc_no: this.machineSn
 				}))
@@ -348,14 +436,15 @@ export default {
 								duration: 1500
 							})
 							if(data.status == 201) {
-								parent.$router.replace('/mobileLogin')
+								parent.$router.replace('/login')
 							}
 							return;
 						}
 
 						this.roomStatus = data.room_status
-						this.avatar = data.headUrl
-
+						data.room_status && (this.avatar = data.headUrl)
+						
+						this.roomNum = data.member_count
 						if (data.isGame === 1) {
 							this.operateTime = data.remainSecond
 							this.operateShow = true
@@ -363,6 +452,12 @@ export default {
 //							this.startSideStream()
 							this.operateCountDown(data.remainSecond)
 						}
+						
+						var news = {
+							tit: this.nickname,
+							text: '进入了房间！'
+						}
+						this.roomNewsList.push(news)
 
 						// 自动发送心跳包（30s一次）
 						this.sendHeartBeate()
@@ -370,9 +465,11 @@ export default {
 						break;
 					case 'hb_r':
 						console.debug('心跳包答复')
+						this.roomNum = data.member_count
 						break;
 					case 'status':
 						console.debug('游戏状态更新')
+						this.roomNum = data.member_count
 						this.roomStatus = data.gameStatus
 						if (data.gameStatus === 1) {
 							data.headUrl ? this.avatar = data.headUrl : this.avatar = '../../static/image/vvv.png'
@@ -380,10 +477,77 @@ export default {
 							this.avatar = ''
 						}
 						break;
+					case 'into_room':
+						console.debug('进入房间通知')
+						this.roomNum = data.member_count
+						var news = {
+							tit: data.nickname,
+							text: '进入了房间！'
+						}
+						this.roomNewsList.push(news)
+						
+						break;
+					case 'leave_room':
+						console.debug('退出房间通知')
+						this.roomNum = data.member_count
+						var news = {
+							tit: data.nickname,
+							text: '离开了房间~~~'
+						}
+						this.roomNewsList.push(news)
+						break;
+					case 'system':
+						console.debug('系统通知')
+						this.roomNum = data.member_count
+						var news = {
+							tit: '系统消息：',
+							text: data.content
+						}
+						this.roomNewsList.push(news)
+						break;
+					case 'text_message':
+						console.debug('聊天消息')
+						this.roomNum = data.member_count
+						var news = {
+							tit: data.sender + '：',
+							text: data.content
+						}
+						this.roomNewsList.push(news)
+						break;
+					case 'maintain':
+						console.debug('设备维护通知')
+						MessageBox.alert('设备维护中， 请切换到其他房间').then(action => {
+							this.$router.replace('/index')
+						})
+						this.succStatus = false
+						this.failStatus = false
+						this.operateShow = false
+						clearInterval(this.endTimer)
+						
+						break;
+					case 'other_grab':
+						console.debug('其他玩家抓取结果通知')
+						this.roomNum = data.member_count
+						if(data.value == 1) {
+							var news = {
+								tit: data.nickname,
+								text: '太棒啦，抓中了娃娃~~'
+							}
+							this.roomNewsList.push(news)
+						}else {
+							var news = {
+								tit: data.nickname,
+								text: '差点就抓到了，继续努力哦~~~'
+							}
+							this.roomNewsList.push(news)
+						}
+						
+						break;
 					case 'start_r':
 						console.debug('游戏开始状态')
 						if (!this.isGame && data.status === 200) {
 							this.avatar = this.userAvatar
+							this.roomNum = data.member_count
 							this.succStatus = false
 							this.failStatus = false
 							this.operateShow = true
@@ -404,6 +568,7 @@ export default {
 						break;
 					case 'grab_r':
 						console.debug('抓取' + (data.value === 1 ? '成功' : '失败'))
+						this.roomNum = data.member_count
 						this.operateShow = false
 						this.isGame = false
 //						this.closeSideStream()
@@ -414,9 +579,19 @@ export default {
 						if (data.value === 1) {
 							// 抓取成功
 							this.grabSucces()
+							var news = {
+								tit: this.nickname,
+								text: '太棒啦，抓中了娃娃~~'
+							}
+							this.roomNewsList.push(news)
 						} else {
 							// 抓取失败
 							this.grabFailure()
+							var news = {
+								tit: this.nickname,
+								text: '差点就抓到了，继续努力哦~~~'
+							}
+							this.roomNewsList.push(news)
 						}
 						break;
 					default:
@@ -430,14 +605,6 @@ export default {
 		},
 		// 即构推流初始化
 		getInitZegoData() {
-			this.progress = 0
-			this.progressTime = setInterval(() => {
-				if(this.progress >= 99) {
-					clearInterval(this.progressTime)
-					return
-				}
-				this.progress+=11
-			}, 90)
 			this.$api.getZegoInitData().then(res => {
 				this.zegoAppId = res.data.appId
 				this.zegoServer = res.data.server
@@ -467,10 +634,10 @@ export default {
 						parent.sideStreamId = item.stream_id
 						// 只有游戏中才开始播放侧边视频流，观众模式播放侧边视频流
 //						this.isGame && parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'), 1)
-						parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'), 1)
+						parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'), 0)
 					} else {
 						parent.frontStreamId = item.stream_id
-						parent.zg.startPlayingStream(item.stream_id, document.getElementById('frontview'), 1)
+						parent.zg.startPlayingStream(item.stream_id, document.getElementById('frontview'), 0)
 					}
 				})
 			}, (error) => {
@@ -481,7 +648,7 @@ export default {
 			this.zg.onDisconnect = (err) => {
 				console.error('房间断开连接[code: ' + err.code + ' , msg: ' + err.msg + ']')
 				MessageBox.alert('连接断开，退出房间').then(action => {
-					this.$router.push('/index')
+					this.$router.replace('/index')
 				})
 			}
 
@@ -489,7 +656,7 @@ export default {
 			this.zg.onKickOut = (err) => {
 				console.error('被踢下线通知[code: ' + err.code + ' , msg: ' + err.msg + ']')
 				MessageBox.alert('账号冲突，退出房间').then(action => {
-					this.$router.push('/index')
+					this.$router.replace('/index')
 				})
 			}
 
@@ -506,7 +673,6 @@ export default {
 			// 流信息变更通知
 			this.zg.onPlayStateUpdate = (type, streamId) => {
 				setTimeout(() => {
-					clearInterval(parent.progressTime)
 					parent.loadingStatus = false
 				}, 600)
 				console.info('流' + streamId + ', 状态：' + type)
@@ -516,6 +682,8 @@ export default {
 		//点击开始游戏
 		beginGame() {
 			this.playClickAudio()
+			this.succStatus = false
+			this.failStatus = false
 			this.startGame()
 		},
 
@@ -581,6 +749,57 @@ export default {
 		back() {
 			this.$router.go(-1)
 		},
+		
+		//消息列表显示或隐藏
+		toggleNews() {
+			this.toggleStatus = !this.toggleStatus
+		},
+		
+		//打开聊天input
+		openChat() {
+			const self = this
+			this.chatStatus = true
+			this.$nextTick(function() {
+				this.$refs.Input.focus()
+				this.$refs.Input.scrollIntoView()
+			})
+		},
+		//聊天input出现在屏幕内
+		chatFocus(event) {
+			event.target.scrollIntoView();
+			
+		},
+		//聊天input出现在屏幕内
+		chatClick(params) {
+			params.event.target.scrollIntoView();
+			
+		},
+		
+        //发送聊天
+		sendChat() {
+			if(!this.chatText) {
+				Toast({
+					message: '请输入聊天内容',
+					position: 'middle',
+					duration: 1000
+				})
+			}
+			if (this.sock == undefined) {
+				alert('服务器连接失败，请重试')
+				return
+			}
+			this.sock.send(JSON.stringify({
+				cmd: 'text_message',
+				vmc_no: this.machineSn,
+				content: this.chatText
+			}))
+			var news = {
+				tit: this.nickname + '：',
+				text: this.chatText
+			}
+			this.roomNewsList.push(news)
+			this.chatText = ''
+		},
 
 		/**
 		 * 发送心跳包
@@ -622,6 +841,7 @@ export default {
 		 * 移动方向（1前2后3左4右）
 		 */
 		touchstart(direction, e) {
+			this.depress(e)
 			if(this.grabProcess) {
 				return
 			}
@@ -636,6 +856,7 @@ export default {
 					direction = 1
 				}
 			}
+			console.info("移动方向：" + this.currDirection+","+ direction)
 			var changeDirect = (this.currDirection != direction)
 			var currDirect = this.currDirection
 	    	let self = this
@@ -645,10 +866,12 @@ export default {
 	    	if(this.stopMoveTime) {
 	    		var diffTime = this.startMoveTime - this.stopMoveTime
 	    		if(diffTime < 200 && !changeDirect) {
+	    			clearTimeout(this.delayStopMove)
 	    			this.delayStopMoveFlag = false
 	    			return
 	    		}
 	    		if(diffTime < 200 && changeDirect) {
+	    			clearTimeout(this.delayStopMove)
 	    			this.delayStopMoveFlag = false
 	    			this.sock.send(JSON.stringify({
 						cmd: 'stop',
@@ -656,13 +879,15 @@ export default {
 						direction: currDirect
 					}))
 	    		}
+	    		
 	    		self.moveDirection(direction)
 	    	}else {
 	    		self.moveDirection(direction)
 	    	}
 	    	
 		},
-		touchend(direction){
+		touchend(direction, e){
+			this.loosen(e)
 			if(this.grabProcess) {
 				return
 			}
@@ -678,7 +903,7 @@ export default {
 				}
 			}
 			this.stopMoveTime = new Date().getTime()
-			this.playClickAudio()
+			this.moveClickAudio()
 			this.stopMove(direction)
 			return false 
 		},
@@ -703,6 +928,7 @@ export default {
 			}
 			
 			var timeDiff = this.stopMoveTime - this.startMoveTime
+			this.delayStopMoveFlag = true
 			if(timeDiff < 200) {
 				this.delayStopMove = setTimeout(() => {
 					if(this.delayStopMoveFlag) {
@@ -711,8 +937,9 @@ export default {
 							vmc_no: this.machineSn,
 							direction: direction
 						}))
-						this.delayStopMoveFlag = false
+						
 					}	
+					
 				}, 200)
 				return
 			}
@@ -800,6 +1027,20 @@ export default {
 		},
 		
 		/**
+		 * 离开房间
+		 */
+		leaveRoom() {
+			if (this.sock == undefined) {
+				alert('服务器连接失败，请重试')
+				return
+			}
+			this.sock.send(JSON.stringify({
+				cmd: 'leave',
+				vmc_no: this.machineSn,
+			}))
+		},
+		
+		/**
 		 * 切换视角
 		 */
 		changeView() {
@@ -807,12 +1048,35 @@ export default {
 			this.showSide = !this.showSide
 			this.playClickAudio()
 		},
+		
+		//切换声音
+		changeAudio(params) {
+			this.playClickAudio()
+			const status = !params.status
+			console.log(status)
+			this.musicSwitch = this.soundSwitch = status
+			storage.set('music_switch', status)
+			storage.set('sound_switch', status)
+			if(status) {
+				this.$root.bgAudio && this.$root.bgAudio.paused && this.$root.bgAudio.play()
+				
+			}else {
+				this.$root.bgAudio && !this.$root.bgAudio.paused && this.$root.bgAudio.pause()
+			}
+		},
 
 		/**
 		 * 播放点击音效
 		 */
 		playClickAudio() {
 			this.soundSwitch && this.clickAudio.play()
+		},
+		
+		/**
+		 * 移动点击音效
+		 */
+		moveClickAudio() {
+			this.soundSwitch && this.moveAudio.play()
 		},
 
 		/**
@@ -859,11 +1123,19 @@ export default {
 		},
 
 		/**
-		 * 去抓取记录
+		 *打开娃娃详情
+		 */
+		goRoomDatail() {
+			this.playClickAudio()
+			this.roomDetail = true
+		},
+		
+		/**
+		 *打开抓取记录
 		 */
 		goGrabList() {
 			this.playClickAudio()
-			this.roomDetail = true
+			this.grabList = true
 		},
 
 		/**
@@ -915,6 +1187,7 @@ export default {
 		 */
 		getGold() {
 			this.$api.userInfo().then(response => {
+				this.nickname = response.data.nickname
 				this.remainGold = response.data.money
 				this.userAvatar = response.data.avatar || '../../static/image/vvv.png'
 			})
@@ -945,6 +1218,9 @@ export default {
 			}
 			// 点击音效
 			this.clickAudio = document.getElementById('click-audio')
+			
+			// 移动音效
+			this.moveAudio = document.getElementById('move-audio')
 
 			// 准备音效
 			this.readyGoAudio = document.getElementById('ready-audio')
@@ -970,7 +1246,7 @@ export default {
 		 * 播放侧边视频
 		 */
 		startSideStream() {
-			this.zg.startPlayingStream(this.sideStreamId, document.getElementById('sideview'), 1)
+			this.zg.startPlayingStream(this.sideStreamId, document.getElementById('sideview'), 0)
 			this.zg.setPlayVolume(this.sideStreamId, 0)
 		},
 
@@ -1005,6 +1281,7 @@ export default {
 		closeGrabList() {
 			this.playClickAudio()
 			this.roomDetail = false
+			this.grabList = false
 		},
 
 		/**
@@ -1053,7 +1330,7 @@ export default {
 	beforeDestroy() {
 		// 关闭背景音量
 		this.$root.bgAudio && !this.$root.bgAudio.paused && this.$root.bgAudio.pause()
-
+		this.leaveRoom()
 		this.zg.release()
 	}
 
@@ -1062,67 +1339,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.danmu {
-  	position: fixed;
-  	left: 100%;
-  	top: 100px;
- 	font-size: .4rem;
-	font-weight: bold;
-  	width: 4rem;
-  	color: white;
-  	animation: danmu 5s linear 0s 1;
-	text-shadow: 0 0 .03rem #fff064
-}
-
-.danmu.green {
-	text-stroke: .02rem #a1c843;
-	-webkit-text-stroke: .02rem #a1c843;	
-}
-.danmu.yellow {
-	text-stroke: .02rem #f2b02d;
-	-webkit-text-stroke: .02rem #f2b02d;
-}
-.danmu.purple {
-	text-stroke: .02rem #ff808e;
-	-webkit-text-stroke: .02rem #ff808e;
-}
-
-@keyframes danmu {
-  from {
-    left: 100%;
-    transform: translateX(0);
-  }
-  to {
-    left: 0;
-    transform: translateX(-100%);
-  }
-}
-@-webkit-keyframes progress-bar-stripes {
-	from {
-		background-position: 40px 0
-	}
-	to {
-		background-position: 0 0
-	}
-}
-
-@-o-keyframes progress-bar-stripes {
-	from {
-		background-position: 40px 0
-	}
-	to {
-		background-position: 0 0
-	}
-}
-
-@keyframes progress-bar-stripes {
-	from {
-		background-position: 40px 0
-	}
-	to {
-		background-position: 0 0
-	}
-}
+@import "../../static/css/style.scss";
 .room-loading{
 	position: absolute;
 	width: 100%;
@@ -1130,161 +1347,265 @@ export default {
 	left: 0;
 	top: 0;
 	bottom: 0;
-	background: #fff;
-	.progress-content{
-		position: absolute;
-		left: 50%;
-		top: 42%;
-		transform: translate(-50%, -50%);
-		.logo{
-			display: block;
-			width: 2.6rem;
-			margin: 0 auto;
-			margin-bottom: 0.36rem;
-		}
-		.progress-box{
-			width: 5.6rem;
-			height: 0.3rem;
-	    overflow: hidden;
-	    background-color: #F5F5F9;
-	    border-radius: 0.3rem;
-	    -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
-	    box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
-	    .progress-finish{
-	    	float: left;
-	    	width: 1rem;
-	    	height: 100%;
-				font-size: 12px;
-				line-height: 0.32rem;
-				color: #fff;
-				text-align: center;
-				background-color: #5cb85c;
-				-webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
-				box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
-				-webkit-transition: width .6s ease;
-				-o-transition: width .6s ease;
-				transition: width .6s ease;
-				background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
-				background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
-				background-image: linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
-				-webkit-background-size: 40px 40px;
-				background-size: 40px 40px;
-				-webkit-animation: progress-bar-stripes 2s linear infinite;
-				-o-animation: progress-bar-stripes 2s linear infinite;
-				animation: progress-bar-stripes 2s linear infinite
-	    }
-		}
-	}
+	background: url(https://yingdd.oss-cn-hangzhou.aliyuncs.com/90530c7ba350e128fa64cee4d4aee58a.jpg) no-repeat center;
+	background-color: #a6a2a1;
+	background-size: 100% 100%;
+}
+.video-content{
+	width: 100%;
+	height: 9.3333333rem;
+	border-radius: 0.2rem;
+	position: relative;
 }
 #frontview, #sideview {
 	width: 100%;
-	z-index: -2;
+	height: 100%;
 	position: absolute;
 	left: 0;
 	top: 0;
+	bottom: 0;
+	right: 0;
+	z-index: -2;
+	border-radius: 0.2rem;
 }
 #frontview.show, #sideview.show {
 	z-index: 0;
 }
 .app{
-	background: #6d6481 !important;
 	position: relative;
-	height: 100vh;
-	display: flex;
-	flex-direction: column;
+	min-height: 100vh;
 	font-weight: 700;
+	padding: 0 0.25rem;
 } 
 .room-top{
-	position: absolute;
-	width: 100%;
-	top: 0;
-	left: 0;
+	height: 0.85rem;
 	display: flex;
 	align-items: center;
-	padding: 0.2rem;
 	color: #fff;
-	// background: #6d6481;
+	margin-left: -0.25rem;
 	.back{
-		width: 1rem;
-		margin-right: 0.2rem;
+		width: 0.85rem;
+		height: 0.85rem;
+		position:relative;
+		.iconfont{
+	        color: $header-back-color;
+	        font-size: 0.36rem;
+	        line-height: 0.4rem;
+	        width: 0.4rem;
+	        height: 0.4rem;
+	        position: absolute;
+	        left: 50%;
+	        top: 50%;
+	        transform: translate(-50%, -50%);
+	    }
 	}
 	.avatar, .avatar-position{
-		width: 0.7rem;
-		height: 0.7rem;
+		width: 0.68rem;
+		height: 0.68rem;
 		border-radius: 50%;
 	}
-	.price{
-		width: 1.7rem;
-		height: 0.7rem;
-		background: rgba(0,0,0,0.2);
-		border-radius: 0.35rem;
-		display: flex;
-		align-items: center;
-		padding-left: 0.2rem;
-		margin-left: 0.2rem;
+	.room-price{
+		background: rgba(0,0,0,0.3);
+		position: relative;
+		line-height: 0.38rem;
+		height: 0.38rem;
+		border-radius: 0.38rem;
+		padding-left: 0.4rem;
+		padding-right: 0.15rem;
 		img{
-			width: 0.28rem;
-			margin-right: 0.16rem;
+			position: absolute;
+			left: -0.2rem;
+			width: 0.48rem;
+			top: 50%;
+			transform: translateY(-50%);
 		}
 	}
 	.room-count{
-		text-align: center;
+		padding-left: 0.2rem;
 		flex: 1;
-		font-size: 0.3rem;
+		font-size: 0.28rem;
 		line-height: 1.2;
 	}
 }
-.view-change{
+.audio-change{
 	position: absolute;
-	right: 0.2rem;
-	top: 40%;
-	width: 1.05rem;
+	width: 0.9rem;
+	height: 0.9rem;
+	right: 0.1rem;
+	top: 0.15rem;
+}
+.room-side{
+	position: absolute;
+	right: 0.1rem;
+	bottom: 0.1rem;
+	width: 0.9rem;
+	& > .child{
+		width: 100%;
+		height: 0.9rem;
+		margin-bottom: 0.2rem;
+		background-size: 100% 100%;
+	}
+	.view-change{
+		background-image: url(../../static/image/dd33.png);
+	}
+	.open-detail{
+		background-image: url(../../static/image/ssrr.png);
+	}
+	.open-record{
+		background-image: url(../../static/image/ewsd.png);
+	}
+}
+.room-news-content{
+	position: absolute;
+	bottom: 0.15rem;
+	left: 0.18rem;
+	width: 3.8rem;
+	z-index: 5;
+	.room-news-list{
+		overflow-y: auto;
+		height: 2.3rem;
+	}
+	.room-news-item{
+		font-size: 0.22rem;
+		font-weight: normal;
+		color: #fff;
+		background: rgba(0,0,0,0.2);
+		padding: 0.06rem 0.1rem;
+		border-radius: 0.1rem;
+		line-height: 1.4;
+		margin-bottom: 0.14rem;
+		display: inline-block;
+		min-width: 60%;
+		max-width: 100%;
+		.tit{
+			color: #f7ed00;
+		}
+	}
+	.toggle-news-list{
+		margin-top: 0.2rem;
+		width: 0.78rem;
+		height: 0.54rem;
+		border-radius: 0.2rem;
+		background: #3ede62;
+		position: relative;
+		text-align: center;
+		line-height: 0.54rem;
+		color: #fff;
+		font-size: 0.22rem;
+		font-weight: normal;
+	}
+}
+.chat-input{
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	background: #fff;
+	z-index: 500;
+	width: 100%;
+	padding: 0.15rem 0.15rem;
+	display: flex;
+	font-size: 0.28rem;
+	font-weight: normal;
+	input{
+		height: 0.8rem;
+		padding: 0.2rem;
+		border: 1px solid #ddd;
+		border-radius: 0.1rem;
+		line-height: 0.4rem;
+		flex: 1;
+	}
+	.chat-send{
+		background: #00BC71;
+		border-radius: 0.1rem;
+		line-height: 0.8rem;
+		width: 1.2rem;
+		text-align: center;
+		margin-left: 0.15rem;
+		color: #fff;
+	}
+}
+@media (max-width: 350px) {
+	.room-bottom{
+		padding: 0.5rem 0 !important;
+	}
+	
 }
 .room-bottom{
-	position: absolute;
 	width: 100%;
-	bottom: 0;
 	display: flex;
-	padding: 0.1rem;
+	padding: 0.65rem 0;
 	color: #fff;
 	font-size: 0.3rem;
-	// background: #6d6481;
+	justify-content: space-around;
+	align-items: center;
 	&>div{
-		background: rgba(0,0,0,0.2);
-		border-radius: 0.2rem;
-		height: 1.1rem;
-		padding-top: 0.12rem;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		margin: 0 0.08rem;
-		img{
-			height: 0.44rem;
+		overflow: hidden;
+		position: relative;
+		.fullEle{
+			position: absolute;
+			left: 0;
+			top: 0;
+			z-index: 0;
 		}
-		&>p{
-			padding-bottom: 0.06rem;
+		.active{
+			display: none;
+		}
+		&.active{
+			.active{
+				display: block;
+			}
+			.comm{
+				display: none;
+			}
+			.content{
+				top: 1px;
+			}
+		}
+		.content{
+			position: relative;
+			width: 100%;
+			height: 100%;
+			z-index: 2;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-direction: column;
+			font-size: 0.28rem;
+			.icon{
+				height: 0.38rem;
+			}
+			
+		}
+		
+	}
+	&>div.com{
+		height: 1.32rem;
+		width: 1.26rem;
+		.shadow-text{
+			padding-bottom: 0.14rem;
+			padding-top: 0.04rem;
 		}
 	}
-	.detail, .rechatge{
-		width: 1.7rem;
-	}
-	.begin{
-		flex: 1;
+	&>div.begin{
+		width: 2.96rem;
+		height: 1.32rem;
 		.price{
 			display: flex;
 			align-items: center;
-			margin-left: 0.2rem;
-			img{
-				margin-right: 0.16rem;
-			}
+			justify-content: center;
+			font-size: 0.3rem;
+		    .icon{
+		    	margin-right: 0.06rem;
+		    	height: 0.36rem;
+		    }
+		    
+		    
 		}
-		.begin-text{
-			color: #ff83a8;
-		}
-		.begin-text.enabled{
-			color: #6bf780;
-		}
+		.status{
+	    	padding-bottom: 0.14rem;
+	    }
 	}
+	
 }
 .mint-popup{
 	background: transparent;
@@ -1304,21 +1625,19 @@ export default {
 }
 .operate-area{
 	display: flex;
-	position: absolute;
 	width: 100%;
 	align-items: center;
-	padding: 0.2rem 0.3rem;
-	left: 0;
-	bottom: 0;
 	justify-content: space-between;
+	padding: 0.2rem 0.4rem;
+	position: relative;
 	.operate-direc{
-		width: 4rem;
-		height: 2.8rem;
+		width: 3.2rem;
+		height: 2.3rem;
 		position: relative;
 		.direction-item{
 			position: absolute;
-			width: 1.08rem;
-			height: 1.08rem;
+			width: 0.88rem;
+			height: 0.88rem;
 			&.left{
 				left: 0;
 				top: 50%;
@@ -1349,9 +1668,9 @@ export default {
 	}
 	.count-dowm{
 		position: absolute;
-		right: 0.36rem;
+		right: 0.48rem;
 		color: #fff;
-		bottom: 0.26rem;
+		bottom: 0.1rem;
 	}
 }
 .has-box{
@@ -1359,7 +1678,7 @@ export default {
 	img.active{
 		display: none;
 	}
-	&:active{
+	&.active{
 		img.active{
 			display: block;
 		}
@@ -1373,7 +1692,7 @@ export default {
 	position: absolute;
 	width: 100%;
 	height: 100%;
-	z-index: 100;
+	z-index: 5;
 	left: 0;
 	top: 0;
 }
@@ -1398,9 +1717,14 @@ export default {
 	
 }
 .fail-content{
-	padding: 2rem 0;
 	width: 5.4rem;
+	padding: 1.3rem 0 1rem;
 	position: relative;
+	.fail-img{
+		display: block;
+		width: 2.6rem;
+		margin: 0 auto 0.5rem;
+	}
 }
 .close{
 	position: absolute;
@@ -1408,9 +1732,13 @@ export default {
 	top: 0;
 	width: 0.6rem;
 }
-.time{
+.again-time{
 	padding-top: 0.5rem;
 	font-size: 0.3rem;
+	opacity: 0;
+	&.show{
+		opacity: 1;
+	}
 }
 .succ-tip{
 	font-size: 0.44rem;
@@ -1431,7 +1759,7 @@ export default {
 		width: 2rem;
 		height: 0.9rem;
 		border-radius: 0.1rem;
-		background: #fdd152;
+		background: $bg-color;
 		line-height: 0.9rem;
 		font-size: 0.3rem;
 		margin:  0 0.5rem;

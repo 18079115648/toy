@@ -150,7 +150,7 @@ export default {
 		&:before{
 			content: '';
 			position: absolute;
-			z-index: 3;
+			z-index: 6;
 			left: 0;
 			top: 0;
 			right: 0;

@@ -69,8 +69,8 @@ function getKey(name) {
 
 storage.set('operatorKey', getKey('key'))
 
-//storage.set('token', {"accessToken":"337f01014ed58ee4de283ae2556caa5c","refreshToken":"b0c1703bd76cc87750f3ad73b5c145bc","expired":1517536840})
-storage.set('token', {"accessToken":"d6c344adef401f47ebc5da5703a7df5f","refreshToken":"3cb7422ee0bf6f36436e92d19c108f69","expired":1517882506})
+storage.set('token', {"accessToken":"34bea3264fa230e8741dcd61158c8197","refreshToken":"1aa2ef0da2038a6aefbbe49d75ef066b","expired":1517912614})
+//storage.set('token', {"accessToken":"d6c344adef401f47ebc5da5703a7df5f","refreshToken":"3cb7422ee0bf6f36436e92d19c108f69","expired":1517882506})
 
 //router.beforeEach((to, from, next) => {
 //  if (to.meta.requireAuth && !token.getAccessToken() && common.isWeixin()) {
