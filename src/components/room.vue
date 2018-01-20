@@ -1,39 +1,47 @@
 <template> 
     <div class="app" id="fastClick" :style="{ height: wH + 'px' }">
     	<div class="room-loading" v-show="loadingStatus"></div>
-		<canvas id="frontview" :class="{show:showFront}" :style="{ height: wH + 'px' }"></canvas>
-      	<canvas id="sideview" :class="{show:showSide}" :style="{ height: wH + 'px' }"></canvas>
-    	<div class="room-top">
-			<img v-show="isGame" class="back" src="../../static/image/feee.png"/>
-    		<img v-show="!isGame" class="back" src="../../static/image/ss44.png" @click="back"/>
+    	<!--<Header>
+        	<div class="room-top">
+	    		<img v-show="avatar" class="avatar" :src="avatar"  />
+	    		<div v-show="!avatar" class="avatar-position"></div>
+	    		<div class="room-count">
+	    			<p>当前房间 {{roomNum}} 人</p>
+	    		</div>
+	    		<div class="room-price" style="margin-right: 0.52rem;">
+	    			<img src="../../static/image/erdd.png"  />
+	    			{{price}}
+	    		</div>
+	    		<div class="room-price">
+	    			<img src="../../static/image/34cd.png"  />
+	    			{{remainGold}}
+	    		</div>
+	    	</div>
+        </Header>-->
+        <div class="room-top">
+        	<div class="back">
+        		<i class="iconfont icon-zuojiantou"></i>
+        	</div>
     		<img v-show="avatar" class="avatar" :src="avatar"  />
     		<div v-show="!avatar" class="avatar-position"></div>
-    		<div class="room-count shadow-text">
-    			<p>当前房间人数</p>
-    			<p>{{roomNum}}</p>
+    		<div class="room-count">
+    			<p>当前房间 {{roomNum}} 人</p>
     		</div>
-    		<div class="price">
-    			<p>
-    				<img src="../../static/image/erdd.png"  />
-    				<span class="shadow-text">{{price}}</span>
-    			</p>
-    			<p>
-    				<img style="left: 1px;" src="../../static/image/34cd.png"  />
-    				<span class="shadow-text">{{remainGold}}</span>
-    			</p>
+    		<div class="room-price" style="margin-right: 0.52rem;">
+    			<img src="../../static/image/erdd.png"  />
+    			{{price}}
+    		</div>
+    		<div class="room-price">
+    			<img src="../../static/image/34cd.png"  />
+    			{{remainGold}}
     		</div>
     	</div>
-    	<!--<img class="view-change" v-if="isGame" v-tap.prevent="{ methods : changeView }" src="../../static/image/dd33.png"  />-->
-    	
-    	<div class="room-side">
-    		<div class="view-change" v-tap="{ methods : changeView }" ></div>
-    		<div class="audio-change img-mask" v-tap="{ methods : changeAudio, status: musicSwitch && soundSwitch }">
-    			<img class="fullEle" src="../../static/image/46@2x.png" v-show="musicSwitch && soundSwitch"  />
-    			<img class="fullEle" src="../../static/image/47@2x.png" v-show="!(musicSwitch && soundSwitch)"  />
-    		</div>
-    	</div>
-    	<div class="room-bottom" v-show="!operateShow">
-    		<div class="room-news-content" v-show="roomNewsList.length > 0">
+        <div class="video-content">
+        	<canvas id="frontview" :class="{show:showFront}"></canvas>
+	      	<canvas id="sideview" :class="{show:showSide}"></canvas>
+	      	
+	      	<!--聊天列表-->
+	      	<div class="room-news-content" v-show="roomNewsList.length > 0">
     			<div class="room-news-list" v-show="toggleStatus">
     				<div class="room-news-item" v-for="(item, index) in roomNewsList" :id="'news-item-' + index" :key="index">
     					<span class="tit">{{item.tit}} </span>
@@ -45,6 +53,29 @@
     				<span v-show="toggleStatus">隐藏</span>
     			</div>
     		</div>
+        </div>
+    	<!--<img class="view-change" v-if="isGame" v-tap.prevent="{ methods : changeView }" src="../../static/image/dd33.png"  />-->
+    	<div class="audio-change img-mask child" v-tap="{ methods : changeAudio, status: musicSwitch && soundSwitch }">
+			<img class="fullEle" src="../../static/image/73@3x.png" v-show="musicSwitch && soundSwitch"  />
+			<img class="fullEle" src="../../static/image/74@3x.png" v-show="!(musicSwitch && soundSwitch)"  />
+		</div>
+    	<div class="room-side">
+    		<div class="view-change child" v-tap="{ methods : changeView }" ></div>
+    		<div class="btn-hover open-detail child" v-tap.prevent="{ methods : openChat }"></div>
+    		<div class="btn-hover open-record child" v-tap.prevent="{ methods : goGrabList }"></div>
+    	</div>
+    	<div class="room-bottom" v-show="!operateShow">
+    		<div class="open-chat com" @touchstart="depress($event)" @touchend="loosen($event)">
+    			<!--<img src=""-->
+    		</div>
+    		<div class="begin">
+    			<p>
+    			</p>
+    		</div>
+    		<div class="open-recharge com"></div>
+    	</div>
+    	<!--<div class="room-bottom" v-show="!operateShow">
+    		
     		<div class="chat-input" v-show="chatStatus">
     			<input type="text" id="chat-input"  @blur="chatStatus = false" @keyup.enter="sendChat" @focus="chatFocus($event)" ref="Input" placeholder="输入发言内容(最多30字)" maxlength="30" v-model="chatText" />
     			<span class="chat-send btn-hover" @click="sendChat">发送</span>
@@ -56,7 +87,7 @@
     		</div>
     		<div class="btn-hover open-record child" v-tap.prevent="{ methods : goGrabList }"></div>
     		<div class="btn-hover open-recharge child" v-tap.prevent="{ methods : goRecharge }"></div>
-    	</div>
+    	</div>-->
 
 		<!-- 操作区域 -->
     	<div class="operate-area" v-show="operateShow">
@@ -278,7 +309,7 @@ export default {
 		    toyImgs: [],            //娃娃大图
 		    winImg: '',
 		    
-		    loadingStatus: true,    //loading
+		    loadingStatus: false,    //loading
 		    
 		    grabProcess: false,     //点击抓取后的一段禁止操作时间
 		    moveDisabled: false,    //方向键禁止连续点击
@@ -300,6 +331,7 @@ export default {
 	    }
 	},
 	created() {	
+		this.machineId = this.$route.query.machineId
 		//房间人数
 		this.roomNum = this.$route.query.num
 		// 机器编号
@@ -335,6 +367,13 @@ export default {
 	},
 	methods: {
 		
+		depress(event) {
+			event.target.classList.add("active")
+		},
+		loosen(event) {
+			event.target.classList.remove("active")
+		},
+		
 		/**
 		 * 房间抓取记录
 		 */
@@ -348,7 +387,7 @@ export default {
 		 * 初始化环信
 		 */
 		enterRoom() { 
-			this.$api.enterRoom({machineSn: this.machineSn}).then((response) => {
+			this.$api.enterRoom({machineId: this.$route.query.machineId}).then((response) => {
 				this.toyImgs = response.data.imgs
 				this.winImg = response.data.winImg
 				
@@ -387,7 +426,7 @@ export default {
 								duration: 1500
 							})
 							if(data.status == 201) {
-								parent.$router.replace('/mobileLogin')
+								parent.$router.replace('/login')
 							}
 							return;
 						}
@@ -406,7 +445,7 @@ export default {
 						
 						var news = {
 							tit: this.nickname,
-							text: '进入了房间！！！'
+							text: '进入了房间！'
 						}
 						this.roomNewsList.push(news)
 
@@ -433,7 +472,7 @@ export default {
 						this.roomNum = data.member_count
 						var news = {
 							tit: data.nickname,
-							text: '进入了房间！！！'
+							text: '进入了房间！'
 						}
 						this.roomNewsList.push(news)
 						
@@ -482,13 +521,13 @@ export default {
 						if(data.value == 1) {
 							var news = {
 								tit: data.nickname,
-								text: '抓中了娃娃！！！'
+								text: '太棒啦，抓中了娃娃~~'
 							}
 							this.roomNewsList.push(news)
 						}else {
 							var news = {
 								tit: data.nickname,
-								text: '差点就抓到了~~~'
+								text: '差点就抓到了，继续努力哦~~~'
 							}
 							this.roomNewsList.push(news)
 						}
@@ -532,7 +571,7 @@ export default {
 							this.grabSucces()
 							var news = {
 								tit: this.nickname,
-								text: '抓中了娃娃！！！'
+								text: '太棒啦，抓中了娃娃~~'
 							}
 							this.roomNewsList.push(news)
 						} else {
@@ -540,7 +579,7 @@ export default {
 							this.grabFailure()
 							var news = {
 								tit: this.nickname,
-								text: '差点就抓到了~~~'
+								text: '差点就抓到了，继续努力哦~~~'
 							}
 							this.roomNewsList.push(news)
 						}
@@ -585,10 +624,10 @@ export default {
 						parent.sideStreamId = item.stream_id
 						// 只有游戏中才开始播放侧边视频流，观众模式播放侧边视频流
 //						this.isGame && parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'), 1)
-						parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'), 1)
+						parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'), 0)
 					} else {
 						parent.frontStreamId = item.stream_id
-						parent.zg.startPlayingStream(item.stream_id, document.getElementById('frontview'), 1)
+						parent.zg.startPlayingStream(item.stream_id, document.getElementById('frontview'), 0)
 					}
 				})
 			}, (error) => {
@@ -1298,205 +1337,179 @@ export default {
 	bottom: 0;
 	background: url(https://yingdd.oss-cn-hangzhou.aliyuncs.com/90530c7ba350e128fa64cee4d4aee58a.jpg) no-repeat center;
 	background-color: #a6a2a1;
-	background-size: 100% auto;
+	background-size: 100% 100%;
+}
+.video-content{
+	width: 100%;
+	height: 9.3333333rem;
+	border-radius: 0.2rem;
+	position: relative;
 }
 #frontview, #sideview {
 	width: 100%;
-	z-index: -2;
+	height: 100%;
 	position: absolute;
 	left: 0;
 	top: 0;
+	bottom: 0;
+	right: 0;
+	z-index: -2;
+	border-radius: 0.2rem;
 }
 #frontview.show, #sideview.show {
 	z-index: 0;
 }
 .app{
-	background: #6d6481 !important;
 	position: relative;
-	height: 100vh;
+	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
 	font-weight: 700;
+	padding: 0 0.25rem;
 } 
 .room-top{
-	position: absolute;
-	width: 100%;
-	top: 0;
-	left: 0;
+	height: 0.85rem;
 	display: flex;
 	align-items: center;
-	padding: 0.2rem;
 	color: #fff;
-	// background: #6d6481;
+	margin-left: -0.25rem;
 	.back{
-		width: 1rem;
-		margin-right: 0.2rem;
+		width: 0.85rem;
+		height: 0.85rem;
+		position:relative;
+		.iconfont{
+	        color: $header-back-color;
+	        font-size: 0.36rem;
+	        line-height: 0.4rem;
+	        width: 0.4rem;
+	        height: 0.4rem;
+	        position: absolute;
+	        left: 50%;
+	        top: 50%;
+	        transform: translate(-50%, -50%);
+	    }
 	}
 	.avatar, .avatar-position{
-		width: 0.7rem;
-		height: 0.7rem;
+		width: 0.68rem;
+		height: 0.68rem;
 		border-radius: 50%;
 	}
-	.price{
-		width: 1.7rem;
-		padding: 0.04rem 0.2rem;
+	.room-price{
 		background: rgba(0,0,0,0.3);
-		border-radius: 0.2rem;
-		margin-left: 0.2rem;
-		& > p{
-			display: flex;
-			align-items: center;
-			padding: 0.04rem 0;
-			position: relative;
-			padding-left: 0.5rem;
-			font-size: 0.26rem;
-			img{
-				left: 0;
-				top: 50%;
-				transform: translateY(-50%);
-				position: absolute;
-				height: 0.32rem;
-				margin-right: 0.1rem;
-			}
+		position: relative;
+		line-height: 0.38rem;
+		height: 0.38rem;
+		border-radius: 0.38rem;
+		padding-left: 0.4rem;
+		padding-right: 0.15rem;
+		img{
+			position: absolute;
+			left: -0.2rem;
+			width: 0.48rem;
+			top: 50%;
+			transform: translateY(-50%);
 		}
 	}
 	.room-count{
-		text-align: center;
+		padding-left: 0.2rem;
 		flex: 1;
-		font-size: 0.3rem;
+		font-size: 0.28rem;
 		line-height: 1.2;
 	}
+}
+.audio-change{
+	position: fixed;
+	width: 0.9rem;
+	height: 0.9rem;
+	right: 0.35rem;
+	top: 1rem;
 }
 .room-side{
 	position: absolute;
 	right: 0.2rem;
 	top: 40%;
 	width: 0.9rem;
-}
-.view-change{
-	height: 0.9rem;
-	width: 0.9rem;
-	margin-bottom: 0.25rem;
-	background: url(../../static/image/dd33.png) no-repeat center;
-	background-size: 100% 100%;
-}
-.audio-change{
-	height: 0.9rem;
-	width: 0.9rem;
-}
-.room-bottom{
-	position: absolute;
-	width: 100%;
-	bottom: 0;
-	display: flex;
-	padding: 0.1rem 0.06rem;
-	color: #fff;
-	font-size: 0.3rem;
-	// background: #6d6481;
-	&>div.child{
-		height: 1.1rem;
-		width: 1.1rem;
-		margin: 0 0.08rem;
-		background-position: center;
-		background-size: 100% 100%;
-		background-repeat: no-repeat;
-		overflow: hidden;
-	}
-	&>div.child.open-chat{
-		background-image: url(../../static/image/sddc.png);
-	}
-	.chat-input{
-		position: absolute;
-		left: 0;
-		bottom: 0;
-		background: #fff;
-		z-index: 500;
+	& > .child{
 		width: 100%;
-		padding: 0.15rem 0.15rem;
-		display: flex;
-		font-size: 0.28rem;
-		font-weight: normal;
-		input{
-			height: 0.8rem;
-			padding: 0.2rem;
-			border: 1px solid #ddd;
-			border-radius: 0.1rem;
-			line-height: 0.4rem;
-			flex: 1;
-		}
-		.chat-send{
-			background: #00BC71;
-			border-radius: 0.1rem;
-			line-height: 0.8rem;
-			width: 1.2rem;
-			text-align: center;
-			margin-left: 0.15rem;
-		}
+		height: 0.9rem;
+		margin-bottom: 0.2rem;
+		background-size: 100% 100%;
 	}
-	&>div.child.open-detail{
+	.view-change{
+		background-image: url(../../static/image/dd33.png);
+	}
+	.open-detail{
 		background-image: url(../../static/image/ssrr.png);
 	}
-	&>div.child.open-record{
+	.open-record{
 		background-image: url(../../static/image/ewsd.png);
 	}
-	&>div.child.open-recharge{
-		background-image: url(../../static/image/tgvd.png);
+}
+.room-news-content{
+	position: absolute;
+	bottom: 0.15rem;
+	left: 0.18rem;
+	width: 3.8rem;
+	z-index: 5;
+	.room-news-list{
+		overflow-y: auto;
+		height: 2.3rem;
 	}
-	.room-news-content{
-		position: absolute;
-		bottom: 130%;
-		left: 0.18rem;
-		width: 3.8rem;
-		.room-news-list{
-			overflow-y: auto;
-			height: 2.9rem;
-		}
-		.room-news-item{
-			font-size: 0.22rem;
-			font-weight: normal;
-			color: #fff;
-			background: rgba(0,0,0,0.2);
-			padding: 0.06rem 0.1rem;
-			border-radius: 0.1rem;
-			line-height: 1.4;
-			margin-bottom: 0.14rem;
-			display: inline-block;
-			min-width: 60%;
-			max-width: 100%;
-			.tit{
-				color: #f7ed00;
-			}
-		}
-		.toggle-news-list{
-			margin-top: 0.2rem;
-			width: 0.78rem;
-			height: 0.54rem;
-			border-radius: 0.2rem;
-			background: #3ede62;
-			position: relative;
-			text-align: center;
-			line-height: 0.54rem;
-			color: #fff;
-			font-size: 0.22rem;
-			font-weight: normal;
+	.room-news-item{
+		font-size: 0.22rem;
+		font-weight: normal;
+		color: #fff;
+		background: rgba(0,0,0,0.2);
+		padding: 0.06rem 0.1rem;
+		border-radius: 0.1rem;
+		line-height: 1.4;
+		margin-bottom: 0.14rem;
+		display: inline-block;
+		min-width: 60%;
+		max-width: 100%;
+		.tit{
+			color: #f7ed00;
 		}
 	}
-	.begin{
-		flex: 1;
-		background: url(../../static/image/wqas.png) no-repeat center;
-		background-size: 100% 100%;
-		margin: 0 0.08rem;
-		overflow: hidden;
+	.toggle-news-list{
+		margin-top: 0.2rem;
+		width: 0.78rem;
+		height: 0.54rem;
+		border-radius: 0.2rem;
+		background: #3ede62;
 		position: relative;
-		.price{
-			position: absolute;
-			left: 52%;
-			top: 0.12rem;
-		}
-		&.enabled{
-			background-image: url(../../static/image/455ds.png);
+		text-align: center;
+		line-height: 0.54rem;
+		color: #fff;
+		font-size: 0.22rem;
+		font-weight: normal;
+	}
+}
+.room-bottom{
+	width: 100%;
+	display: flex;
+	padding: 0.74rem 0;
+	color: #fff;
+	font-size: 0.3rem;
+	justify-content: space-around;
+	align-items: center;
+	&>div.com{
+		height: 1.32rem;
+		width: 1.26rem;
+		background-size: 100% 100%;
+		overflow: hidden;
+		background-image: url(../../static/image/111-1.png);
+		&.active{
+			background-image: url(../../static/image/111-2.png);
 		}
 	}
+	&>div.begin{
+		width: 2.96rem;
+		height: 1.32rem;
+		background-size: 100% 100%;
+		background-image: url(../../static/image/11222.png);
+	}
+	
 }
 .mint-popup{
 	background: transparent;

@@ -336,7 +336,7 @@ export default {
 	},
 	// 进入房间
 	enterRoom(params) {
-		return fetchPost('/dm-api/enter/room', params, true)
+		return fetchGet('/dm-api/enter/machine', params, true)
 	},
 	// 积分商城商品详情
 	goodsDetail(goodsId) {
