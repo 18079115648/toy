@@ -78,14 +78,15 @@ export default {
   },
   methods: {
     recharge() {
-    	this.$api.changeCard({
-	    	buyType: this.type,
-	    	type: this.payWay
-	    }).then(res => {
-//	        this.cardInfo = res.data
-	    }, err => {
-	    	
-	    })
+//  	this.$api.changeCard({
+//	    	buyType: this.type,
+//	    	type: this.payWay
+//	    }).then(res => {
+//	    	document.write(res.data)
+////	        this.cardInfo = res.data
+//	    }, err => {
+//	    	
+//	    })
 //  	if(this.isWinxin) {
 //  		this.$api.payment({
 //		        id: this.id,

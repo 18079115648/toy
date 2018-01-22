@@ -35,7 +35,7 @@ export default {
 	    	captchaLabel:'获取验证码',
 	    	timer: null,
 	    	count: 60,
-	    	disableSend: false
+	    	disableSend: false,
 	    }
 	},
 	mounted() {	
@@ -64,10 +64,10 @@ export default {
 				});
 				return
 			}
+			this.disableSend = true
 			this.$api.getCaptcha({
 				mobile: this.phone
 			}).then(res => {
-				this.disableSend = true
 				this.count = 60
 				this.captchaLabel = '重新获取('+ this.count +')'
 				this.timer = setInterval(() => {
@@ -80,7 +80,7 @@ export default {
 					}
 				}, 1000)
 	        }, err => {
-	        	
+	        	this.disableSend = false
 	        })
 		},
 		login() {
@@ -110,7 +110,6 @@ export default {
 				self.$token.refreshToken(accessToken.accessToken, accessToken.refreshToken, accessToken.expireTime)
 				this.$storage.set('hx', {id: res.data.hxId, password: res.data.hxPwd})
 				this.$storage.set('user', res.data)
-				this.$storage.set('headUrl', res.data.avatar || '../../static/image/vvv.png')
 				this.loginSuccess()
 	        }, err => {
 	        	

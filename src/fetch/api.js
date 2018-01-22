@@ -5,6 +5,27 @@ import storage from '@/fetch/storage'
 import router from '@/router'
 import Token from '@/fetch/accessToken'
 
+function getKey(name) {
+	var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+//	          new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+    var param=window.location.search.substring(1).split('/')[0];
+    var currKey = storage.get('operatorKey')
+    if(!param){
+    	return false
+    }
+    var r = param.match(reg)
+    if (r != null && r[2] == currKey) {
+    	return r[2]
+    }
+    if (r != null && r[2] != currKey) {
+    	storage.remove('token')
+    	return r[2]
+    }
+    return false
+}
+
+storage.set('operatorKey', getKey('key'))
+
  
 // axios 配置
 axios.defaults.timeout = 20000;

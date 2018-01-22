@@ -1,5 +1,5 @@
 <template> 
-    <div class="app" id="fastClick">
+    <div class="app" id="fastClick" :style="{'height': wH + 'px'}">
     	<div class="room-loading" v-show="loadingStatus"></div>
         <div class="room-top">
         	<div class="back" v-tap="{ methods : back }">
@@ -12,16 +12,19 @@
     		</div>
     		<div class="room-price" style="margin-right: 0.52rem;">
     			<img src="../../static/image/erdd.png"  />
-    			{{price}}
+    			{{remainGold}}
     		</div>
     		<div class="room-price">
     			<img src="../../static/image/34cd.png"  />
-    			{{remainGold}}
+    			{{remainPoints}}
     		</div>
     	</div>
-        <div class="video-content">
-        	<canvas id="frontview" :class="{show:showFront}"></canvas>
-	      	<canvas id="sideview" :class="{show:showSide}"></canvas>
+        <div class="video-content" id="video-content">
+        	<div class="video-box" id="video-box" :style="{'width': videoW + 'px'}" >
+        		<canvas id="frontview" :class="{show:showFront}"></canvas>
+	      		<canvas id="sideview" :class="{show:showSide}"></canvas>
+        	</div>
+        	
 	      	
 	      	<!--<img class="view-change" v-if="isGame" v-tap.prevent="{ methods : changeView }" src="../../static/image/dd33.png"  />-->
 	    	<div class="audio-change img-mask child" v-tap="{ methods : changeAudio, status: musicSwitch && soundSwitch }">
@@ -259,6 +262,7 @@ export default {
 	data() {
 	    return {
 	    	wH: 0,							// 页面高度
+	    	videoW: 0,						// 视频宽度高度
 	    	readyStatus: false, 			//readyGO 倒计时3秒弹框
 	    	readyTime: 3,					// 准备倒计时（3秒）
 	    	operateShow: false, 			// 操作区域显示标志位
@@ -268,6 +272,7 @@ export default {
 	    	failStatus: false, 				// 没有抓到娃娃,
 			endTime: 5,						// 抓取结果展示倒计时
 			remainGold: storage.get('remain_gold'),	// 剩余金币
+			remainPoints: 0,                //积分
 			avatar: '', // 当前操作用户头像
 			userAvatar: '',  //登录用户头像
 			roomNum: 0,  //房间人数
@@ -322,7 +327,7 @@ export default {
 		    toyImgs: [],            //娃娃大图
 		    winImg: '',
 		    
-		    loadingStatus: true,    //loading
+		    loadingStatus: false,    //loading
 		    
 		    grabProcess: false,     //点击抓取后的一段禁止操作时间
 		    moveDisabled: false,    //方向键禁止连续点击
@@ -366,15 +371,17 @@ export default {
 	},
 	mounted() {	
 		document.documentElement.scrollTop = 0
-		let self = this
 		this.wH = document.getElementById('app').offsetHeight
+		this.$nextTick(function() {
+			this.videoW = parseFloat(document.getElementById('video-content').offsetHeight) * 0.75
+			
+		})
+		
 		// 加载音频资源
 		this.loadAudios()
-		this.chatContent = document.getElementById('chat-content')
 	},
 	updated() {
-		this.chatContent.scrollTop = this.chatContent.scrollHeight;
-		
+//		this.chatContent.scrollTop = this.chatContent.scrollHeight;	
 	},
 	methods: {
 		depress(event) {
@@ -393,9 +400,7 @@ export default {
 	    	})
 	    },
 
-		/**
-		 * 初始化环信
-		 */
+		
 		enterRoom() { 
 			this.$api.enterRoom({machineId: this.$route.query.machineId}).then((response) => {
 				this.toyImgs = response.data.imgs
@@ -1189,6 +1194,7 @@ export default {
 			this.$api.userInfo().then(response => {
 				this.nickname = response.data.nickname
 				this.remainGold = response.data.money
+				this.remainPoints = response.data.points
 				this.userAvatar = response.data.avatar || '../../static/image/vvv.png'
 			})
 		},
@@ -1352,10 +1358,21 @@ export default {
 	background-size: 100% 100%;
 }
 .video-content{
-	width: 100%;
-	height: 9.3333333rem;
+	position: absolute;
+	left: 0.25rem;
+	top: 0.85rem;
+	bottom: 2.7rem;
+	right: 0.25rem;
 	border-radius: 0.2rem;
-	position: relative;
+	background: #c1c7c6;
+}
+.video-box{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%,-50%);	
 }
 #frontview, #sideview {
 	width: 100%;
@@ -1366,23 +1383,24 @@ export default {
 	bottom: 0;
 	right: 0;
 	z-index: -2;
-	border-radius: 0.2rem;
 }
 #frontview.show, #sideview.show {
 	z-index: 0;
 }
 .app{
 	position: relative;
-	min-height: 100vh;
 	font-weight: 700;
-	padding: 0 0.25rem;
 } 
 .room-top{
+	position: absolute;
+	left: 0;
+	top: 0;
 	height: 0.85rem;
 	display: flex;
 	align-items: center;
 	color: #fff;
-	margin-left: -0.25rem;
+	width: 100%;
+	padding-right: 0.25rem;
 	.back{
 		width: 0.85rem;
 		height: 0.85rem;
@@ -1524,16 +1542,20 @@ export default {
 		color: #fff;
 	}
 }
-@media (max-width: 350px) {
+/*@media (max-width: 350px) {
 	.room-bottom{
 		padding: 0.5rem 0 !important;
 	}
 	
-}
+}*/
 .room-bottom{
+	position: absolute;
+	left: 0;
+	bottom: 0;
 	width: 100%;
 	display: flex;
-	padding: 0.65rem 0;
+	/*padding: 0.65rem 0;*/
+	height: 2.7rem;
 	color: #fff;
 	font-size: 0.3rem;
 	justify-content: space-around;
@@ -1624,12 +1646,14 @@ export default {
 	}
 }
 .operate-area{
+	position: absolute;
+	left: 0;
+	bottom: 0;
 	display: flex;
 	width: 100%;
 	align-items: center;
 	justify-content: space-between;
 	padding: 0.2rem 0.4rem;
-	position: relative;
 	.operate-direc{
 		width: 3.2rem;
 		height: 2.3rem;

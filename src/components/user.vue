@@ -102,7 +102,6 @@ export default {
 			this.userInfo = res.data
 			this.userInfo.hasMember && (this.memberLink = '/memberCenter')
 			this.userInfo.avatar = this.userInfo.avatar ? this.userInfo.avatar : '../../static/image/vvv.png'
-			storage.set('headUrl', this.userInfo.avatar)
     }, err => {
     	
     })

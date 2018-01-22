@@ -1,6 +1,6 @@
 <template>
     <div class="content">
-        <Header title="商品详情"></Header>
+        <Header title="商品详情" v-if="!isHybrid"></Header>
         <div class="goods-detail-content">
         	<div class="goods-banner">
 		    	<mt-swipe :auto="4000" class="swipe-content">
@@ -42,6 +42,7 @@
 					<span class="num">{{num}}</span>
 					<span class="plus" :class="{disabled : checkPlus}" v-tap="{ methods : plus }">+</span>
 				</div>
+				<p class="tip" v-if="goodsInfo.goods_id == 1">提示：兑换的娃娃商品可在娃娃袋中查看</p>
 				<div class="convert-footer">
 					<div class="convert-confirm btn-hover" :class="{disabled : checkConvert}" v-tap="{ methods : convertConfirm }">确定兑换</div>
 				</div>
@@ -55,6 +56,7 @@ import { Toast, Indicator } from 'mint-ui'
 export default {
   data () {
     return {
+    	isHybrid: this.$common.isHybrid(),
     	goodsId: undefined,
     	goodsInfo: {},
     	userPoints: 0, //用户积分
@@ -242,7 +244,7 @@ export default {
 		color: #000;
 	}
 	.convert-body{
-		padding: 0.8rem 0 1rem;
+		padding: 0.8rem 0 0.3rem;
 		display: flex;
 		span{
 			border: 1px solid #dbdbdb;
@@ -266,6 +268,13 @@ export default {
 				}
 			}
 		}
+		
+	}
+	.tip{
+		color: #bbb;
+		font-size: 0.24rem;
+		text-align: left;
+		padding-bottom: 0.4rem;
 	}
 	.convert-confirm{
 		height: 0.62rem;

@@ -117,9 +117,9 @@ export default {
   	play() {
   		let video = document.getElementById('video')
   		if(video.paused) {
-  			document.getElementById('video').play()
+  			video.play()
   		}else {
-  			document.getElementById('video').pause()
+  			video.pause()
   		}
   		
   	},

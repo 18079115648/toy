@@ -2,7 +2,7 @@
   <div class="content">
     <div class="header">
     	<router-link to="/user" class="user-link link">
-    		<img :src="avatar" style="border-radius: 50%;"  class="fullEle" />
+    		<img :src="avatar"  class="fullEle" />
     	</router-link>
     	<img class="logo-text"  src="../../static/image/logo-text.png" />
     	<router-link to="/toysBox" class="user-link link">
@@ -108,7 +108,7 @@ export default {
 	        }
 	    },
 	    
-	    avatar: '../../static/image/vvv.png',  //头像
+	    avatar: '../../static/image/78@3x.png',  //头像
 	    
 	    musicSwitch: true,  //背景音乐
     }
@@ -125,10 +125,6 @@ export default {
     // }, false);  
   },
   activated() {
-  	if(!this.$token.getAccessToken()) {
-  		this.$storage.remove('headUrl')
-  	}
-  	this.avatar = this.$storage.get('headUrl') || '../../static/image/vvv.png'
   	//背景音乐
   	if (this.$storage.get('music_switch') != null) {
 			this.musicSwitch = this.$storage.get('music_switch')

@@ -1,7 +1,7 @@
 <template>
     <div class="content">
-        <Header title="兑换记录"></Header>
-	    <div class="pagination-content">
+        <Header title="兑换记录" v-if="!isHybrid"></Header>
+	    <div class="pagination-content" :class="{'isHybrid' : isHybrid}">
 	    	<Pagination :render="render" :param="pagination" :autoload="false"  ref="pagination" uri="/dm-api/pm/exchanges" >
 				<div class="order-list" v-show="pagination.content.length > 0">
 					<div class="orderList_body" v-for="(item, index) in pagination.content" :key="index">
@@ -38,6 +38,7 @@
 export default {
   data () {
     return {
+    	isHybrid: this.$common.isHybrid(),
         pagination: {
 	        content: [],
 	        loadEnd: false,
@@ -64,6 +65,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+.pagination-content.isHybrid{
+	top: 0;
+}
 .orderList_body{
     width: 100%;
     height: auto;

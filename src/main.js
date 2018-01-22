@@ -6,12 +6,15 @@ import router from './router'
 import VueRouter from 'vue-router'
 import mint from 'mint-ui'
 import 'mint-ui/lib/style.css'
+import storage from '@/fetch/storage'
+Vue.prototype.$storage = storage
+
+
 
 import vueTap from 'v-tap';
 Vue.use(vueTap);
 
-import storage from '@/fetch/storage'
-Vue.prototype.$storage = storage
+
 
 import common from '@/fetch/common'
 Vue.prototype.$common = common
@@ -48,29 +51,10 @@ Vue.use(VueRouter)
 Vue.use(mint)
 Vue.config.productionTip = false
 
-function getKey(name) {
-	var reg = new RegExp('^' + name + '=([^&]*)(&|$)');
-//	          new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
-    var param=window.location.search.substring(1).split('/')[0];
-    var currKey = storage.get('operatorKey')
-    if(!param){
-    	return false
-    }
-    var r = param.match(reg)
-    if (r != null && r[1] == currKey) {
-    	return r[1]
-    }
-    if (r != null && r[1] != currKey) {
-    	storage.remove('token')
-    	return r[1]
-    }
-    return false
-}
 
-storage.set('operatorKey', getKey('key'))
 
-storage.set('token', {"accessToken":"34bea3264fa230e8741dcd61158c8197","refreshToken":"1aa2ef0da2038a6aefbbe49d75ef066b","expired":1517912614})
-//storage.set('token', {"accessToken":"d6c344adef401f47ebc5da5703a7df5f","refreshToken":"3cb7422ee0bf6f36436e92d19c108f69","expired":1517882506})
+//storage.set('token', {"accessToken":"34bea3264fa230e8741dcd61158c8197","refreshToken":"1aa2ef0da2038a6aefbbe49d75ef066b","expired":1517912614})
+//storage.set('token', {"accessToken":"1ab551fab7d142e468a54f5f5925fb50","refreshToken":"6da21c3d30982c47594d1160990bed94","expired":1518080593})
 
 //router.beforeEach((to, from, next) => {
 //  if (to.meta.requireAuth && !token.getAccessToken() && common.isWeixin()) {

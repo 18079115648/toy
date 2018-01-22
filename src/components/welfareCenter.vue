@@ -1,7 +1,7 @@
 <template>
     <div class="content">
-        <Header title="福利社" headClass="welfare-header"></Header>
-        <div class="welfare-content">
+        <Header title="福利社" headClass="welfare-header" v-if="!isHybrid"></Header>
+        <div class="welfare-content" :class="{'isHybrid' : isHybrid}">
         	<div class="sign-content" v-if="signList">
         		<p class="welfare-tit">
         			<span class="tit">{{signList.title}}</span>
@@ -142,6 +142,7 @@ import {Toast, Indicator } from 'mint-ui'
 export default {
   data () {
     return {
+    	isHybrid: this.$common.isHybrid(), //是否是混合开发
         signList: undefined,      //签到
         chargeCard: undefined,    //会员卡
         grabList: undefined,      //抓取奖励
@@ -296,6 +297,9 @@ export default {
 	border-radius: 0.08rem;
 	padding: 0.25rem;
 	padding-bottom: 0;
+	&.isHybrid{
+		top: 0.06rem;
+	}
 	& > div{
 		background: #fff;
 		border-radius: 0.2rem;
@@ -398,11 +402,12 @@ export default {
 					right: 0;
 					top: 0.5rem;
 					transform: translate(50%, -50%);
-					width: 0.5rem;
+					width: 0.8rem;
 					font-weight: 700;
 					color: #743828;
 					font-size: 0.32rem;
 					line-height: 1rem;
+					white-space: nowrap;
 				}
 				.daily-task-icon{
 					border: 2px solid #743828;

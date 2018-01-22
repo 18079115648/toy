@@ -20,7 +20,7 @@
 							<div class="rank-info">
 								<p class="rank-name">{{item.nickName || '***'}}</p>
 								<p class="rank-result" v-show="rankWay == 'Catch'">抓中 <span style="color: #fd485c;">{{item.successTimes}}</span> 个</p>
-								<p class="rank-result" v-show="rankWay == 'Diamond'">消费 &nbsp;<span style="color: #fd485c;">&yen;{{item.total}}</span></p>
+								<p class="rank-result" v-show="rankWay == 'Diamond'">消费 <span style="color: #fd485c;">{{item.total}}</span> 钻</p>
 							</div>
 							<i class="iconfont icon-huangguan" :class="'rank-' + item.rank" v-show="item.rank < 4">
 								<b>{{item.rank}}</b>

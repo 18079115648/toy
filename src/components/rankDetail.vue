@@ -3,13 +3,13 @@
         <Header :title="memberInfo.nickName + '的主页'"></Header>
         <div class="rank-user-info">
 		    	<div class="user-info-link">
-			    	<img class="avatar" :src="memberInfo.avatar"  />
+			    	<img class="avatar" :src="memberInfo.avatar || '../../static/image/vvv.png'"  />
 			    	<div class="user-info-text">
-			    		<p class="nick-name">{{memberInfo.nickName}}</p>
+			    		<p class="nick-name">{{memberInfo.nickName || '***'}}</p>
 			    		<p class="user-record">
-			    			<span>抓中 {{memberInfo.successTimes}}</span>
-			    			<i></i>
-			    			<span>总排位 {{memberInfo.rank}}</span>
+			    			<span>抓中 {{memberInfo.successTimes}} 次</span>
+			    			<!--<i></i>
+			    			<span>总排位 {{memberInfo.rank}}</span>-->
 			    		</p>
 			    	</div>
 			    </div>
@@ -18,13 +18,25 @@
 	      	<Pagination :render="render" :param="pagination" :autoload="false"  ref="pagination" uri="/dm-api/doll//log/success" >
 				<div class="rank-record" v-show="pagination.content.length > 0">
 		      		<div class="rank-item" v-for="(item, index) in pagination.content" :key="index">
-		      			<div class="rank-info-media">
-		      				<img class="fullEle" src="../../static/image/1233.png"  />
+		      			<div class="rank-info-media" v-if="!item.url">
+		      				<img class="fullEle toy-img" :src="item.img"  />
+		      			</div>
+		      			<div class="rank-info-media" v-if="item.url">
+		      				<video 
+		      					:id="'video-'+index"
+                            	x-webkit-airplay="allow" 
+                            	:src="item.url" 
+                            	class="play_video fullEle"  
+                            	webkit-playsinline="true"   
+						      	playsinline="true"
+                            	:poster="item.img">
+                            </video>
+                            <img src="../../static/image/weed.png" v-tap="{ methods : playVideo, id: 'video-'+index }"   class="play_img">
 		      			</div>
 		      			<div class="rank-info-text">
-		      				<p class="rank-goods-name">大公仔</p>
-		      				<p class="rank-time">2017</p>
-		      				<a class="rank-enter">进入游戏</a>
+		      				<p class="rank-goods-name">{{item.name}}</p>
+		      				<p class="rank-time">{{item.createTimeStr}}</p>
+		      				<p class="rank-enter" v-tap="{ methods : enterRoom, machineId: item.machineId }" >进入游戏</p>
 		      			</div>
 		      		</div>
 		      	</div>
@@ -49,7 +61,7 @@ export default {
 	        loadEnd: false,
 	        data: {
 	        	page: 1,
-	        	pageSize: 15,
+	        	pageSize: 10,
 	        	memberId: this.$route.params.id
 	        }
 	    },
@@ -66,7 +78,18 @@ export default {
 	    	this.pagination.content.push(item)
     	})
     },
-    
+    playVideo(params) {
+    	const video = document.getElementById(params.id)
+    	video.paused ? video.play() : video.pause()
+    },
+    enterRoom(params) {
+    	this.$api.enterRoom({machineId: params.machineId}).then((res) => {
+    		let room = res.data
+			this.$router.push({path: '/room', query: {machineSn: room.machineSn, num: room.num, price: room.price, machineId: room.machineId, liveRoomCode: room.liveRoomCode}})
+		}, (err) => {
+			
+		})
+    }
   }
   
 }
@@ -81,7 +104,7 @@ export default {
 .rank-user-info{
 	height: 2.4rem;
 	background: $header-color;
-	padding: 0.3rem 0;
+	padding: 0.2rem 0;
 	padding-bottom: 0.9rem;
 		.user-info-link{
 		height: 100%;
@@ -143,8 +166,16 @@ export default {
 				height: 2.95rem;
 				border-radius: 0.3rem;
 				overflow: hidden;
-				img{
+				position: relative;
+				img.toy-img{
 					border-radius: 0.3rem;
+				}
+				.play_img{
+					position: absolute;
+					width: 1.2rem;
+					left: 50%;
+					top: 50%;
+					transform: translate(-50%, -50%);
 				}
 			}
 			.rank-info-text{
@@ -153,8 +184,10 @@ export default {
 				color: #000;
 				.rank-time{
 					color: #969696;
+					padding-top: 0.06rem;
 				}
 				.rank-enter{
+					padding-top: 0.06rem;
 					display: block;
 					text-decoration: underline;
 					color: #00BC71;

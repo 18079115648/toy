@@ -1,8 +1,8 @@
 <template>
     <div class="content">
-        <Header title="积分商城"></Header>
-        <router-link class="recharge-record-link btn-hover" to="/convertList">兑换记录</router-link>
-        <div class="pagination-content">
+        <Header title="积分商城" v-if="!isHybrid"></Header>
+        <router-link v-if="!isHybrid" class="recharge-record-link btn-hover" to="/convertList">兑换记录</router-link>
+        <div class="pagination-content" :class="{'isHybrid' : isHybrid}">
         	<Pagination :render="render" :param="pagination" :autoload="false"  ref="pagination" uri="/dm-api/pm/goods" >
 		        <div class="convert-list" v-show="pagination.content.length > 0">
 	            	<router-link :to="'/goodsDetail/' + item.goods_id" v-tap class="convert-list-item" v-for="(item, index) in pagination.content" :key="index">
@@ -30,6 +30,7 @@
 export default {
   data () {
     return {
+    	isHybrid: this.$common.isHybrid(),
     	pagination: {
 	        content: [],
 	        loadEnd: false,
@@ -69,6 +70,9 @@ export default {
 	color: $header-text-color;
 	z-index: 30;
 	font-size: 0.28rem;
+}
+.pagination-content.isHybrid{
+	top: 0;
 }
 .convert-list{
 	padding: 0.3rem 0.15rem 0;
