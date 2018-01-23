@@ -86,6 +86,10 @@ export default {
 		width: 100%;
 		height: 100%;
 	}
+	.fullAuto{
+		display: block;
+		height: 100%;
+	}
 	.toast-icon{
 		width: 1.5rem;
 		height: 1.5rem;
@@ -116,7 +120,7 @@ export default {
     align-items: center;
     color: #C9CACA;
     font-size: .3rem;
-    padding-top: 1.4rem;
+    padding-top: 3.5rem;
     &.bg-color{
     	color: $bg-text-color;
     }

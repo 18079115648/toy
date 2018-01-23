@@ -83,7 +83,13 @@ export default {
 		margin: 0 0.15rem 0.4rem;
 		font-size: 0.28rem;
 		color: #000000;
-		
+		.convert-goods-img{
+			overflow: hidden;
+			border-radius: 0.2rem;
+			img.fullEle{
+				border-radius: 0.2rem;
+			}
+		}
 		.convert-goods-info{
 			text-align: center;
 			padding-top: 0.15rem;

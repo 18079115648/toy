@@ -2,11 +2,11 @@
   <div class="content">
     <div class="header">
     	<router-link to="/user" class="user-link link">
-    		<img :src="avatar"  class="fullEle" />
+    		<img :src="avatar"  class="fullAuto" />
     	</router-link>
     	<img class="logo-text"  src="../../static/image/logo-text.png" />
     	<router-link to="/toysBox" class="user-link link">
-    		<img src="../../static/image/toys-box.png"  class="fullEle" />
+    		<img src="../../static/image/toys-box.png"  class="fullAuto" />
     	</router-link>
     </div>
     <div class="home-pagination-content">
@@ -55,7 +55,7 @@
 								    	</div>
 								   </div>	
 				    	</div>
-				    	<div class="no_msg" style="padding-bottom: 1rem;" v-show="pagination.content.length<1 && pagination.loadEnd">
+				    	<div class="no_msg" style="padding-bottom: 1rem; padding-top: 1.3rem;" v-show="pagination.content.length<1 && pagination.loadEnd">
 								<img src="../../static/image/ewd.png"  />
 								<div>没有商品信息~</div>
 						  </div>	

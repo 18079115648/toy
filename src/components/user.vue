@@ -186,7 +186,6 @@ export default {
 	left: 0.25rem;
 	top: -0.6rem;
 	.nav-item{
-		text-align: center;
 		position: relative;
 		width: 50%;
 		position: relative;
@@ -219,7 +218,8 @@ export default {
 			padding-top: 0.4rem;
 			display: flex;
 			align-items: center;
-			justify-content: center;
+			justify-content: flex-start;
+			padding-left: 1rem;
 			.nav-icon{
 				height: 0.4rem;
 				margin-right: 0.16rem;
@@ -234,6 +234,7 @@ export default {
 		}
 		.text{
 			padding-bottom: 0.36rem;
+			text-align: center;
 		}
 		&.top{
 			.text{

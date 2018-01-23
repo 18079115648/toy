@@ -147,7 +147,8 @@ export default {
     			line-height: 0.54rem;
     			display: inline-block;
     			background: #fff;
-    			min-width: 2rem;
+    			width: 2rem;
+    			margin: 0 auto;
     			border-radius: 0.54rem;
     			color: #ffce45;
     			font-weight: 700;

@@ -1,5 +1,5 @@
 <template> 
-    <div class="app" id="fastClick">
+    <div class="app" id="fastClick" :style="{'height': wH + 'px'}">
     	<div class="room-loading" v-show="loadingStatus"></div>
         <!--<div class="room-top">
         	<div class="back" v-tap="{ methods : back }">
@@ -19,7 +19,27 @@
     			{{remainPoints}}
     		</div>
     	</div>-->
-        <div class="video-content">
+    	<div class="room-top">
+			<img v-show="isGame" class="back" src="../../static/image/feee.png"/>
+    		<img v-show="!isGame" class="back" src="../../static/image/ss44.png" v-tap="{ methods : back }"/>
+    		<img v-show="avatar" class="avatar" :src="avatar"  />
+    		<div v-show="!avatar" class="avatar-position"></div>
+    		<div class="room-count shadow-text">
+    			<p>当前房间人数</p>
+    			<p>{{roomNum}}</p>
+    		</div>
+    		<div class="price">
+    			<p>
+    				<img src="../../static/image/erdd.png"  />
+    				<span class="shadow-text">{{remainGold}}</span>
+    			</p>
+    			<p>
+    				<img style="left: 1px;" src="../../static/image/34cd.png"  />
+    				<span class="shadow-text">{{remainPoints}}</span>
+    			</p>
+    		</div>
+    	</div>
+        <div class="video-content" :class="[fullStatus ? 'full' : 'nofull']">
         	<canvas id="frontview" :class="{show:showFront}"></canvas>
 	      	<canvas id="sideview" :class="{show:showSide}"></canvas>
 	      	
@@ -199,7 +219,7 @@
 							</div>
 							<div class="grab-time">
 								<span v-if="item.status">抓取失败</span>
-								<span v-if="!item.status" style="color: #EA7B97;">抓取成功</span>
+								<span v-if="!item.status" style="color: #00bc71;">抓取成功</span>
 							</div>
 						</div>
 						<div class="no_msg" v-show="pagination.content.length<1 && pagination.loadEnd">
@@ -251,7 +271,7 @@ export default {
 	    	fullStatus: true,
 	    	readyStatus: false, 			//readyGO 倒计时3秒弹框
 	    	readyTime: 3,					// 准备倒计时（3秒）
-	    	operateShow: true, 			// 操作区域显示标志位
+	    	operateShow: false, 			// 操作区域显示标志位
 			operateTime: 30, 				// 抓取操作倒计时
 			operationTimer: undefined,		// 抓取操作倒计时句柄
 	    	succStatus: false, 				// 成功抓到娃娃,
@@ -553,7 +573,7 @@ export default {
 							this.pauseFailureAudio()
 							this.readyGo()	
 							this.remainGold = data.remainGold
-							this.remainPoints = data.point
+							this.remainPoints = data.points
 							storage.set('remain_gold', data.remainGold)
 						} else {
 							Toast({
@@ -678,6 +698,7 @@ export default {
 
 		//点击开始游戏
 		beginGame() {
+			this.chatStatus = false
 			this.playClickAudio()
 			this.succStatus = false
 			this.failStatus = false
@@ -744,6 +765,7 @@ export default {
 		
 		// 返回
 		back() {
+			this.chatStatus = false
 			this.$router.go(-1)
 		},
 		
@@ -757,6 +779,7 @@ export default {
 			const self = this
 			this.chatStatus = true
 			this.$nextTick(function() {
+				console.log(11111)
 				this.$refs.Input.focus()
 				this.$refs.Input.scrollIntoView()
 			})
@@ -1041,6 +1064,7 @@ export default {
 		 * 切换视角
 		 */
 		changeView() {
+			this.chatStatus = false
 			this.showFront = !this.showFront
 			this.showSide = !this.showSide
 			this.playClickAudio()
@@ -1048,9 +1072,9 @@ export default {
 		
 		//切换声音
 		changeAudio(params) {
+			this.chatStatus = false
 			this.playClickAudio()
 			const status = !params.status
-			console.log(status)
 			this.musicSwitch = this.soundSwitch = status
 			storage.set('music_switch', status)
 			storage.set('sound_switch', status)
@@ -1115,6 +1139,7 @@ export default {
 		 * 去充值
 		 */
 		goRecharge() {
+			this.chatStatus = false
 			this.$router.push('/recharge')
 //			this.rechargeStatus = true
 		},
@@ -1123,6 +1148,7 @@ export default {
 		 *打开娃娃详情
 		 */
 		goRoomDatail() {
+			this.chatStatus = false
 			this.playClickAudio()
 			this.roomDetail = true
 		},
@@ -1131,6 +1157,7 @@ export default {
 		 *打开抓取记录
 		 */
 		goGrabList() {
+			this.chatStatus = false
 			this.playClickAudio()
 			this.grabList = true
 		},
@@ -1353,7 +1380,17 @@ export default {
 	width: 100%;
 	height: 0;
 	padding-top: 133.3333333%;
-	position: relative;
+	z-index: 1;
+	&.nofull{
+		position: absolute;
+		bottom: 2.7rem;
+		left: 0;
+		
+	}
+	
+	&.full{
+		position: relative;
+	}
 }
 #frontview, #sideview {
 	width: 100%;
@@ -1374,9 +1411,60 @@ export default {
 	font-weight: 700;
 	display: flex;
 	flex-direction: column;
+	overflow: hidden;
 	
 } 
 .room-top{
+	position: absolute;
+	z-index: 2;
+	width: 100%;
+	top: 0;
+	left: 0;
+	display: flex;
+	align-items: center;
+	padding: 0.15rem;
+	color: #fff;
+	.back{
+		width: 0.9rem;
+		margin-right: 0.2rem;
+	}
+	.avatar, .avatar-position{
+		width: 0.7rem;
+		height: 0.7rem;
+		border-radius: 50%;
+	}
+	.price{
+		min-width: 1.7rem;
+		padding: 0.04rem 0.2rem;
+		background: rgba(0,0,0,0.3);
+		border-radius: 0.2rem;
+		margin-left: 0.1rem;
+		& > p{
+			display: flex;
+			align-items: center;
+			padding: 0.04rem 0;
+			position: relative;
+			padding-left: 0.5rem;
+			font-size: 0.26rem;
+			height: 0.46rem;
+			img{
+				left: 0;
+				top: 50%;
+				transform: translateY(-50%);
+				position: absolute;
+				height: 0.32rem;
+				margin-right: 0.1rem;
+			}
+		}
+	}
+	.room-count{
+		text-align: center;
+		flex: 1;
+		font-size: 0.3rem;
+		line-height: 1.2;
+	}
+}
+/*.room-top{
 	height: 0.85rem;
 	display: flex;
 	align-items: center;
@@ -1425,13 +1513,13 @@ export default {
 		font-size: 0.28rem;
 		line-height: 1.2;
 	}
-}
+}*/
 .audio-change{
-	position: absolute;
+	position: fixed;
 	width: 0.9rem;
 	height: 0.9rem;
 	right: 0.1rem;
-	top: 0.15rem;
+	top: 1.45rem;
 }
 .room-side{
 	position: absolute;
@@ -1516,7 +1604,8 @@ export default {
 	.chat-send{
 		background: #00BC71;
 		border-radius: 0.1rem;
-		line-height: 0.8rem;
+		line-height: 0.84rem;
+		height: 0.8rem;
 		width: 1.2rem;
 		text-align: center;
 		margin-left: 0.15rem;
@@ -1528,6 +1617,7 @@ export default {
 	position: relative;
 	display: flex;
 	align-items: center;
+	z-index: 0;
 	&.full {
 		.room-bottom{
 			position: relative;
@@ -1539,6 +1629,7 @@ export default {
 }
 .room-bottom{
 	position: absolute;
+	z-index: 2;
 	left: 0;
 	bottom:0;
 	background: #00BC71;
@@ -1641,6 +1732,7 @@ export default {
 	justify-content: space-between;
 	padding: 0.2rem 0.65rem;
 	position: absolute;
+	z-index: 2;
 	left: 0;
 	bottom: 0;
 	background: #00BC71;
@@ -1682,9 +1774,10 @@ export default {
 	}
 	.count-dowm{
 		position: absolute;
-		right: 0.48rem;
+		right: 1.45rem;
 		color: #fff;
 		bottom: 0.1rem;
+		transform: translateX(50%);
 	}
 }
 .has-box{
@@ -1785,8 +1878,8 @@ export default {
 	margin-right: .2rem;
 }
 .detail-content{
-	width: 6.5rem;
-	height: 66vh;
+	width: 6rem;
+	height: 9.3rem;
 	border-radius: 0.2rem;
 	display: flex;
 	flex-direction: column;
