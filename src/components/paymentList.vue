@@ -12,8 +12,8 @@
 		                        <span>{{item.money}}</span>
 		                    </div>
 		                    <div class="paymentList_way">
-		                        <img src="../../static/image/444.png" v-if="item.type == 1">
-		                        <img src="../../static/image/555.png" v-if="item.type == 2">
+		                        <img src="../../static/image/444.png" v-if="item.source == 1">
+		                        <img src="../../static/image/555.png" v-if="item.source == 2">
 		                        <span>¥ {{item.price}}</span>
 		                    </div>
 		                </div>
