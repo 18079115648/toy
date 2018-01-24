@@ -4,7 +4,7 @@
   	<div class="toys-content" v-show="toysList.length > 0">
   		<p class="total-dia">当前娃娃总价值为：
   			<img src="../../static/image/erdd.png"  />
-	    	<span class="shadow-text">{{ total}}</span>
+	    	<span style="font-weight: 700;">{{ total}}</span>
   		</p>
   		
   		<div class="toys-list">
@@ -34,7 +34,7 @@
     </div>
 	  <div class="toys-operate" v-show="toysList.length > 0">
 	  	<div class="charge-btn btn-operate btn-hover" @click="chargeShow = true">兑换钻石</div>
-	  	<router-link to="/orderSubmit" v-tap class="get-btn btn-operate btn-hover">立即领取</router-link>
+	  	<router-link to="/orderSubmit" class="get-btn btn-operate btn-hover">立即领取</router-link>
 	  </div>  
 	  <confirm-modal :show="chargeShow" @confirm_modal="charge" title="兑换钻石确认" @closeModal="chargeShow = false" :message="message"></confirm-modal>	
     <!--<router-link v-show="toysList.length > 0" to="/orderSubmit" class="btn-default btn-hover btn-receive">立即领取</router-link>-->
@@ -85,6 +85,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+@import "../../static/css/style.scss";
 .toys-content{
 	position: absolute;
 	left: 0;
@@ -98,7 +99,7 @@ export default {
 		left: 0.4rem;
 		right: 0.4rem;
 		bottom: 0.4rem;
-		color: #fff;
+		color: $bg-text-color;
 		display: flex;
 		.tit{
 			width: 1.4rem;
@@ -114,7 +115,7 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	color: #fff;
+	color: $bg-text-color;
 	font-size: 0.3rem;
 	padding-bottom: 0.4rem;
 	img{

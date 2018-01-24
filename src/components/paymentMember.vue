@@ -1,5 +1,5 @@
 <template>
-    <div class="content">
+    <div class="content recharge-content">
         <Header title="订单确认"></Header>
         
         <div class="payment_body">
@@ -23,22 +23,7 @@
 					<p>3、当日钻石必须当天领取，逾期失效</p>
 				</div>
 			</div>
-            <div class="payment_way">
-            	<div class="pay-item" @click="payWay = 2">
-            		<img class="pay-icon" src="../../static/image/555.png">
-	                <div class="payment_way_text">微信支付</div>
-	                <i class="default iconfont icon-xuanze" v-show="payWay == 2"></i>
-	                <img class="select-icon" v-show="payWay != 2" src="../../static/image/rrrr.png">
-            	</div>  
-            	<div class="pay-item" @click="payWay = 1"  v-if="!isWinxin">
-            		<img class="pay-icon" src="../../static/image/444.png">
-	                <div class="payment_way_text">支付宝支付</div>
-	                <i class="default iconfont icon-xuanze" v-show="payWay == 1" ></i>
-	                <img class="select-icon" v-show="payWay != 1" src="../../static/image/rrrr.png">
-            	</div>
-	              
-            </div>
-            <div class="agree">
+            <div class="agree" >
             	<div class="agree-icon" @click="agree = !agree">
             		<i class="default select-icon iconfont icon-xuanze" v-show="agree" ></i>
             		<i class="default select-icon iconfont icon-weixuanzhong-01" v-show="!agree" ></i>
@@ -49,6 +34,9 @@
 
             <div class="btn-default btn-hover recharge" :class="{'disabled': !agree}" v-tap="{ methods : recharge }">确认充值</div>
         </div>
+        <mt-popup v-model="failShow" :closeOnClickModal="false" position="top" class="pay-fail-tip" :class="{'pay-success': isSuccess}">
+	      <p v-html="failText"></p>
+	    </mt-popup>
     </div>
 </template>
 
@@ -58,111 +46,94 @@ import { Toast } from 'mint-ui';
 export default {
   data () {
     return {
-    	isWinxin: this.$common.isWeixin(),
-        type:this.$route.params.type,
+        id:this.$route.params.type,
         cardInfo:{
-        	price: 0
+        	price: 0,
+        	type: 3
         },
-        payWay: 2,   //1 支付宝   2 微信
-        agree: true
+        agree: true,
+        
+        
+        failShow: false,
+        failText: '<img src="../../static/image/fail-pay.png" />支付失败',
+        isSuccess: false
     }
   },
   created(){
-    this.$api.memberCardInfo({
-    	type: this.type
+    this.$api.chargeTextList({
+    	platform: window.OPEN_DATA.platform
     }).then(res => {
-        this.cardInfo = res.data
+        res.data.forEach((item) => {
+        	if(item.itemId == this.id) {
+        		this.cardInfo = item
+        		return
+        	}
+        })
     }, err => {
     	
     })
   },
   methods: {
     recharge() {
-//  	this.$api.changeCard({
-//	    	buyType: this.type,
-//	    	type: this.payWay
-//	    }).then(res => {
-//	    	document.write(res.data)
-////	        this.cardInfo = res.data
-//	    }, err => {
-//	    	
-//	    })
-//  	if(this.isWinxin) {
-//  		this.$api.payment({
-//		        id: this.id,
-//		        type: 2,
-//		        tradeType: 'JSAPI'
-//		    }).then(res => {
-//				function onBridgeReady() {
-//					WeixinJSBridge.invoke(
-//						'getBrandWCPayRequest', {
-//				           "appId": res.data.app_id,     //公众号名称，由商户传入     
-//				           "timeStamp": res.data.time_stamp,       //时间戳，自1970年以来的秒数     
-//				           "nonceStr": res.data.nonce_str,  //随机串     
-//				           "package": 'prepay_id=' + res.data.prepay_id,      
-//				           "signType":'MD5',         //微信签名方式：     
-//				           "paySign": res.data.pay_sign //微信签名 
-//				        },
-//						function(res) {
-//							if(res.err_msg == "get_brand_wcpay_request:ok") {
-//								Toast({
-//									message: '充值成功',
-//									position: 'middle',
-//									iconClass: 'toast-icon icon-success',
-//									duration: 1000
-//								})
-//								setTimeout(() => {
-//									self.$router.go(-1)
-//								}, 500)
-//							}
-//						}
-//					);
-//				}
-//				if(typeof WeixinJSBridge == "undefined") {
-//					if(document.addEventListener) {
-//						document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
-//					} else if(document.attachEvent) {
-//						document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
-//						document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
-//					}
-//				} else {
-//					onBridgeReady();
-//				}
-//		    }, err => {
-//		        
-//	        })
-//  	}else {
-//  		if(this.payWay == 1) {
-//  			this.$api.payment({
-//			        id: this.id,
-//			        type: 3,
-//			        returnUrl: 'http://' + window.location.host + '/#/index'
-//			    }).then(res => {
-//		            document.write(res.data)
-//			    }, err => {
-//			        
-//		        })
-//			    return
-//  		}
-//  		this.$api.payment({
-//		        id: this.id,
-//		        type: 2,
-//		        tradeType: 'MWEB'
-//		    }).then(res => {
-//				window.location.replace(res.data.mweb_url + '&redirect_url=http://' + window.location.host + '/#/index')
-//		    }, err => {
-//		        
-//	        })
-//  	}
-	    	
-        
+		const self = this
+		if(!this.agree) {
+			return
+		}
+    	this.pay()
+    	
+    	window.__paySuccess = function(){
+		    self.pay()
+		}
+		
+		window.__payError = function(){
+			self.isSuccess = false
+			self.payTip('<img src="../../static/image/fail-pay.png" />充值失败')
+		}
+	    window.__payClose = function(){
+	    	self.isSuccess = false
+		    self.payTip('<img src="../../static/image/fail-pay.png" />用户取消充值')
+		}	       
+    },
+    pay() {
+    	const self = this
+    	window.getOpenKey(function(msg){
+    		self.$api.chargePay({
+	    		openid: msg.data.openid,
+	    		openkey: msg.data.openkey,
+	    		platform: window.OPEN_DATA.platform,
+	    		itemId: self.id
+	    	}).then(res => {
+				if(res.errCode == 0) {
+					self.isSuccess = true
+					self.payTip('<img src="../../static/image/succ-pay.png" />充值成功')
+					setTimeout(() => {
+						self.$router.go(-2)
+					}, 2000)
+				}else if(res.errCode == 44444) {
+					window.popPayTips({
+					    defaultScore : parseInt(parseFloat(self.cardInfo.price) * 10),
+					    appid : 1106587346
+					})
+				}
+		    }, err => {
+		    	
+		    })
+		    
+		})
+    },
+    payTip(text) {
+    	this.failShow = true
+		this.failText = text
+		setTimeout(() => {
+			this.failShow = false
+		}, 3000)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
+@import "../../static/css/style.scss";
 .payment_body{
     width: 100%;
     height: auto;
@@ -203,7 +174,7 @@ export default {
     line-height: .6rem;
 }
 .payment-kind-desc{
-	color: #fff;
+	color: $bg-text-color;
 	padding: 0.3rem;
 	font-size: 0.24rem;
 	.desc-text{
@@ -245,7 +216,7 @@ export default {
 }
 .agree{
 	padding: 0.2rem 0.15rem 1.2rem;
-	color: #fff;
+	color: $bg-text-color;
 	display: flex;
 	align-items: center;
 	.agree-icon{
@@ -263,7 +234,7 @@ export default {
 		}
 	}
 	a{
-		color: #fff;
+		color: $bg-text-color;
 		text-decoration: underline;
 		margin-left: 0.08rem;
 	}

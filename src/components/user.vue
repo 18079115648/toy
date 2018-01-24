@@ -2,7 +2,7 @@
   <div class="content">
     <Header title="我的"></Header>
     <div class="user-info">
-    	<router-link to="/userInfo" v-tap class="user-info-link">
+    	<router-link to="/userInfo" class="user-info-link">
 	    	<img class="avatar" :src="userInfo.avatar"  />
 	    	<div class="user-info-text">
 	    		<p class="nick-name">{{userInfo.nickname}}</p>
@@ -18,28 +18,28 @@
     </div>
 	  <div class="user-bottom">
 	  	<div class="navbar">
-	    	<router-link to="/recharge" v-tap class="nav-item right bottom">
+	    	<router-link to="/recharge" class="nav-item right bottom">
 	    		<p class="count">
 	    			<img class="nav-icon" src="../../static/image/18@3x.png" />
 	    			{{userInfo.money}}
 	    		</p>
 	    		<p class="text">我的钻石</p>
 	    	</router-link>
-	    	<router-link to="/intergalMall" v-tap class="nav-item bottom">
+	    	<router-link to="/intergalMall" class="nav-item bottom">
 	    		<p class="count">
 	    			<img class="nav-icon" src="../../static/image/16@3x.png" />
 	    			{{userInfo.points}}
 	    		</p>
-	    		<p class="text">积分商城</p>
+	    		<p class="text">金币商城</p>
 	    	</router-link>
-	    	<router-link to="/grabList" v-tap class="nav-item right top">
+	    	<router-link to="/grabList" class="nav-item right top">
 	    		<p class="count">
 	    			<img class="nav-icon" src="../../static/image/15@3x.png" />
 	    			{{userInfo.grabCounts}}
 	    		</p>
 	    		<p class="text">抓取记录</p>
 	    	</router-link>
-	    	<router-link to="/toysBox" v-tap class="nav-item top">
+	    	<router-link to="/toysBox" class="nav-item top">
 	    		<p class="count">
 	    			<img class="nav-icon" src="../../static/image/17@3x.png" />
 	    			{{userInfo.dollCounts}}
@@ -48,7 +48,7 @@
 	    	</router-link>
 	    </div>
 	    <div class="link-list">
-	    	<router-link :to="memberLink" v-tap class="link-item">
+	    	<router-link :to="memberLink" class="link-item">
 	    		<img src="../../static/image/14@3x.png" style="width: 0.44rem; left: -0.04rem; margin-right: 0.26rem;" class="icon" />
 	    		<p class="text">会员卡中心</p>
 	    		<div class="recharge-btn" v-show="userInfo.hasMember">{{userInfo.erpireDate}} <span>到期</span></div>
@@ -56,17 +56,17 @@
 	    	</router-link>
 	    </div>
 	    <div class="link-list">
-	    	<router-link to="/orderList" v-tap class="link-item">
+	    	<router-link to="/orderList" class="link-item">
 	    		<img src="../../static/image/12@3x.png" class="icon" />
 	    		<p class="text">订单中心</p>
 	    		<img src="../../static/image/wdd.png" class="more"  />
 	    	</router-link>
-	    	<router-link to="/address/unselect" v-tap class="link-item">
+	    	<router-link to="/address/unselect" class="link-item">
 	    		<img src="../../static/image/113@3x.png" class="icon" />
 	    		<p class="text">地址管理</p>
 	    		<img src="../../static/image/wdd.png" class="more"  />
 	    	</router-link>
-	    	<router-link to="/invite" v-tap class="link-item">
+	    	<router-link to="/invite" class="link-item">
 	    		<img src="../../static/image/11@3x.png" class="icon" />
 	    		<p class="text">邀请有礼</p>
 	    		<img src="../../static/image/wdd.png" class="more"  />
@@ -75,7 +75,7 @@
 	    	
 	    </div>
 	    <div class="link-list">
-	    	<router-link to="/set" v-tap class="link-item">
+	    	<router-link to="/set" class="link-item">
 	    		<img src="../../static/image/10@3x.png" class="icon" />
 	    		<p class="text">设置</p>
 	    		<img src="../../static/image/wdd.png" class="more"  />
@@ -140,7 +140,7 @@ export default {
 	display: flex;
 	align-items: center;
 	padding: 0 0.5rem;
-	color: #fff;
+	color: $header-text-color;
 	font-size: 0.3rem;
 	.avatar{
 		width: 1.2rem;

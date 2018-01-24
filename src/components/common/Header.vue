@@ -74,6 +74,12 @@
     .invite-header{
     	background: url(../../../static/image/invite-header.png) no-repeat center;
     	background-size: 100% 100%;
+    	div.back .iconfont{
+    		color: #fff !important;
+    	}
+    	p.defalut-slot{
+    		color: #fff !important;
+    	}
     }
     .headCont{
     	position: absolute;
@@ -105,13 +111,13 @@
     	position: absolute;
     	width: 100%;
     	height: 100%;
-        color: #fff;
-        font-size: 0.3rem;
-        font-weight: 700;
-        left: 0;
-        top: 0;
-        text-align: center;
-        line-height: 0.85rem;
-        z-index: -1;
+	    color: $header-text-color;
+	    font-size: 0.3rem;
+	    font-weight: 700;
+	    left: 0;
+	    top: 0;
+	    text-align: center;
+	    line-height: 0.85rem;
+	    z-index: -1;
     }
 </style>

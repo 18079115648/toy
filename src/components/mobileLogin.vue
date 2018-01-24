@@ -16,7 +16,7 @@
     			<div @click="getCode" class="captcha-btn" :class="{'disabled': disableSend}">{{captchaLabel}}</div>
     		</div>
     		<p class="tip">
-    			未注册抓娃娃的手机号，登录时将自动注册且代表您已经同意遵守<router-link to="/agree"> 用户协议及隐私条款 </router-link>
+    			未注册澳IN娱乐抓娃娃的手机号，登录时将自动注册且代表您已经同意遵守<router-link to="/agree"> 用户协议及隐私条款 </router-link>
     		</p>
     	</div>
     	<div class="btn-default btn-hover btn-login" @click="login">登录</div>

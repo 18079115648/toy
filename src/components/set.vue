@@ -17,14 +17,14 @@
                 </div>
             </div>
             <div class="set_second">
-                <router-link to="/aboutUs" v-tap class="set_list" style="border:none;">
+                <router-link to="/aboutUs" class="set_list" style="border:none;">
                     <div>关于我们</div>
                     <div>
                         <img src="../../static/image/wdd.png" class="set_last_img">
                     </div>
                 </router-link>
             </div>
-            <div class="btn-default btn-hover login-out" v-tap="{ methods : loginOut }">退出登录</div>
+            <!--<div class="btn-default btn-hover login-out" v-tap="{ methods : loginOut }">退出登录</div>-->
         </div>
         
     </div>

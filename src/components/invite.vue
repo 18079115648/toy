@@ -65,7 +65,7 @@ export default {
 		let key = this.$storage.get('operatorKey') ? '?key=' + this.$storage.get('operatorKey') : ''
 		this.lineLink = 'http://' + location.host + '/' + key + '/#/share/' + res.data.inviteCode
 		this.imgUrl = 'https://yingdd.oss-cn-hangzhou.aliyuncs.com/0d25d14de142d89f5af33b0b53ecc7b0.png'
-		this.shareTitle = '抓娃娃'
+		this.shareTitle = '澳IN娱乐'
 		this.descContent = '欢乐抓娃娃，分享奖励多多！'
 		this.wxShare(this.lineLink, this.imgUrl, this.shareTitle, this.descContent)	
     }, err => {

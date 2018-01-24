@@ -17,7 +17,7 @@
 			                    <div class="convert-info">
 			                        <div style="color: #000;">{{item.goods_name}}</div>
 			                        <div style="color: #000;">x{{item.quantity}}</div>
-			                        <div style="margin-top: 0.1rem;"><span class="points">{{item.goods_points}}</span>积分</div>
+			                        <div style="margin-top: 0.1rem;"><span class="points">{{item.goods_points}}</span>金币</div>
 			                    </div>
 			                </div>
 			            </div>

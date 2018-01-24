@@ -113,6 +113,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../static/css/style.scss";
 .content{
 	min-height: 100vh;
 	background: #F5F5F9;
@@ -130,10 +131,11 @@ export default {
 		font-weight: 700;
 		font-size: 0.26rem;
 		flex: 1;
-		color: #efefef;
+		color: $header-text-color;
+		opacity: 0.6;
 		&.active{
+			opacity: 1;
 			font-size: 0.28rem;
-			color: #fff;
 		}
 	}
 }
@@ -148,7 +150,7 @@ export default {
 		display: flex;
 		height: 0.76rem;
 		border-radius: 0.76rem;
-		border: 1px solid #00BC71;
+		border: 1px solid $bg-color;
 		overflow: hidden;
 		background: #fff;
 		span{
@@ -158,8 +160,8 @@ export default {
 			color: #333;
 			&.active{
 				font-size: 0.28rem;
-				color: #fff;
-				background: #00BC71;
+				color: $bg-text-color;
+				background: $bg-color;
 			}
 		}
 	}

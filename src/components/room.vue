@@ -182,13 +182,15 @@
 			</div>
 		</mt-popup>
 
-		<audio id="take-audio" src='https://yingdd.oss-cn-hangzhou.aliyuncs.com/9b38b54c6af6f4113a476df225043a01.mp3' preload></audio>
-		<audio id="click-audio" src='../static/audio/startClickItem.mp3' preload></audio>
-		<audio id="move-audio" src='../static/audio/move.mp3' preload></audio>
-		<audio id="ready-audio" src='../static/audio/readygo.mp3' preload></audio>
-		<audio id="success-audio" src='https://yingdd.oss-cn-hangzhou.aliyuncs.com/fa81942687d7d259c7f4979a00367a48.mp3' preload></audio>
-		<audio id="failure-audio" src='https://yingdd.oss-cn-hangzhou.aliyuncs.com/e95cb5cc6a8070f063b09ce9f6843b18.mp3' preload></audio>
-
+		
+		<!--<audio id="bg-audio" src='/static/audio/bgm03.mp3' preload loop></audio>-->
+		<audio id="take-audio" src='/static/audio/take.mp3' preload></audio>
+		<audio id="click-audio" src='/static/audio/startClickItem.mp3' preload></audio>
+		<audio id="move-audio" src='/static/audio/move.mp3' preload></audio>
+		<audio id="ready-audio" src='/static/audio/readygo.mp3' preload></audio>
+		<audio id="success-audio" src='/static/audio/result_succeed.mp3' preload></audio>
+		<audio id="failure-audio" src='/static/audio/result_failed.mp3' preload></audio>
+		
 		<!-- 详情页面 -->
 		<mt-popup v-model="roomDetail" class="pop">
 			<div class="detail-content">
@@ -232,8 +234,13 @@
 			</div>
 		</mt-popup>
 		
-
-		
+		<!--玩吧-->
+		<div class="guide-tip" v-show="guideShow">
+		    	<img class="mask" src="../../static/image/guide2.png"  />
+		    	<div class="click-area" @click="guideOperate"></div>
+		    </div>
+	    </div>
+		<!--玩吧-->
 		<!-- 充值页面 -->
 		<!--<mt-popup v-model="rechargeStatus" class="pop">
 			<div class="recharge-content">
@@ -258,6 +265,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import { Toast, MessageBox } from 'mint-ui'
 import accessToken from '../fetch/accessToken'
 import storage from '../fetch/storage'
@@ -267,6 +275,16 @@ import * as SockJS from 'sockjs-client'
 export default {
 	data() {
 	    return {
+	    	/**
+	    	 * 玩吧
+	    	 */
+	    	guideShow: false,                //新手操作指引
+	    	
+	    	/**
+	    	 * 玩吧
+	    	 */
+	    	
+	    	
 	    	wH: 0,							// 页面高度
 	    	fullStatus: true,
 	    	readyStatus: false, 			//readyGO 倒计时3秒弹框
@@ -278,7 +296,7 @@ export default {
 	    	failStatus: false, 				// 没有抓到娃娃,
 			endTime: 5,						// 抓取结果展示倒计时
 			remainGold: storage.get('remain_gold'),	// 剩余金币
-			remainPoints: 0,                //积分
+			remainPoints: 0,                //金币
 			avatar: '', // 当前操作用户头像
 			userAvatar: '',  //登录用户头像
 			roomNum: 0,  //房间人数
@@ -355,6 +373,9 @@ export default {
 	    }
 	},
 	created() {	
+		
+		this.guideShow = this.$storage.get('isNew')  //玩吧
+		
 		this.machineId = this.$route.query.machineId
 		//房间人数
 		this.roomNum = this.$route.query.num
@@ -393,6 +414,20 @@ export default {
 		
 	},
 	methods: {
+		/**
+		 * 玩吧
+		 */
+		//新手操作开始游戏
+		guideOperate() {
+			this.guideShow = false
+			this.$storage.set('isNew', false)  
+			MessageBox('提示', '<p class="isNew-finish">恭喜您完成了新手阶段</p>');
+		},
+		/**
+		 * 玩吧
+		 */
+		
+		
 		depress(event) {
 			event.target.classList.add("active")
 		},
@@ -626,18 +661,31 @@ export default {
 				this.zegoAppId = res.data.appId
 				this.zegoServer = res.data.server
 				this.zegoToken = res.data.zegoToken
-				this.initZego()
+//				axios.get('/demo.php', {headers:{"Access-Control-Allow-Origin":"*"}}).then(res => {
+//					console.log(res)
+//				    let workerUrlBlob = new Blob([res], {'type': 'text/javascript'})
+//				    this.initZego(workerUrlBlob)
+//				}, err => {
+//				     console.log(err)   
+//				})
+				this.$api.getJs().then(res => {
+				    let workerUrlBlob = new Blob([res], {'type': 'text/javascript'})
+				    this.initZego(workerUrlBlob)
+				}, err => {    
+				})
 		    }, err => {
 		    	
 		    })
 		},
-		initZego() {
+		initZego(workerUrlBlob) {
 			this.zg = new ZegoClient()
 			this.zg.config({
 				appid: parseInt(this.zegoAppId),
 				server: this.zegoServer,
 				idName: this.zegoIdName,
-				nickName: this.zegoNickName
+				nickName: this.zegoNickName,
+				workerPlayerJSBlob: workerUrlBlob
+//				workerUrl: 'https://1106587346.urlshare.cn/static/js/jsmpeg-stub.min.js' + window.location.search + "&123456"
 			})
 
 			const parent = this
@@ -651,10 +699,10 @@ export default {
 						parent.sideStreamId = item.stream_id
 						// 只有游戏中才开始播放侧边视频流，观众模式播放侧边视频流
 //						this.isGame && parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'), 1)
-						parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'), 0)
+						window.quality ? parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'), 0) : parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'), '', '1')
 					} else {
 						parent.frontStreamId = item.stream_id
-						parent.zg.startPlayingStream(item.stream_id, document.getElementById('frontview'), 0)
+						window.quality ? parent.zg.startPlayingStream(item.stream_id, document.getElementById('frontview'), 0) : parent.zg.startPlayingStream(item.stream_id, document.getElementById('frontview'), '', '1')
 					}
 				})
 			}, (error) => {
@@ -1271,7 +1319,8 @@ export default {
 		 * 播放侧边视频
 		 */
 		startSideStream() {
-			this.zg.startPlayingStream(this.sideStreamId, document.getElementById('sideview'), 0)
+			window.quality ? this.zg.startPlayingStream(this.sideStreamId, document.getElementById('sideview'), 0) : this.zg.startPlayingStream(this.sideStreamId, document.getElementById('sideview'), '', '1')
+			
 			this.zg.setPlayVolume(this.sideStreamId, 0)
 		},
 
@@ -1365,6 +1414,33 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../static/css/style.scss";
+/*玩吧*/
+.guide-tip{
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 1000;
+	.mask{
+		position: absolute;
+		width: 100%;
+		left: 0;
+		bottom: -2.5rem;
+		z-index: 1001;
+	}
+	.click-area{
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		z-index: 1005;
+	}
+}
+/*玩吧*/
+
+
 .room-loading{
 	position: absolute;
 	width: 100%;
@@ -1602,7 +1678,7 @@ export default {
 		flex: 1;
 	}
 	.chat-send{
-		background: #00BC71;
+		background: $bg-color;
 		border-radius: 0.1rem;
 		line-height: 0.84rem;
 		height: 0.8rem;
@@ -1618,21 +1694,27 @@ export default {
 	display: flex;
 	align-items: center;
 	z-index: 0;
+	background: none;
 	&.full {
+		background: url(../../static/image/room-bg.jpg) repeat-x left center;
+		background-size: auto 510%;
 		.room-bottom{
 			position: relative;
+			background: none;
 		}
 		.operate-area{
 			position: relative;
+			background: none;
 		}
 	}
 }
 .room-bottom{
 	position: absolute;
+	background: url(../../static/image/room-bg.jpg) repeat-x left center;
+	background-size: auto 510%;
 	z-index: 2;
 	left: 0;
 	bottom:0;
-	background: #00BC71;
 	width: 100%;
 	display: flex;
 	padding: 0.7rem 0.25rem;
@@ -1726,6 +1808,8 @@ export default {
 	}
 }
 .operate-area{
+	background: url(../../static/image/room-bg.jpg) repeat-x left center;
+	background-size: auto 510%;
 	display: flex;
 	width: 100%;
 	align-items: center;
@@ -1735,7 +1819,6 @@ export default {
 	z-index: 2;
 	left: 0;
 	bottom: 0;
-	background: #00BC71;
 	.operate-direc{
 		width: 3.2rem;
 		height: 2.3rem;

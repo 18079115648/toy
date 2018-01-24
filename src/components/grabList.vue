@@ -51,6 +51,13 @@ export default {
     }
   },
   mounted(){
+  	/**
+  	 * 玩吧
+  	 */
+	mqq.invoke('ui', 'webviewCanScroll', {"enable" : false})
+  	/**
+  	 * 玩吧
+  	 */
 	this.$refs.pagination.refresh()
   },
   methods: {

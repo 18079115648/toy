@@ -1,6 +1,7 @@
 <template>
   <div class="content">
-    <div class="header">
+  	<!--玩吧 start-->
+    <!--<div class="header">
     	<router-link to="/user" class="user-link link">
     		<img :src="avatar"  class="fullAuto" />
     	</router-link>
@@ -8,7 +9,8 @@
     	<router-link to="/toysBox" class="user-link link">
     		<img src="../../static/image/toys-box.png"  class="fullAuto" />
     	</router-link>
-    </div>
+    </div>-->
+    <!--玩吧 end-->
     <div class="home-pagination-content">
     	<Pagination :render="render" :needToken="false" :param="pagination" :autoload="false" ref="pagination" uri="/dm-api/home/tag" >
 	    	<div class="home-data">
@@ -66,8 +68,153 @@
 							
 		  </Pagination>
     </div>
-	    
-	    
+	  
+	  <!--玩吧 start-->
+	  <div class="sign-content"  v-show="signShow && !guideShow">
+    	<div class="sign-box">
+    		<img class="bg" src="../../static/image/sign.png"  />
+    		<div class="sign-text">
+    			<div class="one-level">
+    				<div class="sign-item" :class="{'active': signItem_1.status}">
+    					<div class="unsign">
+    						<img class="icon" src="../../static/image/wd.png"  />
+    						<p class="shadow-text">{{signItem_1.points}}</p>
+    					</div>
+    					<div class="shadow-text signed">
+    						已<br />签
+    					</div>
+    				</div>
+    				<img class="arror" src="../../static/image/566gg.png"  />
+    				<div class="sign-item" :class="{'active': signItem_2.status}">
+    					<div class="unsign">
+    						<img class="icon" src="../../static/image/wd.png"  />
+    						<p class="shadow-text">{{signItem_2.points}}</p>
+    					</div>
+    					<div class="shadow-text signed">
+    						已<br />签
+    					</div>
+    				</div>
+    				<img class="arror" src="../../static/image/566gg.png"  />
+    				<div class="sign-item" :class="{'active': signItem_3.status}">
+    					<div class="unsign">
+    						<img class="icon" src="../../static/image/wd.png"  />
+    						<p class="shadow-text">{{signItem_3.points}}</p>
+    					</div>
+    					<div class="shadow-text signed">
+    						已<br />签
+    					</div>
+    				</div>
+    			</div>
+    			<div class="two-level">
+    				<img src="../../static/image/344c.png"  />
+    			</div>
+    			<div class="one-level">
+    				<div class="sign-item" :class="{'active': signItem_6.status}">
+    					<div class="unsign">
+    						<img class="icon" src="../../static/image/wd.png"  />
+    						<p class="shadow-text">{{signItem_6.points}}</p>
+    					</div>
+    					<div class="shadow-text signed">
+    						已<br />签
+    					</div>
+    				</div>
+    				<img class="arror" src="../../static/image/gghhh.png"  />
+    				<div class="sign-item" :class="{'active': signItem_5.status}">
+    					<div class="unsign">
+    						<img class="icon" src="../../static/image/wd.png"  />
+    						<p class="shadow-text">{{signItem_5.points}}</p>
+    					</div>
+    					<div class="shadow-text signed">
+    						已<br />签
+    					</div>
+    				</div>
+    				<img class="arror" src="../../static/image/gghhh.png"  />
+    				<div class="sign-item" :class="{'active': signItem_4.status}">
+    					<div class="unsign">
+    						<img class="icon" src="../../static/image/wd.png"  />
+    						<p class="shadow-text">{{signItem_4.points}}</p>
+    					</div>
+    					<div class="shadow-text signed">
+    						已<br />签
+    					</div>
+    				</div>
+    			</div>
+    			<div class="three-level">
+    				<img src="../../static/image/34dd.png"  />
+    				<div class="sign-item" :class="{'active': signItem_7.status}">
+    					<div class="unsign">
+    						<img class="icon" src="../../static/image/wd.png"  />
+    						<p class="shadow-text">{{signItem_7.points}}</p>
+    					</div>
+    					<div class="shadow-text signed">
+    						已<br />签
+    					</div>
+    				</div>
+    			</div>
+    			<div class="sign-btn btn-hover" :class="{'signed': !signStatus}" v-tap="{ methods : sign }" >
+    				<span v-show="signStatus">我要签到</span>
+    				<span v-show="!signStatus">已签到</span>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+    <div class="guide-tip img-mask" v-show="guideShow">
+    	<img class="mask" src="../../static/image/guide1.png"  />
+    	<div class="click-area" v-tap="{ methods : guideOperate }"></div>
+    </div>
+    
+    
+    <div class="float-content">
+			<div class="share" v-tap="{ methods : goUser }">
+    		<div class="float-icon"><img src="../../static/image/wanba-user.png"  /></div>
+    		<p>个人中心</p>
+    	</div>
+    	<div class="share" @click="shareShow = true">
+    		<div class="float-icon"><img src="../../static/image/wanba-share.png"  /></div>
+    		<p>分享有礼</p>
+    	</div>
+    	<div class="save" @click="saveShow = true" v-show="platform != 2">
+    		<div class="float-icon"><img src="../../static/image/wanba-save.png"  /></div>
+    		<p>收藏有礼</p>
+    	</div>
+    </div>
+    <mt-popup v-model="saveShow" class="float-pop">
+			<div class="float-box">
+				<p class="tit">添加到桌面收藏可获得奖励</p>
+				<img class="profit-icon" src="../../static/image/81@2x.png"  />
+				<p class="profit-text shadow-text">
+					<span>钻石</span>
+					<span>x {{collectionNum}}</span>
+				</p>
+				<div class="float-btn" v-show="!saveConfirm"  v-tap="{ methods : save }">收藏</div>
+				<div class="float-btn" v-show="saveConfirm" v-tap="{ methods : getSaveProfit }">领取</div>
+			</div>
+		</mt-popup>
+		<mt-popup v-model="shareShow" class="float-pop">
+			<div class="float-box">
+				<p class="tit">分享游戏可获得奖励</p>
+				<img class="profit-icon" src="../../static/image/intergal.png"  />
+				<p class="profit-text shadow-text">
+					<span>金币</span>
+					<span>x {{shareNum}}</span>
+				</p>
+				<div class="float-btn" v-show="!shareConfirm"  v-tap="{ methods : share }">分享</div>
+				<div class="float-btn" v-show="shareConfirm"  v-tap="{ methods : getShareProfit }">领取</div>
+			</div>
+		</mt-popup>
+		<!--礼包-->
+		<mt-popup v-model="giftShow" class="float-pop">
+			<div class="float-box gift-box">
+				<p class="tit">{{receiveGiftInfo.name}}</p>
+				<div class="content">
+					<p class="receive-status">{{receiveGiftInfo.title}}</p>
+					<p class="receive-desc">{{receiveGiftInfo.content}}</p>
+					<p class="receive-tip">记得明天继续到玩吧礼包中心领取新的礼包哦！</p>
+				</div>
+				<img src="../../static/image/qe.png" class="close" @click="giftShow = false" />
+			</div>
+		</mt-popup>
+	  <!--玩吧 end-->  
   </div>
 </template>
 
@@ -85,13 +232,17 @@ export default {
       	icon: '../../static/image/d44f.png',
       	link: '/rankList'
       },{
-      	text: '积分商城',
+      	text: '金币商城',
       	icon: '../../static/image/34dxf.png',
       	link: '/intergalMall'
       },{
       	text: '充值中心',
       	icon: '../../static/image/344fs.png',
       	link: '/recharge'
+      },{
+      	text: '娃娃袋',
+      	icon: '../../static/image/222.png',
+      	link: '/toysBox'
       }],
       banner: [],
       
@@ -111,18 +262,93 @@ export default {
 	    avatar: '../../static/image/78@3x.png',  //头像
 	    
 	    musicSwitch: true,  //背景音乐
+	    
+	    /**
+	     *玩吧start
+			**/
+	    guideShow: false,   //新手指引
+	    
+	    signShow: false,   //签到
+	    signItem_1: {},
+	    signItem_2: {},
+	    signItem_3: {},
+	    signItem_4: {},
+	    signItem_5: {},
+	    signItem_6: {},
+	    signItem_7: {},
+	    signStatus: null,
+	    
+	    
+	    saveShow: false,    //收藏有礼
+		  saveConfirm: false,
+    	collectionNum: null,
+    	
+    	shareShow: false,   //分享有礼
+    	shareNum: null,
+    	shareConfirm: false,
+	    platform: null,
+	    
+	    giftShow: false,    //礼包
+	    receiveGiftInfo: {}
+	    /**
+	     *玩吧start
+			**/
     }
   },
   created() {
-  	console.log(this.$token.getAccessToken())
+  	
+  	/**
+	     *玩吧start
+			**/
+		
+	const self = this
+	this.platform = window.OPEN_DATA.platform
+		mqq.invoke('ui', 'webviewCanScroll', {"enable" : false})
+		mqq.invoke('ui','setOnShareHandler',function(type){
+		    mqq.invoke('ui','shareMessage',{
+		        title: '掌上抓物机',
+		        desc: '真实在线远程操控抓娃娃机',
+		        share_type: type,
+		        share_url: window.OPEN_DATA.shareurl,
+		        image_url: 'http://a.qpic.cn/psb?/V12zhLgs0wFmud/rglvmrzOorCAmDbEpSxLfEyIjagK*2frRbWR4eOMEPM!/b/dPQAAAAAAAAA&bo=yADIAMgAyAADEDU!',
+		        back: true
+		    },function(ret){
+		    	if(ret.retCode == 0) {
+		    		  self.shareShow = true
+		    			self.shareConfirm = true
+		    	}else {
+		    		self.shareShow = false
+		    	}
+		    });
+		});
+		window.mqq.invoke('ui','setOnAddShortcutHandler', {'callback':mqq.callback(self.save, false,true)})
+		this.$api.userTask().then(res => {
+	    this.collectionNum = res.data.collection
+		  this.shareNum = res.data.share
+	  }, err => {
+	        
+	  })
+		this.$wanbaLogin().then(res => {
+			let accessToken = res.data.accessToken
+			self.$token.refreshToken(accessToken.accessToken, accessToken.refreshToken, accessToken.expireTime)
+			self.$storage.set('user', res.data)
+		  self.$storage.set('isNew', res.data.firstLogin)
+		  res.data.firstLogin ? window.reportRegister() : window.reportLogin()
+		  self.$getKey('GIFT') && self.getGift()
+			self.signData()
+    }, err => {
+    	
+    })
+		/**
+	     *玩吧start
+			**/
+		
+		
   	this.$api.homeBanner().then(res => {
 			this.banner = res.data
     }, err => {
     	  
-	})
-	// document.addEventListener("WeixinJSBridgeReady", function () {  
-    //   document.getElementById('bg-audio').play()
-    // }, false);  
+		})
   },
   activated() {
   	//背景音乐
@@ -131,7 +357,6 @@ export default {
 		}
   },
   mounted() {
-	console.log(this.$refs)
   	this.$api.homeTags().then(res => {
 			this.navbar = res.data
 			this.currTags = this.navbar[0].id
@@ -177,8 +402,9 @@ export default {
 					item.statusText = '维护中'
 					item.statusClass = 'end'
 				}
-        	this.pagination.content.push(item)
-        })
+        this.pagination.content.push(item)
+      })
+			this.guideShow = this.$storage.get('isNew')
     },
 
     // 进入房间
@@ -201,13 +427,365 @@ export default {
     	}
         
       this.$router.push({path: '/room', query: {machineSn: room.machineSn, num: room.num, price: room.price, machineId: room.machineId, liveRoomCode: room.liveRoomCode}})
-    }
+    },
+    
+    /**
+	     *玩吧start
+			**/
+		//礼包
+		getGift() {
+			this.$api.giftReceive({
+				option_id: this.$getKey('GIFT')
+			}).then(res => {
+				this.giftShow = true
+				this.receiveGiftInfo = res.data
+		  }, err => {
+	
+		  })
+		},
+    //签到
+  	signData() {
+			this.$api.signList().then(res => {
+				this.signItem_1 = res.data.list[0]
+				this.signItem_2 = res.data.list[1]
+				this.signItem_3 = res.data.list[2]
+				this.signItem_4 = res.data.list[3]
+				this.signItem_5 = res.data.list[4]
+				this.signItem_6 = res.data.list[5]
+				this.signItem_7 = res.data.list[6]
+				this.signStatus = res.data.status
+				this.signShow = !!res.data.status
+		  }, err => {
+	
+		  })
+		},
+		sign() {
+			this.$api.sign().then(res => {
+				this.signStatus = 0
+				this.signShow = false
+				Toast({
+				  message: '领取成功',
+				  position: 'middle',
+				  iconClass: 'toast-icon icon-success',
+				  duration: 1500
+				})
+		    }, err => {
+					this.signShow = false
+		    })
+		},
+		
+		//新手操作进入房间
+    guideOperate() {
+    	let room = {
+    		item: this.pagination.content[0]
+    	}
+    	this.enterRoom(room)
+			setTimeout(() => {
+				this.guideShow = false
+			},600)
+    },
+    goUser() {
+    	this.$router.push('/user')
+		},
+		share() {
+			mqq.ui.showShareMenu();
+		},
+		getShareProfit() {
+			const self = this
+			self.$api.userTaskComplete({
+				task_key: 'share'
+			}).then(res => {
+				  self.shareConfirm = false
+				  self.shareShow = false
+		        Toast({
+						  message: '分享成功',
+						  position: 'middle',
+						  iconClass: 'toast-icon icon-success',
+						  duration: 2000
+						})
+		  }, err => {
+		        
+		  })
+		},
+		save() {
+			const self = this
+			mqq.ui.addShortcut({
+	        action: 'web',
+	        title: '掌上抓物机',
+	        icon: 'http://a.qpic.cn/psb?/V12zhLgs0wFmud/rglvmrzOorCAmDbEpSxLfEyIjagK*2frRbWR4eOMEPM!/b/dPQAAAAAAAAA&bo=yADIAMgAyAADEDU!',
+	        url: window.OPEN_DATA.jumpurl,
+	        callback: function(ret){
+	        	if(ret.result == 0) {
+	        		self.saveShow = true
+	        		self.saveConfirm = true
+	        		
+	        	}else {
+	        		Toast({
+							  message: '您已收藏过了哦！',
+							  position: 'bottom',
+							  duration: 2000
+							});
+		        	self.saveShow = false
+	        	}
+		        	
+	        }
+	    })
+		},
+		getSaveProfit() {
+			const self = this
+			self.$api.userTaskComplete({
+				task_key: 'collection'
+			}).then(res => {
+			  self.saveConfirm = false
+			  self.saveShow = false
+	        Toast({
+					  message: '收藏成功',
+					  position: 'bottom',
+					  duration: 2000
+					});
+	    }, err => {
+	        self.saveConfirm = false
+			    self.saveShow = false
+	    })
+		}
+    /**
+	     *玩吧end
+			**/
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+@import "../../static/css/style.scss";
+/*玩吧start*/
+.gift-box{
+	position: relative;
+	.receive-status{
+		font-size: 0.32rem;
+		color: #ff9435;
+		padding-top: 0.1rem;
+	}
+	.receive-desc{
+		padding: 0.2rem 0;
+	}
+	.close{
+		position: absolute;
+		width: 0.5rem;
+		right: 0.1rem;
+		top: 0.1rem;
+	}
+}
+
+
+.float-pop{
+	border-radius: 0.2rem;
+	overflow: hidden;
+}
+.float-box{
+	width: 6rem;
+	padding: 0.3rem 0.2rem;
+	text-align: center;
+	
+	.tit{
+		padding: 0.15rem;
+		color: #000000;
+		font-size: 0.32rem;
+	}
+	.profit-icon{
+		display: block;
+		width: 3.1rem;
+		margin: 0 auto;
+	}
+	.profit-text{
+		color: #fff;
+		font-size: 0.3rem;
+		text-shadow: 2px 0 1px #000,0 2px 1px #000,-2px 0 1px #000,0 -2px 1px #000;
+		*filter: Glow(color=#000, strength=1);
+	}
+	.float-btn{
+		width: 4rem;
+		height: 0.66rem;
+		line-height: 0.66rem;
+		background: #f97295;
+		border-radius: 0.66rem;
+		margin: 0.5rem auto 0.2rem;
+		color: #fff;
+		font-size: 0.3rem;
+	}
+}
+.float-content{
+	position: fixed;
+	z-index: 100;
+	right: 0.2rem;
+	bottom: 0.8rem;
+	text-align: center;
+	.float-icon{
+		margin: 0 auto;
+		width: 0.7rem;
+		height: 0.7rem;
+		img{
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
+	}
+	&>div{
+		text-align: center;
+		margin-bottom: 0.3rem;
+		color: #000;
+		p{
+			padding-top: 0.1rem;
+			font-size: 0.24rem;
+		}
+	}
+}
+.sign-content{
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+	background: rgba(55,55,55,0.6);
+	.sign-box{
+		position: absolute;
+		width: 6.5rem;
+		transform: translate(-50%, -55%);
+		left:50%;
+		top:50%;
+		.bg{
+			display: block;
+			width: 100%;
+		}
+		.sign-text{
+			position: absolute;
+			top: 3.1rem;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			z-index: 110;
+			padding: 0 1.06rem;
+		}
+	}
+}
+
+.guide-tip{
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 1000;
+	.mask{
+		position: absolute;
+		width: 100%;
+		left: 0;
+		top: -0.84rem;
+		z-index: 3001;
+	}
+}
+.click-area{
+	width: 3.18rem;
+	height: 3.18rem;
+	position: absolute;
+	left: 0.44rem;
+	top: 6.22rem;
+	z-index: 3005;
+}
+.one-level{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.arror{
+	width: 0.44rem;
+	margin: 0 0.1rem;
+}
+.sign-item{
+	width: 0.9rem;
+	height: 1.04rem;
+	
+	background-image: url(../../static/image/233fccc.png);
+	background-size: 100% 100%;
+	position: relative;
+	.icon{
+		display: block;
+		margin: 0 auto;
+		width: 0.3rem;
+		margin-top: 0.1rem;
+	}
+	p{
+		color: #fff;
+		text-align: center;
+		font-size: 0.28rem;
+	}
+	&.active{
+		background-image: url(../../static/image/sw3444.png);
+		display: block;
+		.signed{
+			display: none;
+		}
+		.unsign{
+			display: block;
+		}
+	}
+	.unsign{
+		display: none;
+	}
+	.signed{
+		display: block;
+		color: #fff;
+		font-size: 0.28rem;
+		line-height: 1.3;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		width: 100%;
+		text-align: center;
+		transform: translate(-50%, -50%);
+	}
+}
+.two-level{
+	display: flex;
+	justify-content: flex-end;
+	padding: 0.14rem 0.54rem;
+	img{
+		height: 0.44rem;
+	}
+}
+.three-level{
+	padding-top: 0.6rem;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	&>img{
+		position: absolute;
+		top: 0.14rem;
+		width: 0.94rem;
+		left: 0.64rem;
+	}
+}
+.sign-btn{
+	width: 2.5rem;
+	height: 0.7rem;
+	border-radius: 0.2rem;
+	text-align: center;
+	line-height: 0.7rem;
+	color: #FFFFFF;
+	background: #f97295;
+	margin: 0.44rem auto 0;
+	&.signed{
+		background: #ddd;
+		color: #efefef;
+	}
+}
+/*玩吧end*/
+
+
+
+
+
 .header{
 	height: 0.85rem;
 	background: #00bc71;
@@ -253,7 +831,8 @@ export default {
 	position: absolute;
 	width: 100%;
 	left: 0;
-	top: 0.85rem;
+	top: 0.2rem;
+	/*top: 0.85rem;*/  /*玩吧 */
 	bottom: 0;
 	overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -278,9 +857,9 @@ export default {
 		}
 		&.active{
 			.text{
-				color: #00bc71;
+				color: $bg-text-color;
 				padding: 0 0.1rem;
-				border-bottom: 2px solid #00bc71;
+				border-bottom: 2px solid $bg-text-color;
 				
 			}
 		}

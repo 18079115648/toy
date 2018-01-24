@@ -111,7 +111,7 @@ export default {
 		display: flex;
 		align-items: center;
 		padding: 0 0.5rem;
-		color: #fff;
+		color: $bg-text-color;
 		font-size: 0.3rem;
 		.avatar{
 			width: 1.2rem;

@@ -85,8 +85,12 @@ const welfareCenter = r => require.ensure([], () => r(require('../components/wel
 
 const router = new Router({
   routes: [
-    { path: '/',
-      redirect: '/index' 
+    { 
+      path: '/',
+      component: index,
+      meta: {
+      	keepAlive: true
+      }
     },
     {
       path: '/live',

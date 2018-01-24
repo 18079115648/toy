@@ -1,17 +1,17 @@
 <template>
     <div class="content">
-        <Header title="积分商城" v-if="!isHybrid"></Header>
+        <Header title="金币商城" v-if="!isHybrid"></Header>
         <router-link v-if="!isHybrid" class="recharge-record-link btn-hover" to="/convertList">兑换记录</router-link>
         <div class="pagination-content" :class="{'isHybrid' : isHybrid}">
         	<Pagination :render="render" :param="pagination" :autoload="false"  ref="pagination" uri="/dm-api/pm/goods" >
 		        <div class="convert-list" v-show="pagination.content.length > 0">
-	            	<router-link :to="'/goodsDetail/' + item.goods_id" v-tap class="convert-list-item" v-for="(item, index) in pagination.content" :key="index">
+	            	<router-link :to="'/goodsDetail/' + item.goods_id" class="convert-list-item" v-for="(item, index) in pagination.content" :key="index">
 	            		<div class="convert-goods-img img-mask">
 	            			<img class="fullEle" :src="item.thumb"  />
 	            		</div>
 	            		<div class="convert-goods-info">
 	            			<p class="convert-goods-name">{{item.name}}</p>
-	            			<p class="convert-goods-price"><span>{{item.points}}</span>积分</p>
+	            			<p class="convert-goods-price"><span>{{item.points}}</span>金币</p>
 	            		</div>
 	            	</router-link>
 	            </div>

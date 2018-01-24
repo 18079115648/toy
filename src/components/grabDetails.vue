@@ -174,6 +174,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+@import "../../static/css/style.scss";
 .grabDetails_body{
     width: 100%;
     height: auto;
@@ -301,7 +302,7 @@ export default {
 .problem{
     margin-top: .3rem;
     padding: 0 .35rem;
-    color: #fff;
+    color: $bg-text-color;
     font-size: 0.24rem;
     p{
         margin-bottom: .1rem;

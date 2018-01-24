@@ -19,7 +19,7 @@
         		</div>
         		<div class="goods-operate">
         			<div class="goods-price">
-        				<span>{{goodsInfo.points}}</span>积分
+        				<span>{{goodsInfo.points}}</span>金币
         			</div>
         			<div class="convert-btn btn-hover"  v-tap="{ methods : openConvert }">立即兑换</div>
         		</div>
@@ -59,7 +59,7 @@ export default {
     	isHybrid: this.$common.isHybrid(),
     	goodsId: undefined,
     	goodsInfo: {},
-    	userPoints: 0, //用户积分
+    	userPoints: 0, //用户金币
         convertStatus: false,
         num: 1,   //兑换数量
         
@@ -116,7 +116,7 @@ export default {
     plus() {
     	if(this.checkPlus) {
     		Toast({
-			  message: '当前积分不足',
+			  message: '当前金币不足',
 			  position: 'bottom',
 			  duration: 1500
 			});

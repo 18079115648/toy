@@ -1,7 +1,7 @@
 <template>
 	<transition name="fade">
 		<div class="modal-box" v-show="show">
-	    	<div class="modal-bg" @click="cancel"></div>
+	    	<div class="modal-bg"  v-tap="{ methods : cancel }"></div>
 	    	<div class="modal-content">
 	    		<div class="modal-header" v-if="!has_icon" v-html="title"></div>
 	    		<div class="modal-body">
@@ -9,8 +9,8 @@
 	    			<div class="modal-message" v-html="message"></div>
 	    		</div>
 	    		<div class="modal-footer">
-	    			<span class="cancel-btn" @click="cancel_operate">{{cancel_text}}</span>
-	    			<span class="confirm-btn" @click="confirm_operate">{{confirm_text}}</span>
+	    			<span class="cancel-btn" v-tap="{ methods : cancel_operate }">{{cancel_text}}</span>
+	    			<span class="confirm-btn"  v-tap="{ methods : confirm_operate }">{{confirm_text}}</span>
 	    		</div>
 	    	</div>
 	    </div>

@@ -49,6 +49,7 @@ export default {
     }
   },
   mounted(){
+	mqq.invoke('ui', 'webviewCanScroll', {"enable" : false})   //玩吧
 	this.$refs.pagination.refresh()
   },
   methods: {

@@ -39,7 +39,7 @@
 			</mt-swipe>
 	    </div> 
 		<div class="link-list">
-	    	<router-link to="/welfareCenter" v-tap class="link-item">
+	    	<router-link to="/welfareCenter" class="link-item">
 	    		<img src="../../static/image/11@3x.png" class="icon" />
 	    		<p class="text">福利中心</p>
 	    		<p style="padding-right: 0.3rem; color: #969696;">更多福利</p>
@@ -107,7 +107,7 @@ export default {
 		padding: 0.06rem 0.65rem;
 	}
 	a{
-		color: #fff;
+		color: $bg-text-color;
 	}
 	.member-tit{
 		text-align: center;
@@ -152,13 +152,14 @@ export default {
 			display: flex;
 			text-align: center;
 			padding-top: 0.3rem;
+			color: $bg-text-color;
 			.profit-item{
 				flex: 1;
 				.profit-num{
 					display: flex;
 					align-items: center;
 					justify-content: center;
-					color: #fff;
+					color: $bg-text-color;
 					font-size:0.3rem;
 					font-weight:700;
 					padding: 0.3rem 0;

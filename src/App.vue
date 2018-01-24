@@ -162,4 +162,44 @@ export default {
 			background: transparent;
 		}
 	}
+	
+	
+	/*玩吧*/
+	.recharge-content .modal-header{
+	display: none !important; 
+}
+
+.recharge-content .v-modal{
+	background: transparent !important;
+}
+	.pay-fail-tip{
+    width: 92%;
+    height: 0.85rem;
+    text-align: center;
+    background-color: #f9a938 !important;
+    display: flex;
+    border-radius: 0.1rem;
+  &.pay-success{
+  	background: #0ac380 !important;
+  }
+	p{
+		width: 100%;
+		display: flex;
+	  font-size: 0.3rem;
+		color:#fff;
+		align-items: center;
+		padding-left: 1rem;
+		img{
+			width: 0.46rem;
+			margin-right: 0.15rem;
+		}
+	}
+}
+.isNew-finish{
+	color: #ff9435;
+	padding-top: 0.15rem;
+	padding-bottom: 0.15rem;
+	font-size: 0.36rem;
+}
+/*玩吧*/
 </style>

@@ -58,18 +58,19 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+@import "../../static/css/style.scss";
 .content{
 	min-height: 100vh;
 	background: #F5F5F9;
 }
 .reward-total{
-	background: #20c369;
+	background: $bg-color;
 	padding: 0.5rem 0.7rem;
-	color: #eee;
+	color: $bg-text-color;
 	.reward-num{
 		display: flex;
 		align-items:center;
-		color: #fff;
+		color: $bg-text-color;
 		font-size:0.44rem;
 		font-weight:700;
 		padding:0.3rem 0 0.25rem;

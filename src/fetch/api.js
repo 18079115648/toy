@@ -5,26 +5,33 @@ import storage from '@/fetch/storage'
 import router from '@/router'
 import Token from '@/fetch/accessToken'
 
-function getKey(name) {
-	var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
-//	          new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
-    var param=window.location.search.substring(1).split('/')[0];
-    var currKey = storage.get('operatorKey')
-    if(!param){
-    	return false
-    }
-    var r = param.match(reg)
-    if (r != null && r[2] == currKey) {
-    	return r[2]
-    }
-    if (r != null && r[2] != currKey) {
-    	storage.remove('token')
-    	return r[2]
-    }
-    return false
-}
+/**
+ * 玩吧 start
+ */
+//function getKey(name) {
+//	var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+//  var param=window.location.search.substring(1).split('/')[0];
+//  var currKey = storage.get('operatorKey')
+//  if(!param){
+//  	return false
+//  }
+//  var r = param.match(reg)
+//  if (r != null && r[2] == currKey) {
+//  	return r[2]
+//  }
+//  if (r != null && r[2] != currKey) {
+//  	storage.remove('token')
+//  	return r[2]
+//  }
+//  return false
+//}
+//
+//storage.set('operatorKey', getKey('key'))
 
-storage.set('operatorKey', getKey('key'))
+/**
+ * 玩吧 end
+ */
+
 
  
 // axios 配置
@@ -39,23 +46,37 @@ axios.interceptors.request.use((config) => {
     
     return Promise.reject(error);
 });
-
-
+/**
+ * 玩吧 start
+ */
+//function buildURL(url, needToken) {
+//	let key = storage.get('operatorKey') ? storage.get('operatorKey') : '8dd758066c594324962cc2de7ee7a306'
+//	url = url+(url.indexOf('?') >= 0 ? '&' : '?') + "key=" + key
+//	let token = Token.getAccessToken()
+//  if (!needToken) {
+//      return token ? url + (url.indexOf('?') >= 0 ? '&' : '?') + "accessToken=" + token : url
+//  }
+//  if (!token) {
+//  	storage.set('history_url', router.history.current.path)
+//      router.replace('/login')
+//      return false
+//  }
+//  return url + (url.indexOf('?') >= 0 ? '&' : '?') + "accessToken=" + token
+//}
 function buildURL(url, needToken) {
-	let key = storage.get('operatorKey') ? storage.get('operatorKey') : '8dd758066c594324962cc2de7ee7a306'
-	url = url+(url.indexOf('?') >= 0 ? '&' : '?') + "key=" + key
+	url = url+(url.indexOf('?') >= 0 ? '&' : '?') + "key=8dd758066c594324962cc2de7ee7a306" 
 	let token = Token.getAccessToken()
     if (!needToken) {
-        return token ? url + (url.indexOf('?') >= 0 ? '&' : '?') + "accessToken=" + token : url
+        return url
     }
     if (!token) {
-    	storage.set('history_url', router.history.current.path)
-        router.replace('/login')
         return false
     }
     return url + (url.indexOf('?') >= 0 ? '&' : '?') + "accessToken=" + token
 }
-
+/**
+ * 玩吧 end
+ */
 export function fetchPost(url, params, needToken, multiple) {
 	url = buildURL(url, needToken)
 	if (!url) {
@@ -111,6 +132,8 @@ export function fetchPost(url, params, needToken, multiple) {
             .then(response => {
             	if(response.status == 200) {
             		if(response.data.errCode == 0) {
+            			resolve(response.data) 
+            		}else if(response.data.errCode == 44444) {
             			resolve(response.data) 
             		}else {
             			reject(response)
@@ -194,6 +217,48 @@ export function fetchGet(url, params, needToken) {
     })
 }
 export default {
+	/**
+	 * 玩吧 start
+	 */
+	
+	//玩吧登录
+	wanbaLogin(params) {
+		return fetchPost('/dm-api/wanba/login', params, false)
+	},
+	//任务中心
+	userTask(params) {
+		return fetchGet('/dm-api/wanba/task', params, false)
+	},
+	//完成任务
+	userTaskComplete(params) {
+		return fetchPost('/dm-api/wanba/receive', params, true)
+	},
+	//充值模板列表
+	chargeTextList(params) {
+		return fetchGet('/dm-api/charge/wanba/list', params, false)
+	},
+	
+	//玩吧支付
+	chargePay(params) {
+		return fetchPost('/dm-api/charge/wanba/pay', params, true)
+	},
+	
+	//领取礼包
+	giftReceive(params) {
+		return fetchPost('/dm-api/wanba/giftReceive', params, true)
+	},
+	
+	//请求js文件
+	getJs(params) {
+		return fetchGet('/demo.php?time=' + Date.parse(new Date()), params, false)
+	},
+	
+	/**
+	 * 玩吧 end
+	 */
+	
+	
+	
 	//	房间抓取记录
 	logRoom(params) {
 		return fetchGet('/dm-api/doll/log/room', params, true)

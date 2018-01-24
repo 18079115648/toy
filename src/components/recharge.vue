@@ -1,39 +1,44 @@
 <template>
-    <div class="content">
+    <div class="content recharge-content">
         <Header title="充值"></Header>
         <router-link class="recharge-record-link btn-hover" to="/paymentList">充值记录</router-link>
         <div class="recharge_body">
             <div class="member-charge" v-if="menberCharge.week || menberCharge.month">
             	<p class="menber-tit kind-tit">超值会员</p>
             	<div class="charge-list">
-            		<router-link to="/paymentMember/1" v-tap class="charge-item" v-if="menberCharge.week">
+            		<router-link :to="'/paymentMember/' + menberCharge.week.itemId" class="charge-item" v-if="menberCharge.week">
             			<img class="pop" src="../../static/image/7@2x.png"  />
             			<p class="tit shadow-text">{{menberCharge.week.title}}</p>
             			<p class="desc">{{menberCharge.week.desc}}</p>
             			<p class="price">&yen;{{menberCharge.week.price.toFixed(2)}}</p>
             		</router-link>
-            		<router-link to="/paymentMember/1" v-tap class="charge-item" v-if="menberCharge.month">
-            			<p class="tit shadow-text">{{menberCharge.week.title}}</p>
-            			<p class="desc">{{menberCharge.week.desc}}</p>
-            			<p class="price">&yen;{{menberCharge.week.price.toFixed(2)}}</p>
+            		<router-link :to="'/paymentMember/' + menberCharge.month.itemId" class="charge-item" v-if="menberCharge.month">
+            			<p class="tit shadow-text">{{menberCharge.month.title}}</p>
+            			<p class="desc">{{menberCharge.month.desc}}</p>
+            			<p class="price">&yen;{{menberCharge.month.price.toFixed(2)}}</p>
             		</router-link>
             	</div>
             </div>
             <div class="diamond-charge" v-show="diamondCharge.length > 0">
             	<p class="diamond-tit kind-tit">钻石充值</p>
             	<div class="charge-list">
-            		<router-link :to="'/payment/' + item.id" v-tap class="charge-item diamond" v-for="(item, index) in diamondCharge" :key="index">
+            		<div v-tap="{ methods : infoPayment, item: item }" class="charge-item diamond" v-for="(item, index) in diamondCharge" :key="index">
             			<img class="pop" src="../../static/image/6@2x.png" v-if="index == 0"  />
             			<p class="tit shadow-text">
             				<img class="dia-icon" src="../../static/image/erdd.png" />
             				{{item.money}}
             			</p>
-            			<p class="desc">{{item.desc}}</p>
-            			<p class="price">&yen;{{item.price}}</p>
-            		</router-link>
+            			<p class="desc">{{item.title}}</p>
+            			<p class="price">&yen;{{item.price.toFixed(2)}}</p>
+            		</div>
             	</div>
             </div>
         </div>
+        <confirm-modal :show="payShow" @confirm_modal="chargePay" @closeModal="payShow = false" :message="payText"></confirm-modal>
+    	<mt-popup v-model="failShow" :closeOnClickModal="false" position="top" class="pay-fail-tip" :class="{'pay-success': isSuccess}">
+	      <p v-html="failText"></p>
+	    </mt-popup>
+	    
     </div>
 </template>
 
@@ -47,19 +52,98 @@ export default {
     		month: null
     	},
         diamondCharge:[],
+        
+        payShow: false,
+        payText: '',
+        currPayId: null,
+        currPayPrice: null,
+        
+        failShow: false,
+        failText: '<img src="../../static/image/fail-pay.png" />支付失败',
+        isSuccess: false
     }
   },
   created(){
-    this.$api.recharge().then(res => {
-        this.diamondCharge = res.data.normal
-        res.data.week && (this.menberCharge.week = res.data.week)
-        res.data.month && (this.menberCharge.month = res.data.month)
+  	this.$api.chargeTextList({
+    	platform: window.OPEN_DATA.platform
+    }).then(res => {
+        res.data.forEach((item) => {
+        	switch(item.type) {
+				case 1:
+					this.menberCharge.week = item
+					break;
+				case 2:
+					this.menberCharge.month = item
+					break;
+				case 3:
+					this.diamondCharge.push(item)
+					break;
+			}
+        })
     }, err => {
     	
     })
+  	
   },
   methods: {
-
+	infoPayment(params){
+		let item = params.item
+    	this.payShow = true
+    	this.currPayId = item.itemId
+    	this.currPayPrice = parseFloat(item.price)
+    	this.payText = '充值 <b style="color: #000;">' + item.price + '</b> 元获得<b style="color: #000;"> ' + item.money + ' </b>钻石'	
+    },
+    chargePay() {
+    	const self = this
+    	this.pay()
+    	
+    	window.__paySuccess = function(){
+		    self.pay()
+		}
+		
+		window.__payError = function(){
+			self.isSuccess = false
+			self.payTip('<img src="../../static/image/fail-pay.png" />充值失败')
+		}
+	    window.__payClose = function(){
+	    	self.isSuccess = false
+		    self.payTip('<img src="../../static/image/fail-pay.png" />用户取消充值')
+		}	
+    },
+    pay() {
+    	const self = this
+    	window.getOpenKey(function(msg){
+    		self.$api.chargePay({
+	    		openid: msg.data.openid,
+	    		openkey: msg.data.openkey,
+	    		platform: window.OPEN_DATA.platform,
+	    		itemId: self.currPayId
+	    	}).then(res => {
+				if(res.errCode == 0) {
+					self.isSuccess = true
+					self.payTip('<img src="../../static/image/succ-pay.png" />充值成功')
+					setTimeout(() => {
+						window.history.back()
+					}, 2000)
+				}else if(res.errCode == 44444) {
+					window.popPayTips({
+					    defaultScore : parseInt(self.currPayPrice * 10),
+					    appid : 1106587346
+					})
+				}
+		    }, err => {
+		    	
+		    })
+		    
+		})
+    },
+    payTip(text) {
+    	this.failShow = true
+		this.failText = text
+		setTimeout(() => {
+			this.failShow = false
+		}, 3000)
+    }
   }
 }
 </script>

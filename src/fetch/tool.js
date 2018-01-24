@@ -4,6 +4,19 @@ import wx from 'weixin-js-sdk'
 *   Toast公共方法
 */
 
+export function getKey(name) {
+	var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+    var param=window.location.search.substring(1).split('/')[0];
+    if(!param){
+    	return ''
+    }
+    var r = param.match(reg)
+    if (r != null) {
+    	return r[2]
+    }
+    return ''
+}
+
 export function loadJssdk(lineLink, imgUrl, shareTitle, descContent) {
     wx.onMenuShareTimeline({
         title: shareTitle, // 分享标题
