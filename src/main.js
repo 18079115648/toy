@@ -98,6 +98,9 @@ function setSdk(type){
     } else {        // 异步版本  适用于性能不好的机器  视频将会码率降级
         window.quality = false;
         jZego.setAttribute('src', 'static/js/jZego-1.0.13.async.min.js');
+//      window.quality = true;
+//      jZego.setAttribute('src', 'static/js/jZego-1.0.13.min.js');
+        
     }
     document.documentElement.appendChild(jZego);  
 }
@@ -107,11 +110,11 @@ function setSdk(type){
 /**
  * 玩吧 start
  */
-//mqq.ui.setWebViewBehavior({
-//  swipeBack:1,
-//  actionButton: 1,
-//  bottomBar:true
-//})
+mqq.ui.setWebViewBehavior({
+    swipeBack:1,
+    actionButton: 1,
+    bottomBar:true
+})
 
 /**
  * 玩吧 end

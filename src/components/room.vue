@@ -40,8 +40,11 @@
     		</div>
     	</div>
         <div class="video-content" :class="[fullStatus ? 'full' : 'nofull']">
-        	<canvas id="frontview" :class="{show:showFront}"></canvas>
-	      	<canvas id="sideview" :class="{show:showSide}"></canvas>
+        	<div class="fullEle" id="canvas-box">
+        		<!--<canvas id="frontview" :class="{show:showFront}"></canvas>
+		      	<canvas id="sideview" :class="{show:showSide}"></canvas>-->
+        	</div>
+	        	
 	      	
 	      	<!--<img class="view-change" v-if="isGame" v-tap.prevent="{ methods : changeView }" src="../../static/image/dd33.png"  />-->
 	    	<div class="audio-change img-mask child" v-tap="{ methods : changeAudio, status: musicSwitch && soundSwitch }">
@@ -395,6 +398,17 @@ export default {
 		this.preventScale()
 	},
 	mounted() {	
+		let timeId = Date.parse(new Date())
+		let frontview = document.createElement("canvas");
+		let sideview = document.createElement("canvas");
+		let canvasBox = document.getElementById('canvas-box')
+		frontview.id = 'frontview' + timeId;
+		sideview.id = 'sideview' + timeId;
+		canvasBox.appendChild(frontview);
+		canvasBox.appendChild(sideview);
+		this.frontview = frontview
+		this.sideview = sideview
+		this.changeCanvas()
 		// 即构推流初始化
 		this.getInitZegoData()
 
@@ -415,6 +429,16 @@ export default {
 		
 	},
 	methods: {
+		changeCanvas() {
+			if(this.showFront) {
+				this.frontview.style.zIndex = -2
+				this.sideview.style.zIndex = 0
+			}else {
+				this.frontview.style.zIndex = 0
+				this.sideview.style.zIndex = -2
+			}
+		},
+		
 		/**
 		 * 玩吧
 		 */
@@ -627,6 +651,7 @@ export default {
 //						this.closeSideStream()
 						this.showFront = true
 						this.showSide = false
+						this.changeCanvas()
 						clearInterval(this.operationTimer)
 						this.grabProcess = false
 						if (data.value === 1) {
@@ -693,17 +718,21 @@ export default {
 
 			// 登录房间
 			this.zg.login(this.zegoRoomId, 2, this.zegoToken, (streamList) => {
+				console.log(streamList)
 				streamList.forEach((item) => {
 					// 设置音量0
 					parent.zg.setPlayVolume(item.stream_id, 0)
 					if (item.stream_id.endsWith('_2')) {
 						parent.sideStreamId = item.stream_id
 						// 只有游戏中才开始播放侧边视频流，观众模式播放侧边视频流
+						
+						window.quality ? parent.zg.startPlayingStream(item.stream_id, parent.sideview, 0) : parent.zg.startPlayingStream(item.stream_id, parent.sideview, '', '1')
 //						this.isGame && parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'), 1)
-						window.quality ? parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'), 0) : parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'), '', '1')
+//						window.quality ? parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'), 0) : parent.zg.startPlayingStream(item.stream_id, document.getElementById('sideview'), '', '1')
 					} else {
 						parent.frontStreamId = item.stream_id
-						window.quality ? parent.zg.startPlayingStream(item.stream_id, document.getElementById('frontview'), 0) : parent.zg.startPlayingStream(item.stream_id, document.getElementById('frontview'), '', '1')
+						window.quality ? parent.zg.startPlayingStream(item.stream_id, parent.frontview, 0) : parent.zg.startPlayingStream(item.stream_id, parent.frontview, '', '1')
+//						window.quality ? parent.zg.startPlayingStream(item.stream_id, document.getElementById('frontview'), 0) : parent.zg.startPlayingStream(item.stream_id, document.getElementById('frontview'), '', '1')
 					}
 				})
 			}, (error) => {
@@ -728,16 +757,19 @@ export default {
 
 			// 流更新通知
 			this.zg.onStreamUpdated = (type, streamList) => {
+				console.log(streamList + '更新')
 				console.info('流更新通知')
 			}
 
 			// 流状态变更通知
 			this.zg.onStreamExtraInfoUpdated = (streamList) => {
+				console.log(streamList + '状态变更')
 				console.info("流状态变更通知")
 			}
 
 			// 流信息变更通知
 			this.zg.onPlayStateUpdate = (type, streamId) => {
+				console.log(streamId + '信息变更')
 				setTimeout(() => {
 					parent.loadingStatus = false
 				}, 600)
@@ -1116,6 +1148,7 @@ export default {
 			this.chatStatus = false
 			this.showFront = !this.showFront
 			this.showSide = !this.showSide
+			this.changeCanvas()
 			this.playClickAudio()
 		},
 		
@@ -1401,13 +1434,19 @@ export default {
 			
 		}
 	},
-
-	beforeDestroy() {
-		// 关闭背景音量
+	beforeRouteLeave (to, from , next) {
+	    // 关闭背景音量
 		this.$root.bgAudio && !this.$root.bgAudio.paused && this.$root.bgAudio.pause()
 		this.leaveRoom()
 		this.zg.release()
-	}
+		next()
+	},
+//	beforeDestroy() {
+//		// 关闭背景音量
+//		this.$root.bgAudio && !this.$root.bgAudio.paused && this.$root.bgAudio.pause()
+//		this.leaveRoom()
+//		this.zg.release()
+//	}
 
 		
 }

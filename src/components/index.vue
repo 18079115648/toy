@@ -70,7 +70,7 @@
     </div>
 	  
 	  <!--玩吧 start-->
-	  <div class="sign-content"  v-show="signShow && !guideShow">
+	  <div class="sign-content"  v-show="signShow && !guideShow && !giftShow && loadEnd">
     	<div class="sign-box">
     		<img class="bg" src="../../static/image/sign.png"  />
     		<div class="sign-text">
@@ -158,7 +158,7 @@
     		</div>
     	</div>
     </div>
-    <div class="guide-tip img-mask" v-show="guideShow">
+    <div class="guide-tip img-mask" v-show="guideShow && !giftShow && loadEnd">
     	<img class="mask" src="../../static/image/guide1.png"  />
     	<div class="click-area" v-tap="{ methods : guideOperate }"></div>
     </div>
@@ -203,7 +203,7 @@
 			</div>
 		</mt-popup>
 		<!--礼包-->
-		<mt-popup v-model="giftShow" class="float-pop">
+		<mt-popup v-model="giftShow && loadEnd" class="float-pop">
 			<div class="float-box gift-box">
 				<p class="tit">{{receiveGiftInfo.name}}</p>
 				<div class="content">
@@ -223,6 +223,7 @@ import { Toast, Indicator } from 'mint-ui'
 export default {
   data () { 
     return {
+    	loadEnd: false,
     	homebar: [{
       	text: '福利中心',
       	icon: '../../static/image/112344.png',
@@ -455,6 +456,7 @@ export default {
 				this.signItem_7 = res.data.list[6]
 				this.signStatus = res.data.status
 				this.signShow = !!res.data.status
+				this.loadEnd = true
 		  }, err => {
 	
 		  })

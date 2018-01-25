@@ -20,6 +20,26 @@ export default {
 
 <style lang="scss">
 	@import "../static/css/style.scss";
+	#canvas-box{
+		position: absolute;
+		left: 0;
+		top: 0;
+		z-index: -1;
+		canvas{
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			left: 0;
+			top: 0;
+			bottom: 0;
+			right: 0;
+			z-index: -2;
+		}
+		&.show {
+			z-index: 0;
+		}
+	}
+	
 	#app{
 		background: $bg-color;
 		min-height: 100vh;
