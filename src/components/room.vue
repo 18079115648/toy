@@ -391,12 +391,13 @@ export default {
 		this.enterRoom()
 		// 初始化socket
 		this.initWebSocket()
-		// 即构推流初始化
-		this.getInitZegoData()
 		// 阻止缩放
 		this.preventScale()
 	},
 	mounted() {	
+		// 即构推流初始化
+		this.getInitZegoData()
+
 		document.documentElement.scrollTop = 0
 		let self = this
 		this.$nextTick(function() {
