@@ -62,6 +62,7 @@ export default {
 </script>
 
 <style scoped>
+@import "../../../static/css/style.scss";
 .modal-box{
 	position: absolute;
 	z-index: 3000;
@@ -151,6 +152,6 @@ export default {
 }
 .modal-footer .confirm-btn{
     width: 50%;
-    color: #00BC71;
+    color: $modal-btn-color;
 }
 </style>
