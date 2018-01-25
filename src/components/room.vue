@@ -431,11 +431,11 @@ export default {
 	methods: {
 		changeCanvas() {
 			if(this.showFront) {
-				this.frontview.style.zIndex = -2
-				this.sideview.style.zIndex = 0
-			}else {
 				this.frontview.style.zIndex = 0
 				this.sideview.style.zIndex = -2
+			}else {
+				this.frontview.style.zIndex = -2
+				this.sideview.style.zIndex = 0
 			}
 		},
 		
@@ -802,7 +802,7 @@ export default {
 					}
 					parent.readyTime--
 					timeout()
-				}, 1000)
+				}, 667)
 			}
 			timeout()
 		},
@@ -1718,7 +1718,7 @@ export default {
 		flex: 1;
 	}
 	.chat-send{
-		background: $bg-color;
+		background: #00BC71;
 		border-radius: 0.1rem;
 		line-height: 0.84rem;
 		height: 0.8rem;

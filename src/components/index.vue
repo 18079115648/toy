@@ -70,7 +70,7 @@
     </div>
 	  
 	  <!--玩吧 start-->
-	  <div class="sign-content"  v-show="signShow && !guideShow && !giftShow && loadEnd">
+	  <div class="sign-content"  v-show="signShow && (!guideShow) && (!giftShow) && loadEnd">
     	<div class="sign-box">
     		<img class="bg" src="../../static/image/sign.png"  />
     		<div class="sign-text">
@@ -158,7 +158,7 @@
     		</div>
     	</div>
     </div>
-    <div class="guide-tip img-mask" v-show="guideShow && !giftShow && loadEnd">
+    <div class="guide-tip img-mask" v-show="guideShow && (!giftShow) && loadEnd">
     	<img class="mask" src="../../static/image/guide1.png"  />
     	<div class="click-area" v-tap="{ methods : guideOperate }"></div>
     </div>
@@ -203,7 +203,7 @@
 			</div>
 		</mt-popup>
 		<!--礼包-->
-		<mt-popup v-model="giftShow && loadEnd" class="float-pop">
+		<mt-popup v-model="giftShow" class="float-pop">
 			<div class="float-box gift-box">
 				<p class="tit">{{receiveGiftInfo.name}}</p>
 				<div class="content">
@@ -463,14 +463,14 @@ export default {
 		},
 		sign() {
 			this.$api.sign().then(res => {
-				this.signStatus = 0
-				this.signShow = false
-				Toast({
-				  message: '领取成功',
-				  position: 'middle',
-				  iconClass: 'toast-icon icon-success',
-				  duration: 1500
-				})
+					this.signStatus = 0
+					this.signShow = false
+					Toast({
+					  message: '领取成功',
+					  position: 'middle',
+					  iconClass: 'toast-icon icon-success',
+					  duration: 1500
+					})
 		    }, err => {
 					this.signShow = false
 		    })
