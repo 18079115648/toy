@@ -105,7 +105,7 @@
     	position: absolute;
     	width: 100%;
     	height: 100%;
-        color: #fff;
+        color: $header-text-color;
         font-size: 0.3rem;
         font-weight: 700;
         left: 0;

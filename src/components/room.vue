@@ -1412,6 +1412,7 @@ export default {
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
+	background: $bg-color;
 	
 } 
 .room-top{
@@ -1632,7 +1633,7 @@ export default {
 	z-index: 2;
 	left: 0;
 	bottom:0;
-	background: #00BC71;
+	background: $bg-color;
 	width: 100%;
 	display: flex;
 	padding: 0.7rem 0.25rem;
@@ -1735,7 +1736,7 @@ export default {
 	z-index: 2;
 	left: 0;
 	bottom: 0;
-	background: #00BC71;
+	background: $bg-color;
 	.operate-direc{
 		width: 3.2rem;
 		height: 2.3rem;

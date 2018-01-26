@@ -162,7 +162,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+@import "../../static/css/style.scss";
 .payment_body{
     width: 100%;
     height: auto;
@@ -203,7 +203,7 @@ export default {
     line-height: .6rem;
 }
 .payment-kind-desc{
-	color: #fff;
+	color: $bg-text-color;
 	padding: 0.3rem;
 	font-size: 0.24rem;
 	.desc-text{
@@ -245,7 +245,7 @@ export default {
 }
 .agree{
 	padding: 0.2rem 0.15rem 1.2rem;
-	color: #fff;
+	color: $bg-text-color;
 	display: flex;
 	align-items: center;
 	.agree-icon{
@@ -263,7 +263,7 @@ export default {
 		}
 	}
 	a{
-		color: #fff;
+		color: $bg-text-color;
 		text-decoration: underline;
 		margin-left: 0.08rem;
 	}

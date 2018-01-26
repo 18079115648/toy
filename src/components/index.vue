@@ -208,9 +208,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+@import "../../static/css/style.scss";
 .header{
 	height: 0.85rem;
-	background: #00bc71;
+	background: $header-color;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
