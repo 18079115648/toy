@@ -10,7 +10,6 @@
 	            </slot>
 	        </div>
 	    </div>
-	    <div class="menu-blank" style="height: 0.85rem;"></div>
 	    
     </div>
 </template>
@@ -55,8 +54,9 @@
 
 <style lang="scss" scoped>
 	@import "../../../static/css/style.scss";
-    .header, .headPart {
-        z-index: 10;
+    .header {
+       height: 0.85rem;
+       position: relative;
     }
     .headPart{
         width: 100%;
@@ -64,7 +64,7 @@
         background: $header-color;
         overflow: hidden;
         position: fixed;
-        z-index: 10;
+        z-index: 8;
         left: 0;
         top: 0;
     }
@@ -118,6 +118,5 @@
 	    top: 0;
 	    text-align: center;
 	    line-height: 0.85rem;
-	    z-index: -1;
     }
 </style>

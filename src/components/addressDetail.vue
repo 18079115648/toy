@@ -196,8 +196,7 @@ export default {
 <style lang="scss" scoped>
 @import "../../static/css/style.scss";
 .content{
-	padding-bottom: 0.8rem;
-	height: 100vh;
+	min-height: 100vh;
 	background: #F5F5F9;
 }
 .addAddress_body{
@@ -265,7 +264,6 @@ export default {
     padding: .3rem .3rem .2rem 0;
 }
 .confirm{
-	position: absolute;
 	width: 1.2rem;
 	height: 0.85rem;
 	position: fixed;

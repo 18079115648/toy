@@ -156,9 +156,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+@import "../../static/css/style.scss";
 .content{
-	padding-bottom: 0.8rem;
-	height: 100vh;
+	min-height: 100vh;
 	background: #F5F5F9;
 }
 .addAddress_body{
@@ -235,7 +236,7 @@ export default {
 	z-index: 10;
 	text-align: center;
 	line-height: 0.85rem;
-	color: #fff;
+	color: $header-text-color;
     font-size: 0.28rem;
     /*font-weight: 700;*/
 }
