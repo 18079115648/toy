@@ -2,11 +2,11 @@
   <div class="content">
     <div class="header">
     	<router-link to="/user" class="user-link link">
-    		<img :src="avatar"  class="fullAuto" />
+    		<i class="icon iconfont icon-wode2"></i>
     	</router-link>
-    	<img class="logo-text"  src="../../static/image/logo-text.png" />
+    	<img class="logo-text"  :src="`${imageUrl}/logo-text.png`" />
     	<router-link to="/toysBox" class="user-link link">
-    		<img src="../../static/image/toys-box.png"  class="fullAuto" />
+    		<img :src="`${imageUrl}/toys-box.png`"  class="fullAuto" />
     	</router-link>
     </div>
     <div class="home-pagination-content">
@@ -56,7 +56,7 @@
 								   </div>	
 				    	</div>
 				    	<div class="no_msg" style="padding-bottom: 1rem; padding-top: 1.3rem;" v-show="pagination.content.length<1 && pagination.loadEnd">
-								<img src="../../static/image/ewd.png"  />
+								<img :src="`${imageUrl}/ewd.png`"  />
 								<div>没有商品信息~</div>
 						  </div>	
 				    </div>
@@ -76,21 +76,22 @@ import { Toast, Indicator } from 'mint-ui'
 export default {
   data () { 
     return {
+    	imageUrl: this.$store.state.imageUrl,
     	homebar: [{
       	text: '福利中心',
-      	icon: '../../static/image/112344.png',
+      	icon: `${this.$store.state.imageUrl}/112344.png`,
       	link: '/welfareCenter'
       },{
       	text: '排行榜',
-      	icon: '../../static/image/d44f.png',
+      	icon: `${this.$store.state.imageUrl}/d44f.png`,
       	link: '/rankList'
       },{
       	text: '积分商城',
-      	icon: '../../static/image/34dxf.png',
+      	icon: `${this.$store.state.imageUrl}/34dxf.png`,
       	link: '/intergalMall'
       },{
       	text: '充值中心',
-      	icon: '../../static/image/344fs.png',
+      	icon: `${this.$store.state.imageUrl}/344fs.png`,
       	link: '/recharge'
       }],
       banner: [],
@@ -108,13 +109,12 @@ export default {
 	        }
 	    },
 	    
-	    avatar: '../../static/image/78@3x.png',  //头像
-	    
 	    musicSwitch: true,  //背景音乐
+	    
+	    
     }
   },
   created() {
-  	console.log(this.$token.getAccessToken())
   	this.$api.homeBanner().then(res => {
 			this.banner = res.data
     }, err => {
@@ -224,6 +224,11 @@ export default {
 		background-size: 55%;*/
 		position: relative;
 		padding: 0.15rem;
+		.iconfont{
+			line-height: 1;
+			font-size: 0.6rem;
+			color: $user-icon-color;
+		}
 	}
 	/*.user-link{
 		background-image: url(../../static/image/vvv.png);
@@ -397,7 +402,7 @@ export default {
 			width: 1.1rem;
 			height: 0.5rem;
 			line-height: 0.5rem;
-			background-image: url(../../static/image/66fg.png);
+			background-image: url(#{$imageUrl}/66fg.png);
 			background-size: 100% 100%;
 			.shadow-text{
 				position: absolute;

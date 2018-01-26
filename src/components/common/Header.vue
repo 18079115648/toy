@@ -74,6 +74,13 @@
     .invite-header{
     	background: url(../../../static/image/invite-header.png) no-repeat center;
     	background-size: 100% 100%;
+    	div.back .iconfont{
+    		color: #fff !important;
+    	}
+    	p.defalut-slot{
+    		color: #fff !important;
+    	}
+
     }
     .headCont{
     	position: absolute;

@@ -61,7 +61,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 @import "../../../static/css/style.scss";
 .modal-box{
 	position: absolute;

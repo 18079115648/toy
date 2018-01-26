@@ -24,7 +24,7 @@
 			        </router-link>
 				</div>
 				<div class="no_msg bg-color" v-show="pagination.content.length<1 && pagination.loadEnd">
-			        <img style="width: 1.4rem;" src="../../static/image/none-record.png">
+			        <img style="width: 1.4rem;" :src="`${imageUrl}/none-record.png`">
 		            <div>暂无订单数据~</div>
 			    </div>	   
 			</Pagination>
@@ -38,6 +38,7 @@
 export default {
   data () {
     return {
+    	imageUrl: this.$store.state.imageUrl,
         pagination: {
 	        content: [],
 	        loadEnd: false,

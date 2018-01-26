@@ -11,14 +11,14 @@
         </div>
         <input type="file" id="file" name="avatar" class="save_img"  @change="changeAvatar" accept="image/*" alt="avatar">
         <div>
-          <img src="../../static/image/wdd.png" class="guide">
+          <img :src="`${imageUrl}/wdd.png`" class="guide">
         </div>
       </div>
       <div class="head" style="border-bottom: solid 1px #f2f2f2;">
         <label for="user_name">昵称</label>
         <input type="text" class="nickname-text" maxlength="20" name="user_name" placeholder="请输入昵称" v-model="nickname">
         <div>
-          <img src="../../static/image/wdd.png" class="guide">
+          <img :src="`${imageUrl}/wdd.png`" class="guide">
         </div>
       </div>
       <!--<div class="head" >
@@ -37,6 +37,7 @@ import { Toast,Indicator } from 'mint-ui';
 export default {
   data () {
     return {
+    	imageUrl: this.$store.state.imageUrl,
       avatar:'',
       nickname:'',
       inviteCode: '',
@@ -46,7 +47,7 @@ export default {
   created(){
     // this.saveImg()
     this.$api.userInfo().then(res => {
-      this.avatar = res.data.avatar ? res.data.avatar : '../../static/image/vvv.png'
+      this.avatar = res.data.avatar ? res.data.avatar : `${this.imageUrl}/vvv.png`
       this.nickname = res.data.nickname
       this.inviteCode = res.data.inviteCode
     }, err => {

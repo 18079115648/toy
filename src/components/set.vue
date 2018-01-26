@@ -20,7 +20,7 @@
                 <router-link to="/aboutUs" v-tap class="set_list" style="border:none;">
                     <div>关于我们</div>
                     <div>
-                        <img src="../../static/image/wdd.png" class="set_last_img">
+                        <img :src="`${imageUrl}/wdd.png`" class="set_last_img">
                     </div>
                 </router-link>
             </div>
@@ -37,6 +37,7 @@ import storage from '../fetch/storage'
 export default {
   data () {
     return {
+    	imageUrl: this.$store.state.imageUrl,
         push:true,
         music:true,
         sound:true,

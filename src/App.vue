@@ -111,6 +111,9 @@ export default {
 	    border-color: $bg-color !important;
 	    background-color: $bg-color !important;
 	}
+	.mint-indicator-mask{
+		z-index: 990;
+	}
 	.mint-indicator-wrapper{
 		z-index: 1000;
 	}

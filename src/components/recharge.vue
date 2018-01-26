@@ -7,12 +7,14 @@
             	<p class="menber-tit kind-tit">超值会员</p>
             	<div class="charge-list">
             		<router-link to="/paymentMember/1" v-tap class="charge-item" v-if="menberCharge.week">
-            			<img class="pop" src="../../static/image/7@2x.png"  />
+            			<!--<img class="pop" src="../../static/image/7@2x.png"  />-->
+            			<p class="charge-item-mark" v-if="menberCharge.week.mark">{{menberCharge.week.mark}}</p>
             			<p class="tit shadow-text">{{menberCharge.week.title}}</p>
             			<p class="desc">{{menberCharge.week.desc}}</p>
             			<p class="price">&yen;{{menberCharge.week.price.toFixed(2)}}</p>
             		</router-link>
             		<router-link to="/paymentMember/1" v-tap class="charge-item" v-if="menberCharge.month">
+            			<p class="charge-item-mark" v-if="menberCharge.month.mark">{{menberCharge.month.mark}}</p>
             			<p class="tit shadow-text">{{menberCharge.week.title}}</p>
             			<p class="desc">{{menberCharge.week.desc}}</p>
             			<p class="price">&yen;{{menberCharge.week.price.toFixed(2)}}</p>
@@ -23,9 +25,9 @@
             	<p class="diamond-tit kind-tit">钻石充值</p>
             	<div class="charge-list">
             		<router-link :to="'/payment/' + item.id" v-tap class="charge-item diamond" v-for="(item, index) in diamondCharge" :key="index">
-            			<img class="pop" src="../../static/image/6@2x.png" v-if="index == 0"  />
+            			<p class="charge-item-mark" v-if="item.mark">{{item.mark}}</p>
             			<p class="tit shadow-text">
-            				<img class="dia-icon" src="../../static/image/erdd.png" />
+            				<img class="dia-icon" :src="`${imageUrl}/erdd.png`" />
             				{{item.money}}
             			</p>
             			<p class="desc">{{item.desc}}</p>
@@ -42,6 +44,7 @@
 export default {
   data () {
     return {
+    	imageUrl: this.$store.state.imageUrl,
     	menberCharge: {
     		week:null,
     		month: null
@@ -127,6 +130,15 @@ export default {
     				color: #8ec1f4;
     			}
     		}
+    		.charge-item-mark{
+    			position: absolute;
+    			left: 0;
+    			top: -0.15rem;
+    			font-size: 0.2rem;
+    			border-radius: 0 0.06rem 0.06rem 0.06rem;
+    			background: linear-gradient(to right, #c552fa , #7e2afc);
+    			padding: 0.04rem 0.1rem;
+    		}
     		.tit{
     			font-size: 0.3rem;
     			display: flex;
@@ -164,47 +176,6 @@ export default {
     }
 
 }
-.recharge{
-    width: 100%;
-    height: 1rem;
-    display: flex;
-    padding: 0 .3rem;
-    align-items: center;
-    margin-bottom: .3rem;
-    background: url('../../static/image/333.png') no-repeat;
-    background-size: 100% 100%;
-}
-.recharge_left{
-    display: flex;
-    align-items: center;
-    font-size: .33rem;
-    color: #fff;
-    font-size: .32rem;
-    width: 2rem;
-    text-shadow: 1px 0 0 #000,0 1px 0 #000,-1px 0 0 #000,0 -1px 0 #000;
-    .diamond-icon{
-    	width: 0.3rem;
-    	margin-right: 0.2rem;
-    }
-    
-}
-.recharge_center{
-    color: #956134;
-    font-size: .28rem;
-    font-weight: 500;
-    flex: 1;
-    overflow: hidden;
-}
-.recharge_right{
-    color: #fc7298;
-    height: 0.54rem;
-    line-height: 0.54rem;
-    border-radius: 0.54rem;
-    width: 1.8rem;
-    text-align: center;
-    background: #fff;
-    font-size: 0.3rem;
-    font-weight: 700;
-}
+
 
 </style>

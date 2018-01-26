@@ -18,7 +18,7 @@
 								<div class="profit-item">
 									<p class="profit-name">已领取专属奖励</p>
 									<p class="profit-num">
-										<img src="../../static/image/erdd.png"  />
+										<img :src="`${imageUrl}/erdd.png`"  />
 										{{item.totalMoney}}
 									</p>
 									<router-link :to="'/rewardList/' + item.type" class="reward-link">查看奖励明细 ></router-link>
@@ -26,7 +26,7 @@
 								<div class="profit-item">
 									<p class="profit-name">每日可领取</p>
 									<p class="profit-num">
-										<img src="../../static/image/erdd.png"  />
+										<img :src="`${imageUrl}/erdd.png`"  />
 										{{item.dayMoney}}
 									</p>
 									<a class="receive-btn finish" v-if="item.receiveStatus" >已领取</a>
@@ -40,10 +40,10 @@
 	    </div> 
 		<div class="link-list">
 	    	<router-link to="/welfareCenter" v-tap class="link-item">
-	    		<img src="../../static/image/11@3x.png" class="icon" />
+	    		<img :src="`${imageUrl}/11@3x.png`" class="icon" />
 	    		<p class="text">福利中心</p>
 	    		<p style="padding-right: 0.3rem; color: #969696;">更多福利</p>
-	    		<img src="../../static/image/wdd.png" class="more"  />
+	    		<img :src="`${imageUrl}/wdd.png`" class="more"  />
 	    	</router-link>
 	    </div>	
     </div>
@@ -54,6 +54,7 @@ import { Toast, Indicator } from 'mint-ui'
 export default {
   data () {
     return {
+       imageUrl: this.$store.state.imageUrl,
        memberCart: [],
        
     }
@@ -102,12 +103,12 @@ export default {
 	height: 4.64rem;
 	background: #21232e;
 	
-	color: #eee;
+	color: $bg-text-color;
 	.member-content{
 		padding: 0.06rem 0.65rem;
 	}
 	a{
-		color: #fff;
+		color: $bg-text-color;
 	}
 	.member-tit{
 		text-align: center;
@@ -158,7 +159,7 @@ export default {
 					display: flex;
 					align-items: center;
 					justify-content: center;
-					color: #fff;
+					color: $bg-text-color;
 					font-size:0.3rem;
 					font-weight:700;
 					padding: 0.3rem 0;

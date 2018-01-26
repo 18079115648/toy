@@ -3,8 +3,8 @@
   	<Header title="娃娃袋"></Header>
   	<div class="toys-content" v-show="toysList.length > 0">
   		<p class="total-dia">当前娃娃总价值为：
-  			<img src="../../static/image/erdd.png"  />
-	    	<span class="shadow-text">{{ total}}</span>
+  			<img  :src="`${imageUrl}/erdd.png`"  />
+	    	<span style="font-weight: 700;">{{ total}}</span>
   		</p>
   		
   		<div class="toys-list">
@@ -16,7 +16,7 @@
 	    			<p></p>
 	    		</div>	
 	    		<div class="change-num">
-	    			<img src="../../static/image/erdd.png"  />
+	    			<img  :src="`${imageUrl}/erdd.png`"  />
 	    			{{item.diamonds}}
 	    		</div>
 	    	</div>
@@ -29,7 +29,7 @@
 	  	</p>
   	</div>
   	<div class="no_msg bg-color" v-show="toysList.length < 1 && loadEnd">
-        <img src="../../static/image/none-toy.png"  />
+        <img  :src="`${imageUrl}/none-toy.png`"  />
         <div>您还没有抓到娃娃~</div>
     </div>
 	  <div class="toys-operate" v-show="toysList.length > 0">
@@ -46,11 +46,12 @@ import {Toast, Indicator } from 'mint-ui'
 export default {
   data () {
     return {
-			toysList: [],
-			total: 0,  //兑换总钻石数
-			chargeShow: false,
-			message: '',
-			loadEnd: false
+    	imageUrl: this.$store.state.imageUrl,
+		toysList: [],
+		total: 0,  //兑换总钻石数
+		chargeShow: false,
+		message: '',
+		loadEnd: false
     }
   },
   created() {
@@ -85,6 +86,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+@import "../../static/css/style.scss";
 .toys-content{
 	position: absolute;
 	left: 0;
@@ -98,7 +100,7 @@ export default {
 		left: 0.4rem;
 		right: 0.4rem;
 		bottom: 0.4rem;
-		color: #fff;
+		color: $bg-text-color;
 		display: flex;
 		.tit{
 			width: 1.4rem;
@@ -114,7 +116,7 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	color: #fff;
+	color: $bg-text-color;
 	font-size: 0.3rem;
 	padding-bottom: 0.4rem;
 	img{

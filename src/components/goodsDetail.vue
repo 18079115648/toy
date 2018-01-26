@@ -258,7 +258,7 @@ export default {
 				flex: 1;
 			}
 			&.plus{
-				color: $btn-default-bgcolor;
+				color: $bg-text-color;
 				background: $bg-color;
 				border-color: $bg-color;
 				&.disabled{
@@ -281,7 +281,7 @@ export default {
 		line-height: 0.62rem;
 		border-radius: 0.62rem;
 		background: $bg-color;
-		color: $btn-default-bgcolor;
+		color: $bg-text-color;
 		&.disabled{
 			background: #eee;
 			color: #ccc;

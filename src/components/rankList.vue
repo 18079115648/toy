@@ -16,7 +16,7 @@
 	        	<Pagination :render="render" :param="pagination" :autoload="false"  ref="pagination" :uri="rankUrl[rankWay][rankTime]" >
 			        <div class="rank-list" v-show="pagination.content.length > 0">
 						<router-link :to="'/rankDetail/' + item.memberId" class="rank-list-item" v-for="(item, index) in pagination.content" :key="item.rank">
-							<img class="avatar" :src="item.avatar || '../../static/image/vvv.png'"  />
+							<img class="avatar" :src="item.avatar || `${imageUrl}/vvv.png`"  />
 							<div class="rank-info">
 								<p class="rank-name">{{item.nickName || '***'}}</p>
 								<p class="rank-result" v-show="rankWay == 'Catch'">抓中 <span style="color: #fd485c;">{{item.successTimes}}</span> 个</p>
@@ -46,6 +46,7 @@
 export default {
   data () {
     return {
+    	imageUrl: this.$store.state.imageUrl,
     	rankWay: 'Catch',             //Catch：大神榜     Diamond：土豪榜
     	rankTime: 'day',             //day：日榜     1：total
         pagination: {
@@ -131,10 +132,12 @@ export default {
 		font-weight: 700;
 		font-size: 0.26rem;
 		flex: 1;
-		color: #efefef;
+		opacity: 0.6;
+		color: $header-text-color;
 		&.active{
 			font-size: 0.28rem;
-			color: #fff;
+			color: $header-text-color;
+			opacity: 1;
 		}
 	}
 }
@@ -159,7 +162,7 @@ export default {
 			color: #333;
 			&.active{
 				font-size: 0.28rem;
-				color: #fff;
+				color: $bg-text-color;
 				background: $bg-color;
 			}
 		}

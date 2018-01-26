@@ -3,7 +3,7 @@
         <Header :title="memberInfo.nickName + '的主页'"></Header>
         <div class="rank-user-info">
 		    	<div class="user-info-link">
-			    	<img class="avatar" :src="memberInfo.avatar || '../../static/image/vvv.png'"  />
+			    	<img class="avatar" :src="memberInfo.avatar || `${imageUrl}/vvv.png`"  />
 			    	<div class="user-info-text">
 			    		<p class="nick-name">{{memberInfo.nickName || '***'}}</p>
 			    		<p class="user-record">
@@ -31,7 +31,7 @@
 						      	playsinline="true"
                             	:poster="item.img">
                             </video>
-                            <img src="../../static/image/weed.png" v-tap="{ methods : playVideo, id: 'video-'+index }"   class="play_img">
+                            <img :src="`${imageUrl}/weed.png`" v-tap="{ methods : playVideo, id: 'video-'+index }"   class="play_img">
 		      			</div>
 		      			<div class="rank-info-text">
 		      				<p class="rank-goods-name">{{item.name}}</p>
@@ -56,6 +56,7 @@
 export default {
   data () {
     return {
+    	imageUrl: this.$store.state.imageUrl,
         pagination: {
 	        content: [],
 	        loadEnd: false,
@@ -111,7 +112,7 @@ export default {
 		display: flex;
 		align-items: center;
 		padding: 0 0.5rem;
-		color: #fff;
+		color: $bg-text-color;
 		font-size: 0.3rem;
 		.avatar{
 			width: 1.2rem;

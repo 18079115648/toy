@@ -12,16 +12,16 @@
 	                    <div class="img_body" @click="defaultChange(item)">
 	                    	<i class="default iconfont icon-xuanze" v-show="item.isDefault"></i>
 	                        <!--<img src="../../static/image/bbb.png" v-show="item.isDefault">-->
-	                        <img src="../../static/image/rrrr.png" v-show="!item.isDefault">
+	                        <img  :src="`${imageUrl}/rrrr.png`" v-show="!item.isDefault">
 	                        <div>默认地址</div>
 	                    </div>
 	                    <div  class="address_operation">
 	                        <div @click="goDetail(item)">
-	                            <img src="../../static/image/11223.png">
+	                            <img  :src="`${imageUrl}/11223.png`">
 	                            <span>编辑</span>
 	                        </div>
 	                        <div @click="selectDelete(item.id, index)">
-	                            <img src="../../static/image/424.png">
+	                            <img  :src="`${imageUrl}/424.png`">
 	                            <span>删除</span>
 	                        </div>
 	                    </div>
@@ -29,7 +29,7 @@
 	            </div>
 	        </div>
 	        <div class="no_msg bg-color" v-show="addressList.length < 1 && loadEnd">
-	            <img src="../../static/image/none-addr.png">
+	            <img  :src="`${imageUrl}/none-addr.png`">
 	            <div>暂无收货地址~</div>
 	        </div>
 		</div>
@@ -45,6 +45,7 @@ import { Toast, Indicator } from 'mint-ui'
 export default {
   data () {
     return {
+    	imageUrl: this.$store.state.imageUrl,
         addressList:[],
         loadEnd: false,
         

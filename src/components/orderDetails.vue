@@ -94,6 +94,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../static/css/style.scss";
 .orderDetails_body{
     width: 100%;
     height: auto;
@@ -114,14 +115,14 @@ export default {
 .express_img{
     width: .5rem;
     height: .5rem;
-    background: url('../../static/image/dd.png') no-repeat;
+    background: url(#{$imageUrl}/dd.png) no-repeat;
     background-size: .5rem .35rem;
     background-position: center;
 }
 .contact_img{
     width: .5rem;
     height: .5rem;
-    background: url('../../static/image/3344.png') no-repeat;
+    background: url(#{$imageUrl}/3344.png) no-repeat;
     background-size: .35rem .5rem;
     background-position: center;
 }

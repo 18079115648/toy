@@ -10,7 +10,7 @@
         		<div class="sign-list">
         			<div class="sign-list-item" :class="{'sign': !item.status}" v-for="(item, index) in signList.data" :key="index">
         				<div class="unsign fullEle">
-    						<img class="icon" src="../../static/image/erdd.png"  />
+    						<img class="icon" :src="`${imageUrl}/erdd.png`"  />
     						<p class="shadow-text">{{item.points}}</p>
     					</div>
     					<div class="shadow-text fullEle signed">
@@ -36,7 +36,7 @@
         				</div>
         				<div class="member-desc">{{item.erpireDate}}到期</div>
         				<div class="member-profit shadow-text">
-        					<img src="../../static/image/erdd.png"  />
+        					<img :src="`${imageUrl}/erdd.png`"  />
         					{{item.dayMoney}}
         				</div>
         			</div>
@@ -63,7 +63,7 @@
         		<div class="tasks-rate flex-center">
         			<div class="rate">进度 <span class="bold">{{dailyList.reachedCount}}/{{dailyList.data.length}}</span></div>
         			<div class="profit flex-center">奖励 &nbsp;
-        				<img class="dia-icon" src="../../static/image/erdd.png"  />
+        				<img class="dia-icon" :src="`${imageUrl}/erdd.png`"  />
         				<span class="bold">{{dailyList.reward}}</span>
         			</div>
         		</div>
@@ -80,7 +80,7 @@
         			<div class="tasks-list-item" v-for="(item, index) in grabList.data" :key="index">
         				<div class="tesks-info">
         					<p class="text">{{item.title}}
-        						<img class="dia-icon" src="../../static/image/erdd.png"  />
+        						<img class="dia-icon" :src="`${imageUrl}/erdd.png`"  />
         						<span class="num">+{{item.reward}}</span>
         					</p>
         					<p class="rate">当前进度：{{item.progress > item.goal ? item.goal : item.progress}}/{{item.goal}}</p>
@@ -100,7 +100,7 @@
         			<div class="tasks-list-item" v-for="(item, index) in grabSuccList.data" :key="index">
         				<div class="tesks-info">
         					<p class="text">{{item.title}}
-        						<img class="dia-icon" src="../../static/image/erdd.png"  />
+        						<img class="dia-icon" :src="`${imageUrl}/erdd.png`" />
         						<span class="num">+{{item.reward}}</span>
         					</p>
         					<p class="rate">当前进度：{{item.progress > item.goal ? item.goal : item.progress}}/{{item.goal}}</p>
@@ -120,7 +120,7 @@
         			<div class="tasks-list-item" v-for="(item, index) in exchargeList.data" :key="index">
         				<div class="tesks-info">
         					<p class="text">{{item.title}}
-        						<img class="dia-icon" src="../../static/image/erdd.png"  />
+        						<img class="dia-icon" :src="`${imageUrl}/erdd.png`" />
         						<span class="num">+{{item.reward}}</span>
         					</p>
         					<p class="rate">当前进度：{{item.progress > item.goal ? item.goal : item.progress}}/{{item.goal}}</p>
@@ -133,7 +133,7 @@
         		</div>
         	</div>
         </div>
-	    <img class="welfare-bottom-icon" src="../../static/image/122@2x.png"  />	
+	    <img class="welfare-bottom-icon" :src="`${imageUrl}/122@2x.png`"  />	
     </div>
 </template>
 
@@ -142,6 +142,7 @@ import {Toast, Indicator } from 'mint-ui'
 export default {
   data () {
     return {
+    	imageUrl: this.$store.state.imageUrl,
     	isHybrid: this.$common.isHybrid(), //是否是混合开发
         signList: undefined,      //签到
         chargeCard: undefined,    //会员卡
@@ -256,6 +257,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+@import "../../static/css/style.scss";
 .content{
 	min-height: 100vh;
 	background: #fbcb44;
@@ -318,7 +320,7 @@ export default {
 				height: 1.15rem;
 				border: 0.06rem solid #743828;
 				border-radius: 0.2rem;
-				background-image: url(../../static/image/38@2x.png);
+				background-image: url(#{$imageUrl}/38@2x.png);
 				overflow: hidden;
 				background-size: 100% 100%;
 				margin: 0 0.22rem 0.3rem;
@@ -327,7 +329,7 @@ export default {
 				font-size: 0.3rem;
 				text-align: center;
 				&.sign{
-					background-image: url(../../static/image/39@2x.png);
+					background-image: url(#{$imageUrl}/39@2x.png);
 					.unsign{
 						display: none;
 					}

@@ -16,7 +16,7 @@
 	            	</router-link>
 	            </div>
 		        <div class="no_msg" v-if="pagination.content.length<1 && pagination.loadEnd">
-		            <img src="../../static/image/ewd.png">
+		            <img :src="`${imageUrl}/ewd.png`">
 		            <div>暂无商品~</div>
 		        </div>
 			</Pagination>
@@ -30,6 +30,7 @@
 export default {
   data () {
     return {
+    	imageUrl: this.$store.state.imageUrl,
     	isHybrid: this.$common.isHybrid(),
     	pagination: {
 	        content: [],

@@ -7,6 +7,12 @@ import VueRouter from 'vue-router'
 import mint from 'mint-ui'
 import 'mint-ui/lib/style.css'
 import storage from '@/fetch/storage'
+import store from '@/vuex/store'
+import Vuex from 'vuex'
+
+
+
+Vue.use(Vuex)
 Vue.prototype.$storage = storage
 
 
@@ -81,6 +87,7 @@ new Vue({
         bgAudio: undefined
     }
   },
+  store,
   router,
   template: '<App/>',
   components: { App }

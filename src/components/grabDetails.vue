@@ -19,7 +19,7 @@
 						      	playsinline="true"
                             	:poster="grabInfo.img">
                             </video>
-                            <img src="../../static/image/weed.png" @click="play"  class="play_img">
+                            <img :src="`${imageUrl}/weed.png`" @click="play"  class="play_img">
                         </div>
                         <div class="img_body" v-if="!grabInfo.url">
                         	<img :src="grabInfo.img" class="fullEle"  />
@@ -89,6 +89,7 @@ import { Actionsheet,Indicator } from 'mint-ui';
 export default {
   data () {
     return {
+    	imageUrl: this.$store.state.imageUrl,
 	    diaActionsStatus: false,
 	    diaActions:[
 	        {name:'画面黑屏或定格',method:this.add},
@@ -174,6 +175,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+@import "../../static/css/style.scss";
 .grabDetails_body{
     width: 100%;
     height: auto;
@@ -301,7 +303,7 @@ export default {
 .problem{
     margin-top: .3rem;
     padding: 0 .35rem;
-    color: #fff;
+    color: $bg-text-color;
     font-size: 0.24rem;
     p{
         margin-bottom: .1rem;

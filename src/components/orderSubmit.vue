@@ -2,13 +2,13 @@
     <div class="content">
         <Header title="填写订单"></Header>
         <router-link to="/address/select" class="address-content">
-        	<img v-show="hasAddr" class="addr-icon" src="../../static/image/3344.png"  />
+        	<img v-show="hasAddr" class="addr-icon" :src="`${imageUrl}/3344.png`"  />
         	<div v-show="hasAddr" class="address-info">
         		<p><span>收货人：{{addrInfo.consignee}}</span><span>{{addrInfo.mobile}}</span></p>
         		<p>{{addrInfo.address}}</p>
         	</div>
         	<p v-show="!hasAddr" class="none-addr">请添加收货地址~</p>
-        	<img class="more-icon" src="../../static/image/wdd.png"  />
+        	<img class="more-icon" :src="`${imageUrl}/wdd.png`"  />
         </router-link>
 		<div class="toys-list">
 			<div class="toys-item" v-for="(item, index) in toysList" :key="index">
@@ -22,11 +22,11 @@
 		<div class="price-content">
 			<div class="price-item">
 				<span>我的钻石</span>
-				<span class="price"><img src="../../static/image/erdd.png" />{{money.toFixed(2)}}</span>
+				<span class="price"><img :src="`${imageUrl}/erdd.png`" />{{money.toFixed(2)}}</span>
 			</div>
 			<div class="price-item">
 				<span>配送费用</span>
-				<span class="price"><img src="../../static/image/erdd.png" />{{expressMoney.toFixed(2)}}</span>
+				<span class="price"><img :src="`${imageUrl}/erdd.png`" />{{expressMoney.toFixed(2)}}</span>
 			</div>
 		</div>
 		<div class="btn-default btn-hover submit" @click="paySubmit">支付并配送</div>
@@ -38,6 +38,7 @@ import { Toast, Indicator } from 'mint-ui'
 export default {
   data () {
     return {
+    	imageUrl: this.$store.state.imageUrl,
         hasAddr: false,
         toysList: [],
         expressMoney: 0,
@@ -47,13 +48,18 @@ export default {
     }
   },
   created(){
+  	Indicator.open()
   	this.$api.getDefaultAddress().then(res => {
+  		setTimeout(() => {
+  			Indicator.close()
+  		},200)
+		
 		if(res.data) {
 			this.hasAddr = true
 			this.addrInfo = res.data
 		}
     }, err => {
-    	
+    	Indicator.close()
     })
   	this.$api.userInfo().then(res => {
 		this.money = res.data.money

@@ -7,13 +7,13 @@
 		            <div class="head paymentList_border" v-for="item in pagination.content">
 		                <div class="paymentList_msg" style="margin-bottom:.12rem;">
 		                    <div class="paymentList_img">
-		                        <img src="../../static/image/erdd.png" v-if="item.type == 3">
-		                        <img src="../../static/image/8@3x.png" v-if="item.type != 3">
+		                        <img :src="`${imageUrl}/erdd.png`" v-if="item.type == 3">
+		                        <img  :src="`${imageUrl}/8@3x.png`" v-if="item.type != 3">
 		                        <span>{{item.money}}</span>
 		                    </div>
 		                    <div class="paymentList_way">
-		                        <img src="../../static/image/444.png" v-if="item.source == 1">
-		                        <img src="../../static/image/555.png" v-if="item.source == 2">
+		                        <img :src="`${imageUrl}/444.png`" v-if="item.source == 1">
+		                        <img :src="`${imageUrl}/555.png`" v-if="item.source == 2">
 		                        <span>¥ {{item.price}}</span>
 		                    </div>
 		                </div>
@@ -26,7 +26,7 @@
 		            
 		        </div>
 		        <div class="no_msg" v-show="pagination.content.length < 1 && pagination.loadEnd">
-		            <img style="width: 1.5rem;" src="../../static/image/1266f.png">
+		            <img style="width: 1.5rem;"  :src="`${imageUrl}/1266f.png`">
 		            <div>暂无充值记录~</div>
 		        </div>
 			</Pagination>
@@ -42,6 +42,7 @@
 export default {
   data () {
     return {
+    	imageUrl: this.$store.state.imageUrl,
         pagination: {
 	        content: [],
 	        loadEnd: false,
