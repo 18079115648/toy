@@ -11,9 +11,7 @@ const user = r => require.ensure([], () => r(require('../components/user.vue')),
 const login = r => require.ensure([], () => r(require('../components/login.vue')), 'login')
 const mobileLogin = r => require.ensure([], () => r(require('../components/mobileLogin.vue')), 'mobileLogin')
 const oauth = r => require.ensure([], () => r(require('../components/oauth.vue')), 'oauth')
-const signIn = r => require.ensure([], () => r(require('../components/signIn.vue')), 'signIn')
 const toysBox = r => require.ensure([], () => r(require('../components/toysBox.vue')), 'toysBox')
-const news = r => require.ensure([], () => r(require('../components/news.vue')), 'news')
 const orderSubmit = r => require.ensure([], () => r(require('../components/orderSubmit.vue')), 'orderSubmit')
 const invite = r => require.ensure([], () => r(require('../components/invite.vue')), 'invite')
 const share = r => require.ensure([], () => r(require('../components/share.vue')), 'share')
@@ -68,33 +66,10 @@ const welfareCenter = r => require.ensure([], () => r(require('../components/wel
 
 
 
-/**
- * Demon Start
- */
-
- // 直播测试
- const live = r => require.ensure([], () => r(require('../components/live.vue')), 'live')
- // 加载动画
- const loading = r => require.ensure([], () => r(require('../components/loading.vue')), 'loading')
-
- /**
-  * Demon End
-  */
-
-
-
 const router = new Router({
   routes: [
     { path: '/',
       redirect: '/index' 
-    },
-    {
-      path: '/live',
-      component: live
-    },
-    {
-      path: '/loading',
-      component: loading
     },
     {
       path: '/index',
@@ -268,13 +243,6 @@ const router = new Router({
       component: oauth
     },
     {
-      path: '/signIn',
-      component: signIn,
-      meta: {
-      	requireAuth: true
-      }
-    },
-    {
       path: '/toysBox',
       component: toysBox,
       meta: {
@@ -299,13 +267,7 @@ const router = new Router({
       	requireAuth: true
       }
     },
-    {
-      path: '/news',
-      component: news,
-      meta: {
-      	requireAuth: true
-      }
-    },
+    
   ]
 })
 

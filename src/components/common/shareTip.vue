@@ -1,6 +1,6 @@
 <template>
     <div class="share-tip" v-show="show" @click="cancel">
-    	<img src="../../../static/image/share.png" />
+    	<img :src="`${imageUrl}/share.png`" />
     </div>
 </template>
 
@@ -11,6 +11,11 @@ export default {
             type: Boolean
         }
     },
+    data () {
+	    return {
+	      imageUrl: this.$store.state.imageUrl,
+	    }
+	  },
     methods: {
     	cancel() {
     		this.$emit('shareCancel')

@@ -2,14 +2,14 @@
     <!--<div class="app">
     	<div class="top">
     		<div class="bg"></div>
-    		<img src="../../static/image/45534.jpg"  />
+    		<img :src="`${imageUrl}/45534.jpg`"  />
     		<div class="miss" @click="miss">跳过</div>
     	</div>
     	<div class="bottom">
     		<p class="login-tit">选择登录方式</p>
     		<div class="login-way">
-    			<img src="../../static/image/rr.png" @click="wechatLogin" />
-    			<img src="../../static/image/ff.png" @click="mobileLogin" />
+    			<img :src="`${imageUrl}/rr.png`" @click="wechatLogin" />
+    			<img :src="`${imageUrl}/ff.png`" @click="mobileLogin" />
     		</div>
     	</div>
     </div>-->
@@ -20,7 +20,7 @@ import { Toast } from 'mint-ui'
 export default {
 	data() {
 	    return {
-	    	
+	    	imageUrl: this.$store.state.imageUrl,
 	    }
 	},
 	created() {

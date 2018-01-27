@@ -1,7 +1,7 @@
 <template>
     <div class="app" id="app" :style="{ height: wH + 'px' }">
     	<Header title="">
-    		<img class="logo-text" src="../../static/image/logo-text.png" />
+    		<img class="logo-text" :src="`${imageUrl}/logo-text.png`" />
     	</Header>
     	<div class="login-content">
     		<div class="input-item">
@@ -29,6 +29,7 @@ import { Toast } from 'mint-ui'
 export default {
 	data() {
 	    return {
+	    	imageUrl: this.$store.state.imageUrl,
 	    	phone: '',
 	    	code: '',
 	    	wH: 0,

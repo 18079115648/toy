@@ -83,7 +83,7 @@ export default {
 //	    	buyType: this.type,
 //	    	type: this.payWay
 //	    }).then(res => {
-//	    	document.write(res.data)
+////	    	document.write(res.data)
 ////	        this.cardInfo = res.data
 //	    }, err => {
 //	    	

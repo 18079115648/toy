@@ -8,7 +8,7 @@
 	    			<span v-if="type == 2">月卡会员</span>
 	    			 累计领取</p>
 	    		<p class="reward-num">
-	    			<img src="../../static/image/erdd.png"  />
+	    			<img :src="`${imageUrl}/erdd.png`"  />
 	    			{{memberCard.totalMoney}}
 	    		</p>
 	    		<p class="reward-tip">当日未领取将不可领取，领取到期{{memberCard.erpireDate}}</p>
@@ -31,6 +31,7 @@
 export default {
   data () {
     return {
+    	imageUrl: this.$store.state.imageUrl,
         type: this.$route.params.type,
         memberCard: {},
         receiveTime: []

@@ -20,21 +20,22 @@
     		</div>
     	</div>-->
     	<div class="room-top">
-			<img v-show="isGame" class="back" src="../../static/image/feee.png"/>
-    		<img v-show="!isGame" class="back" src="../../static/image/ss44.png" v-tap="{ methods : back }"/>
+			<img v-show="isGame" class="back" :src="`${imageUrl}/feee.png`"/>
+    		<img v-show="!isGame" class="back" :src="`${imageUrl}/ss44.png`" v-tap="{ methods : back }"/>
     		<img v-show="avatar" class="avatar" :src="avatar"  />
     		<div v-show="!avatar" class="avatar-position"></div>
     		<div class="room-count shadow-text">
+    			
     			<p>当前房间人数</p>
     			<p>{{roomNum}}</p>
     		</div>
     		<div class="price">
     			<p>
-    				<img src="../../static/image/erdd.png"  />
+    				<img :src="`${imageUrl}/erdd.png`"  />
     				<span class="shadow-text">{{remainGold}}</span>
     			</p>
     			<p>
-    				<img style="left: 1px;" src="../../static/image/34cd.png"  />
+    				<img style="left: 1px;" :src="`${imageUrl}/34cd.png`"  />
     				<span class="shadow-text">{{remainPoints}}</span>
     			</p>
     		</div>
@@ -43,10 +44,9 @@
         	<canvas id="frontview" :class="{show:showFront}"></canvas>
 	      	<canvas id="sideview" :class="{show:showSide}"></canvas>
 	      	
-	      	<!--<img class="view-change" v-if="isGame" v-tap.prevent="{ methods : changeView }" src="../../static/image/dd33.png"  />-->
 	    	<div class="audio-change img-mask child" v-tap="{ methods : changeAudio, status: musicSwitch && soundSwitch }">
-				<img class="fullEle" src="../../static/image/73@3x.png" v-show="musicSwitch && soundSwitch"  />
-				<img class="fullEle" src="../../static/image/74@3x.png" v-show="!(musicSwitch && soundSwitch)"  />
+				<img class="fullEle" :src="`${imageUrl}/73@3x.png`"  v-show="musicSwitch && soundSwitch"  />
+				<img class="fullEle" :src="`${imageUrl}/74@3x.png`"  v-show="!(musicSwitch && soundSwitch)"  />
 			</div>
 	    	<div class="room-side">
 	    		<div class="view-change child" v-tap="{ methods : changeView }" ></div>
@@ -71,20 +71,20 @@
         <div class="operate-content" :class="{'full' : fullStatus}">
         	<div class="room-bottom" v-show="!operateShow">
 	    		<div class="open-chat com img-mask" v-tap="{ methods : openChat }" @touchstart="depress($event)" @touchend="loosen($event)">
-	    			<img src="../../static/image/111-1.png" class="fullEle comm"  />
-	    			<img src="../../static/image/111-2.png" class="fullEle active"  />
+	    			<img :src="`${imageUrl}/111-1.png`"  class="fullEle comm"  />
+	    			<img :src="`${imageUrl}/111-2.png`"  class="fullEle active"  />
 	    			<div class="content">
-	    				<img src="../../static/image/77@2x.png" class="icon"  />
+	    				<img :src="`${imageUrl}/77@2x.png`" class="icon"  />
 	    				<p class="shadow-text">发言</p>
 	    			</div>
 	    			
 	    		</div>
 	    		<div class="begin img-mask" v-tap="{ methods : beginGame }" @touchstart="depress($event)" @touchend="loosen($event)">
-	    			<img src="../../static/image/112-1.png" class="fullEle comm"  />
-	    			<img src="../../static/image/112-2.png" class="fullEle active"  />
+	    			<img :src="`${imageUrl}/112-1.png`"  class="fullEle comm"  />
+	    			<img :src="`${imageUrl}/112-2.png`"  class="fullEle active"  />
 	    			<div class="content">
 	    				<p class="shadow-text price">
-	    					<img src="../../static/image/71@2x.png" class="icon"  />
+	    					<img :src="`${imageUrl}/71@2x.png`" class="icon"  />
 	    					{{price}}
 	    				</p>
 	    				<p class="shadow-text status">
@@ -94,10 +94,10 @@
 	    			</div>
 	    		</div>
 	    		<div class="open-recharge com img-mask" @touchstart="depress($event)" @touchend="loosen($event)" v-tap="{ methods : goRecharge }">
-	    			<img src="../../static/image/111-1.png" class="fullEle comm"  />
-	    			<img src="../../static/image/111-2.png" class="fullEle active"  />
+	    			<img :src="`${imageUrl}/111-1.png`" class="fullEle comm"  />
+	    			<img :src="`${imageUrl}/111-2.png`" class="fullEle active"  />
 	    			<div class="content">
-	    				<img src="../../static/image/70@2x.png" class="icon"  />
+	    				<img :src="`${imageUrl}/70@2x.png`"  class="icon"  />
 	    				<p class="shadow-text">充值</p>
 	    			</div>
 	    			
@@ -107,25 +107,25 @@
 	    	<div class="operate-area" v-show="operateShow">
 	    		<div class="operate-direc">
 	    			<div class="direction-item left has-box " @touchstart="touchstart(3, $event)" @touchend="touchend(3, $event)">
-	    				<img class="fullEle com" src="../../static/image/left-1.png"  />
-	    				<img class="fullEle active" src="../../static/image/left-2.png"  />
+	    				<img class="fullEle com" :src="`${imageUrl}/left-1.png`"   />
+	    				<img class="fullEle active" :src="`${imageUrl}/left-2.png`"   />
 	    			</div>
 	    			<div class="direction-item top has-box" @touchstart="touchstart(1, $event)" @touchend="touchend(1, $event)">
-	    				<img class="fullEle com" src="../../static/image/up-1.png"  />
-	    				<img class="fullEle active" src="../../static/image/up-2.png"  />
+	    				<img class="fullEle com" :src="`${imageUrl}/up-1.png`"   />
+	    				<img class="fullEle active" :src="`${imageUrl}/up-2.png`"   />
 	    			</div>
 	    			<div class="direction-item right has-box" @touchstart="touchstart(4, $event)" @touchend="touchend(4, $event)">
-	    				<img class="fullEle com" src="../../static/image/right-1.png"  />
-	    				<img class="fullEle active" src="../../static/image/right-2.png"  />
+	    				<img class="fullEle com" :src="`${imageUrl}/right-1.png`"   />
+	    				<img class="fullEle active" :src="`${imageUrl}/right-2.png`"  />
 	    			</div>
 	    			<div class="direction-item bottom has-box" @touchstart="touchstart(2, $event)" @touchend="touchend(2, $event)">
-	    				<img class="fullEle com" src="../../static/image/down-1.png"  />
-	    				<img class="fullEle active" src="../../static/image/down-2.png"  />
+	    				<img class="fullEle com" :src="`${imageUrl}/down-1.png`"   />
+	    				<img class="fullEle active" :src="`${imageUrl}/down-2.png`"  />
 	    			</div>
 	    		</div>
 	    		<div class="operate-click has-box" v-tap.prevent="{ methods : grab }" @touchstart="depress($event)" @touchend="loosen($event)">
-	    			<img class="fullEle com" src="../../static/image/76-1@2x.png"  />
-	    			<img class="fullEle active" src="../../static/image/76-2@2x.png"  />
+	    			<img class="fullEle com" :src="`${imageUrl}/76-1@2x.png`"   />
+	    			<img class="fullEle active" :src="`${imageUrl}/76-2@2x.png`"   />
 	    		</div>
 	    		<div class="count-dowm shadow-text">倒计时 {{operateTime}}秒</div>
 	    	</div>
@@ -162,7 +162,7 @@
 					</p>
 					<p class="again-time shadow-text" :class="{show: endTime >= 1}">倒计时 {{endTime}}秒</p>
 				</div>
-				<img src="../../static/image/2@2x.png" class="close" v-tap.prevent="{ methods : closePop }"/>	
+				<img :src="`${imageUrl}/2@2x.png`" class="close" v-tap.prevent="{ methods : closePop }"/>	
 			</div>
 		</mt-popup>
 		
@@ -170,7 +170,7 @@
 		<mt-popup v-model="failStatus" class="pop" :closeOnClickModal="false">
 			<div class="fail-content">
 				<div class="shadow-text" style="text-align: center; color: #fff;">
-					<img class="fail-img" src="../../static/image/61@2x.png"  />
+					<img class="fail-img" :src="`${imageUrl}/61@2x.png`"   />
 					<p class="succ-tip shadow-text">很遗憾，差点就抓到了！</p>
 					<p class="operate-btn">
 						<!--<span class="btn-hover">分享好友</span>-->
@@ -178,16 +178,16 @@
 					</p>
 					<p class="again-time shadow-text" :class="{show: endTime >= 1}">倒计时 {{endTime}}秒</p>
 				</div>
-				<img src="../../static/image/2@2x.png" class="close" v-tap.prevent="{ methods : closePop }" />	
+				<img :src="`${imageUrl}/2@2x.png`" class="close" v-tap.prevent="{ methods : closePop }" />	
 			</div>
 		</mt-popup>
 
-		<audio id="take-audio" src='https://yingdd.oss-cn-hangzhou.aliyuncs.com/9b38b54c6af6f4113a476df225043a01.mp3' preload></audio>
-		<audio id="click-audio" src='../static/audio/startClickItem.mp3' preload></audio>
-		<audio id="move-audio" src='../static/audio/move.mp3' preload></audio>
-		<audio id="ready-audio" src='../static/audio/readygo.mp3' preload></audio>
-		<audio id="success-audio" src='https://yingdd.oss-cn-hangzhou.aliyuncs.com/fa81942687d7d259c7f4979a00367a48.mp3' preload></audio>
-		<audio id="failure-audio" src='https://yingdd.oss-cn-hangzhou.aliyuncs.com/e95cb5cc6a8070f063b09ce9f6843b18.mp3' preload></audio>
+		<audio id="take-audio" :src='grabAudioUrl' preload></audio>
+		<audio id="click-audio" :src="clickAudioUrl" preload></audio>
+		<audio id="move-audio" :src='moveAudioUrl' preload></audio>
+		<audio id="ready-audio" :src='readyGoAudioUrl' preload></audio>
+		<audio id="success-audio" :src='successAudioUrl' preload></audio>
+		<audio id="failure-audio" :src='failAudioUrl' preload></audio>
 
 		<!-- 详情页面 -->
 		<mt-popup v-model="roomDetail" class="pop">
@@ -198,7 +198,7 @@
 				<div class="toy-imgs">
 					<img :src="item" v-for="(item, index) in toyImgs" :key="index"  />
 				</div>
-				<img src="../../static/image/x.png" class="close" v-tap.prevent="{ methods : closeGrabList }" />	
+				<img :src="`${imageUrl}/x.png`" class="close" v-tap.prevent="{ methods : closeGrabList }" />	
 			</div>
 		</mt-popup>
 		<!--抓中记录-->
@@ -210,7 +210,7 @@
 				<div class="grab-list">
 					<Pagination :render="render" :param="pagination"  ref="pagination" uri="/dm-api/doll/log/room" >
 						<div class="grab-item" v-for="(item, index) in pagination.content" :key="index">
-							<img class="avatar" :src="item.avatar || '../../static/image/vvv.png'" />
+							<img class="avatar" :src="item.avatar || `${imageUrl}/vvv.png`" />
 							<div class="grab-text">
 								<p class="name">{{item.nickname}}</p>
 								<p class="status" style="color: #999; font-size: 0.24rem;">
@@ -223,12 +223,12 @@
 							</div>
 						</div>
 						<div class="no_msg" v-show="pagination.content.length<1 && pagination.loadEnd">
-					        <img src="../../static/image/wfdfc.png">
+					        <img :src="`${imageUrl}/wfdfc.png`">
 				            <div>暂无抓取数据~</div>
 					    </div>	   
 					</Pagination>
 				</div>
-				<img src="../../static/image/x.png" class="close" v-tap.prevent="{ methods : closeGrabList }" />	
+				<img :src="`${imageUrl}/x.png`" class="close" v-tap.prevent="{ methods : closeGrabList }" />	
 			</div>
 		</mt-popup>
 		
@@ -267,6 +267,13 @@ import * as SockJS from 'sockjs-client'
 export default {
 	data() {
 	    return {
+	    	imageUrl: this.$store.state.imageUrl,  //图片路径
+			clickAudioUrl: this.$store.state.clickAudioUrl, // 按钮点击音效
+			grabAudioUrl: this.$store.state.grabAudioUrl, //点击抓取音效
+			moveAudioUrl: this.$store.state.moveAudioUrl,   //点击方向键移动音效
+			readyGoAudioUrl: this.$store.state.readyGoAudioUrl, //readyGo开始音效
+			successAudioUrl: this.$store.state.successAudioUrl, //抓取成功音效
+			failAudioUrl: this.$store.state.failAudioUrl,    //抓取失败音效
 	    	wH: 0,							// 页面高度
 	    	fullStatus: true,
 	    	readyStatus: false, 			//readyGO 倒计时3秒弹框
@@ -488,7 +495,7 @@ export default {
 						this.roomNum = data.member_count
 						this.roomStatus = data.gameStatus
 						if (data.gameStatus === 1) {
-							data.headUrl ? this.avatar = data.headUrl : this.avatar = '../../static/image/vvv.png'
+							data.headUrl ? this.avatar = data.headUrl : this.avatar = `${this.imageUrl}/vvv.png`
 						}else {
 							this.avatar = ''
 						}
@@ -721,7 +728,7 @@ export default {
 					}
 					parent.readyTime--
 					timeout()
-				}, 1000)
+				}, 667)
 			}
 			timeout()
 		},
@@ -757,6 +764,7 @@ export default {
 
 		// 关闭弹窗
 		closePop() {
+			this.playClickAudio()
 			this.succStatus = false
 			this.failStatus = false
 			this.operateShow = false
@@ -771,12 +779,14 @@ export default {
 		
 		//消息列表显示或隐藏
 		toggleNews() {
+			this.playClickAudio()
 			this.toggleStatus = !this.toggleStatus
 		},
 		
 		//打开聊天input
 		openChat() {
 			const self = this
+			this.playClickAudio()
 			this.chatStatus = true
 			this.$nextTick(function() {
 				console.log(11111)
@@ -1139,6 +1149,7 @@ export default {
 		 * 去充值
 		 */
 		goRecharge() {
+			this.playClickAudio()
 			this.chatStatus = false
 			this.$router.push('/recharge')
 //			this.rechargeStatus = true
@@ -1214,7 +1225,7 @@ export default {
 				this.nickname = response.data.nickname
 				this.remainGold = response.data.money
 				this.remainPoints = response.data.points
-				this.userAvatar = response.data.avatar || '../../static/image/vvv.png'
+				this.userAvatar = response.data.avatar || `${this.imageUrl}/vvv.png`
 			})
 		},
 
@@ -1534,13 +1545,13 @@ export default {
 		background-size: 100% 100%;
 	}
 	.view-change{
-		background-image: url(../../static/image/dd33.png);
+		background-image: url(#{$imageUrl}/dd33.png);
 	}
 	.open-detail{
-		background-image: url(../../static/image/ssrr.png);
+		background-image: url(#{$imageUrl}/ssrr.png);
 	}
 	.open-record{
-		background-image: url(../../static/image/ewsd.png);
+		background-image: url(#{$imageUrl}/ewsd.png);
 	}
 }
 .room-news-content{
@@ -1809,7 +1820,7 @@ export default {
 	position: relative;
 	.goods-img{
 		height: 5.2rem;
-		background:  url(../../static/image/sw.png) no-repeat center;
+		background:  url(#{$imageUrl}/sw.png) no-repeat center;
 		background-size: 100%;
 		position: relative;
 		img{
