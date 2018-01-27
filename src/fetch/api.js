@@ -247,6 +247,10 @@ export default {
 	giftReceive(params) {
 		return fetchPost('/dm-api/wanba/giftReceive', params, true)
 	},
+	//领取特权礼包
+	getPrivilege(params) {
+		return fetchPost('/dm-api/wanba/getPrivilege', params, true)
+	},
 	
 	//请求js文件
 	getJs(params) {

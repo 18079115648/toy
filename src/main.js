@@ -110,11 +110,11 @@ function setSdk(type){
 /**
  * 玩吧 start
  */
-//mqq.ui.setWebViewBehavior({
-//  swipeBack:1,
-//  actionButton: 1,
-//  bottomBar:true
-//})
+mqq.ui.setWebViewBehavior({
+    swipeBack:1,
+    actionButton: 1,
+    bottomBar:true
+})
 
 /**
  * 玩吧 end

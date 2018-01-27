@@ -6,7 +6,7 @@ export default {
      * @param {*} value 值 
      */
     set(key, value) {
-        window.localStorage.setItem(key, JSON.stringify(value))
+        localStorage.setItem(key, JSON.stringify(value))
     },
 
     /**
@@ -15,7 +15,7 @@ export default {
      * @param {*} key  键
      */
     get(key) {
-        return JSON.parse(window.localStorage.getItem(key))
+        return JSON.parse(localStorage.getItem(key))
     },
 
     /**
@@ -24,6 +24,6 @@ export default {
      * @param {*} key 键
      */
     remove(key) {
-        window.localStorage.removeItem(key)
+        localStorage.removeItem(key)
     }
 }

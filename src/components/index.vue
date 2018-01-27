@@ -34,6 +34,16 @@
 				    	</div>
 					    	
 				    </div>
+				    <div class="homeNav">
+			    		<router-link to="/user" class="nav-item">
+				    		<img src="../../static/image/user-icon.png"  />
+				    		个人中心
+				    	</router-link>
+				    	<div class="nav-item" @click="vipGiftShow = true">
+				    		<img src="../../static/image/tequan.png"  />
+				    		礼包
+				    	</div>
+				    </div>
 				</div>	
 				<div class="home-toys-content">
 					<div class="home-toys-list">
@@ -165,10 +175,6 @@
     
     
     <div class="float-content">
-			<div class="share" v-tap="{ methods : goUser }">
-    		<div class="float-icon"><img src="../../static/image/wanba-user.png"  /></div>
-    		<p>个人中心</p>
-    	</div>
     	<div class="share" @click="shareShow = true">
     		<div class="float-icon"><img src="../../static/image/wanba-share.png"  /></div>
     		<p>分享有礼</p>
@@ -205,11 +211,11 @@
 		<!--礼包-->
 		<mt-popup v-model="giftShow" class="float-pop">
 			<div class="float-box gift-box">
-				<p class="tit">{{receiveGiftInfo.name}}</p>
+				<p class="tit" v-if="receiveGiftInfo.name">{{receiveGiftInfo.name}}</p>
 				<div class="content">
 					<p class="receive-status">{{receiveGiftInfo.title}}</p>
 					<p class="receive-desc">{{receiveGiftInfo.content}}</p>
-					<p class="receive-tip">记得明天继续到礼包中心领取新的礼包哦！</p>
+					<p class="receive-tip" v-if="receiveGiftInfo.res">记得明天继续到礼包中心领取新的礼包哦！</p>
 				</div>
 				<img src="../../static/image/33333.png" class="close" @click="giftShow = false" />
 			</div>
@@ -218,10 +224,14 @@
 		<mt-popup v-model="vipGiftShow" class="float-pop">
 			<div class="float-box vip-gift-box">
 				<img src="../../static/image/33333.png" class="close" @click="vipGiftShow = false"  />
+				<img src="../../static/image/vip.png" class="vip-logo"  />
 				<p class="title">vip特权每日礼包</p>
-				<p class="vip-grade">当前VIP等级 1 级</p>
+				<p class="vip-grade">
+					<span v-show="privilegeData.level">当前VIP等级 {{privilegeData.level}} 级</span>
+					<span v-show="!privilegeData.level">您当前不是VIP用户</span>
+				</p>
 				<p class="tip">VIP详情请在	QQ空间小游戏特权中心内查看</p>
-				<div class="vip-item">
+				<div class="vip-item" v-show="privilegeData.level">
 					<p class="vip-item-tit">
 						<img src="../../static/image/3@3x.png"  />
 						当前VIP等级可领取特权礼包内容
@@ -232,17 +242,17 @@
 								<div class="icon flex-center">
 									<img src="../../static/image/34cd.png"  />
 								</div>
-								<p class="num">1000金币</p>
+								<p class="num">{{privilegeData.point}}金币</p>
 							</div>
 							<div class="gold ">
 								<div class="icon flex-center dia">
 									<img src="../../static/image/erdd.png"  />
 								</div>
-								<p class="num">1000钻石</p>
+								<p class="num">{{privilegeData.money}}钻石</p>
 							</div>
 						</div>
 							
-						<div class="receive-btn">
+						<div class="receive-btn" :class="{'disabled': privilegeData.receiveStatus}" @click="receiveprivilege">
 							<span>领取礼包</span>
 						</div>
 					</div>
@@ -258,14 +268,17 @@
 								<div class="icon flex-center">
 									<img src="../../static/image/34cd.png"  />
 								</div>
-								<p class="num">1000金币</p>
+								<p class="num">{{privilegeData.nextPoint}}金币</p>
 							</div>
 							<div class="gold ">
 								<div class="icon flex-center dia">
 									<img src="../../static/image/erdd.png"  />
 								</div>
-								<p class="num">1000钻石</p>
+								<p class="num">{{privilegeData.nextMoney}}钻石</p>
 							</div>
+						</div>
+						<div class="receive-btn recharge" v-tap="{ methods : goRecharge }">
+							<span>升级</span>
 						</div>
 					</div>
 				</div>
@@ -276,7 +289,7 @@
 </template>
 
 <script>
-import { Toast, Indicator } from 'mint-ui'
+import { Toast, Indicator, MessageBox } from 'mint-ui'
 export default {
   data () { 
     return {
@@ -350,6 +363,7 @@ export default {
 	    receiveGiftInfo: {},
 	    
 	    vipGiftShow: false,  //vip礼包
+	    privilegeData: {}
 	    /**
 	     *玩吧start
 			**/
@@ -395,6 +409,7 @@ export default {
 		  self.$storage.set('isNew', res.data.firstLogin)
 		  res.data.firstLogin ? window.reportRegister() : window.reportLogin()
 		  self.$getKey('GIFT') && self.getGift()
+		  self.getPrivilegeData()
 			self.signData()
     }, err => {
     	
@@ -409,8 +424,13 @@ export default {
     }, err => {
     	  
 		})
+  	
+  
   },
   activated() {
+		if(this.$token.getAccessToken() && window.OPEN_DATA.openkey) {
+    		this.getPrivilegeData()
+    }
   	//背景音乐
   	if (this.$storage.get('music_switch') != null) {
 			this.musicSwitch = this.$storage.get('music_switch')
@@ -495,13 +515,46 @@ export default {
 		//礼包
 		getGift() {
 			this.$api.giftReceive({
-				option_id: this.$getKey('GIFT')
+				option_id: this.$getKey('GIFT'),
+				openid: window.OPEN_DATA.openid,
+				openkey: window.OPEN_DATA.openkey
 			}).then(res => {
 				this.giftShow = true
 				this.receiveGiftInfo = res.data
 		  }, err => {
 	
 		  })
+		},
+		//特权礼包
+		getPrivilegeData() {
+			this.$api.getPrivilege({
+				option_id: this.$getKey('GIFT'),
+				openid: window.OPEN_DATA.openid,
+				openkey: window.OPEN_DATA.openkey
+			}).then(res => {
+				this.privilegeData = res.data
+		  }, err => {
+	
+		  })
+		},
+		receiveprivilege() {
+			if(!this.privilegeData.receiveStatus) {
+				return
+			}
+			this.$api.giftReceive({
+				option_id: this.privilegeData.optionId,
+//				option_id: 41001,
+				openid: window.OPEN_DATA.openid,
+				openkey: window.OPEN_DATA.openkey
+			}).then(res => {
+				MessageBox(res.data.title, res.data.content);
+		  }, err => {
+	
+		  })
+		},
+		goRecharge() {
+			this.vipGiftShow = false
+			this.$router.push('/recharge')
 		},
     //签到
   	signData() {
@@ -650,6 +703,12 @@ export default {
 	font-size: 0.28rem;
 	color: #000;
 	position: relative;
+	.vip-logo{
+		position: absolute;
+		left: 0.1rem;
+		top: 0.1rem;
+		width: 1.1rem;
+	}
 	.close{
 		position: absolute;
 		width: 0.6rem;
@@ -672,9 +731,10 @@ export default {
 	.tip{
 		font-size: 0.24rem;
 		color: #fb640b;
+		padding-bottom: 0.06rem;
 	}
 	.vip-item{
-		padding-top: 0.3rem;
+		padding-top: 0.4rem;
 		.vip-item-tit{
 			display: flex;
 			align-items: center;
@@ -730,6 +790,12 @@ export default {
 			font-size: 0.26rem;
 			color: #fff;
 			margin-right: 0.2rem;
+			&.disabled{
+				background-image: url(../../static/image/44444.png);
+			}
+			&.recharge{
+				background-image: url(../../static/image/333@3x.png);
+			}
 		}
 	}
 }
@@ -1063,6 +1129,25 @@ export default {
 		}
 		p{
 			color: #000;
+		}
+	}
+}
+.homeNav{	
+	display: flex;
+	padding: 0 0 0.3rem;
+	.nav-item{
+		flex: 1;
+		display: flex;
+    align-items: center;
+    justify-content: center;    
+    color: #000;
+    margin: 0 0.2rem;
+    background: #fff;
+    border-radius: 0.2rem;
+    padding:0.24rem 0;
+		img{
+			height: 0.5rem;
+			margin-right: 0.15rem;
 		}
 	}
 }
