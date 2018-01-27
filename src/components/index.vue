@@ -209,9 +209,66 @@
 				<div class="content">
 					<p class="receive-status">{{receiveGiftInfo.title}}</p>
 					<p class="receive-desc">{{receiveGiftInfo.content}}</p>
-					<p class="receive-tip">记得明天继续到玩吧礼包中心领取新的礼包哦！</p>
+					<p class="receive-tip">记得明天继续到礼包中心领取新的礼包哦！</p>
 				</div>
-				<img src="../../static/image/qe.png" class="close" @click="giftShow = false" />
+				<img src="../../static/image/33333.png" class="close" @click="giftShow = false" />
+			</div>
+		</mt-popup>
+		<!--vip礼包-->
+		<mt-popup v-model="vipGiftShow" class="float-pop">
+			<div class="float-box vip-gift-box">
+				<img src="../../static/image/33333.png" class="close" @click="vipGiftShow = false"  />
+				<p class="title">vip特权每日礼包</p>
+				<p class="vip-grade">当前VIP等级 1 级</p>
+				<p class="tip">VIP详情请在	QQ空间小游戏特权中心内查看</p>
+				<div class="vip-item">
+					<p class="vip-item-tit">
+						<img src="../../static/image/3@3x.png"  />
+						当前VIP等级可领取特权礼包内容
+					</p>
+					<div class="vip-item-content">
+						<div class="receive-content">
+							<div class="gold">
+								<div class="icon flex-center">
+									<img src="../../static/image/34cd.png"  />
+								</div>
+								<p class="num">1000金币</p>
+							</div>
+							<div class="gold ">
+								<div class="icon flex-center dia">
+									<img src="../../static/image/erdd.png"  />
+								</div>
+								<p class="num">1000钻石</p>
+							</div>
+						</div>
+							
+						<div class="receive-btn">
+							<span>领取礼包</span>
+						</div>
+					</div>
+				</div>
+				<div class="vip-item">
+					<p class="vip-item-tit">
+						<img src="../../static/image/3@3x.png"  />
+						下一档VIP等级可领取特权礼包内容
+					</p>
+					<div class="vip-item-content">
+						<div class="receive-content">
+							<div class="gold">
+								<div class="icon flex-center">
+									<img src="../../static/image/34cd.png"  />
+								</div>
+								<p class="num">1000金币</p>
+							</div>
+							<div class="gold ">
+								<div class="icon flex-center dia">
+									<img src="../../static/image/erdd.png"  />
+								</div>
+								<p class="num">1000钻石</p>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</mt-popup>
 	  <!--玩吧 end-->  
@@ -290,7 +347,9 @@ export default {
 	    platform: null,
 	    
 	    giftShow: false,    //礼包
-	    receiveGiftInfo: {}
+	    receiveGiftInfo: {},
+	    
+	    vipGiftShow: false,  //vip礼包
 	    /**
 	     *玩吧start
 			**/
@@ -561,8 +620,12 @@ export default {
 <style lang="scss" scoped>
 @import "../../static/css/style.scss";
 /*玩吧start*/
+
 .gift-box{
 	position: relative;
+	border-radius: 0.2rem;
+	background: #fff3b7;
+	border: 0.1rem solid #fff;
 	.receive-status{
 		font-size: 0.32rem;
 		color: #ff9435;
@@ -573,16 +636,106 @@ export default {
 	}
 	.close{
 		position: absolute;
-		width: 0.5rem;
-		right: 0.1rem;
-		top: 0.1rem;
+		width: 0.6rem;
+		right: -0.26rem;
+		top: -0.26rem;
+		
+	}
+}
+.vip-gift-box{
+	background: #fff3b7;
+	border: 0.1rem solid #fff;
+	border-radius: 0.2rem;
+	width: 6.5rem !important;
+	font-size: 0.28rem;
+	color: #000;
+	position: relative;
+	.close{
+		position: absolute;
+		width: 0.6rem;
+		right: -0.26rem;
+		top: -0.26rem;
+	}
+	.title{
+		font-size: 0.36rem;
+		color:#ff5505;
+		font-weight: 700;
+	}
+	.vip-grade{
+		background: #fff;
+		height: 0.76rem;
+		border-radius: 0.76rem;
+		text-align: center;
+		line-height: 0.76rem;
+		margin: 0.25rem 0 0.2rem;
+	}
+	.tip{
+		font-size: 0.24rem;
+		color: #fb640b;
+	}
+	.vip-item{
+		padding-top: 0.3rem;
+		.vip-item-tit{
+			display: flex;
+			align-items: center;
+			padding-bottom:0.15rem;
+			img{
+				width: 0.44rem;
+				margin-right: 0.1rem;
+			}
+		}
+		.vip-item-content{
+			display: flex;
+			background: #fee86e;
+			align-items: center;
+			justify-content: space-between;
+			border-radius: 0.3rem;
+			padding: 0.3rem 0 0.15rem;
+			.receive-content{
+				display: flex;
+				.gold{
+					display: flex;
+					flex-direction: column;
+	
+					align-items: center;
+					min-width:1.7rem;
+					.icon{
+						width: 1.04rem;
+						height: 1.04rem;
+						border: 0.06rem solid #fff;
+						padding: 0.18rem;
+						border-radius: 0.2rem;
+						background: #95c1ff;
+						img{
+							display: block;
+							width: 100%;
+						}
+						&.dia{
+							background: #ffe03d;
+						}
+					}
+					.num{
+						padding-top: 0.2rem;
+					}
+				}
+			}
+				
+		}
+		.receive-btn{
+			width: 1.8rem;
+			height: 0.6rem;
+			background: url(../../static/image/4444.png);
+			background-size: 100% 100%;
+			line-height: 0.56rem;
+			font-size: 0.26rem;
+			color: #fff;
+			margin-right: 0.2rem;
+		}
 	}
 }
 
-
 .float-pop{
 	border-radius: 0.2rem;
-	overflow: hidden;
 }
 .float-box{
 	width: 6rem;
