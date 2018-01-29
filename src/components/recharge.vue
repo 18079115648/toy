@@ -112,22 +112,22 @@ export default {
     	flex-wrap: wrap;
     	margin: 0 -0.15rem;
     	.charge-item{
-    		background: #ffce45;
+    		background: $pay-member-bgcolor;
     		border-radius: 0.2rem;
     		width: 3.1rem;
     		margin: 0 0.15rem 0.3rem;
     		padding: 0.15rem;
     		text-align: center;
-    		color: #fff;
+    		color: $pay-member-textcolor;
     		position: relative;
     		display: flex;
     		flex-direction: column;
     		justify-content: space-between;
     		min-height: 2.1rem;
     		&.diamond{
-    			background: #8ec1f4;
+    			background: $pay-diamond-bgcolor;
     			.price{
-    				color: #8ec1f4;
+    				color: $pay-diamond-bgcolor;
     			}
     		}
     		.charge-item-mark{
@@ -162,7 +162,7 @@ export default {
     			width: 2rem;
     			margin: 0 auto;
     			border-radius: 0.54rem;
-    			color: #ffce45;
+    			color: $pay-member-bgcolor;
     			font-weight: 700;
     			font-size: 0.3rem;
     		}

@@ -182,7 +182,7 @@ export default {
 		text-align: center;
 		line-height: 1rem;
 		font-size: 0.28rem;
-		color: #00BC71;
+		color: $bg-color;
 		&.get-btn{
 			background: #efefef;
 			color: #000;

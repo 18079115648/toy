@@ -199,8 +199,8 @@ export default {
 		}
 		.convert-btn{
 			padding: 0 0.35rem;
-			color: #00BC71;
-			border: 1px solid #00BC71;
+			color: $bg-color;
+			border: 1px solid $bg-color;
 			height: 0.62rem;
 			line-height: 0.62rem;
 			border-radius: 0.58rem;

@@ -18,14 +18,12 @@
             	<div class="pay-item" @click="payWay = 2">
             		<img class="pay-icon" :src="`${imageUrl}/555.png`">
 	                <div class="payment_way_text">微信支付</div>
-	                <i class="default iconfont icon-xuanze" v-show="payWay == 2"></i>
-	                <img class="select-icon" v-show="payWay != 2" :src="`${imageUrl}/rrrr.png`">
+	                <i class="default iconfont " :class="[payWay == 2 ? 'icon-xuanze': 'icon-weixuanzhong-01']"></i>
             	</div>  
             	<div class="pay-item" @click="payWay = 1"  v-if="!isWinxin">
             		<img class="pay-icon" :src="`${imageUrl}/444.png`">
 	                <div class="payment_way_text">支付宝支付</div>
-	                <i class="default iconfont icon-xuanze" v-show="payWay == 1" ></i>
-	                <img class="select-icon" v-show="payWay != 1" :src="`${imageUrl}/rrrr.png`">
+	                <i class="default iconfont" :class="[payWay == 1 ? 'icon-xuanze': 'icon-weixuanzhong-01']" ></i>
             	</div>
 	              
             </div>
@@ -137,6 +135,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../static/css/style.scss";
 .payment_body{
     width: 100%;
     height: auto;
@@ -211,12 +210,15 @@ export default {
     		color: #000;
     		font-size: 0.3rem;
     	}
-    	.select-icon, .default{
+    	.iconfont, .icon-xuanze{
     		font-size: 0.4rem;
     		line-height: 1;
-    		color: #00BC71;
+    		color: $checkbox-selected-color;
     		width: 0.4rem;
     		margin-right: 0.14rem;
+    	}
+    	.icon-weixuanzhong-01{
+    		color: $checkbox-color;
     	}
     }
 }

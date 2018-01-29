@@ -10,9 +10,7 @@
 	            <div class="address_img">
 	                <div class="address">
 	                    <div class="img_body" @click="defaultChange(item)">
-	                    	<i class="default iconfont icon-xuanze" v-show="item.isDefault"></i>
-	                        <!--<img src="../../static/image/bbb.png" v-show="item.isDefault">-->
-	                        <img  :src="`${imageUrl}/rrrr.png`" v-show="!item.isDefault">
+	                    	<i class="default iconfont " :class="[item.isDefault ? 'icon-xuanze': 'icon-weixuanzhong-01']"></i>
 	                        <div>默认地址</div>
 	                    </div>
 	                    <div  class="address_operation">
@@ -171,13 +169,16 @@ export default {
             display: block;
             margin-right: .15rem;
         }
-        .default{
+        .default, .icon-xuanze{
         	width: .4rem;
             height: .4rem;
             margin-right: .15rem;
             line-height: 0.4rem;
             font-size: 0.4rem;
-            color: #00BC71;
+            color: $checkbox-selected-color;
+        }
+        .icon-weixuanzhong-01{
+        	color: $checkbox-color;
         }
         div{
             color: #666;

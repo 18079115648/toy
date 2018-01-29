@@ -277,7 +277,7 @@ export default {
 .recharge-btn{
 	padding-right: 0.2rem;
 	span{
-		color: #00BC71;
+		color: $bg-color;
 	}
 }
 </style>

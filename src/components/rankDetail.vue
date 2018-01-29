@@ -191,7 +191,7 @@ export default {
 					padding-top: 0.06rem;
 					display: block;
 					text-decoration: underline;
-					color: #00BC71;
+					color: $bg-color;
 				}
 			}
 		}
