@@ -284,9 +284,9 @@ export default {
 		}
 		&.active{
 			.text{
-				color: #00bc71;
+				color: $index-nav-color;
 				padding: 0 0.1rem;
-				border-bottom: 2px solid #00bc71;
+				border-bottom: 2px solid $index-nav-color;
 				
 			}
 		}
