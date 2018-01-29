@@ -3,24 +3,24 @@
     <div class="menu-blank"></div>
     <ul class="nav_bottm">
         <li :class="{'active':actived == 'first'}">
-            <router-link to='/selected' replace>
-                <img v-show="actived == 'first'" src="../../../static/images/34@3x.png" alt="精选"/>
-                <img v-show="actived != 'first'" src="../../../static/images/4@3x.png" alt="精选"/>
-                <div>精选</div>
+            <router-link to='/index' replace>
+            	<i class="iconfont icon-shouye" v-show="actived == 'first'"></i>
+            	<i class="iconfont icon-shouye1" v-show="actived != 'first'"></i>
+                <div>首页</div>
             </router-link>
         </li>
         <li :class="{'active':actived == 'second'}">
-            <router-link to='/classification' replace>
-                <img v-show="actived == 'second'" src="../../../static/images/1@3x.png" alt="分类"/>
-                <img v-show="actived != 'second'" src="../../../static/images/33@3x.png" alt="分类"/>
-                <div>分类</div>
+            <router-link to='/toysBox' replace>
+                <img v-show="actived == 'second'"  alt="娃娃袋"/>
+                <img v-show="actived != 'second'"  alt="娃娃袋"/>
+                <div>娃娃袋</div>
             </router-link>
         </li>
-        <li :class="{'active':actived == 'third'}">
+        <!--<li :class="{'active':actived == 'third'}">
             <router-link to='/information' replace>
-                <img v-show="actived == 'third'" src="../../../static/images/3@3x.png" alt="资讯"/>
-                <img v-show="actived != 'third'" src="../../../static/images/32@3x.png" alt="资讯"/>
-                <div>资讯</div>
+                <img v-show="actived == 'third'" src="../../../static/images/3@3x.png" alt="商城"/>
+                <img v-show="actived != 'third'" src="../../../static/images/32@3x.png" alt="商城"/>
+                <div>商城</div>
             </router-link>
         </li>
         <li :class="{'active':actived == 'five'}">
@@ -29,18 +29,24 @@
                 <img v-show="actived != 'five'" src="../../../static/images/30@3x.png" alt="我的"/>
                 <div>我的</div>
             </router-link>
-        </li>
+        </li>-->
     </ul>
 </div>
 </template>
 
 <script>
     export default {
-        props: ['actived']
+        props: ['actived'],
+        data () {
+		    return {
+		      imageUrl: this.$store.state.imageUrl,
+		    }
+		},
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+    @import "../../../static/css/style.scss";
     .menu-blank {
         height: 1rem;
     }
@@ -50,22 +56,26 @@
         left: 0;
         width: 100%;
         height: 1rem;
-        background: #FFFFFF;
-        border-top: 1px solid #eee;
+        background: $footer-bgcolor;
+       /* border-top: 1px solid #eee;*/
         box-sizing: border-box;       
         display: flex;
-        z-index: 30;
+        z-index: 10;
     }
     .nav_bottm li{
         flex: 1;
         display: flex;
-        /*align-items: center;
-        justify-content: center;*/
-        color: #000;
     }
     .nav_bottm a{
         display: block;
         width: 100%;
+        color: $footer-text-color;
+        text-align: center;
+        padding-top: 0.16rem;
+        .iconfont{
+        	font-size: 0.4rem;
+        	line-height: 1;
+        }
     }
     .nav_bottm img{
         width: 0.36rem;
@@ -75,10 +85,7 @@
     }
     .nav_bottm div{
         font-size: 0.22rem;
-        color: #000;
         text-align: center;
-    }
-    .nav_bottm .active div {
-        color: #3cafb6;
+        line-height: 0.42rem;
     }
 </style>

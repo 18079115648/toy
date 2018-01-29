@@ -40,6 +40,9 @@ Vue.prototype.$weixin = weixin
 import Header from '@/components/common/Header'
 Vue.component('Header', Header)
 
+import Menu from '@/components/common/tabBar'
+Vue.component('Menu', Menu)
+
 import Pagination from '@/components/common/Pagination'
 Vue.component('Pagination', Pagination)
 

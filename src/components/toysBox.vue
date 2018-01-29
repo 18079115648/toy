@@ -36,6 +36,7 @@
 	  	<div class="charge-btn btn-operate btn-hover" @click="chargeShow = true">兑换钻石</div>
 	  	<router-link to="/orderSubmit" v-tap class="get-btn btn-operate btn-hover">立即领取</router-link>
 	  </div>  
+	  <Menu actived="second"></Menu>
 	  <confirm-modal :show="chargeShow" @confirm_modal="charge" title="兑换钻石确认" @closeModal="chargeShow = false" :message="message"></confirm-modal>	
     <!--<router-link v-show="toysList.length > 0" to="/orderSubmit" class="btn-default btn-hover btn-receive">立即领取</router-link>-->
   </div>
@@ -91,7 +92,7 @@ export default {
 	position: absolute;
 	left: 0;
 	top: 0.85rem;
-	bottom: 1rem;
+	bottom: 2rem;
 	width: 100%;
 	
 	padding: 0.3rem 0.2rem 1.5rem;
@@ -173,7 +174,7 @@ export default {
 	position: absolute;
 	width: 100%;
 	left: 0;
-	bottom: 0;
+	bottom: 1rem;
 	height: 1rem;
 	display: flex;
 	background: #fff;
