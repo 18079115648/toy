@@ -260,7 +260,7 @@ export default {
 	width: 100%;
 	left: 0;
 	top: 0.85rem;
-	bottom: 0;
+	bottom: 1rem;
 	overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding-bottom: 0.3rem;
