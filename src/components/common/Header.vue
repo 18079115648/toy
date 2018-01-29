@@ -69,7 +69,7 @@
         top: 0;
     }
     .welfare-header{
-    	background: #fbcb44;
+    	background: $welfare-bgcolor;
     }
     .invite-header{
     	background: url(../../../static/image/invite-header.png) no-repeat center;

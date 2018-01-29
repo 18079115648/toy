@@ -162,7 +162,7 @@
 					</p>
 					<p class="again-time shadow-text" :class="{show: endTime >= 1}">倒计时 {{endTime}}秒</p>
 				</div>
-				<img :src="`${imageUrl}/2@2x.png`" class="close" v-tap.prevent="{ methods : closePop }"/>	
+				<i class="close iconfont icon-guanbi" v-tap.prevent="{ methods : closePop }"></i>
 			</div>
 		</mt-popup>
 		
@@ -178,7 +178,7 @@
 					</p>
 					<p class="again-time shadow-text" :class="{show: endTime >= 1}">倒计时 {{endTime}}秒</p>
 				</div>
-				<img :src="`${imageUrl}/2@2x.png`" class="close" v-tap.prevent="{ methods : closePop }" />	
+				<i class="close iconfont icon-guanbi" v-tap.prevent="{ methods : closePop }"></i>
 			</div>
 		</mt-popup>
 
@@ -325,7 +325,7 @@ export default {
 			
 			roomDetail: false,   	 	// 房间娃娃详情
 			grabList: false,             //抓取记录
-			nickname: storage.get('user').nickname,	// 昵称
+			nickname: '',	// 昵称
 			
 			//分页参数
 			pagination: {
@@ -433,7 +433,7 @@ export default {
 		 * 初始化socket
 		 */
 		initWebSocket() {
-			this.sock = new SockJS(process.env.WEBSOCKET_URL)
+			this.sock = new SockJS(this.$store.state.WEBSOCKET_URL)
 
 			const parent = this 
 
@@ -1847,9 +1847,13 @@ export default {
 }
 .close{
 	position: absolute;
-	right: 0;
-	top: 0;
+	right: -0.25rem;
+	top: -0.25rem;
 	width: 0.6rem;
+	text-align: center;
+	line-height: 1;
+	font-size: 0.6rem;
+	color: $bg-color;
 }
 .again-time{
 	padding-top: 0.5rem;

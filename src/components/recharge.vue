@@ -13,11 +13,11 @@
             			<p class="desc">{{menberCharge.week.desc}}</p>
             			<p class="price">&yen;{{menberCharge.week.price.toFixed(2)}}</p>
             		</router-link>
-            		<router-link to="/paymentMember/1" v-tap class="charge-item" v-if="menberCharge.month">
+            		<router-link to="/paymentMember/2" v-tap class="charge-item" v-if="menberCharge.month">
             			<p class="charge-item-mark" v-if="menberCharge.month.mark">{{menberCharge.month.mark}}</p>
-            			<p class="tit shadow-text">{{menberCharge.week.title}}</p>
-            			<p class="desc">{{menberCharge.week.desc}}</p>
-            			<p class="price">&yen;{{menberCharge.week.price.toFixed(2)}}</p>
+            			<p class="tit shadow-text">{{menberCharge.month.title}}</p>
+            			<p class="desc">{{menberCharge.month.desc}}</p>
+            			<p class="price">&yen;{{menberCharge.month.price.toFixed(2)}}</p>
             		</router-link>
             	</div>
             </div>
@@ -56,7 +56,7 @@ export default {
     this.$api.recharge().then(res => {
         this.diamondCharge = res.data.normal
         res.data.week && (this.menberCharge.week = res.data.week)
-        res.data.month && (this.menberCharge.month = res.data.month)
+        res.data.mouth && (this.menberCharge.month = res.data.mouth)
     }, err => {
     	
     })

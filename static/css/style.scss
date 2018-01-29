@@ -12,9 +12,47 @@
 
 
 
-$bg-color: #00bc71;    //背景颜色
+//$bg-color: #00bc71;    //背景颜色
+//$bg-text-color: #ffffff;   //背景颜色下的文本颜色
+//$header-color: #00bc71;    //头部背景颜色
+//$header-text-color: #ffffff;  //头部背景下的文本颜色
+//$header-back-color: #ffffff;  //头部返回按钮颜色
+//
+//
+//$btn-default-bgcolor: #ffffff;  //背景颜色下的按钮颜色
+//$btn-default-color: #555;       //背景颜色下的按钮字体颜色
+//
+//$modal-btn-color: #00bc71;
+//
+//$user-icon-color: #ffffff;   //首页个人中心头像颜色
+//$index-nav-color: #00bc71;   //首页nav选中颜色
+//
+//$checkbox-color: #dddddd;    //checkbox未选中颜色
+//$checkbox-selected-color: #00bc71;    //checkbox选中颜色
+//
+//$payment-checkout-color: #ffffff;    //会员卡充值页面checkbox未选中颜色
+//$payment-selected-color: #ffffff;    //会员卡充值页面checkbox颜色
+//
+//$pay-member-bgcolor: #ffce45;       //充值列表会员item背景颜色
+//$pay-member-textcolor: #ffffff;     //充值列表会员item文本颜色
+//
+//$pay-diamond-bgcolor: #8ec1f4;       //充值列表会员item背景颜色
+//$pay-diamond-textcolor: #ffffff;     //充值列表会员item文本颜色
+//
+//$welfare-bgcolor: #fbcb44;       //福利社页面背景颜色
+//$welfare-content-bgcolor: #ffe67b;  //福利社页面内容背景颜色
+//$welfare-content-bordercolor: #743828;  //福利社页面内容边框颜色
+//
+//$welfare-btn-bgcolor: #fbcb44;       //福利社页面背景颜色
+//$welfare-btn-color:  #743828;       //福利社页面背景颜色
+//
+//$imageUrl: '/static/image/renwozhua';
+
+
+//熊苗人
+$bg-color: #ff86a2;    //背景颜色
 $bg-text-color: #ffffff;   //背景颜色下的文本颜色
-$header-color: #00bc71;    //头部背景颜色
+$header-color: #ff86a2;    //头部背景颜色
 $header-text-color: #ffffff;  //头部背景下的文本颜色
 $header-back-color: #ffffff;  //头部返回按钮颜色
 
@@ -22,13 +60,13 @@ $header-back-color: #ffffff;  //头部返回按钮颜色
 $btn-default-bgcolor: #ffffff;  //背景颜色下的按钮颜色
 $btn-default-color: #555;       //背景颜色下的按钮字体颜色
 
-$modal-btn-color: #00bc71;
+$modal-btn-color: #ff86a2;
 
 $user-icon-color: #ffffff;   //首页个人中心头像颜色
-$index-nav-color: #00bc71;   //首页nav选中颜色
+$index-nav-color: #ff86a2;   //首页nav选中颜色
 
 $checkbox-color: #dddddd;    //checkbox未选中颜色
-$checkbox-selected-color: #00bc71;    //checkbox选中颜色
+$checkbox-selected-color: #ff86a2;    //checkbox选中颜色
 
 $payment-checkout-color: #ffffff;    //会员卡充值页面checkbox未选中颜色
 $payment-selected-color: #ffffff;    //会员卡充值页面checkbox颜色
@@ -36,14 +74,14 @@ $payment-selected-color: #ffffff;    //会员卡充值页面checkbox颜色
 $pay-member-bgcolor: #ffce45;       //充值列表会员item背景颜色
 $pay-member-textcolor: #ffffff;     //充值列表会员item文本颜色
 
-$pay-diamond-bgcolor: #8ec1f4;       //充值列表会员item背景颜色
-$pay-diamond-textcolor: #ffffff;     //充值列表会员item文本颜色
+$pay-diamond-bgcolor: #8ec1f4;       //充值列表钻石item背景颜色
+$pay-diamond-textcolor: #ffffff;     //充值列表钻石item文本颜色
 
-$welfare-bgcolor: #fbcb44;       //福利社页面背景颜色
-$welfare-content-bgcolor: #ffe67b;  //福利社页面内容背景颜色
-$welfare-content-bordercolor: #ffe67b;  //福利社页面内容边框颜色
+$welfare-bgcolor: #ff86a2;       //福利社页面背景颜色
+$welfare-content-bgcolor: #cce0ff;  //福利社页面内容背景颜色
+$welfare-content-bordercolor: #743828;  //福利社页面内容边框颜色
 
-$welfare-btn-bgcolor: #743828;       //福利社页面背景颜色
-$welfare-btn-color: #fbcb44;       //福利社页面背景颜色
+$welfare-btn-bgcolor: #fbcb44;       //福利社页面背景颜色
+$welfare-btn-color:  #743828;       //福利社页面背景颜色
 
 $imageUrl: '/static/image/renwozhua';

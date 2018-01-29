@@ -260,15 +260,16 @@ export default {
 @import "../../static/css/style.scss";
 .content{
 	min-height: 100vh;
-	background: #fbcb44;
+	background: $welfare-bgcolor;
 }
 .border-btn{
-	border: 0.06rem solid #743828;
+	border: 0.06rem solid $welfare-btn-color;
 	height: 0.72rem;
 	border-radius: 0.72rem;
 	line-height: 0.6rem;
 	text-align: center;
-	color: #743828;
+	color: $welfare-btn-color;
+	background: $welfare-btn-bgcolor;
 	font-weight: 700;
 	width: 2.5rem;
 	margin: 0 auto;
@@ -294,8 +295,8 @@ export default {
 	top: 0.9rem;
 	overflow-y: auto;
 	-webkit-overflow-scrolling : touch;
-	border: 0.1rem solid #743828;
-	background: #ffe67b;
+	border: 0.1rem solid $welfare-content-bordercolor;
+	background: $welfare-content-bgcolor;
 	border-radius: 0.08rem;
 	padding: 0.25rem;
 	padding-bottom: 0;
@@ -318,7 +319,7 @@ export default {
 			.sign-list-item{
 				width: 1.05rem;
 				height: 1.15rem;
-				border: 0.06rem solid #743828;
+				border: 0.06rem solid $welfare-btn-color;
 				border-radius: 0.2rem;
 				background-image: url(#{$imageUrl}/38@2x.png);
 				overflow: hidden;
@@ -412,7 +413,7 @@ export default {
 					white-space: nowrap;
 				}
 				.daily-task-icon{
-					border: 2px solid #743828;
+					border: 2px solid $welfare-btn-color;
 					width: 1rem;
 					height: 1rem;
 					margin: 0 auto;

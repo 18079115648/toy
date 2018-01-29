@@ -59,7 +59,7 @@ export default {
   		this.loadEnd = true
 			this.toysList = res.data.data
 			this.total = res.data.total
-			this.message = '当前所有娃娃可兑换 <span style="color: #00bc71;">' + this.total + '</span> 钻石'
+			this.message = '当前所有娃娃可兑换 <span class="duihuan">' + this.total + '</span> 钻石'
     }, err => {
     	
     })

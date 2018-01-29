@@ -165,4 +165,7 @@ export default {
 			background: transparent;
 		}
 	}
+	.duihuan{
+		color: $bg-color !important;
+	}
 </style>

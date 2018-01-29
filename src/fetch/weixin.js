@@ -1,15 +1,15 @@
 import axios from 'axios'
 import storage from './storage'
 import router from '../router'
+import store from '@/vuex/store'
 
-const APP_ID = process.env.WEIXIN.APP_ID
-const APP_SECRET = process.env.WEIXIN.APP_SECRET
+const APP_ID = store.state.WEIXIN.APP_ID
 
 export default {
     // 认证
     authorize() {
     	let key = storage.get('operatorKey') ? '?key=' + storage.get('operatorKey') : ''
-        let redirect = process.env.WEIXIN.REDIRECT_URI + key + '#/oauth'
+        let redirect = store.state.WEIXIN.REDIRECT_URI + key + '#/oauth'
         let authURI = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + APP_ID + '&redirect_uri=' + encodeURIComponent(redirect) + '&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
         window.location.replace(authURI)
     },
