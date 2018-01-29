@@ -253,11 +253,12 @@
 						</div>
 							
 						<div class="receive-btn" :class="{'disabled': privilegeData.receiveStatus}" @click="receiveprivilege">
-							<span>领取礼包</span>
+							<span v-show="!privilegeData.receiveStatus">领取礼包</span>
+							<span v-show="privilegeData.receiveStatus">已领取</span>
 						</div>
 					</div>
 				</div>
-				<div class="vip-item">
+				<div class="vip-item" v-if="privilegeData.level < 6">
 					<p class="vip-item-tit">
 						<img src="../../static/image/3@3x.png"  />
 						下一档VIP等级可领取特权礼包内容
@@ -538,15 +539,15 @@ export default {
 		  })
 		},
 		receiveprivilege() {
-			if(!this.privilegeData.receiveStatus) {
+			if(this.privilegeData.receiveStatus) {
 				return
 			}
 			this.$api.giftReceive({
 				option_id: this.privilegeData.optionId,
-//				option_id: 41001,
 				openid: window.OPEN_DATA.openid,
 				openkey: window.OPEN_DATA.openkey
 			}).then(res => {
+				this.privilegeData.receiveStatus = 1
 				MessageBox(res.data.title, res.data.content);
 		  }, err => {
 	
