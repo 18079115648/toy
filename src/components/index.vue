@@ -285,6 +285,15 @@
 				</div>
 			</div>
 		</mt-popup>
+		<mt-popup v-model="vipReceiveStatus" class="float-pop" >
+			<div class="float-box gift-box" style="z-index: 4000 !important;">
+				<div class="content">
+					<p class="receive-status" style="padding-bottom: 0.15rem;">{{vipReceiveData.title}}</p>
+					<p class="receive-desc">{{vipReceiveData.content}}</p>
+				</div>
+				<img src="../../static/image/33333.png" class="close" @click="vipReceiveStatus = false" />
+			</div>
+		</mt-popup>
 	  <!--玩吧 end-->  
   </div>
 </template>
@@ -364,7 +373,10 @@ export default {
 	    receiveGiftInfo: {},
 	    
 	    vipGiftShow: false,  //vip礼包
-	    privilegeData: {}
+	    privilegeData: {},
+	    
+	    vipReceiveStatus: false, //vip特权礼包
+	    vipReceiveData: {}
 	    /**
 	     *玩吧start
 			**/
@@ -548,7 +560,8 @@ export default {
 				openkey: window.OPEN_DATA.openkey
 			}).then(res => {
 				this.privilegeData.receiveStatus = 1
-				MessageBox(res.data.title, res.data.content);
+				this.vipReceiveData = res.data
+				this.vipReceiveStatus = true
 		  }, err => {
 	
 		  })
