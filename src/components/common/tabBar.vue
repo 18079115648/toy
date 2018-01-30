@@ -4,32 +4,32 @@
     <ul class="nav_bottm">
         <li :class="{'active':actived == 'first'}">
             <router-link to='/index' replace>
-            	<i class="iconfont icon-shouye" v-show="actived == 'first'"></i>
-            	<i class="iconfont icon-shouye1" v-show="actived != 'first'"></i>
+            	<img v-show="actived == 'first'" :src="`${imageUrl}/1-1-01.png`"  alt="娃娃袋"/>
+                <img v-show="actived != 'first'" :src="`${imageUrl}/1-2-01.png`"  alt="娃娃袋"/>
                 <div>首页</div>
             </router-link>
         </li>
         <li :class="{'active':actived == 'second'}">
             <router-link to='/toysBox' replace>
-                <img v-show="actived == 'second'"  alt="娃娃袋"/>
-                <img v-show="actived != 'second'"  alt="娃娃袋"/>
+                <img v-show="actived == 'second'" :src="`${imageUrl}/4-1-01.png`"  alt="娃娃袋"/>
+                <img v-show="actived != 'second'" :src="`${imageUrl}/4-2-01.png`"  alt="娃娃袋"/>
                 <div>娃娃袋</div>
             </router-link>
         </li>
-        <!--<li :class="{'active':actived == 'third'}">
-            <router-link to='/information' replace>
-                <img v-show="actived == 'third'" src="../../../static/images/3@3x.png" alt="商城"/>
-                <img v-show="actived != 'third'" src="../../../static/images/32@3x.png" alt="商城"/>
+        <li :class="{'active':actived == 'third'}">
+            <router-link to='/intergalMall' replace>
+                <img v-show="actived == 'third'" :src="`${imageUrl}/3-1-01.png`" alt="商城"/>
+                <img v-show="actived != 'third'" :src="`${imageUrl}/3-2-01.png`" alt="商城"/>
                 <div>商城</div>
             </router-link>
         </li>
-        <li :class="{'active':actived == 'five'}">
+        <li :class="{'active':actived == 'four'}">
             <router-link to='/user' replace>
-                <img v-show="actived == 'five'" src="../../../static/images/5@3x.png" alt="我的"/>
-                <img v-show="actived != 'five'" src="../../../static/images/30@3x.png" alt="我的"/>
+                <img v-show="actived == 'four'" :src="`${imageUrl}/2-1-01.png`" alt="我的"/>
+                <img v-show="actived != 'four'" :src="`${imageUrl}/2-2-01.png`" alt="我的"/>
                 <div>我的</div>
             </router-link>
-        </li>-->
+        </li>
     </ul>
 </div>
 </template>
@@ -57,7 +57,7 @@
         width: 100%;
         height: 1rem;
         background: $footer-bgcolor;
-       /* border-top: 1px solid #eee;*/
+        border-top: 1px solid $footer-border-color;
         box-sizing: border-box;       
         display: flex;
         z-index: 10;
@@ -65,27 +65,29 @@
     .nav_bottm li{
         flex: 1;
         display: flex;
-    }
-    .nav_bottm a{
-        display: block;
-        width: 100%;
-        color: $footer-text-color;
-        text-align: center;
-        padding-top: 0.16rem;
-        .iconfont{
-        	font-size: 0.4rem;
-        	line-height: 1;
+        &.active a{
+        	color: $footer-active-text-color;
+        }
+        a{
+        	display: block;
+	        width: 100%;
+	        color: $footer-text-color;
+	        text-align: center;
+	        padding-top: 0.14rem;
+	        .iconfont{
+	        	font-size: 0.4rem;
+	        	line-height: 1;
+	        }
         }
     }
     .nav_bottm img{
-        width: 0.36rem;
-        height: 0.36rem;
+        height: 0.4rem;
         display: block;
-        margin:0.14rem auto 0.1rem ;
+        margin:0 auto ;
     }
     .nav_bottm div{
         font-size: 0.22rem;
         text-align: center;
-        line-height: 0.42rem;
+        line-height: 0.44rem;
     }
 </style>

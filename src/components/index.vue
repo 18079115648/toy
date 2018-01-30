@@ -1,13 +1,7 @@
 <template>
   <div class="content">
     <div class="header">
-    	<router-link to="/user" class="user-link link">
-    		<i class="icon iconfont icon-wode2"></i>
-    	</router-link>
     	<img class="logo-text"  :src="`${imageUrl}/logo-text.png`" />
-    	<router-link to="/toysBox" class="user-link link">
-    		<img :src="`${imageUrl}/toys-box.png`"  class="fullAuto" />
-    	</router-link>
     </div>
     <div class="home-pagination-content">
     	<Pagination :render="render" :needToken="false" :param="pagination" :autoload="false" ref="pagination" uri="/dm-api/home/tag" >
@@ -24,10 +18,11 @@
 				    <div class="homebar">
 				    	<div class="homebar-content">
 				    		<router-link :to="item.link" class="nav-item" v-for="(item,index) in homebar" :key="index">
-					    		<div class="icon">
+					    		<div class="icon img-mask">
 					    			<img :src="item.icon"  />
 					    		</div>
-					    		<p>{{item.text}}</p>
+					    		<p class="tit">{{item.title}}</p>
+					    		<p class="text">{{item.text}}</p>
 					    	</router-link>
 				    	</div>
 					    	
@@ -78,21 +73,15 @@ export default {
     return {
     	imageUrl: this.$store.state.imageUrl,
     	homebar: [{
-      	text: '福利中心',
-      	icon: `${this.$store.state.imageUrl}/112344.png`,
+      	title: '福利社',
+      	text: '做任务得钻石',
+      	icon: `${this.$store.state.imageUrl}/9@2x.png`,
       	link: '/welfareCenter'
       },{
-      	text: '排行榜',
-      	icon: `${this.$store.state.imageUrl}/d44f.png`,
+      	title: '排位榜单',
+      	text: '膜拜大神土豪',
+      	icon: `${this.$store.state.imageUrl}/8@2x.png`,
       	link: '/rankList'
-      },{
-      	text: '积分商城',
-      	icon: `${this.$store.state.imageUrl}/34dxf.png`,
-      	link: '/intergalMall'
-      },{
-      	text: '充值中心',
-      	icon: `${this.$store.state.imageUrl}/344fs.png`,
-      	link: '/recharge'
       }],
       banner: [],
       
@@ -115,6 +104,7 @@ export default {
     }
   },
   created() {
+  	
   	this.$api.homeBanner().then(res => {
 			this.banner = res.data
     }, err => {
@@ -214,7 +204,7 @@ export default {
 	background: $header-color;
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
+	justify-content: center;
 	padding: 0 0.15rem;
 	.link{
 		width: 0.85rem;
@@ -310,31 +300,36 @@ export default {
 	}
 }
 .homebar{	
-	padding: 0.3rem 0.2rem;
+	padding: 0.3rem 0.1rem;
 	.homebar-content{
-		background: #fff;
 		display: flex;
 		height: 1.4rem;
-		border-radius: 0.2rem;
+		
 	}
 	.nav-item{
 		flex: 1;
-		display: flex;
-		flex-direction: column;
-    align-items: center;
-    padding: 0.06rem 0;
-    
+    margin: 0 0.1rem;
+    background: #ffffff;
+    border-radius: 0.2rem;
+    padding-left: 0.3rem;
+    position: relative;
+    padding-top: 0.16rem;
 		.icon{
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			height: 0.8rem;
+			position: absolute;
+			right: 0;
+			top: 0;
 			img{
-				height: 0.46rem;
+				width: 1.4rem;
 			}
 		}
-		p{
+		.tit{
 			color: #000;
+			font-weight: 700;
+			font-size: 0.28rem;
+			padding: 0.08rem 0;
+		}
+		.text{
+			color: #aaa;
 		}
 	}
 }

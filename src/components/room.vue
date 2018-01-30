@@ -283,11 +283,11 @@ export default {
 			operationTimer: undefined,		// 抓取操作倒计时句柄
 	    	succStatus: false, 				// 成功抓到娃娃,
 	    	failStatus: false, 				// 没有抓到娃娃,
-			endTime: 5,						// 抓取结果展示倒计时
-			remainGold: storage.get('remain_gold'),	// 剩余金币
+			endTime: 10,						// 抓取结果展示倒计时
+			remainGold: 0,	// 剩余金币
 			remainPoints: 0,                //积分
 			avatar: '', // 当前操作用户头像
-			userAvatar: '',  //登录用户头像
+			userAvatar: this.$storage.get('avatar'),  //登录用户头像
 			roomNum: 0,  //房间人数
 			
 			machineSn: undefined,			// 设备编号
@@ -325,7 +325,7 @@ export default {
 			
 			roomDetail: false,   	 	// 房间娃娃详情
 			grabList: false,             //抓取记录
-			nickname: '',	// 昵称
+			nickname: this.$storage.get('nickname'),	// 昵称
 			
 			//分页参数
 			pagination: {
@@ -371,8 +371,6 @@ export default {
 		this.zegoRoomId = this.$route.query.liveRoomCode
 		// 抓取价格
 		this.price = parseInt(this.$route.query.price)
-		// 获取金币
-		this.getGold()
 		//进入房间
 		this.enterRoom()
 		// 初始化socket
@@ -463,7 +461,8 @@ export default {
 							}
 							return;
 						}
-
+						this.remainGold = data.gold
+						this.remainPoints = data.points
 						this.roomStatus = data.room_status
 						data.room_status && (this.avatar = data.headUrl)
 						
@@ -600,6 +599,7 @@ export default {
 						this.showSide = false
 						clearInterval(this.operationTimer)
 						this.grabProcess = false
+						this.endTime = parseInt(data.protection_seconds)
 						if (data.value === 1) {
 							// 抓取成功
 							this.grabSucces()
@@ -748,19 +748,6 @@ export default {
 			}, 1000)
 		},
 		
-		
-		//退出计时
-		resultGo() {
-			this.endTime = 5
-			this.endTimer = setInterval(() => {
-				this.endTime--
-				if(this.endTime === 1) {
-					this.succStatus = false
-					this.failStatus = false
-					clearInterval(this.endTimer)
-				}
-			},1000)
-		},
 
 		// 关闭弹窗
 		closePop() {
@@ -1179,7 +1166,6 @@ export default {
 		grabSucces() {
 			this.succStatus = true
 			this.playSuccessAudio()
-			this.endTime = 5
 			const parent = this
 			function timeout() {
 				setTimeout(() => {
@@ -1201,7 +1187,6 @@ export default {
 		grabFailure() {
 			this.failStatus = true
 			this.playFailureAudio()
-			this.endTime = 5
 			const parent = this
 			function timeout() {
 				setTimeout(function() {
@@ -1217,17 +1202,6 @@ export default {
 			timeout()
 		},
 
-		/**
-		 * 获取金币
-		 */
-		getGold() {
-			this.$api.userInfo().then(response => {
-				this.nickname = response.data.nickname
-				this.remainGold = response.data.money
-				this.remainPoints = response.data.points
-				this.userAvatar = response.data.avatar || `${this.imageUrl}/vvv.png`
-			})
-		},
 
 		/**
 		 * 跳转娃娃袋

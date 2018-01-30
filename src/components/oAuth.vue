@@ -3,6 +3,11 @@
 
 <script>
 export default {
+	data () {
+	    return {
+	      imageUrl: this.$store.state.imageUrl,
+	    }
+	},
     created() {
     	const self = this
         let code = ''
@@ -17,8 +22,10 @@ export default {
 		}).then(res => {
 			let accessToken = res.data.accessToken
             self.$token.refreshToken(accessToken.accessToken, accessToken.refreshToken, accessToken.expireTime)
-            this.$storage.set('hx', {id: res.data.hxId, password: res.data.hxPwd})
-            this.$storage.set('user', res.data)
+            res.data.avatar = res.data.avatar ? res.data.avatar : `${this.imageUrl}/vvv.png`
+			res.data.nickname = res.data.nickname ? res.data.nickname : '***'
+			this.$storage.set('avatar', res.data.avatar)
+			this.$storage.set('nickname', res.data.nickname)
 			this.loginSuccess()
 	    }, err => {
 	    	
