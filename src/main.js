@@ -20,8 +20,6 @@ Vue.prototype.$storage = storage
 import vueTap from 'v-tap';
 Vue.use(vueTap);
 
-
-
 import common from '@/fetch/common'
 Vue.prototype.$common = common
 
