@@ -1,6 +1,10 @@
 <template> 
     <div class="app" id="fastClick" :style="{'height': wH + 'px'}">
-    	<div class="room-loading" v-show="loadingStatus"></div>
+    	<div class="room-loading" v-show="loadingStatus">
+    		<div class="back img-mask" v-tap="{ methods : back }">
+    			<img class="fullEle" src="../../static/image/ss44.png"   />
+    		</div>
+    	</div>
         <!--<div class="room-top">
         	<div class="back" v-tap="{ methods : back }">
         		<i class="iconfont icon-zuojiantou"></i>
@@ -20,8 +24,8 @@
     		</div>
     	</div>-->
     	<div class="room-top">
-			<img v-show="isGame" class="back" src="../../static/image/feee.png"/>
-    		<img v-show="!isGame" class="back" src="../../static/image/ss44.png" v-tap="{ methods : back }"/>
+			<!--<img v-show="isGame" class="back" src="../../static/image/feee.png"/>-->
+    		<img class="back" src="../../static/image/ss44.png" v-tap="{ methods : back }"/>
     		<img v-show="avatar" class="avatar" :src="avatar"  />
     		<div v-show="!avatar" class="avatar-position"></div>
     		<div class="room-count shadow-text">
@@ -1491,6 +1495,13 @@ export default {
 	background: url(https://yingdd.oss-cn-hangzhou.aliyuncs.com/90530c7ba350e128fa64cee4d4aee58a.jpg) no-repeat center;
 	background-color: #a6a2a1;
 	background-size: 100% 100%;
+	.back{
+		position: absolute;
+		width: 0.9rem;
+		top: 0.16rem;
+		left: 0.15rem;
+		height: 0.9rem;
+	}
 }
 .video-content{
 	width: 100%;
