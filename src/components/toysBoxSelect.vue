@@ -2,12 +2,10 @@
   <div class="content">
   	<Header title="娃娃袋"></Header>
   	<div class="toys-content" v-show="toysList.length > 0">
-  		<p class="total-dia">当前娃娃总价值为：
-  			<img  :src="`${imageUrl}/erdd.png`"  />
-	    	<span style="font-weight: 700;">{{ total}}</span>
-  		</p>
-  		
   		<div class="toys-list">
+  			<div class="toys-item-content">
+  				
+  			</div>
 	    	<div class="toys-item img-mask shadow-text" v-for="(item, index) in toysList" :key="index">
 	    		<img class="toys-img" :src="item.img"  />
 	    		
@@ -23,20 +21,16 @@
 	    	
 	    	
 	    </div>
-	    
-	    <p class="tip">
-	  		<span class="tit">温馨提示：</span><span class="text">抓中娃娃后15天内未领取，系统将自动兑换成钻石</span>
-	  	</p>
+	    <div class="no_msg bg-color" v-show="toysList.length < 1 && loadEnd">
+	        <img  :src="`${imageUrl}/none-toy.png`"  />
+	        <div>您还没有抓到娃娃~</div>
+	    </div>
   	</div>
-  	<div class="no_msg bg-color" v-show="toysList.length < 1 && loadEnd">
-        <img  :src="`${imageUrl}/none-toy.png`"  />
-        <div>您还没有抓到娃娃~</div>
-    </div>
+  	
 	  <div class="toys-operate" v-show="toysList.length > 0">
-	  	<router-link to="/toysBoxSelect/1" v-tap class="charge-btn btn-operate btn-hover">兑换钻石</router-link>
-	  	<router-link to="/toysBoxSelect/2" v-tap class="get-btn btn-operate btn-hover">立即领取</router-link>
+	  	<div class="charge-btn btn-operate btn-hover" @click="chargeShow = true">兑换钻石</div>
+	  	<router-link to="/orderSubmit" v-tap class="get-btn btn-operate btn-hover">立即领取</router-link>
 	  </div>  
-	  <Menu actived="second"></Menu>
   </div>
 </template>
 
@@ -48,6 +42,8 @@ export default {
     	imageUrl: this.$store.state.imageUrl,
 			toysList: [],
 			total: 0,  //兑换总钻石数
+			chargeShow: false,
+			message: '',
 			loadEnd: false
     }
   },
@@ -56,10 +52,28 @@ export default {
   		this.loadEnd = true
 			this.toysList = res.data.data
 			this.total = res.data.total
+			this.message = '当前所有娃娃可兑换 <span class="duihuan">' + this.total + '</span> 钻石'
     }, err => {
     	
     })
   },
+  methods: {
+  	charge() {
+  		this.$api.convertDiamond().then(res => {
+	  		Toast({
+				  message: '兑换成功',
+				  position: 'middle',
+				  iconClass: 'toast-icon icon-success',
+				  duration: 800
+				})
+	  		setTimeout(() => {
+	  			this.$router.replace('/index')
+	  		}, 1000)
+	    }, err => {
+	    	
+	    })
+  	}
+  }
 }
 </script>
 
@@ -70,46 +84,14 @@ export default {
 	position: absolute;
 	left: 0;
 	top: 0.85rem;
-	bottom: 2rem;
+	bottom: 1rem;
 	width: 100%;
 	
-	padding: 0.3rem 0.2rem 1.5rem;
-	.tip{
-		position: absolute;
-		left: 0.4rem;
-		right: 0.4rem;
-		bottom: 0.4rem;
-		color: $bg-text-color;
-		display: flex;
-		.tit{
-			width: 1.4rem;
-		}
-		.text{
-			flex: 1;
-			overflow: hidden;
-		}
-		
-	}
-}
-.total-dia{
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	color: $bg-text-color;
-	font-size: 0.3rem;
-	padding-bottom: 0.4rem;
-	img{
-		width: 0.4rem;
-		margin-left: 0.2rem;
-		margin-right: 0.06rem;
-	}
+	padding: 0.3rem 0.2rem;
 }
 .toys-list{
-	position: absolute;
-	left: 0.2rem;
-	right: 0.2rem;
-	top: 1.04rem;
-	bottom: 1.4rem;
+	width: 100%;
+	height: 100%;
 	overflow-y: auto;
 	-webkit-overflow-scrolling: touch;
 	border-radius: 0.2rem;
@@ -163,7 +145,7 @@ export default {
 	position: absolute;
 	width: 100%;
 	left: 0;
-	bottom: 1rem;
+	bottom: 0rem;
 	height: 1rem;
 	display: flex;
 	background: #fff;

@@ -1,6 +1,6 @@
 <template>
     <div class="content">
-        <Header :title="memberInfo.nickName + '的主页'"></Header>
+        <Header :title="(memberInfo.nickName || '') + '的主页'"></Header>
         <div class="rank-user-info">
 		    	<div class="user-info-link">
 			    	<img class="avatar" :src="memberInfo.avatar || `${imageUrl}/vvv.png`"  />

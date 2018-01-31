@@ -1,138 +1,154 @@
 <template> 
-    <div class="app" id="fastClick" :style="{'height': wH + 'px'}">
+    <div class="app" id="fastClick" :style="{'height': wH + 'px'}" :class="{'overflow': loadingStatus || operateShow || failStatus || succStatus}">
     	<div class="room-loading" v-show="loadingStatus">
     		<div class="back img-mask" v-tap="{ methods : back }">
     			<img class="fullEle" :src="`${imageUrl}/ss44.png`"   />
     		</div>
     	</div>
-        <!--<div class="room-top">
-        	<div class="back" v-tap="{ methods : back }">
-        		<i class="iconfont icon-zuojiantou"></i>
-        	</div>
-    		<img v-show="avatar" class="avatar" :src="avatar"  />
-    		<div v-show="!avatar" class="avatar-position"></div>
-    		<div class="room-count">
-    			<p>当前房间 {{roomNum}} 人</p>
-    		</div>
-    		<div class="room-price" style="margin-right: 0.52rem;">
-    			<img src="../../static/image/erdd.png"  />
-    			{{remainGold}}
-    		</div>
-    		<div class="room-price">
-    			<img src="../../static/image/34cd.png"  />
-    			{{remainPoints}}
-    		</div>
-    	</div>-->
-    	<div class="room-top">
-			<img v-show="isGame" class="back" :src="`${imageUrl}/feee.png`"/>
-    		<img v-show="!isGame" class="back" :src="`${imageUrl}/ss44.png`" v-tap="{ methods : back }"/>
-    		<img v-show="avatar" class="avatar" :src="avatar"  />
-    		<div v-show="!avatar" class="avatar-position"></div>
-    		<div class="room-count shadow-text">
-    			
-    			<p>当前房间人数</p>
-    			<p>{{roomNum}}</p>
-    		</div>
-    		<div class="price">
-    			<p>
-    				<img :src="`${imageUrl}/erdd.png`"  />
-    				<span class="shadow-text">{{remainGold}}</span>
-    			</p>
-    			<p>
-    				<img style="left: 1px;" :src="`${imageUrl}/34cd.png`"  />
-    				<span class="shadow-text">{{remainPoints}}</span>
-    			</p>
-    		</div>
-    	</div>
-        <div class="video-content" :class="[fullStatus ? 'full' : 'nofull']">
-        	<canvas id="frontview" :class="{show:showFront}"></canvas>
-	      	<canvas id="sideview" :class="{show:showSide}"></canvas>
-	      	
+    	<div class="room-view-content" :style="{'height': wH + 'px'}">
+    		<div class="room-top">
+				<img v-show="isGame" class="back" :src="`${imageUrl}/feee.png`"/>
+	    		<img v-show="!isGame" class="back" :src="`${imageUrl}/ss44.png`" v-tap="{ methods : back }"/>
+	    		<img v-show="avatar" class="avatar" :src="avatar"  />
+	    		<div v-show="!avatar" class="avatar-position"></div>
+	    		<!--<div class="room-count shadow-text">
+	    			
+	    			<p>当前房间人数</p>
+	    			<p>{{roomNum}}</p>
+	    		</div>
+	    		<div class="price">
+	    			<p>
+	    				<img :src="`${imageUrl}/erdd.png`"  />
+	    				<span class="shadow-text">{{remainGold}}</span>
+	    			</p>
+	    			<p>
+	    				<img style="left: 1px;" :src="`${imageUrl}/34cd.png`"  />
+	    				<span class="shadow-text">{{remainPoints}}</span>
+	    			</p>
+	    		</div>-->
+	    		<div class="room-queue" v-show="roomNum > 0">
+	    			<div class="room-queue-list">
+	    				<div class="room-queue-content">
+	    					<router-link :to="'/rankDetail/' + item.member_id" class="room-queue-item img-mask" v-for="item in roomNumInfo" :key="item.member_id">
+	    						<img class="fullEle" :src=" item.avatar || `${imageUrl}/vvv.png`"  />
+	    					</router-link>
+	    				</div>
+	    			</div>
+	    			<span class="shadow-text queue-num" >{{roomNum}}人</span>
+	    		</div>
+	    	</div>
 	    	<div class="audio-change img-mask child" v-tap="{ methods : changeAudio, status: musicSwitch && soundSwitch }">
 				<img class="fullEle" :src="`${imageUrl}/73@3x.png`"  v-show="musicSwitch && soundSwitch"  />
 				<img class="fullEle" :src="`${imageUrl}/74@3x.png`"  v-show="!(musicSwitch && soundSwitch)"  />
 			</div>
 	    	<div class="room-side">
 	    		<div class="view-change child" v-tap="{ methods : changeView }" ></div>
-	    		<div class="btn-hover open-detail child" v-tap="{ methods : goRoomDatail }"></div>
-	    		<div class="btn-hover open-record child" v-tap="{ methods : goGrabList }"></div>
+	    		<!--<div class="btn-hover open-detail child" v-tap="{ methods : goRoomDatail }"></div>
+	    		<div class="btn-hover open-record child" v-tap="{ methods : goGrabList }"></div>-->
 	    	</div>
-	      	
-	      	<!--聊天列表-->
-	      	<div class="room-news-content" v-show="roomNewsList.length > 0">
-    			<div class="room-news-list" id="chat-content" v-show="toggleStatus">
-    				<div class="room-news-item" v-for="(item, index) in roomNewsList" :key="index">
-    					<span class="tit">{{item.tit}} </span>
-    					<span class="text">{{item.text}}</span>
-    				</div>
-    			</div>
-    			<div class="toggle-news-list" @touchstart="toggleNews">
-    				<span v-show="!toggleStatus">展开</span>
-    				<span v-show="toggleStatus">隐藏</span>
-    			</div>
-    		</div>
-        </div>
-        <div class="operate-content" :class="{'full' : fullStatus}">
-        	<div class="room-bottom" v-show="!operateShow">
-	    		<div class="open-chat com img-mask" v-tap="{ methods : openChat }" @touchstart="depress($event)" @touchend="loosen($event)">
-	    			<img :src="`${imageUrl}/111-1.png`"  class="fullEle comm"  />
-	    			<img :src="`${imageUrl}/111-2.png`"  class="fullEle active"  />
-	    			<div class="content">
-	    				<img :src="`${imageUrl}/77@2x.png`" class="icon"  />
-	    				<p class="shadow-text">发言</p>
+    		<div class="video-content" :class="[fullStatus ? 'full' : 'nofull']">
+	        	<canvas id="frontview" :class="{show:showFront}"></canvas>
+		      	<canvas id="sideview" :class="{show:showSide}"></canvas>
+		      	
+		      	<!--聊天列表-->
+		      	<div class="room-news-content" v-show="roomNewsList.length > 0">
+	    			<div class="room-news-list" id="chat-content" v-show="toggleStatus">
+	    				<div class="room-news-item" v-for="(item, index) in roomNewsList" :key="index">
+	    					<span class="tit">{{item.tit}} </span>
+	    					<span class="text">{{item.text}}</span>
+	    				</div>
 	    			</div>
+	    			<div class="toggle-news-list" @touchstart="toggleNews">
+	    				<span v-show="!toggleStatus">展开</span>
+	    				<span v-show="toggleStatus">隐藏</span>
+	    			</div>
+	    		</div>
+	    		<div class="user-price">
+	    			<p>
+	    				<img :src="`${imageUrl}/34cd.png`"  />
+	    				<span class="shadow-text">{{remainPoints}}</span>
+	    			</p>
+	    			<p>
+	    				<img :src="`${imageUrl}/erdd.png`"  />
+	    				<span class="shadow-text">{{remainGold}}</span>
+	    			</p>
 	    			
 	    		</div>
-	    		<div class="begin img-mask" v-tap="{ methods : beginGame }" @touchstart="depress($event)" @touchend="loosen($event)">
-	    			<img :src="`${imageUrl}/112-1.png`"  class="fullEle comm"  />
-	    			<img :src="`${imageUrl}/112-2.png`"  class="fullEle active"  />
-	    			<div class="content">
-	    				<p class="shadow-text price">
-	    					<img :src="`${imageUrl}/71@2x.png`" class="icon"  />
-	    					{{price}}
-	    				</p>
-	    				<p class="shadow-text status">
-	    					<span v-show="roomStatus != 1" style="color: #8dff98;">开始游戏</span>
-	    					<span v-show="roomStatus == 1" style="color: #ff617f;">使用中</span>
-	    				</p>
-	    			</div>
-	    		</div>
-	    		<div class="open-recharge com img-mask" @touchstart="depress($event)" @touchend="loosen($event)" v-tap="{ methods : goRecharge }">
-	    			<img :src="`${imageUrl}/111-1.png`" class="fullEle comm"  />
-	    			<img :src="`${imageUrl}/111-2.png`" class="fullEle active"  />
-	    			<div class="content">
-	    				<img :src="`${imageUrl}/70@2x.png`"  class="icon"  />
-	    				<p class="shadow-text">充值</p>
-	    			</div>
-	    			
-	    		</div>
-	    	</div>
-	    	<!-- 操作区域 -->
-	    	<div class="operate-area" v-show="operateShow">
-	    		<div class="operate-direc">
-	    			<div class="direction-item left has-box " @touchstart="touchstart(3, $event)" @touchend="touchend(3, $event)">
-	    				<img class="fullEle com" :src="`${imageUrl}/left-1.png`"   />
-	    				<img class="fullEle active" :src="`${imageUrl}/left-2.png`"   />
-	    			</div>
-	    			<div class="direction-item top has-box" @touchstart="touchstart(1, $event)" @touchend="touchend(1, $event)">
-	    				<img class="fullEle com" :src="`${imageUrl}/up-1.png`"   />
-	    				<img class="fullEle active" :src="`${imageUrl}/up-2.png`"   />
-	    			</div>
-	    			<div class="direction-item right has-box" @touchstart="touchstart(4, $event)" @touchend="touchend(4, $event)">
-	    				<img class="fullEle com" :src="`${imageUrl}/right-1.png`"   />
-	    				<img class="fullEle active" :src="`${imageUrl}/right-2.png`"  />
-	    			</div>
-	    			<div class="direction-item bottom has-box" @touchstart="touchstart(2, $event)" @touchend="touchend(2, $event)">
-	    				<img class="fullEle com" :src="`${imageUrl}/down-1.png`"   />
-	    				<img class="fullEle active" :src="`${imageUrl}/down-2.png`"  />
-	    			</div>
-	    		</div>
-	    		<div class="operate-click has-box" v-tap.prevent="{ methods : grab }" @touchstart="depress($event)" @touchend="loosen($event)">
-	    			<img class="fullEle com" :src="`${imageUrl}/76-1@2x.png`"   />
-	    			<img class="fullEle active" :src="`${imageUrl}/76-2@2x.png`"   />
-	    		</div>
-	    		<div class="count-dowm shadow-text">倒计时 {{operateTime}}秒</div>
-	    	</div>
+	        </div>
+	        <div class="operate-content" :class="{'full' : fullStatus}">
+	        	<div class="room-bottom" v-show="!operateShow">
+		    		<div class="open-chat com img-mask" v-tap="{ methods : openChat }" @touchstart="depress($event)" @touchend="loosen($event)">
+		    			<img :src="`${imageUrl}/111-1.png`"  class="fullEle comm"  />
+		    			<img :src="`${imageUrl}/111-2.png`"  class="fullEle active"  />
+		    			<div class="content">
+		    				<img :src="`${imageUrl}/77@2x.png`" class="icon"  />
+		    				<p class="shadow-text">发言</p>
+		    			</div>
+		    			
+		    		</div>
+		    		<div class="begin img-mask" v-tap="{ methods : beginGame }" @touchstart="depress($event)" @touchend="loosen($event)">
+		    			<img :src="`${imageUrl}/112-1.png`"  class="fullEle comm"  />
+		    			<img :src="`${imageUrl}/112-2.png`"  class="fullEle active"  />
+		    			<div class="content">
+		    				<p class="shadow-text price">
+		    					<img :src="`${imageUrl}/71@2x.png`" class="icon"  />
+		    					{{price}}
+		    				</p>
+		    				<p class="shadow-text status">
+		    					<span v-show="roomStatus != 1" style="color: #8dff98;">开始游戏</span>
+		    					<span v-show="roomStatus == 1" style="color: #ff617f;">使用中</span>
+		    				</p>
+		    			</div>
+		    		</div>
+		    		<div class="open-recharge com img-mask" @touchstart="depress($event)" @touchend="loosen($event)" v-tap="{ methods : goRecharge }">
+		    			<img :src="`${imageUrl}/111-1.png`" class="fullEle comm"  />
+		    			<img :src="`${imageUrl}/111-2.png`" class="fullEle active"  />
+		    			<div class="content">
+		    				<img :src="`${imageUrl}/70@2x.png`"  class="icon"  />
+		    				<p class="shadow-text">充值</p>
+		    			</div>
+		    			
+		    		</div>
+		    	</div>
+		    	<!-- 操作区域 -->
+		    	<div class="operate-area" v-show="operateShow">
+		    		<div class="operate-direc">
+		    			<div class="direction-item left has-box " :class="{'stop': grabProcess}" @touchstart="touchstart(3, $event)" @touchend="touchend(3, $event)">
+		    				<img class="fullEle com" :src="`${imageUrl}/left-1.png`"   />
+		    				<img class="fullEle active" :src="`${imageUrl}/left-2.png`"   />
+		    			</div>
+		    			<div class="direction-item top has-box" :class="{'stop': grabProcess}" @touchstart="touchstart(1, $event)" @touchend="touchend(1, $event)">
+		    				<img class="fullEle com" :src="`${imageUrl}/up-1.png`"   />
+		    				<img class="fullEle active" :src="`${imageUrl}/up-2.png`"   />
+		    			</div>
+		    			<div class="direction-item right has-box" :class="{'stop': grabProcess}" @touchstart="touchstart(4, $event)" @touchend="touchend(4, $event)">
+		    				<img class="fullEle com" :src="`${imageUrl}/right-1.png`"   />
+		    				<img class="fullEle active" :src="`${imageUrl}/right-2.png`"  />
+		    			</div>
+		    			<div class="direction-item bottom has-box" :class="{'stop': grabProcess}" @touchstart="touchstart(2, $event)" @touchend="touchend(2, $event)">
+		    				<img class="fullEle com" :src="`${imageUrl}/down-1.png`"   />
+		    				<img class="fullEle active" :src="`${imageUrl}/down-2.png`"  />
+		    			</div>
+		    		</div>
+		    		<div class="operate-click has-box" :class="{'stop': grabProcess}" v-tap.prevent="{ methods : grab }" @touchstart="depress($event)" @touchend="loosen($event)">
+		    			<img class="fullEle com" :src="`${imageUrl}/76-1@2x.png`"   />
+		    			<img class="fullEle active" :src="`${imageUrl}/76-2@2x.png`"   />
+		    		</div>
+		    		<div class="count-dowm shadow-text">
+		    			<span v-show="!grabProcess">倒计时 {{operateTime}}秒</span>
+		    			<span v-show="grabProcess" style="font-size: 0.22rem;">已下抓,等待结果...</span>
+		    		</div>
+		    	</div>
+	        </div>
+    	</div>
+        <div class="room-goods-detail">
+        	<div class="room-goods-content">
+        		<p class="tit">商品详情</p>
+	        	<div class="toy-imgs">
+					<img :src="item" v-for="(item, index) in toyImgs" :key="index"  />
+				</div>
+        	</div>
+	        	
         </div>
 			
 	    	
@@ -293,6 +309,7 @@ export default {
 			avatar: '', // 当前操作用户头像
 			userAvatar: this.$storage.get('avatar'),  //登录用户头像
 			roomNum: 0,  //房间人数
+			roomNumInfo: [],  //房间人数列表信息
 			
 			machineSn: undefined,			// 设备编号
       		sock: undefined,				// socket handler
@@ -471,6 +488,7 @@ export default {
 						data.room_status && (this.avatar = data.headUrl)
 						
 						this.roomNum = data.member_count
+						this.roomNumInfo = data.players.concat()
 						if (data.isGame === 1) {
 							this.operateTime = data.remainSecond
 							this.operateShow = true
@@ -506,6 +524,7 @@ export default {
 					case 'into_room':
 						console.debug('进入房间通知')
 						this.roomNum = data.member_count
+						this.roomNumInfo = data.players.concat()
 						var news = {
 							tit: data.nickname,
 							text: '进入了房间！'
@@ -516,6 +535,7 @@ export default {
 					case 'leave_room':
 						console.debug('退出房间通知')
 						this.roomNum = data.member_count
+						this.roomNumInfo = data.players.concat()
 						var news = {
 							tit: data.nickname,
 							text: '离开了房间~~~'
@@ -601,7 +621,6 @@ export default {
 //						this.closeSideStream()
 						this.showFront = true
 						this.showSide = false
-						clearInterval(this.operationTimer)
 						this.grabProcess = false
 						this.endTime = parseInt(data.protection_seconds)
 						if (data.value === 1) {
@@ -1043,7 +1062,7 @@ export default {
 			setTimeout(() => {
 				parent.takeAudio.play()
 			}, 200)
-
+			clearInterval(this.operationTimer)
 			this.sock.send(JSON.stringify({
 				cmd: 'grab',
 				vmc_no: this.machineSn,
@@ -1375,7 +1394,12 @@ export default {
 		height: 0.9rem;
 	}
 }
-
+.room-view-content{
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	position: relative;
+}
 .video-content{
 	width: 100%;
 	height: 0;
@@ -1409,15 +1433,14 @@ export default {
 	position: relative;
 	min-height: 100vh;
 	font-weight: 700;
-	display: flex;
-	flex-direction: column;
-	overflow: hidden;
 	background: $bg-color;
-	
+	&.overflow{
+		overflow: hidden;
+	}
 } 
 .room-top{
 	position: absolute;
-	z-index: 2;
+	z-index: 5;
 	width: 100%;
 	top: 0;
 	left: 0;
@@ -1434,35 +1457,44 @@ export default {
 		height: 0.7rem;
 		border-radius: 50%;
 	}
-	.price{
-		min-width: 1.7rem;
-		padding: 0.04rem 0.2rem;
-		background: rgba(0,0,0,0.3);
-		border-radius: 0.2rem;
-		margin-left: 0.1rem;
-		& > p{
-			display: flex;
-			align-items: center;
-			padding: 0.04rem 0;
-			position: relative;
-			padding-left: 0.5rem;
-			font-size: 0.26rem;
-			height: 0.46rem;
-			img{
-				left: 0;
-				top: 50%;
-				transform: translateY(-50%);
-				position: absolute;
-				height: 0.32rem;
-				margin-right: 0.1rem;
+	.room-queue{
+		flex: 1;
+		display: flex;
+		align-items: center;
+		overflow: hidden;
+		padding-left: 1.7rem;
+		.room-queue-list{
+			flex: 1;
+			overflow: hidden;
+			.room-queue-content{
+				direction:rtl;
+				width: 100%;
+				overflow-x: auto;
+				white-space: nowrap;
+				line-height: 0;
+				overflow-y: hidden;
+				text-align: right;
+				.room-queue-item{
+					display: inline-block;
+					width: 0.66rem;
+					height: 0.66rem;
+					border-radius: 50%;
+					margin:0 0.06rem;
+					img{
+						border-radius: 50%;
+					}
+				}
+				
 			}
 		}
-	}
-	.room-count{
-		text-align: center;
-		flex: 1;
-		font-size: 0.3rem;
-		line-height: 1.2;
+		.queue-num{
+			background: rgba(0,0,0,0.3);
+			height: 0.54rem;
+			line-height: 0.54rem;
+			border-radius: 0.54rem;
+			padding-right: 0.2rem;
+			padding-left: 0.2rem;
+		}
 	}
 }
 /*.room-top{
@@ -1516,17 +1548,19 @@ export default {
 	}
 }*/
 .audio-change{
-	position: fixed;
+	position: absolute;
 	width: 0.9rem;
 	height: 0.9rem;
 	right: 0.1rem;
 	top: 1.45rem;
+	z-index: 5;
 }
 .room-side{
 	position: absolute;
 	right: 0.1rem;
-	bottom: 0.1rem;
+	top: 2.55rem;
 	width: 0.9rem;
+	z-index: 5;
 	& > .child{
 		width: 100%;
 		height: 0.9rem;
@@ -1581,6 +1615,33 @@ export default {
 		color: #fff;
 		font-size: 0.22rem;
 		font-weight: normal;
+	}
+}
+.user-price{
+	position: absolute;
+	right: 0.15rem;
+	bottom: 0;
+	display: flex;
+	padding: 0.15rem 0;
+	& > p{
+		display: flex;
+		align-items: center;
+		color: #fff;
+		height: 0.54rem;
+		position: relative;
+		padding-left: 0.7rem;
+		padding-right: 0.2rem;
+		background: rgba(0,0,0,0.3);
+		border-radius: 0.54rem;
+		margin-left: 0.2rem;
+		img{
+			height: 0.4rem;
+			margin-right: 0.06rem;
+			position: absolute;
+			left: 0.15rem;
+			top: 50%;
+			transform: translateY(-50%);
+		}
 	}
 }
 .chat-input{
@@ -1765,12 +1826,18 @@ export default {
 				left: 50%;
 				transform: translateX(-50%);
 			}
+			&.stop{
+				opacity: 0.8;
+			}
 		}
 			
 	}
 	.operate-click{
 		width: 1.6rem;
 		height: 1.6rem;
+		&.stop{
+			opacity: 0.8;
+		}
 		
 	}
 	.count-dowm{
@@ -2012,6 +2079,23 @@ export default {
 		transform: translateX(-50%);
 		width: 0.8rem;
 		height: 0.8rem;
+	}
+}
+.room-goods-detail{
+	background: $bg-color;
+	padding: 0.1rem 0.25rem 0.3rem;
+	.room-goods-content{
+		background: #fff;
+		border-radius: 0.2rem;
+		padding-bottom: 0.3rem;
+		.tit{
+			padding: 0.2rem 0.4rem;
+		}
+		.toy-imgs img {
+			display: block;
+			width: 100%;
+			margin-bottom: 0.3rem;
+		}
 	}
 }
 </style>

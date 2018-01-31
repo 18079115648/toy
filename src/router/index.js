@@ -12,6 +12,7 @@ const login = r => require.ensure([], () => r(require('../components/login.vue')
 const mobileLogin = r => require.ensure([], () => r(require('../components/mobileLogin.vue')), 'mobileLogin')
 const oauth = r => require.ensure([], () => r(require('../components/oauth.vue')), 'oauth')
 const toysBox = r => require.ensure([], () => r(require('../components/toysBox.vue')), 'toysBox')
+const toysBoxSelect = r => require.ensure([], () => r(require('../components/toysBoxSelect.vue')), 'toysBoxSelect')
 const orderSubmit = r => require.ensure([], () => r(require('../components/orderSubmit.vue')), 'orderSubmit')
 const invite = r => require.ensure([], () => r(require('../components/invite.vue')), 'invite')
 const share = r => require.ensure([], () => r(require('../components/share.vue')), 'share')
@@ -245,6 +246,13 @@ const router = new Router({
     {
       path: '/toysBox',
       component: toysBox,
+      meta: {
+      	requireAuth: true
+      }
+    },
+    {
+      path: '/toysBoxSelect/:type',
+      component: toysBoxSelect,
       meta: {
       	requireAuth: true
       }
