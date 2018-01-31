@@ -11,7 +11,12 @@
     	</router-link>
     </div>-->
     <!--玩吧 end-->
-    <div class="home-pagination-content">
+    <div class="loading-content" v-show = "loadingStatus">
+    	<div class="loading" >
+	    	<mt-spinner class="loading-icon" type="double-bounce" color="#ffe86e" :size="46"></mt-spinner>
+    	</div>
+    </div>
+    <div class="home-pagination-content" :class="{'overflow': vipReceiveStatus || signShow || guideShow || saveShow || shareShow || giftShow || vipGiftShow}">
     	<Pagination :render="render" :needToken="false" :param="pagination" :autoload="false" ref="pagination" uri="/dm-api/home/tag" >
 	    	<div class="home-data">
 					<div class="banner">
@@ -376,7 +381,10 @@ export default {
 	    privilegeData: {},
 	    
 	    vipReceiveStatus: false, //vip特权礼包
-	    vipReceiveData: {}
+	    vipReceiveData: {},
+	    
+	    
+	    loadingStatus: true
 	    /**
 	     *玩吧start
 			**/
@@ -420,12 +428,13 @@ export default {
 			self.$token.refreshToken(accessToken.accessToken, accessToken.refreshToken, accessToken.expireTime)
 			self.$storage.set('user', res.data)
 		  self.$storage.set('isNew', res.data.firstLogin)
+		  this.guideShow = res.data.firstLogin
 		  res.data.firstLogin ? window.reportRegister() : window.reportLogin()
 		  self.$getKey('GIFT') && self.getGift()
 		  self.getPrivilegeData()
 			self.signData()
     }, err => {
-    	
+    	this.loadingStatus = false
     })
 		/**
 	     *玩吧start
@@ -497,7 +506,7 @@ export default {
 				}
         this.pagination.content.push(item)
       })
-			this.guideShow = this.$storage.get('isNew')
+			
     },
 
     // 进入房间
@@ -583,8 +592,9 @@ export default {
 				this.signStatus = res.data.status
 				this.signShow = !!res.data.status
 				this.loadEnd = true
+				this.loadingStatus = false
 		  }, err => {
-	
+				this.loadingStatus = false
 		  })
 		},
 		sign() {
@@ -687,6 +697,22 @@ export default {
 <style lang="scss" scoped>
 @import "../../static/css/style.scss";
 /*玩吧start*/
+.loading-content{
+	position: fixed;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	z-index: 9999;
+	background: #f5f5f5;
+	.loading{
+		position: absolute;
+		left: 50%;
+		top: 45%;
+		transform: translate(-50%, -50%);	
+	}
+	
+}
 
 .gift-box{
 	position: relative;
@@ -916,7 +942,7 @@ export default {
 		position: absolute;
 		width: 100%;
 		left: 0;
-		top: -0.84rem;
+		top: -5.06rem;
 		z-index: 3001;
 	}
 }
@@ -1072,6 +1098,9 @@ export default {
 	overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding-bottom: 0.3rem;
+  &.overflow{
+  	overflow: hidden !important;
+  }
 }
 .navbar{
 	height: 0.8rem;
