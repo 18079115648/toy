@@ -3,21 +3,29 @@
   	<Header title="娃娃袋"></Header>
   	<div class="toys-content" v-show="toysList.length > 0">
   		<div class="toys-list">
-  			<div class="toys-item-content">
-  				
+  			<div class="toys-item-content" v-for="(item, index) in toysList" :key="index">
+  				<div class="toys-item img-mask shadow-text" >
+		    		<img class="toys-img" :src="item.img"  />
+		    		<div class="operate-status img-mask">
+		    			<img class="fullEle" v-show="!item.isActive"  :src="`${imageUrl}/191@3x.png`"  />
+		    			<img class="fullEle" v-show="item.isActive"  :src="`${imageUrl}/192@3x.png`"  />
+		    		</div>
+		    		<div class="change-num ">
+		    			<img  :src="`${imageUrl}/erdd.png`"  />
+		    			{{item.diamonds}}
+		    		</div>
+		    		<div class="toys-info">
+		    			<p>{{item.name}}</p>
+		    			<p>x{{item.num}}</p>
+		    		</div>	
+		    	</div>
+		    	<div class="num-operate">
+		    		<span class="operate" v-tap="{ methods : minus, item: item }">-</span>
+		    		<span class="num">{{item.operateNum}}</span>
+		    		<span class="operate" v-tap="{ methods : plus, item: item }">+</span>
+		    	</div>
   			</div>
-	    	<div class="toys-item img-mask shadow-text" v-for="(item, index) in toysList" :key="index">
-	    		<img class="toys-img" :src="item.img"  />
-	    		
-	    		<div class="change-num ">
-	    			<img  :src="`${imageUrl}/erdd.png`"  />
-	    			{{item.diamonds}}
-	    		</div>
-	    		<div class="toys-info">
-	    			<p>{{item.name}}</p>
-	    			<p>x{{item.num}}</p>
-	    		</div>	
-	    	</div>
+		    	
 	    	
 	    	
 	    </div>
@@ -50,7 +58,12 @@ export default {
   created() {
   	this.$api.toysWin().then(res => {
   		this.loadEnd = true
-			this.toysList = res.data.data
+  		res.data.data.forEach((item) => {
+  			item.operateNum = 1
+  			item.isActive = false
+  			this.toysList.push(item)
+  		})
+			
 			this.total = res.data.total
 			this.message = '当前所有娃娃可兑换 <span class="duihuan">' + this.total + '</span> 钻石'
     }, err => {
@@ -58,6 +71,12 @@ export default {
     })
   },
   methods: {
+  	minus(params) {
+  		(params.item.operateNum > 1) && params.item.operateNum--
+  	},
+  	plus(params) {
+  		(params.item.operateNum < params.item.num) && params.item.operateNum++
+  	},
   	charge() {
   		this.$api.convertDiamond().then(res => {
 	  		Toast({
@@ -87,7 +106,7 @@ export default {
 	bottom: 1rem;
 	width: 100%;
 	
-	padding: 0.3rem 0.2rem;
+	padding: 0.2rem 0.2rem 0.3rem;
 }
 .toys-list{
 	width: 100%;
@@ -97,15 +116,38 @@ export default {
 	border-radius: 0.2rem;
 	display: flex;
 	flex-wrap: wrap;
-	padding: 0.3rem 0.15rem;
+	align-items: flex-start;
+	align-content: flex-start;
+	padding: 0.3rem 0.15rem 0;
 	background: #fff;
+	.toys-item-content{
+		padding-bottom: 0.4rem;
+	}
+	.num-operate{
+		display: flex;
+		justify-content: center;
+		height:0.6rem;
+		span{
+			background: #efefef;
+			font-size: 0.32rem;
+			line-height: 0.6rem;
+			text-align: center;
+			margin: 0 0.04rem;
+			width: 0.6rem;
+			&.num{
+				width: auto;
+				min-width: 1.4rem;
+				padding: 0 0.2rem;
+			}
+		}
+	}
 	.toys-item{
 		width: 3.1rem;
 		height: 3.1rem;
 		position: relative;
 		border-radius: 0.2rem;
 		overflow: hidden;
-		margin: 0 0.15rem 0.3rem;
+		margin: 0 0.15rem 0.1rem;
 		color: #fff;
 		font-weight: 700;
 		.toys-img{
@@ -115,6 +157,14 @@ export default {
 			width: 100%;
 			height: 100%;
 			border-radius: 0.2rem;
+		}
+		.operate-status{
+			width: 0.4rem;
+			height: 0.4rem;
+			position: absolute;
+			top: 0.1rem;
+			left: 0.1rem;
+			z-index: 8;
 		}
 		.toys-info{
 			position: absolute;
