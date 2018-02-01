@@ -3,6 +3,8 @@ import qs from 'qs'
 import { Toast } from 'mint-ui'
 import storage from '@/fetch/storage'
 import router from '@/router'
+import common from '@/fetch/common'
+import bridge from '@/fetch/bridge'
 import Token from '@/fetch/accessToken'
 
 function getKey(name) {
@@ -48,8 +50,14 @@ function buildURL(url, needToken) {
         return token ? url + (url.indexOf('?') >= 0 ? '&' : '?') + "accessToken=" + token : url
     }
     if (!token) {
-    	storage.set('history_url', router.history.current.path)
-        router.replace('/login')
+    	if(common.isHybrid()) {
+			bridge.enterAppPage({
+        		page: 'login'
+        	})
+        }else {
+        	router.replace('/login')
+        }
+        
         return false
     }
     return url + (url.indexOf('?') >= 0 ? '&' : '?') + "accessToken=" + token

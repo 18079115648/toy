@@ -10,7 +10,8 @@ import storage from '@/fetch/storage'
 import store from '@/vuex/store'
 import Vuex from 'vuex'
 
-
+import VConsole from 'vconsole'
+var vConsole = new VConsole();
 
 Vue.use(Vuex)
 Vue.prototype.$storage = storage
@@ -77,15 +78,27 @@ Vue.config.productionTip = false
 router.beforeEach((to, from, next) => {
     if (to.meta.requireAuth && !token.getAccessToken()) {
         storage.set('history_url', to.fullPath)
-        next('/login')
+        if(common.isHybrid()) {
+			bridge.enterAppPage({
+        		page: 'login'
+        	})
+        }else {
+        	next('/login')
+        }
+        
     } else {
     	next()
     }   
 })
+
+console.log(window.navigator.userAgent)
+console.log(common.isHybrid())
 /* eslint-disable no-new */
 if(common.isHybrid()) {
 	bridge.getUserInfo().then((res) => {
-		storage.set('token', {'accessToken': res.access_token})
+		console.log(JSON.stringify(res)+ '-----')
+		storage.set('token', {'accessToken': res.access_token, 'expired': res.expireTime})
+		console.log(storage.get('token'))
 		new Vue({
 		  el: '#app',
 		  data() {
