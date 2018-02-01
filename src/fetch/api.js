@@ -25,7 +25,6 @@ function getKey(name) {
 }
 
 storage.set('operatorKey', getKey('key'))
-
  
 // axios 配置
 axios.defaults.timeout = 20000;
