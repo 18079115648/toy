@@ -216,7 +216,7 @@
 	    <div class="link-list">
 	    	<router-link :to="memberLink" v-tap class="link-item">
 	    		<img :src="`${imageUrl}/14@3x.png`" style="width: 0.44rem; left: -0.04rem; margin-right: 0.26rem;" class="icon" />
-	    		<p class="text">会员卡中心</p>
+	    		<p class="text">会员中心</p>
 	    		<div class="recharge-btn" v-show="userInfo.hasMember">{{userInfo.erpireDate}} <span>到期</span></div>
 	    		<img :src="`${imageUrl}/wdd.png`" class="more"  />
 	    	</router-link>

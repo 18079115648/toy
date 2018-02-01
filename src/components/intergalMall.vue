@@ -154,6 +154,7 @@ export default {
 		color: #000000;
 		.convert-goods-img{
 			overflow: hidden;
+			height: 3.3rem;
 			border-radius: 0.2rem;
 			img.fullEle{
 				border-radius: 0.2rem;

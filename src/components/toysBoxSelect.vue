@@ -6,7 +6,7 @@
   			<div class="toys-item-content" v-for="(item, index) in toysList" :key="index">
   				<div class="toys-item img-mask shadow-text" >
 		    		<img class="toys-img" :src="item.img"  />
-		    		<div class="operate-status img-mask">
+		    		<div class="operate-status img-mask" v-tap="{ methods : toggle, item: item }">
 		    			<img class="fullEle" v-show="!item.isActive"  :src="`${imageUrl}/191@3x.png`"  />
 		    			<img class="fullEle" v-show="item.isActive"  :src="`${imageUrl}/192@3x.png`"  />
 		    		</div>
@@ -71,6 +71,9 @@ export default {
     })
   },
   methods: {
+  	toggle(params) {
+  		params.item.isActive = !params.item.isActive
+  	},
   	minus(params) {
   		(params.item.operateNum > 1) && params.item.operateNum--
   	},
