@@ -1060,8 +1060,8 @@ export default {
 			this.grabProcess = true
 			const parent = this
 			setTimeout(() => {
-				parent.takeAudio.play()
-			}, 200)
+				parent.playGrabAudio()
+			}, 100)
 			clearInterval(this.operationTimer)
 			this.sock.send(JSON.stringify({
 				cmd: 'grab',
@@ -1128,6 +1128,13 @@ export default {
 		 */
 		playReadyGoAudio() {
 			this.soundSwitch && this.readyGoAudio.play()
+		},
+		
+		/**
+		 * 播放抓取音效
+		 */
+		playGrabAudio() {
+			this.soundSwitch && this.takeAudio.play()
 		},
 
 		/**

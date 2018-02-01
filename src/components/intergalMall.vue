@@ -1,6 +1,6 @@
 <template>
-    <div class="content">
-        <Header title="商城" v-if="!isHybrid"></Header>
+    <div class="content" :class="{'isHybrid' : isHybrid}">
+        <Header back="hidden"  title="商城" v-if="!isHybrid"></Header>
         <router-link v-if="!isHybrid" class="recharge-record-link btn-hover" to="/convertList">兑换记录</router-link>
         <div class="pagination-content" @scroll="scrollContent($event)" :class="{'isHybrid' : isHybrid}">
         	<Pagination :render="render" :param="pagination" :autoload="false"  ref="pagination" uri="/dm-api/pm/goods" >
@@ -36,7 +36,7 @@
 			</Pagination>
 	            
         </div>
-        <Menu actived="third"></Menu>  
+        <Menu v-if="!isHybrid" actived="third"></Menu>  
     </div>
 </template>
 
@@ -62,6 +62,7 @@ export default {
   mounted(){
 	this.$refs.pagination.refresh()
 	this.scrollH = document.getElementById('total-num').offsetHeight
+	console.log(this.scrollH)
   },
   methods: {
   	render(res) {
@@ -78,6 +79,15 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../static/css/style.scss";
+.isHybrid{
+	.pagination-content{
+		top:0 !important;
+		bottom:0 !important;
+	}
+	.mall-nav.position{
+		top: 0 !important;
+	}
+}
 .content{
 	background: #fff;
 	min-height: 100vh;
@@ -95,9 +105,6 @@ export default {
 }
 .content .pagination-content{
 	bottom: 1rem;
-}
-.pagination-content.isHybrid{
-	top: 0;
 }
 .mall-top{
 	.total-num{

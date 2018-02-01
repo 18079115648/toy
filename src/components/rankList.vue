@@ -1,6 +1,6 @@
 <template>
-    <div class="content">
-        <Header>
+    <div class="content" :class="{'isHybrid' : isHybrid}">
+        <Header v-if="!isHybrid">
         	<div class="rank-kind">
         		<span :class="{'active': rankWay == 'Catch'}" v-tap="{ methods : changeRankWay, way: 'Catch' }">大神榜</span>
         		<span :class="{'active': rankWay == 'Diamond'}" v-tap="{ methods : changeRankWay, way: 'Diamond' }">土豪榜</span>
@@ -46,6 +46,7 @@
 export default {
   data () {
     return {
+    	isHybrid: this.$common.isHybrid(), //是否是混合开发
     	imageUrl: this.$store.state.imageUrl,
     	rankWay: 'Catch',             //Catch：大神榜     Diamond：土豪榜
     	rankTime: 'day',             //day：日榜     1：total
@@ -115,6 +116,11 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../static/css/style.scss";
+.isHybrid{
+	.rank-content{
+		top: 0;
+	}
+}
 .content{
 	min-height: 100vh;
 	background: #F5F5F9;

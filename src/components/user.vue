@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <Header title="我的"></Header>
+    <Header back="hidden" title="我的"></Header>
     <div class="user-info">
     	<router-link to="/userInfo" v-tap class="user-info-link">
 	    	<img class="avatar" :src="userInfo.avatar"  />

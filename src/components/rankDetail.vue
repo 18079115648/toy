@@ -1,6 +1,6 @@
 <template>
     <div class="content">
-        <Header :title="(memberInfo.nickName || '') + '的主页'"></Header>
+        <Header :title="(memberInfo.nickName || '***') + '的主页'"></Header>
         <div class="rank-user-info">
 		    	<div class="user-info-link">
 			    	<img class="avatar" :src="memberInfo.avatar || `${imageUrl}/vvv.png`"  />
@@ -57,6 +57,7 @@ export default {
   data () {
     return {
     	imageUrl: this.$store.state.imageUrl,
+    	isHybrid: this.$common.isHybrid(), //是否是混合开发
         pagination: {
 	        content: [],
 	        loadEnd: false,
@@ -86,6 +87,10 @@ export default {
     enterRoom(params) {
     	this.$api.enterRoom({machineId: params.machineId}).then((res) => {
     		let room = res.data
+    		if(this.isHybrid) {
+    			this.bridge.enterRoom(JSON.stringify(room))
+    			return
+    		}
 			this.$router.push({path: '/room', query: {machineSn: room.machineSn, num: room.num, price: room.price, machineId: room.machineId, liveRoomCode: room.liveRoomCode}})
 		}, (err) => {
 			

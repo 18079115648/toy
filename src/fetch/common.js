@@ -2,10 +2,10 @@
 import MobileDetect from 'mobile-detect'
 
 export default {
-		//判断是否hybrid h5
-		isHybrid() {
-			return window.navigator.userAgent.indexOf('hybridApp') > -1
-		},
+	//判断是否hybrid h5
+	isHybrid() {
+		return window.navigator.userAgent.indexOf('hybridApp') > -1
+	},
 	
     // 判断是否微信
     isWeixin() {

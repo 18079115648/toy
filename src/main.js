@@ -20,7 +20,8 @@ Vue.prototype.$storage = storage
 import vueTap from 'v-tap';
 Vue.use(vueTap);
 
-
+import bridge from '@/fetch/bridge'
+Vue.prototype.$bridge = bridge
 
 import common from '@/fetch/common'
 Vue.prototype.$common = common
@@ -81,17 +82,39 @@ router.beforeEach((to, from, next) => {
     	next()
     }   
 })
-
 /* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  data() {
-    return {
-        bgAudio: undefined
-    }
-  },
-  store,
-  router,
-  template: '<App/>',
-  components: { App }
-})
+if(common.isHybrid()) {
+	bridge.getUserInfo().then((res) => {
+		storage.set('token', {'accessToken': res.access_token})
+		new Vue({
+		  el: '#app',
+		  data() {
+		    return {
+		        bgAudio: undefined
+		    }
+		  },
+		  store,
+		  router,
+		  template: '<App/>',
+		  components: { App }
+		})
+	})
+}else {
+	new Vue({
+	  el: '#app',
+	  data() {
+	    return {
+	        bgAudio: undefined
+	    }
+	  },
+	  store,
+	  router,
+	  template: '<App/>',
+	  components: { App }
+	})
+}
+
+
+
+
+
