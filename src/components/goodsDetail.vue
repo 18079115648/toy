@@ -1,6 +1,6 @@
 <template>
     <div class="content">
-        <Header title="商品详情" v-if="!isHybrid"></Header>
+        <Header v-if="!isHybrid" title="商品详情"></Header>
         <div class="goods-detail-content">
         	<div class="goods-banner">
 		    	<mt-swipe :auto="4000" class="swipe-content">
@@ -14,7 +14,6 @@
         	
         	<div class="goods-detail-text">
         		<div class="goods-name">
-        			<span class="new">新品</span>
         			<span class="text">{{goodsInfo.name}}</span>
         		</div>
         		<div class="goods-operate">
@@ -88,6 +87,12 @@ export default {
     }, err => {
     	
     })
+  	this.$api.memberFragment().then(res => {
+//		this.userPoints = res.data.points
+    }, err => {
+    	
+    })
+  	
   },
   deactivated() {
   	this.convertStatus = false
@@ -180,7 +185,6 @@ export default {
 			font-size: 0.28rem;
 			flex: 1;
 			overflow: hidden;
-			padding-left: 0.25rem;
 		}
 	}
 	.goods-operate{

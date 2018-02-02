@@ -19,7 +19,7 @@
 		    			<p>x{{item.num}}</p>
 		    		</div>	
 		    	</div>
-		    	<div class="num-operate">
+		    	<div class="num-operate" :class="{'active': item.isActive}">
 		    		<span class="operate" v-tap="{ methods : minus, item: item }">-</span>
 		    		<span class="num">{{item.operateNum}}</span>
 		    		<span class="operate" v-tap="{ methods : plus, item: item }">+</span>
@@ -29,15 +29,18 @@
 	    	
 	    	
 	    </div>
-	    <div class="no_msg bg-color" v-show="toysList.length < 1 && loadEnd">
-	        <img  :src="`${imageUrl}/none-toy.png`"  />
-	        <div>您还没有抓到娃娃~</div>
-	    </div>
+	    
   	</div>
-  	
+  	<div class="no_msg bg-color" v-show="toysList.length < 1 && loadEnd">
+        <img  :src="`${imageUrl}/none-toy.png`"  />
+        <div>您还没有抓到娃娃~</div>
+    </div>
 	  <div class="toys-operate" v-show="toysList.length > 0">
-	  	<div class="charge-btn btn-operate btn-hover" @click="chargeShow = true">兑换钻石</div>
-	  	<router-link to="/orderSubmit" v-tap class="get-btn btn-operate btn-hover">立即领取</router-link>
+	  	<div class="charge-btn btn-operate btn-hover" v-tap="{ methods : back }">取消</div>
+	  	<div class="get-btn btn-operate btn-hover">
+	  		<span v-if="type == 1">立即领取 (共5个)</span>
+	  		<span v-if="type == 2">立即领取 (可兑换199钻石)</span>
+	  	</div>
 	  </div>  
   </div>
 </template>
@@ -48,11 +51,12 @@ export default {
   data () {
     return {
     	imageUrl: this.$store.state.imageUrl,
-			toysList: [],
-			total: 0,  //兑换总钻石数
-			chargeShow: false,
-			message: '',
-			loadEnd: false
+    	type: this.$route.params.type,
+		toysList: [],
+		total: 0,  //兑换总钻石数
+		chargeShow: false,
+		message: '',
+		loadEnd: false
     }
   },
   created() {
@@ -61,11 +65,11 @@ export default {
   		res.data.data.forEach((item) => {
   			item.operateNum = 1
   			item.isActive = false
-  			this.toysList.push(item)
+			this.toysList.push(item)
   		})
 			
-			this.total = res.data.total
-			this.message = '当前所有娃娃可兑换 <span class="duihuan">' + this.total + '</span> 钻石'
+		this.total = res.data.total
+		this.message = '当前所有娃娃可兑换 <span class="duihuan">' + this.total + '</span> 钻石'
     }, err => {
     	
     })
@@ -75,10 +79,19 @@ export default {
   		params.item.isActive = !params.item.isActive
   	},
   	minus(params) {
+  		if(!params.item.isActive) {
+  			return
+  		}
   		(params.item.operateNum > 1) && params.item.operateNum--
   	},
   	plus(params) {
+  		if(!params.item.isActive) {
+  			return
+  		}
   		(params.item.operateNum < params.item.num) && params.item.operateNum++
+  	},
+  	back() {
+  		this.$router.go(-1)
   	},
   	charge() {
   		this.$api.convertDiamond().then(res => {
@@ -130,8 +143,15 @@ export default {
 		display: flex;
 		justify-content: center;
 		height:0.6rem;
+		&.active{
+			span{
+				color: #000;
+				background: #efefef;
+			}
+		}
 		span{
-			background: #efefef;
+			color: #c2c2c2;
+			background: #f5f5f5;
 			font-size: 0.32rem;
 			line-height: 0.6rem;
 			text-align: center;
@@ -201,16 +221,17 @@ export default {
 	bottom: 0rem;
 	height: 1rem;
 	display: flex;
-	background: #fff;
+	background: #efefef;
 	.btn-operate{
-		flex: 1;
+		flex: 5;
 		text-align: center;
 		line-height: 1rem;
 		font-size: 0.28rem;
-		color: $bg-color;
+		color: #000;
 		&.get-btn{
-			background: #efefef;
-			color: #000;
+			flex: 11;
+			background: #fff;
+			color: $bg-color;
 		}
 	}
 }

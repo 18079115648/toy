@@ -48,7 +48,7 @@ export default {
     return {
     	isHybrid: this.$common.isHybrid(), //是否是混合开发
     	imageUrl: this.$store.state.imageUrl,
-    	rankWay: 'Catch',             //Catch：大神榜     Diamond：土豪榜
+    	rankWay: this.$route.params.type,             //Catch：大神榜     Diamond：土豪榜
     	rankTime: 'day',             //day：日榜     1：total
         pagination: {
 	        content: [],
@@ -69,22 +69,22 @@ export default {
 	    	}
 	    },
 	    changeEnd: false,           //loading mask
-	    
-	    scrollDistance: 0
     }
   },
-  activated() {
-  	this.pageContent.scrollTop = this.scrollDistance
-  },
-  beforeRouteLeave(to, from, next) {
-	this.scrollDistance = this.pageContent.scrollTop
-  	next()
+  watch: {
+    // 如果路由有变化，会再次执行该方法
+    '$route': 'pageRefresh'
   },
   mounted(){
     this.$refs.pagination.refresh()
     this.pageContent = document.getElementById('page-content')
   },
   methods: {
+  	pageRefresh() {
+  		this.changeEnd = false
+  		this.rankWay = this.$route.params.type
+  		this.$refs.pagination.refresh()
+  	},
   	render(res) {
 		res.data.forEach((item) => {
 	    	this.pagination.content.push(item)

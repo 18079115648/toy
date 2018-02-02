@@ -48,6 +48,7 @@ const set = r => require.ensure([], () => r(require('../components/set.vue')), '
 const aboutUs = r => require.ensure([], () => r(require('../components/aboutUs.vue')), 'aboutUs')
 //排行榜
 const rankList = r => require.ensure([], () => r(require('../components/rankList.vue')), 'rankList')
+const rankListApp = r => require.ensure([], () => r(require('../components/rankListApp.vue')), 'rankListApp')
 //排行榜用户详情
 const rankDetail = r => require.ensure([], () => r(require('../components/rankDetail.vue')), 'rankDetail')
 //积分商城
@@ -125,7 +126,7 @@ const router = new Router({
       	requireAuth: true
       }
     },{
-      path: '/goodsDetail/:id',
+      path: '/goodsDetail/:id/:type',  //type 1 积分  2 碎片
       component: goodsDetail,
       meta: {
       	keepAlive: true,
@@ -180,6 +181,12 @@ const router = new Router({
       meta: {
       	requireAuth: true,
       	keepAlive: true,
+      }
+    },{
+      path: '/rankListApp/:type',
+      component: rankListApp,
+      meta: {
+      	requireAuth: true,
       }
     },{
       path: '/rankDetail/:id',

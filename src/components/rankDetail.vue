@@ -1,6 +1,6 @@
 <template>
-    <div class="content">
-        <Header :title="(memberInfo.nickName || '***') + '的主页'"></Header>
+    <div class="content" :class="{'isHybrid' : isHybrid}">
+        <Header :title="(memberInfo.nickName || '***') + '的主页'" v-if="!isHybrid"></Header>
         <div class="rank-user-info">
 		    	<div class="user-info-link">
 			    	<img class="avatar" :src="memberInfo.avatar || `${imageUrl}/vvv.png`"  />
@@ -103,6 +103,11 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../static/css/style.scss";
+.isHybrid{
+	.rank-page{
+		top: 1.75rem;
+	}
+}
 .content{
 	min-height: 100vh;
 	background: #F5F5F9;

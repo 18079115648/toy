@@ -1,9 +1,9 @@
 <template>
     <div class="content" :class="{'isHybrid' : isHybrid}">
-        <Header back="hidden"  title="商城" v-if="!isHybrid"></Header>
+        <Header back="hidden" v-if="!isHybrid"  title="商城"></Header>
         <router-link v-if="!isHybrid" class="recharge-record-link btn-hover" to="/convertList">兑换记录</router-link>
-        <div class="pagination-content" @scroll="scrollContent($event)" :class="{'isHybrid' : isHybrid}">
-        	<Pagination :render="render" :param="pagination" :autoload="false"  ref="pagination" uri="/dm-api/pm/goods" >
+        <div class="pagination-content" id="page-content" @scroll="scrollContent($event)" :class="{'isHybrid' : isHybrid}">
+        	<Pagination :render="render" :param="pagination" :autoload="false"  ref="pagination" :uri="currUrl" >
 		        <div class="mall-top">
 		        	<div class="total-num" id="total-num">
 		        		<img class="icon" :src="`${imageUrl}/2@3x.png`"  />
@@ -11,21 +11,21 @@
 		        	</div>
 		        	<div class="mall-nav-content">
 		        		<div class="mall-nav" :class="{'position': navPosition}">
-			        		<span class="active">碎片商城</span>
-			        		<span>积分商城</span>
+			        		<span :class="{'active': currUrl == '/dm-api/pm/goods'}" v-tap="{ methods : changeMall, url: '/dm-api/pm/goods' }">积分商城</span>
+			        		<span :class="{'active': currUrl == '/dm-api/fragment'}" v-tap="{ methods : changeMall, url: '/dm-api/fragment' }">碎片商城</span>
 			        	</div>
 		        	</div>
 			        	
 		        </div>
 		        
 		        <div class="convert-list" v-show="pagination.content.length > 0">
-	            	<router-link :to="'/goodsDetail/' + item.goods_id" v-tap class="convert-list-item" v-for="(item, index) in pagination.content" :key="index">
+	            	<router-link :to="`/goodsDetail/${item.goods_id}/${changeType}`" v-tap class="convert-list-item" v-for="(item, index) in pagination.content" :key="index">
 	            		<div class="convert-goods-img img-mask">
 	            			<img class="fullEle" :src="item.thumb"  />
 	            		</div>
 	            		<div class="convert-goods-info">
 	            			<p class="convert-goods-name">{{item.name}}</p>
-	            			<p class="convert-goods-price"><span>{{item.points}}</span>积分</p>
+	            			<p class="convert-goods-price"><span>{{item.points}}</span>{{changeUnit}}</p>
 	            		</div>
 	            	</router-link>
 	            </div>
@@ -47,6 +47,7 @@ export default {
     return {
     	imageUrl: this.$store.state.imageUrl,
     	isHybrid: this.$common.isHybrid(),
+    	currUrl: '/dm-api/pm/goods',
     	pagination: {
 	        content: [],
 	        loadEnd: false,
@@ -59,19 +60,42 @@ export default {
 	    navPosition: false,
     }
   },
+  computed: {
+  	changeUnit: function() {
+  		return (this.currUrl == '/dm-api/fragment' ? '碎片' : '积分')
+  	},
+  	changeType: function() {
+  		return (this.currUrl == '/dm-api/fragment' ? 2 : 1)
+  	}
+  },
   mounted(){
 	this.$refs.pagination.refresh()
 	this.scrollH = document.getElementById('total-num').offsetHeight
+	this.pageContent = document.getElementById('page-content')
 	console.log(this.scrollH)
   },
   methods: {
   	render(res) {
 		res.data.forEach((item) => {
+			if(this.currUrl == '/dm-api/fragment') {
+				item.goods_id = item.productId
+				item.name = item.productName
+				item.thumb = item.productImg
+				item.points = item.num
+			}
 	    	this.pagination.content.push(item)
         })
+		this.pageContent.scrollTop = 0
     }, 
     scrollContent(e) {
     	this.navPosition = (e.target.scrollTop > this.scrollH ? true : false)
+    },
+    changeMall(params) {
+    	if(this.currUrl == params.url) {
+    		return
+    	}
+    	this.currUrl = params.url
+    	this.$refs.pagination.refresh()
     }
   }
 }
@@ -81,10 +105,10 @@ export default {
 @import "../../static/css/style.scss";
 .isHybrid{
 	.pagination-content{
-		top:0 !important;
 		bottom:0 !important;
+		top: 0 !important;
 	}
-	.mall-nav.position{
+	.position{
 		top: 0 !important;
 	}
 }
