@@ -12,7 +12,7 @@
 						<div class="menber-info">
 							<p class="member-time">
 								{{item.erpireDate}}到期，
-								<router-link to="/recharge" class="recharge-link">立即续费</router-link>
+								<router-link :to="`/paymentMember/${item.type}`" class="recharge-link">立即续费</router-link>
 							</p>
 							<div class="member-profit">
 								<div class="profit-item">

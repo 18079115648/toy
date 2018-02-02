@@ -38,8 +38,8 @@
 	  <div class="toys-operate" v-show="toysList.length > 0">
 	  	<div class="charge-btn btn-operate btn-hover" v-tap="{ methods : back }">取消</div>
 	  	<div class="get-btn btn-operate btn-hover">
-	  		<span v-if="type == 1">立即领取 (共5个)</span>
-	  		<span v-if="type == 2">立即领取 (可兑换199钻石)</span>
+	  		<p v-if="type == 1">立即领取 <span v-show="checkNum">(共{{checkNum}}个)</span></p>
+	  		<p v-if="type == 2">立即领取 <span v-show="checkNum">(可兑换{{checkDia}}钻石)</span></p>
 	  	</div>
 	  </div>  
   </div>
@@ -73,6 +73,22 @@ export default {
     }, err => {
     	
     })
+  },
+  computed: {
+  	checkNum: function() {
+  		let num = 0
+  		this.toysList.forEach((item) => {
+  			item.isActive && (num+=(item.operateNum))
+  		})
+  		return num
+  	},
+  	checkDia: function() {
+  		let dia = 0
+  		this.toysList.forEach((item) => {
+  			item.isActive && (dia+=(item.operateNum * item.diamonds))
+  		})
+  		return dia
+  	}
   },
   methods: {
   	toggle(params) {

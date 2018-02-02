@@ -84,6 +84,7 @@
         						<img class="dia-icon" :src="`${imageUrl}/erdd.png`" />
         						<span class="num">+{{item.reward}}</span>
         					</p>
+        					<p class="rate" v-if="item.goal > 0">每日最多可领取{{item.goal}}次</p>
         				</div>
         				<div v-tap="{ methods : receiveTask, status: item.receiveStatus || !item.reached , key: dailyShare.key, item: item  }" class="task-btn border-btn btn-hover" :class="{'disabled-btn': item.receiveStatus || !item.reached}">
         					<span v-show="!item.receiveStatus">立即领取</span>
