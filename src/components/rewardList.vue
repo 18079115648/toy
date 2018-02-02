@@ -59,12 +59,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+@import "../../static/css/style.scss";
 .content{
 	min-height: 100vh;
 	background: #F5F5F9;
 }
 .reward-total{
-	background: #20c369;
+	background: $bg-color;
 	padding: 0.5rem 0.7rem;
 	color: #eee;
 	.reward-num{

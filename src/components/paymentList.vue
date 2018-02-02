@@ -26,7 +26,7 @@
 		            
 		        </div>
 		        <div class="no_msg" v-show="pagination.content.length < 1 && pagination.loadEnd">
-		            <img style="width: 1.5rem;"  :src="`${imageUrl}/1266f.png`">
+		            <img style="width: 1.5rem;"  :src="`${imageUrl}/333@3x.png`">
 		            <div>暂无充值记录~</div>
 		        </div>
 			</Pagination>

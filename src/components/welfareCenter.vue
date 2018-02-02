@@ -5,7 +5,7 @@
         	<div class="sign-content" v-if="signList">
         		<p class="welfare-tit">
         			<span class="tit">{{signList.title}}</span>
-        			<span class="tip">连续签到才可领取后续礼包</span>
+        			<span class="tip">{{signList.desc}}</span>
         		</p>
         		<div class="sign-list">
         			<div class="sign-list-item" :class="{'sign': !item.status}" v-for="(item, index) in signList.data" :key="index">
@@ -26,7 +26,7 @@
         	<div class="member-content" v-if="chargeCard">
         		<p class="welfare-tit">
         			<span class="tit">{{chargeCard.title}}</span>
-        			<!--<span class="tip">最后领取截止2018-12-30</span>-->
+        			<span class="tip">{{chargeCard.desc}}</span>
         		</p>
         		<div class="member-list">
         			<div class="member-list-item" :class="{'month': item.type == 2}" v-for="(item, index) in chargeCard.data" :key="index">
@@ -42,14 +42,14 @@
         			</div>
         		</div>
         		<div class="border-btn btn-hover" :class="{'disabled-btn': chargeCard.receiveStatus}" v-tap="{ methods : receiveCard, status: chargeCard.receiveStatus }">
-        			<span v-show="!signList.receiveStatus">立即领取</span>
-        			<span v-show="signList.receiveStatus">已领取</span>
+        			<span v-show="!chargeCard.receiveStatus">立即领取</span>
+        			<span v-show="chargeCard.receiveStatus">已领取</span>
         		</div>
         	</div>
         	<div class="daily-task-content" v-if="dailyList">
         		<p class="welfare-tit">
         			<span class="tit">{{dailyList.title}}</span>
-        			<span class="tip">当前全部完成才可领取</span>
+        			<span class="tip">{{dailyList.desc}}</span>
         		</p>
         		<div class="daily-list">
         			<div class="daily-list-item" v-for="(item, index) in dailyList.data" :key="index">
@@ -72,9 +72,30 @@
         			<span v-show="dailyList.receiveStatus">已领取</span>
         		</div>
         	</div>
+        	<div class="grab-content" v-if="dailyShare">
+        		<p class="welfare-tit">
+        			<span class="tit">{{dailyShare.title}}</span>
+        			<span class="tip">{{dailyShare.desc}}</span>
+        		</p>
+        		<div class="tasks-list">
+        			<div class="tasks-list-item" v-for="(item, index) in dailyShare.data" :key="index">
+        				<div class="tesks-info">
+        					<p class="text">{{item.title}}
+        						<img class="dia-icon" :src="`${imageUrl}/erdd.png`" />
+        						<span class="num">+{{item.reward}}</span>
+        					</p>
+        				</div>
+        				<div v-tap="{ methods : receiveTask, status: item.receiveStatus || !item.reached , key: dailyShare.key, item: item  }" class="task-btn border-btn btn-hover" :class="{'disabled-btn': item.receiveStatus || !item.reached}">
+        					<span v-show="!item.receiveStatus">立即领取</span>
+        					<span v-show="item.receiveStatus">已领取</span>
+        				</div>
+        			</div>
+        		</div>
+        	</div>
         	<div class="grab-content" v-if="grabList">
         		<p class="welfare-tit">
         			<span class="tit">{{grabList.title}}</span>
+        			<span class="tip">{{grabList.desc}}</span>
         		</p>
         		<div class="tasks-list">
         			<div class="tasks-list-item" v-for="(item, index) in grabList.data" :key="index">
@@ -95,6 +116,7 @@
         	<div class="grab-content" v-if="grabSuccList">
         		<p class="welfare-tit">
         			<span class="tit">{{grabSuccList.title}}</span>
+        			<span class="tip">{{grabSuccList.desc}}</span>
         		</p>
         		<div class="tasks-list">
         			<div class="tasks-list-item" v-for="(item, index) in grabSuccList.data" :key="index">
@@ -115,6 +137,7 @@
         	<div class="grab-content" v-if="exchargeList">
         		<p class="welfare-tit">
         			<span class="tit">{{exchargeList.title}}</span>
+        			<span class="tip">{{exchargeList.desc}}</span>
         		</p>
         		<div class="tasks-list">
         			<div class="tasks-list-item" v-for="(item, index) in exchargeList.data" :key="index">
@@ -150,6 +173,7 @@ export default {
         grabSuccList: undefined,      //抓取成功奖励
         exchargeList: undefined,      //充值奖励
         dailyList: undefined,       //每日任务奖励
+        dailyShare: undefined,
     }
   },
   created(){
@@ -178,6 +202,9 @@ export default {
 						break;
 					case 'day_task':
 						this.dailyList = item
+						break;
+					case 'daily_share_rewards':
+						this.dailyShare = item
 						break;
 				}
 			})
@@ -242,8 +269,13 @@ export default {
 			taskKey: params.key
 		}).then(res => {
 			setTimeout(() => {
+			  Indicator.close()
+			  if(params.key == 'daily_share_rewards') {
+			  	this.initData()
+			  	return
+			  }
 			  params.item.receiveStatus = 1
-  			  Indicator.close()
+  			  
 			}, 200);
 	  			
 	    }, err => {

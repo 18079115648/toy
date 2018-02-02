@@ -88,7 +88,7 @@ export default {
     	this.$api.enterRoom({machineId: params.machineId}).then((res) => {
     		let room = res.data
     		if(this.isHybrid) {
-    			this.bridge.enterRoom(JSON.stringify(room))
+    			this.$bridge.enterRoom(JSON.stringify(room))
     			return
     		}
 			this.$router.push({path: '/room', query: {machineSn: room.machineSn, num: room.num, price: room.price, machineId: room.machineId, liveRoomCode: room.liveRoomCode}})
