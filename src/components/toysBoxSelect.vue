@@ -1,6 +1,6 @@
 <template>
-  <div class="content" :class="{'isHybrid' : isHybrid}">
-  	<Header v-if="!isHybrid" title="娃娃袋"></Header>
+  <div class="content">
+  	<Header title="娃娃袋"></Header>
   	<div class="toys-content" v-show="toysList.length > 0">
   		<div class="toys-list">
   			<div class="toys-item-content" v-for="(item, index) in toysList" :key="index">
@@ -48,7 +48,6 @@ export default {
   data () {
     return {
     	imageUrl: this.$store.state.imageUrl,
-    	isHybrid: this.$common.isHybrid(),
 			toysList: [],
 			total: 0,  //兑换总钻石数
 			chargeShow: false,
@@ -103,11 +102,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 @import "../../static/css/style.scss";
-.isHybrid{
-	.toys-content{
-		top: 0;
-	}
-}
 .toys-content{
 	position: absolute;
 	left: 0;

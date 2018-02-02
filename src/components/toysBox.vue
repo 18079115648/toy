@@ -1,6 +1,6 @@
 <template>
-  <div class="content" :class="{'isHybrid' : isHybrid}">
-  	<Header v-if="!isHybrid" back="hidden" title="娃娃袋"></Header>
+  <div class="content">
+  	<Header back="hidden" title="娃娃袋"></Header>
   	<div class="toys-content" v-show="toysList.length > 0">
   		<p class="total-dia">当前娃娃总价值为：
   			<img  :src="`${imageUrl}/erdd.png`"  />
@@ -36,7 +36,7 @@
 	  	<router-link to="/toysBoxSelect/1" v-tap class="charge-btn btn-operate btn-hover">兑换钻石</router-link>
 	  	<router-link to="/toysBoxSelect/2" v-tap class="get-btn btn-operate btn-hover">立即领取</router-link>
 	  </div>  
-	  <Menu v-if="!isHybrid" actived="second"></Menu>
+	  <Menu actived="second"></Menu>
   </div>
 </template>
 
@@ -46,7 +46,6 @@ export default {
   data () {
     return {
     	imageUrl: this.$store.state.imageUrl,
-    	isHybrid: this.$common.isHybrid(),
 		toysList: [],
 		total: 0,  //兑换总钻石数
 		loadEnd: false
@@ -67,15 +66,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 @import "../../static/css/style.scss";
-.isHybrid{
-	.toys-content{
-		top: 0;
-		bottom: 1rem;
-	}
-	.toys-operate{
-		bottom: 0;
-	}
-}
 .toys-content{
 	position: absolute;
 	left: 0;
