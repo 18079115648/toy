@@ -33,7 +33,8 @@ export default {
     },
     methods: {
     	loginSuccess() {
-    		let key = this.$storage.get('operatorKey') ? '/?key=' + this.$storage.get('operatorKey') : ''
+    		let key = this.$storage.get('key') ? '/?key=' + this.$storage.get('key') : ''
+    		key += this.$storage.get('channelKey') ? '&channelKey=' + this.$storage.get('channelKey') : ''
 			let redirectURI = '/index'
 			window.location.replace('http://' + window.location.host + key + '/#/index')
 //          this.$router.replace(redirectURI)

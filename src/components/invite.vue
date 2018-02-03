@@ -63,7 +63,8 @@ export default {
 		if(!this.$common.isWeixin()) {
 			return
 		}
-		let key = this.$storage.get('operatorKey') ? '?key=' + this.$storage.get('operatorKey') : ''
+		let key = this.$storage.get('key') ? '?key=' + this.$storage.get('key') : ''
+		key += this.$storage.get('channelKey') ? '&channelKey=' + this.$storage.get('channelKey') : ''
 		this.lineLink = 'http://' + location.host + '/' + key + '/#/index'
 		this.imgUrl = this.$store.state.shareLogo
 		this.shareTitle = this.appName
@@ -89,11 +90,24 @@ export default {
 				jsApiList: ['uploadImage', 'getLocation', 'chooseImage', 'previewImage', 'uploadImage', 'scanQRCode', 'chooseWXPay', 'onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareQZone'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
 			})
 			wx.ready(function() {
-				self.$loadJssdk(lineLink, imgUrl, shareTitle, descContent, self.wxShare)
+				self.$loadJssdk(lineLink, imgUrl, shareTitle, descContent, self.wxShare).then(res => {
+					self.shareSuccess(res)
+			    }, err => {
+			    	
+			    })
 			})
 		}).catch((err) => {
 			console.log(err)
 		})
+	},
+	shareSuccess(type) {
+		this.$api.shareSuccess({
+			share_type: type
+		}).then(res => {
+			this.wxShare(this.lineLink, this.imgUrl, this.shareTitle, this.descContent)	
+	    }, err => {
+	    	
+	    })
 	},
     receive() {
     	if(!this.inviteCode) {

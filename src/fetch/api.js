@@ -11,11 +11,12 @@ function getKey(name) {
 	var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
 //	          new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
     var param=window.location.search.substring(1).split('/')[0];
-    var currKey = storage.get('operatorKey')
+    var currKey = storage.get(name)
     if(!param){
     	return false
     }
     var r = param.match(reg)
+    console.log(r)
     if (r != null && r[2] == currKey) {
     	return r[2]
     }
@@ -26,7 +27,8 @@ function getKey(name) {
     return false
 }
 
-storage.set('operatorKey', getKey('key'))
+storage.set('key', getKey('key'))
+storage.set('channelKey', getKey('channelKey'))
  
 // axios 配置
 axios.defaults.timeout = 20000;
@@ -43,7 +45,8 @@ axios.interceptors.request.use((config) => {
 
 
 function buildURL(url, needToken) {
-	let key = storage.get('operatorKey') ? storage.get('operatorKey') : '8dd758066c594324962cc2de7ee7a306'
+	let key = storage.get('key') ? storage.get('key') : '8dd758066c594324962cc2de7ee7a306'
+	key += storage.get('channelKey') ? '&channelKey=' + storage.get('channelKey') : ''
 	url = url+(url.indexOf('?') >= 0 ? '&' : '?') + "key=" + key
 	let token = Token.getAccessToken()
     if (!needToken) {

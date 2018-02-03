@@ -5,40 +5,46 @@ import wx from 'weixin-js-sdk'
 */
 
 export function loadJssdk(lineLink, imgUrl, shareTitle, descContent) {
-    wx.onMenuShareTimeline({
-        title: shareTitle, // 分享标题
-        link: lineLink, // 分享链接
-        imgUrl: imgUrl, // 分享图标
-        success: function () {
-            // 用户确认分享后执行的回调函数
-        }
-    });
-    wx.onMenuShareAppMessage({
-        desc: descContent, // 分享描述
-        title: shareTitle, // 分享标题
-        link: lineLink, // 分享链接
-        imgUrl: imgUrl, // 分享图标
-        type: 'link', // 分享类型,music、video或link，不填默认为link
-        dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
-        success: function () {
-            // 用户确认分享后执行的回调函数
-        },
-        cancel: function () {
-            // 用户取消分享后执行的回调函数
-        }
-    });
-    wx.onMenuShareQQ({
-        desc: descContent, // 分享描述
-        title: shareTitle, // 分享标题
-        link: lineLink, // 分享链接
-        imgUrl: imgUrl, // 分享图标
-        success: function () {
-            // 用户确认分享后执行的回调函数
-        },
-        cancel: function () {
-            // 用户取消分享后执行的回调函数
-        }
-    });
+	return new Promise((resolve, reject) => {
+        wx.onMenuShareTimeline({
+	        title: shareTitle, // 分享标题
+	        link: lineLink, // 分享链接
+	        imgUrl: imgUrl, // 分享图标
+	        success: function () {
+	            resolve(2) 
+	        },
+	        cancel: function () {
+		    	reject()
+		    }
+	    });
+	    wx.onMenuShareAppMessage({
+	        desc: descContent, // 分享描述
+	        title: shareTitle, // 分享标题
+	        link: lineLink, // 分享链接
+	        imgUrl: imgUrl, // 分享图标
+	        type: 'link', // 分享类型,music、video或link，不填默认为link
+	        dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+	        success: function () {
+	            resolve(1) 
+	        },
+	        cancel: function () {
+	            reject()
+	        }
+	    });
+	    wx.onMenuShareQQ({
+	        desc: descContent, // 分享描述
+	        title: shareTitle, // 分享标题
+	        link: lineLink, // 分享链接
+	        imgUrl: imgUrl, // 分享图标
+	        success: function () {
+//	            resolve(3) 
+	        },
+	        cancel: function () {
+//	            reject()
+	        }
+	    });
+    })
+	    
 }
 
 export function getCookie(name) {

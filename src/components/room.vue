@@ -1390,7 +1390,7 @@ export default {
 	left: 0;
 	top: 0;
 	bottom: 0;
-	background: url(https://yingdd.oss-cn-hangzhou.aliyuncs.com/90530c7ba350e128fa64cee4d4aee58a.jpg) no-repeat center;
+	background: url($roomLoadImg) no-repeat center;
 	background-color: #a6a2a1;
 	background-size: 100% 100%;
 	.back{

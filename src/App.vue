@@ -168,4 +168,11 @@ export default {
 	.duihuan{
 		color: $bg-color !important;
 	}
+	.goods-rich-content{
+		img {
+			display: block !important;
+			width: 100% !important;
+			margin-bottom: 0.2rem !important;
+		}
+	}
 </style>

@@ -24,7 +24,7 @@
                     </div>
                 </router-link>
             </div>
-            <div class="btn-default btn-hover login-out" v-tap="{ methods : loginOut }">退出登录</div>
+            <div v-if="isWinxin" class="btn-default btn-hover login-out" v-tap="{ methods : loginOut }">退出登录</div>
         </div>
         
     </div>
@@ -37,6 +37,7 @@ import storage from '../fetch/storage'
 export default {
   data () {
     return {
+    	isWinxin: this.$common.isWeixin(),
     	imageUrl: this.$store.state.imageUrl,
         push:true,
         music:true,
@@ -68,10 +69,12 @@ export default {
 
     //退出登录
     loginOut() {
-    	let operatorKey = storage.get('operatorKey') ? storage.get('operatorKey') : false
+        let key = storage.get('key') ? storage.get('key') : false
+    	let channelKey = storage.get('channelKey') ? storage.get('channelKey') : false
         window.localStorage.clear()
         this.$router.replace('/login')
-        storage.set('operatorKey', operatorKey)
+        storage.set('key', key)
+        storage.set('channelKey', channelKey)
     }
   }
 }
