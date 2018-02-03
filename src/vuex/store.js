@@ -5,6 +5,8 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const state = {
+	appName: '任我抓',
+	shareLogo: 'https://yingdd.oss-cn-hangzhou.aliyuncs.com/0d25d14de142d89f5af33b0b53ecc7b0.png',
 	imageUrl: '/static/image/renwozhua',
 	bgAudio: 'https://yingdd.oss-cn-hangzhou.aliyuncs.com/d0bda63fee3ad56ab8938d349b791fa1.mp3',  //背景音乐
 	clickAudioUrl: '/static/audio/click.mp3', // 按钮点击音效
