@@ -406,4 +406,8 @@ export default {
 	memberFragment(params) {
 		return fetchGet('/dm-api/fragment/member', params, true)
 	},
+	// 分享成功回调
+	shareSuccess(params) {
+		return fetchPost('/dm-api/share/record', params, true)
+	},
 }

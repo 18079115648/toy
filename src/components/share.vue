@@ -6,7 +6,7 @@
         	<div class="invite-code" >
         		<span v-for="(item, index) in code" :key="index">{{item}}</span>
         	</div>
-        	<div class="btn-default btn-hover go-index" @click="goIndex">开启抓娃娃</div>
+        	<div class="btn-default btn-hover go-index" @click="goIndex">开启{{appName}}</div>
         </div>
     </div>
 </template>
@@ -17,7 +17,8 @@ import { Toast } from 'mint-ui'
 export default {
   data () {
     return {
-		code:[]
+		code:[],
+		appName: this.$store.state.appName,
     }
   },
   created() {

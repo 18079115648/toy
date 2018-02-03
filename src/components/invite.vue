@@ -49,6 +49,7 @@ import { Toast } from 'mint-ui'
 export default {
   data () {
     return {
+    	appName: this.$store.state.appName,
 		isWinxin: this.$common.isWeixin(),
 		inviteCode: '',
 		code:[],
@@ -63,7 +64,7 @@ export default {
 			return
 		}
 		let key = this.$storage.get('operatorKey') ? '?key=' + this.$storage.get('operatorKey') : ''
-		this.lineLink = 'http://' + location.host + '/' + key + '/#/share/' + res.data.inviteCode
+		this.lineLink = 'http://' + location.host + '/' + key + '/#/index'
 		this.imgUrl = this.$store.state.shareLogo
 		this.shareTitle = this.appName
 		this.descContent = '欢乐抓娃娃，分享奖励多多！'

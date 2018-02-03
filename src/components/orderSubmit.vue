@@ -92,7 +92,15 @@ export default {
   			addressId: this.addrInfo.id
   		}).then(res => {
   			this.disabledBtn = false
-			this.$router.replace('/orderList')
+			Toast({
+			  message: '领取成功',
+			  position: 'middle',
+			  iconClass: 'toast-icon icon-success',
+			  duration: 600
+			})
+	  		setTimeout(() => {
+	  			this.$router.replace('/orderList')
+	  		}, 900)
 	    }, err => {
 	    	this.disabledBtn = false
 	    })
