@@ -147,7 +147,11 @@ export default {
   	bannerLink(params) {
   		let room = params.item
   		if(room.type == 1) {
-  			this.$router.push({path: '/room', query: {machineSn: room.machineSn, num: room.num, price: room.price, machineId: room.machineId, liveRoomCode: room.liveRoomCode}})
+  			this.$api.enterRoom({machineSn: room.machineSn}).then((response) => {
+  				room = response.data
+					this.$router.push({path: '/room', query: {machineSn: room.machineSn, num: room.num, price: room.price, machineId: room.machineId, liveRoomCode: room.liveRoomCode}})
+				})
+  			
   		}else if(room.type == 2) {
 				this.$router.push('/recharge')
   		}else {

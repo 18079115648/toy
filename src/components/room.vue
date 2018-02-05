@@ -209,7 +209,7 @@
 		<audio id="failure-audio" :src='failAudioUrl' preload></audio>
 
 		<!-- 详情页面 -->
-		<mt-popup v-model="roomDetail" class="pop">
+		<!--<mt-popup v-model="roomDetail" class="pop">
 			<div class="detail-content">
 				<div class="tit">
 					<span>娃娃详情</span>
@@ -219,9 +219,9 @@
 				</div>
 				<img :src="`${imageUrl}/x.png`" class="close" v-tap.prevent="{ methods : closeGrabList }" />	
 			</div>
-		</mt-popup>
+		</mt-popup>-->
 		<!--抓中记录-->
-		<mt-popup v-model="grabList" class="pop">
+		<!--<mt-popup v-model="grabList" class="pop">
 			<div class="detail-content">
 				<div class="tit">
 					<span>抓取记录</span>
@@ -249,7 +249,7 @@
 				</div>
 				<img :src="`${imageUrl}/x.png`" class="close" v-tap.prevent="{ methods : closeGrabList }" />	
 			</div>
-		</mt-popup>
+		</mt-popup>-->
 		
 
 		
@@ -441,7 +441,7 @@ export default {
 		 * 初始化环信
 		 */
 		enterRoom() { 
-			this.$api.enterRoom({machineId: this.$route.query.machineId}).then((response) => {
+			this.$api.enterRoom({machineSn: this.$route.query.machineSn}).then((response) => {
 				this.toyImgs = response.data.imgs
 				this.winImg = response.data.winImg
 				
@@ -818,12 +818,14 @@ export default {
 		},
         //发送聊天
 		sendChat() {
+			this.$refs.Input.focus()
 			if(!this.chatText) {
 				Toast({
 					message: '请输入聊天内容',
 					position: 'middle',
 					duration: 1000
 				})
+				return
 			}
 			if (this.sock == undefined) {
 				alert('服务器连接失败，请重试')
@@ -1657,7 +1659,7 @@ export default {
 	}
 }
 .chat-input{
-	position: absolute;
+	position: fixed;
 	left: 0;
 	bottom: 0;
 	background: #fff;

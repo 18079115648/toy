@@ -1,24 +1,7 @@
 <template>
-    <div class="content">
-        <Header title="邀请好友" headClass="invite-header"></Header>
+    <div class="content" :class="{'isHybrid' : isHybrid}">
+        <Header v-if="!isHybrid" title="邀请好友" headClass="invite-header"></Header>
         <img class="bg-img" src="../../static/image/44@2x.jpg"  />
-        <!--<div class="invite-receive">
-        	<div class="invite-input">
-        		<input type="tel" v-model="inviteCode" maxlength="20" placeholder="输入好友邀请码" />
-        	</div>
-        	<div class="invite-tip">
-        		<h3>奖励规则:</h3>
-        		<p>邀请好友加入，好友兑换邀请码后，您和好友将获得一定数量的钻石</p>
-        	</div>
-        	<div class="receive btn-hover" @click="receive">兑换钻石</div>
-        </div>
-        <div class="invite-content" v-if="isWinxin">
-        	<p class="tit">我的邀请码</p>
-        	<div class="invite-code" >
-        		<span v-for="(item, index) in code" :key="index">{{item}}</span>
-        	</div>
-        	<div class="receive btn-hover" @click="show = true">分享邀请好友</div>
-        </div>-->
         <div class="invite-content">
         	<p class="invite-tip">
         		邀请好友加入，好友兑换邀请码后，您和好友将获得一定数量的钻石
@@ -35,7 +18,7 @@
 		        	<div class="invite-code" >
 		        		<span v-for="(item, index) in code" :key="index">{{item}}</span>
 		        	</div>
-		        	<div v-show="isWinxin" class="receive btn-hover" @click="show = true">分享邀请好友</div>
+		        	<div v-show="isWinxin" class="receive btn-hover" v-tap="{ methods : invite }">分享邀请好友</div>
 		        </div>
         	</div>
         </div>
@@ -51,6 +34,7 @@ export default {
     return {
     	appName: this.$store.state.appName,
 		isWinxin: this.$common.isWeixin(),
+		isHybrid: this.$common.isHybrid(),
 		inviteCode: '',
 		code:[],
 		
@@ -109,6 +93,13 @@ export default {
 	    	
 	    })
 	},
+	invite() {
+		if(!this.isHybrid) {
+			this.show = true
+			return
+		}
+		this.$bridge.shareApp()	
+	},
     receive() {
     	if(!this.inviteCode) {
     		Toast({
@@ -127,7 +118,7 @@ export default {
 			  iconClass: 'toast-icon icon-success',
 			  duration: 1000
 			})
-			this.$router.go(-1)
+//			this.$router.go(-1)
 	    }, err => {
 	    	
 	    })
@@ -141,6 +132,9 @@ export default {
 	min-height: 100vh;
 	background: #fdf2b7;
 	padding: 3.3rem 0.25rem 0.2rem;
+	&.isHybrid{
+		padding-top: 4.15rem;
+	}
 }
 .bg-img{
 	position: absolute;
