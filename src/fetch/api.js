@@ -343,7 +343,7 @@ export default {
 	},
 	//下单
 	submitOrder(params) {
-		return fetchPost('/dm-api/order/', params, true)
+		return fetchPost('/dm-api/order/part', params, true)
 	},
 	//修改个人
 	saveUser(params) {
@@ -412,5 +412,9 @@ export default {
 	// 分享成功回调
 	shareSuccess(params) {
 		return fetchPost('/dm-api/share/record', params, true)
+	},
+	// 娃娃盒兑换钻石
+	exchangeDiamond(params) {
+		return fetchPost('/dm-api/doll/diamond/exchange/part', params, true)
 	},
 }
