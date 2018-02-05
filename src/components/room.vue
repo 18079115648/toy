@@ -5,10 +5,9 @@
     			<img class="fullEle" :src="`${imageUrl}/ss44.png`"   />
     		</div>
     	</div>
-    	<div class="room-view-content" :style="{'height': wH + 'px'}">
+    	<div class="room-view-content" :class="{'full' : fullStatus}">
     		<div class="room-top">
-				<img v-show="isGame" class="back" :src="`${imageUrl}/feee.png`"/>
-	    		<img v-show="!isGame" class="back" :src="`${imageUrl}/ss44.png`" v-tap="{ methods : back }"/>
+	    		<img class="back" :src="`${imageUrl}/ss44.png`" v-tap="{ methods : back }"/>
 	    		<img v-show="avatar" class="avatar" :src="avatar"  />
 	    		<div v-show="!avatar" class="avatar-position"></div>
 	    		<!--<div class="room-count shadow-text">
@@ -141,7 +140,7 @@
 		    	</div>
 	        </div>
     	</div>
-        <div class="room-goods-detail">
+        <div class="room-goods-detail img-mask">
         	<div class="room-goods-content">
         		<p class="tit">商品详情</p>
 	        	<div class="toy-imgs">
@@ -153,8 +152,8 @@
 			
 	    	
     	<div class="chat-input" v-show="chatStatus">
-			<input type="text" id="chat-input"  @blur="chatStatus = false" @keyup.enter="sendChat" @focus="chatFocus($event)" ref="Input" placeholder="输入发言内容(最多30字)" maxlength="30" v-model="chatText" />
-			<span class="chat-send btn-hover" @click="sendChat">发送</span>
+			<input type="text" id="chat-input" @click.stop="preventClick"  @keyup.enter="sendChat" @focus="chatFocus($event)" ref="Input" placeholder="输入发言内容(最多30字)" maxlength="30" v-model="chatText" />
+			<span class="chat-send btn-hover" @click.stop="sendChat">发送</span>
 		</div>
 
 			
@@ -210,7 +209,7 @@
 		<audio id="failure-audio" :src='failAudioUrl' preload></audio>
 
 		<!-- 详情页面 -->
-		<mt-popup v-model="roomDetail" class="pop">
+		<!--<mt-popup v-model="roomDetail" class="pop">
 			<div class="detail-content">
 				<div class="tit">
 					<span>娃娃详情</span>
@@ -220,9 +219,9 @@
 				</div>
 				<img :src="`${imageUrl}/x.png`" class="close" v-tap.prevent="{ methods : closeGrabList }" />	
 			</div>
-		</mt-popup>
+		</mt-popup>-->
 		<!--抓中记录-->
-		<mt-popup v-model="grabList" class="pop">
+		<!--<mt-popup v-model="grabList" class="pop">
 			<div class="detail-content">
 				<div class="tit">
 					<span>抓取记录</span>
@@ -250,7 +249,7 @@
 				</div>
 				<img :src="`${imageUrl}/x.png`" class="close" v-tap.prevent="{ methods : closeGrabList }" />	
 			</div>
-		</mt-popup>
+		</mt-popup>-->
 		
 		<!-- 充值页面 -->
 		<!--<mt-popup v-model="rechargeStatus" class="pop">
@@ -411,6 +410,9 @@ export default {
 		// 加载音频资源
 		this.loadAudios()
 		this.chatContent = document.getElementById('chat-content')
+		document.onclick=function(){
+			self.chatStatus = false
+		}
 	},
 	updated() {
 		this.chatContent.scrollTop = this.chatContent.scrollHeight;
@@ -437,7 +439,7 @@ export default {
 		 * 初始化环信
 		 */
 		enterRoom() { 
-			this.$api.enterRoom({machineId: this.$route.query.machineId}).then((response) => {
+			this.$api.enterRoom({machineSn: this.$route.query.machineSn}).then((response) => {
 				this.toyImgs = response.data.imgs
 				this.winImg = response.data.winImg
 				
@@ -800,7 +802,6 @@ export default {
 			this.playClickAudio()
 			this.chatStatus = true
 			this.$nextTick(function() {
-				console.log(11111)
 				this.$refs.Input.focus()
 				this.$refs.Input.scrollIntoView()
 			})
@@ -810,20 +811,19 @@ export default {
 			event.target.scrollIntoView();
 			
 		},
-		//聊天input出现在屏幕内
-		chatClick(params) {
-			params.event.target.scrollIntoView();
+		preventClick() {
 			
 		},
-		
         //发送聊天
 		sendChat() {
+			this.$refs.Input.focus()
 			if(!this.chatText) {
 				Toast({
 					message: '请输入聊天内容',
 					position: 'middle',
 					duration: 1000
 				})
+				return
 			}
 			if (this.sock == undefined) {
 				alert('服务器连接失败，请重试')
@@ -1390,7 +1390,7 @@ export default {
 	bottom: 0;
 	background: url($roomLoadImg) no-repeat center;
 	background-color: #a6a2a1;
-	background-size: 100% 100%;
+	background-size: 100% auto;
 	.back{
 		position: absolute;
 		width: 0.9rem;
@@ -1404,6 +1404,11 @@ export default {
 	flex-direction: column;
 	overflow: hidden;
 	position: relative;
+	height: 100%;
+	&.full{
+		height: 12.7rem;
+	}
+	/*height: 12.7rem;*/
 }
 .video-content{
 	width: 100%;
@@ -1439,6 +1444,8 @@ export default {
 	min-height: 100vh;
 	font-weight: 700;
 	background: $bg-color;
+	overflow-y: auto;
+	-webkit-overflow-scrolling : touch;
 	&.overflow{
 		overflow: hidden;
 	}
@@ -1650,7 +1657,7 @@ export default {
 	}
 }
 .chat-input{
-	position: absolute;
+	position: fixed;
 	left: 0;
 	bottom: 0;
 	background: #fff;
@@ -1682,15 +1689,17 @@ export default {
 .operate-content{
 	flex: 1;
 	position: relative;
-	display: flex;
-	align-items: center;
 	z-index: 0;
 	&.full {
 		.room-bottom{
 			position: relative;
+			top: 0;
+			bottom: auto;
 		}
 		.operate-area{
 			position: relative;
+			top: 0;
+			bottom: auto;
 		}
 	}
 }

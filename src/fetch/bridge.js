@@ -57,6 +57,16 @@ export default {
             })
         })
     },
+    // 调起app分享
+    shareApp() {
+        return new Promise((resolve, reject) => {
+            setupWebViewJavascriptBridge(bridge => {
+                bridge.callHandler('shareApp', null, response => {
+                    resolve(response)
+                })
+            })
+        })
+    },
 
     // 进入app指定页面
     enterAppPage(params) {

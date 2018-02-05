@@ -5,9 +5,13 @@
         <div class="pagination-content" id="page-content" @scroll="scrollContent($event)" :class="{'isHybrid' : isHybrid}">
         	<Pagination :render="render" :param="pagination" :autoload="false"  ref="pagination" :uri="currUrl" >
 		        <div class="mall-top">
-		        	<div class="total-num" id="total-num">
+		        	<div class="total-num" id="total-num" v-show="changeType == 1">
 		        		<img class="icon" :src="`${imageUrl}/2@3x.png`"  />
-		        		39999
+		        		{{userPoints}}
+		        	</div>
+		        	<div class="total-num" id="total-num" v-show="changeType == 2">
+		        		<img class="icon" :src="`${imageUrl}/3@3x.png`"  />
+		        		{{userFragment}}
 		        	</div>
 		        	<div class="mall-nav-content">
 		        		<div class="mall-nav" :class="{'position': navPosition}">
@@ -58,6 +62,8 @@ export default {
 	    },
 	    scrollH: 0,
 	    navPosition: false,
+	    userPoints: 0,
+	    userFragment: 0,
     }
   },
   computed: {
@@ -68,11 +74,20 @@ export default {
   		return (this.currUrl == '/dm-api/fragment' ? 2 : 1)
   	}
   },
+  activated() {
+  	this.navPosition = false
+  	this.$api.userInfo().then(res => {
+		this.userPoints = res.data.points
+		this.userFragment = res.data.fragmentCounts
+    }, err => {
+    	
+    })
+  	
+  },
   mounted(){
 	this.$refs.pagination.refresh()
 	this.scrollH = document.getElementById('total-num').offsetHeight
 	this.pageContent = document.getElementById('page-content')
-	console.log(this.scrollH)
   },
   methods: {
   	render(res) {

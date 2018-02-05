@@ -38,8 +38,8 @@
 	  <div class="toys-operate" v-show="toysList.length > 0">
 	  	<div class="charge-btn btn-operate btn-hover" v-tap="{ methods : back }">取消</div>
 	  	<div class="get-btn btn-operate btn-hover">
-	  		<p v-if="type == 1">立即领取 <span v-show="checkNum">(共{{checkNum}}个)</span></p>
-	  		<p v-if="type == 2">立即领取 <span v-show="checkNum">(可兑换{{checkDia}}钻石)</span></p>
+	  		<p v-tap="{ methods : exchangeDiamond }" v-if="type == 1">立即兑换 <span v-show="checkNum">(可兑换{{checkDia}}钻石)</span></p>
+	  		<p v-tap="{ methods : paySubmit }" v-if="type == 2">立即领取 <span v-show="checkNum">(共{{checkNum}}个)</span></p>
 	  	</div>
 	  </div>  
   </div>
@@ -52,11 +52,11 @@ export default {
     return {
     	imageUrl: this.$store.state.imageUrl,
     	type: this.$route.params.type,
-		toysList: [],
-		total: 0,  //兑换总钻石数
-		chargeShow: false,
-		message: '',
-		loadEnd: false
+			toysList: [],
+			total: 0,  //兑换总钻石数
+			loadEnd: false,
+			nums: [],
+			productIds: [],
     }
   },
   created() {
@@ -69,7 +69,6 @@ export default {
   		})
 			
 		this.total = res.data.total
-		this.message = '当前所有娃娃可兑换 <span class="duihuan">' + this.total + '</span> 钻石'
     }, err => {
     	
     })
@@ -77,9 +76,16 @@ export default {
   computed: {
   	checkNum: function() {
   		let num = 0
+  		this.nums = []
+  		this.productIds = []
   		this.toysList.forEach((item) => {
-  			item.isActive && (num+=(item.operateNum))
+  			if(item.isActive) {
+  				num+=(item.operateNum)
+  				this.nums.push(item.operateNum)
+  				this.productIds.push(item.productId)
+  			}
   		})
+  		console.log(this.nums)
   		return num
   	},
   	checkDia: function() {
@@ -109,8 +115,19 @@ export default {
   	back() {
   		this.$router.go(-1)
   	},
-  	charge() {
-  		this.$api.convertDiamond().then(res => {
+  	exchangeDiamond() {
+  		if(this.checkNum < 1) {
+  			Toast({
+				  message: '请选择您要兑换的娃娃',
+				  position: 'bottom',
+				  duration: 1000
+				})
+  			return
+  		}
+  		this.$api.exchangeDiamond({
+  			nums: ''+ this.nums,
+  			productIds: ''+ this.productIds
+  		}).then(res => {
 	  		Toast({
 				  message: '兑换成功',
 				  position: 'middle',
@@ -118,12 +135,24 @@ export default {
 				  duration: 800
 				})
 	  		setTimeout(() => {
-	  			this.$router.replace('/index')
+	  			this.$router.go(-1)
 	  		}, 1000)
 	    }, err => {
 	    	
 	    })
-  	}
+  	},
+  	paySubmit() {
+  		if(this.checkNum < 1) {
+  			Toast({
+				  message: '请选择您要领取的娃娃',
+				  position: 'bottom',
+				  duration: 1000
+				})
+  			return
+  		}
+  		this.$storage.set('orderToys', {num: this.nums, productId: this.productIds})
+  		this.$router.replace('/orderSubmit')
+  	},
   }
 }
 </script>
@@ -248,6 +277,9 @@ export default {
 			flex: 11;
 			background: #fff;
 			color: $bg-color;
+		}
+		p{
+			height: 100%;
 		}
 	}
 }

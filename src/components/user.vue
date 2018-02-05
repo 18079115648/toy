@@ -127,7 +127,7 @@
 	    	<router-link to="/intergalMall" v-tap class="nav-item right top">
 	    		<p class="count">
 	    			<i class="iconfont icon-pintu nav-icon"></i>
-	    			<!--{{userInfo.grabCounts}}-->
+	    			{{userInfo.fragmentCounts}}
 	    		</p>
 	    		<p class="text">我的碎片</p>
 	    	</router-link>

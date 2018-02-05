@@ -48,12 +48,12 @@ export default {
     }
   },
   created(){
+  	this.orderToys = this.$storage.get('orderToys')
   	Indicator.open()
   	this.$api.getDefaultAddress().then(res => {
   		setTimeout(() => {
   			Indicator.close()
   		},200)
-		
 		if(res.data) {
 			this.hasAddr = true
 			this.addrInfo = res.data
@@ -67,7 +67,15 @@ export default {
     	
     })
     this.$api.toysWin().then(res => {
-		this.toysList = res.data.data
+    	res.data.data.forEach((item, index) => {
+    		this.orderToys.productId.forEach((obj, key) => {
+    			if(item.productId == obj) {
+	    			item.num = this.orderToys.num[key]
+	    			this.toysList.push(item)
+	    			return
+	    		}
+    		})	
+    	})
 		this.expressMoney = res.data.expressMoney
     }, err => {
     	
@@ -78,18 +86,20 @@ export default {
   	paySubmit() {
   		if(!this.addrInfo.id) {
   			Toast({
-				  message: '请选择收货地址',
-				  position: 'bottom',
-				  duration: 1000
-				});
-				return
+			  message: '请选择收货地址',
+			  position: 'bottom',
+			  duration: 1000
+			});
+			return
   		}
   		if(this.disabledBtn) {
   			return
   		}
   		this.disabledBtn = true
   		this.$api.submitOrder({
-  			addressId: this.addrInfo.id
+  			addressId: this.addrInfo.id,
+  			nums: ''+this.orderToys.num,
+  			productIds: ''+this.orderToys.productId
   		}).then(res => {
   			this.disabledBtn = false
 			Toast({

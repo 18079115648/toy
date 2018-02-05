@@ -87,11 +87,6 @@ export default {
     }, err => {
     	
     })
-  	this.$api.memberFragment().then(res => {
-//		this.userPoints = res.data.points
-    }, err => {
-    	
-    })
   	
   },
   deactivated() {
