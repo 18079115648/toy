@@ -18,11 +18,12 @@
         		</div>
         		<div class="goods-operate">
         			<div class="goods-price">
-        				<span>{{goodsInfo.points}}</span>积分
+        				<p v-if="type == 1"><span>{{goodsInfo.points}}</span>积分</p>
+        				<p v-if="type == 2"><span>{{goodsInfo.fragmentNum}}</span>碎片</p>
         			</div>
         			<div class="convert-btn btn-hover"  v-tap="{ methods : openConvert }">立即兑换</div>
         		</div>
-        		<p class="tip" v-if="goodsInfo.goods_id == 1">提示：兑换的娃娃商品可在娃娃袋中查看</p>
+        		<p class="tip" v-if="goodsInfo.type == 1">提示：兑换的娃娃商品可在娃娃袋中查看</p>
         	</div>
         	<div class="goods-image-text">
         		<p class="tit">商品介绍</p>
@@ -41,7 +42,7 @@
 					<span class="num">{{num}}</span>
 					<span class="plus" :class="{disabled : checkPlus}" v-tap="{ methods : plus }">+</span>
 				</div>
-				<p class="tip" v-if="goodsInfo.goods_id == 1">提示：兑换的娃娃商品可在娃娃袋中查看</p>
+				<p class="tip" v-if="goodsInfo.type == 1">提示：兑换的娃娃商品可在娃娃袋中查看</p>
 				<div class="convert-footer">
 					<div class="convert-confirm btn-hover" :class="{disabled : checkConvert}" v-tap="{ methods : convertConfirm }">确定兑换</div>
 				</div>
@@ -57,8 +58,10 @@ export default {
     return {
     	isHybrid: this.$common.isHybrid(),
     	goodsId: undefined,
+    	type: undefined,
     	goodsInfo: {},
     	userPoints: 0, //用户积分
+    	fragmentCounts: 0, //用户碎片
         convertStatus: false,
         num: 1,   //兑换数量
         
@@ -66,24 +69,38 @@ export default {
   },
   computed: {
   	checkConvert: function() {
-  		let totalPoints = parseInt(this.goodsInfo.points) * this.num
-  		return (this.userPoints < totalPoints ? true : false )
+  		if(this.type == 1) {
+  			let totalPoints = parseInt(this.goodsInfo.points) * this.num
+	  		return (this.userPoints < totalPoints ? true : false )
+  		}else {
+  			let totalfragment = parseInt(this.goodsInfo.fragmentNum) * this.num
+	  		return (this.fragmentCounts < totalfragment ? true : false )
+  		}
+	  		
   	},
   	checkPlus: function() {
-  		let totalPoints = parseInt(this.goodsInfo.points) * (this.num + 1)
-  		return (this.userPoints < totalPoints ? true : false )
+  		if(this.type == 1) {
+  			let totalPoints = parseInt(this.goodsInfo.points) * (this.num + 1)
+	  		return (this.userPoints < totalPoints ? true : false )
+  		}else {
+  			let totalfragment = parseInt(this.goodsInfo.fragmentNum) * (this.num + 1)
+	  		return (this.fragmentCounts < totalfragment ? true : false )
+  		}
+	  		
   	}
   },
   created(){	
     
   },
   activated() {
+  	this.type = this.$route.params.type
   	if(this.goodsId != this.$route.params.id) {
   		this.goodsId = this.$route.params.id
   		this.initData()	
   	}
   	this.$api.userInfo().then(res => {
 		this.userPoints = res.data.points
+		this.fragmentCounts = res.data.fragmentCounts
     }, err => {
     	
     })
