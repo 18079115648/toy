@@ -409,7 +409,7 @@ export default {
 	convertDiamond(params) {
 		return fetchPost('/dm-api/doll/diamond/exchange', params, true)
 	},
-	// 娃娃盒娃娃兑换
+	// 我的碎片
 	memberFragment(params) {
 		return fetchGet('/dm-api/fragment/member', params, true)
 	},
