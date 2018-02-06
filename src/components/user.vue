@@ -124,7 +124,7 @@
 	    		</p>
 	    		<p class="text">积分商城</p>
 	    	</router-link>
-	    	<router-link to="/intergalMall" v-tap class="nav-item right top">
+	    	<router-link to="/fragmentList" v-tap class="nav-item right top">
 	    		<p class="count">
 	    			<i class="iconfont icon-pintu nav-icon"></i>
 	    			{{userInfo.fragmentCounts}}

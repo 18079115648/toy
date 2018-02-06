@@ -13,7 +13,7 @@ module.exports = {
     proxyTable: {
     	'/dm-api/': {    //将www.exaple.com印射为/apis
 //  		  target: 'http://wawa2.ftgame.com.cn/dm-api/',  // 接口域名
-          target: 'http://api.toy.xm.ydd100.cn/',  // 接口域名
+          target: 'http://h5.toy.ydd100.cn/dm-api/',  // 接口域名
           changeOrigin: true,  //是否跨域
           pathRewrite: {
                 '^/dm-api/': ''   //需要rewrite的,
@@ -77,7 +77,7 @@ module.exports = {
      * Source Maps
      */
 
-    productionSourceMap: true,
+    productionSourceMap: false,
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
 

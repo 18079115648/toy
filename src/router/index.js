@@ -64,6 +64,8 @@ const rewardList = r => require.ensure([], () => r(require('../components/reward
 //福利中心
 const welfareCenter = r => require.ensure([], () => r(require('../components/welfareCenter.vue')), 'welfareCenter')
 
+//我的碎片
+const fragmentList = r => require.ensure([], () => r(require('../components/fragmentList.vue')), 'fragmentList')
 
 
 
@@ -278,6 +280,13 @@ const router = new Router({
     {
       path: '/orderSubmit',
       component: orderSubmit,
+      meta: {
+      	requireAuth: true
+      }
+    },
+    {
+      path: '/fragmentList',
+      component: fragmentList,
       meta: {
       	requireAuth: true
       }

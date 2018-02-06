@@ -105,11 +105,13 @@ export default {
 		        
 	        })
     	}else {
+    		let key = this.$storage.get('key') ? '/?key=' + this.$storage.get('key') : ''
+    		key += this.$storage.get('channelKey') ? '&channelKey=' + this.$storage.get('channelKey') : ''
     		if(this.payWay == 1) {
     			this.$api.payment({
 			        id: this.id,
 			        type: 3,
-			        returnUrl: 'http://' + window.location.host + '/#/index'
+			        returnUrl: 'http://' + window.location.host + key + '/#/index'
 			    }).then(res => {
 		            document.write(res.data)
 			    }, err => {
@@ -122,7 +124,7 @@ export default {
 		        type: 2,
 		        tradeType: 'MWEB'
 		    }).then(res => {
-				window.location.replace(res.data.mweb_url + '&redirect_url=http://' + window.location.host + '/#/index')
+				window.location.replace(res.data.mweb_url + '&redirect_url=http://' + window.location.host + key + '/#/index')
 		    }, err => {
 		        
 	        })

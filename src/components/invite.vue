@@ -18,7 +18,7 @@
 		        	<div class="invite-code" >
 		        		<span v-for="(item, index) in code" :key="index">{{item}}</span>
 		        	</div>
-		        	<div v-show="isWinxin" class="receive btn-hover" v-tap="{ methods : invite }">分享邀请好友</div>
+		        	<div v-show="isWinxin || isHybrid" class="receive btn-hover" v-tap="{ methods : invite }">分享邀请好友</div>
 		        </div>
         	</div>
         </div>

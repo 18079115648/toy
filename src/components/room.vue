@@ -1,12 +1,12 @@
 <template> 
     <div class="app" id="fastClick" :style="{'height': wH + 'px'}" :class="{'overflow': loadingStatus || operateShow || failStatus || succStatus}">
-    	<div class="room-loading" v-show="loadingStatus">
+    	<!--<div class="room-loading" v-show="loadingStatus">
     		<div class="back img-mask" v-tap="{ methods : back }">
     			<img class="fullEle" :src="`${imageUrl}/ss44.png`"   />
     		</div>
-    	</div>
+    	</div>-->
     	<div class="room-view-content" :class="{'full' : fullStatus}">
-    		<div class="room-top">
+    		<div class="room-top" :class="{'load' : loadingStatus}">
 	    		<img class="back" :src="`${imageUrl}/ss44.png`" v-tap="{ methods : back }"/>
 	    		<img v-show="avatar" class="avatar" :src="avatar"  />
 	    		<div v-show="!avatar" class="avatar-position"></div>
@@ -46,6 +46,8 @@
 	    		<div class="btn-hover open-record child" v-tap="{ methods : goGrabList }"></div>-->
 	    	</div>
     		<div class="video-content" :class="[fullStatus ? 'full' : 'nofull']">
+    			<div class="canvas-loading" v-show="loadingStatus">
+    			</div>
 	        	<canvas id="frontview" :class="{show:showFront}"></canvas>
 		      	<canvas id="sideview" :class="{show:showSide}"></canvas>
 		      	
@@ -397,12 +399,12 @@ export default {
 		    	1: {   //钻石
 		    		image: `${this.$store.state.imageUrl}/16@2x.png`,
 		    		num: 0,
-		    		name: ''
+		    		name: '钻石'
 		    	},
 		    	2: {  // 积分
 		    		image: `${this.$store.state.imageUrl}/34cd.png`,
 		    		num: 0,
-		    		name: ''
+		    		name: '积分'
 		    	},
 		    	3: {  // 碎片
 		    		image: '',
@@ -411,6 +413,11 @@ export default {
 		    	},
 		    	4: {  // 无
 		    		image: `${this.$store.state.imageUrl}/61@2x.png`,
+		    		num: 0,
+		    		name: ''
+		    	},
+		    	5: {  // 五福
+		    		image: '',
 		    		num: 0,
 		    		name: ''
 		    	}
@@ -435,8 +442,7 @@ export default {
 		this.zegoRoomId = this.$route.query.liveRoomCode
 		// 抓取价格
 		this.price = parseInt(this.$route.query.price)
-		//进入房间
-		this.enterRoom()
+		
 		// 初始化socket
 		this.initWebSocket()
 		// 即构推流初始化
@@ -445,11 +451,14 @@ export default {
 		this.preventScale()
 	},
 	mounted() {	
-		document.documentElement.scrollTop = 0
+		//进入房间
+		this.enterRoom()
+		this.roomContent = document.getElementById('app')
+		document.getElementById('fastClick').scrollTop = 0
 		let self = this
 		this.$nextTick(function() {
-			const height = this.wH = document.getElementById('app').offsetHeight
-			const width = document.getElementById('app').offsetWidth
+			const height = this.wH = this.roomContent.offsetHeight
+			const width = this.roomContent.offsetWidth
 			this.fullStatus = (height / width) > 1.69333333
 		})
 		
@@ -679,23 +688,26 @@ export default {
 							this.roomNewsList.push(news)
 						} else {
 							// 抓取失败
-							let type = data.prize_type
+							let type = data.prizeType
 							type && (this.currRewardType = type)
 							switch(type) {
 								case 1:           //钻石
 									this.failReward[type].num = data.num
-									this.failReward[type].name = data.name
 									break;
 								case 2:           //积分
 									this.failReward[type].num = data.num
-									this.failReward[type].name = data.name
 									break;
 								case 3:           //碎片
 									this.failReward[type].num = data.num
 									this.failReward[type].name = data.name
+									this.failReward[type].image = data.img
 									break;
 								case 4:
+									break;
+								case 5:
+									this.failReward[type].num = data.num
 									this.failReward[type].name = data.name
+									this.failReward[type].image = data.img
 									break;
 							}
 							this.grabFailure()
@@ -789,13 +801,14 @@ export default {
 			this.zg.onPlayStateUpdate = (type, streamId) => {
 				setTimeout(() => {
 					parent.loadingStatus = false
-				}, 600)
+				},600)
 				console.info('流' + streamId + ', 状态：' + type)
 			}
 		},
 
 		//点击开始游戏
 		beginGame() {
+			document.getElementById('fastClick').scrollTop = 0
 			this.chatStatus = false
 			this.playClickAudio()
 			this.succStatus = false
@@ -1491,6 +1504,17 @@ export default {
 		position: relative;
 	}
 }
+.canvas-loading{
+	position: absolute;
+	left: 0;
+	top: 0.85rem;
+	bottom: 0;
+	right: 0;
+	z-index: 7;
+	background: url($roomLoadImg) no-repeat center;
+	background-color: #a6a2a1;
+	background-size: 100% auto;
+}
 #frontview, #sideview {
 	width: 100%;
 	height: 100%;
@@ -1517,6 +1541,7 @@ export default {
 } 
 .room-top{
 	position: absolute;
+	background-color: transparent;
 	z-index: 5;
 	width: 100%;
 	top: 0;
@@ -1525,6 +1550,9 @@ export default {
 	align-items: center;
 	padding: 0.15rem;
 	color: #fff;
+	&.load{
+		background: $bg-color;
+	}
 	.back{
 		width: 0.9rem;
 		margin-right: 0.2rem;
@@ -1630,14 +1658,14 @@ export default {
 	height: 0.9rem;
 	right: 0.1rem;
 	top: 1.45rem;
-	z-index: 5;
+	z-index: 1;
 }
 .room-side{
 	position: absolute;
 	right: 0.1rem;
 	top: 2.55rem;
 	width: 0.9rem;
-	z-index: 5;
+	z-index: 1;
 	& > .child{
 		width: 100%;
 		height: 0.9rem;
@@ -1700,6 +1728,7 @@ export default {
 	bottom: 0;
 	display: flex;
 	padding: 0.15rem 0;
+	z-index: 5;
 	& > p{
 		display: flex;
 		align-items: center;
@@ -1989,7 +2018,7 @@ export default {
 .profit-info{
 	margin: 0.4rem 0;
 	height: 3rem;
-	padding: 0.75rem 0;
+	padding: 0.66rem 0 0.84rem;
 	background: url(#{$imageUrl}/18@2x.png) no-repeat center;
 	background-size: auto 100%;
 	position: relative;
@@ -2033,7 +2062,7 @@ export default {
 	}
 }
 .succ-tip{
-	font-size: 0.28rem;
+	font-size: 0.3rem;
 	padding-bottom: 0.15rem;
 }
 .check-goods{
