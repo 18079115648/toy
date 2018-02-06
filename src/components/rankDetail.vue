@@ -18,7 +18,7 @@
 	      	<Pagination :render="render" :param="pagination" :autoload="false"  ref="pagination" uri="/dm-api/doll//log/success" >
 				<div class="rank-record" v-show="pagination.content.length > 0">
 		      		<div class="rank-item" v-for="(item, index) in pagination.content" :key="index">
-		      			<div class="rank-info-media" v-if="!item.url">
+		      			<div class="rank-info-media" v-tap="{ methods : enterRoom, machineId: item.machineId }" v-if="!item.url">
 		      				<img class="fullEle toy-img" :src="item.img"  />
 		      			</div>
 		      			<div class="rank-info-media" v-if="item.url">
@@ -36,7 +36,6 @@
 		      			<div class="rank-info-text">
 		      				<p class="rank-goods-name">{{item.name}}</p>
 		      				<p class="rank-time">{{item.createTimeStr}}</p>
-		      				<p class="rank-enter" v-tap="{ methods : enterRoom, machineId: item.machineId }" >进入游戏</p>
 		      			</div>
 		      		</div>
 		      	</div>

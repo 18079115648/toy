@@ -1,7 +1,7 @@
 <template>
     <div class="content">
-        <Header title="我的碎片"></Header>
-        <div class="pagination-content">
+        <Header title="我的碎片" v-if="!isHybrid"></Header>
+        <div class="pagination-content" :class="{'isHybrid' : isHybrid}">
         	<Pagination :render="render" :param="pagination" :autoload="false"  ref="pagination" uri="/dm-api/fragment/member" >
 				<div class="grabList_body" v-show="pagination.content.length > 0">
 		            <div class="grabList" v-for="(item, index) in pagination.content" :key="index">
@@ -32,6 +32,7 @@
 export default {
   data () {
     return {
+    	isHybrid: this.$common.isHybrid(),
     	imageUrl: this.$store.state.imageUrl,
         pagination: {
 	        content: [],
@@ -61,6 +62,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.isHybrid{
+	top: 0 !important;
+}
 .grabList_body{
     width: 100%;
     height: auto;
