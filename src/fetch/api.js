@@ -377,6 +377,10 @@ export default {
 	goodsExchange(params) {
 		return fetchPost('/dm-api/pm/exchange', params, true)
 	},
+	// 碎片商城商品兑换
+	fragmentExchange(params) {
+		return fetchPost('/dm-api/fragment/exchange', params, true)
+	},
 	// 会员中心
 	memberCenter(params) {
 		return fetchGet('/dm-api/member/center/v15', params, true)

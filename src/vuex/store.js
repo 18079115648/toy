@@ -16,8 +16,8 @@ const state = {
 	successAudioUrl: 'https://yingdd.oss-cn-hangzhou.aliyuncs.com/fa81942687d7d259c7f4979a00367a48.mp3', //抓取成功音效
 	failAudioUrl: 'https://yingdd.oss-cn-hangzhou.aliyuncs.com/e95cb5cc6a8070f063b09ce9f6843b18.mp3',    //抓取失败音效
 
-	WEBSOCKET_URL: 'http://121.41.101.63:8000/netty/socket-wawaji',  //测试
-	//WEBSOCKET_URL: 'http://115.159.84.133:8000/netty/socket-wawaji', //澳in
+//	WEBSOCKET_URL: 'http://121.41.101.63:8000/netty/socket-wawaji',  //测试
+	WEBSOCKET_URL: 'http://api.toy.xm.ydd100.cn:8000/netty/socket-wawaji', //熊喵人
 	WEIXIN: {
 	    APP_ID: 'wx74953a61b831d625',
 	    REDIRECT_URI: 'http://h5.toy.ydd100.cn/'

@@ -19,7 +19,7 @@
         		<div class="goods-operate">
         			<div class="goods-price">
         				<p v-if="type == 1"><span>{{goodsInfo.points}}</span>积分</p>
-        				<p v-if="type == 2"><span>{{goodsInfo.fragmentNum}}</span>碎片</p>
+        				<p v-if="type == 2"><span>{{goodsInfo.fragmentNum}}</span>{{goodsInfo.fragmentName}}碎片</p>
         			</div>
         			<div class="convert-btn btn-hover"  v-tap="{ methods : openConvert }">立即兑换</div>
         		</div>
@@ -133,7 +133,7 @@ export default {
     plus() {
     	if(this.checkPlus) {
     		Toast({
-			  message: '当前积分不足',
+			  message: `当前${this.type == 1 ? '积分' : '碎片'}不足`,
 			  position: 'bottom',
 			  duration: 1500
 			});
@@ -142,25 +142,49 @@ export default {
     	this.num++	
     },
     convertConfirm() {
+    	if(this.checkConvert) {
+    		return
+    	}
     	this.convertStatus = false
     	Indicator.open()
-    	this.$api.goodsExchange({
-    		goods_id: this.goodsId,
-    		quantity: this.num
-    	}).then(res => {
-    		Indicator.close()
-			Toast({
-			  message: '兑换成功',
-			  position: 'middle',
-			  iconClass: 'toast-icon icon-success',
-			  duration: 800
-			})
-			setTimeout(() => {
-			  this.$router.push('/convertList')
-			}, 1000);
-	    }, err => {
-	    	Indicator.close()
-	    })
+    	if(this.type == 1) {
+    		this.$api.goodsExchange({
+	    		goods_id: this.goodsId,
+	    		quantity: this.num
+	    	}).then(res => {
+	    		Indicator.close()
+				Toast({
+				  message: '兑换成功',
+				  position: 'middle',
+				  iconClass: 'toast-icon icon-success',
+				  duration: 800
+				})
+				setTimeout(() => {
+				  this.$router.push('/convertList')
+				}, 1000);
+		    }, err => {
+		    	Indicator.close()
+		    })
+        }else {
+    		this.$api.fragmentExchange({
+	    		productId: this.goodsId,
+	    		num: this.num
+	    	}).then(res => {
+	    		Indicator.close()
+				Toast({
+				  message: '兑换成功',
+				  position: 'middle',
+				  iconClass: 'toast-icon icon-success',
+				  duration: 800
+				})
+				setTimeout(() => {
+				  this.$router.push('/convertList')
+				}, 1000);
+		    }, err => {
+		    	Indicator.close()
+		    })
+    	}
+	    	
     	
     }
   }
