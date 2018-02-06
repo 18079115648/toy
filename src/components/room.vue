@@ -169,35 +169,53 @@
 		<!-- 抓取成功提示页面 -->
 		<mt-popup v-model="succStatus" class="pop" :closeOnClickModal="false">
 			<div class="succ-content">
-				<div class="goods-img">
+				<!--<div class="goods-img">
 					<img :src="winImg"  />
-				</div>
-				<div class="shadow-text" style="text-align: center; color: #fff;">
-					<p class="succ-tip shadow-text">太棒了，抓到娃娃了耶！</p>
-					<a class="check-goods shadow-text" v-tap.prevent="{ methods : toToysPocket }">立即查看</a>
+				</div>-->
+				<div class="result-content" style="text-align: center;">
+					<p class="succ-tip">太棒了，抓到娃娃了耶！</p>
+					<p>获得奖励</p>
+					<div class="profit-info img-mask">
+						<img class="goods-img" :src="winImg" />
+					</div>
+					<!--<a class="check-goods shadow-text" v-tap.prevent="{ methods : toToysPocket }">立即查看</a>-->
 					<p class="operate-btn">
 						<!--<span class="btn-hover">分享好友</span>-->
+						<span class="btn-hover shadow-text" v-tap.prevent="{ methods : toToysPocket }">立即查看</span>
 						<span class="btn-hover shadow-text" v-tap.prevent="{ methods : beginGame }">再次挑战</span>
 					</p>
-					<p class="again-time shadow-text" :class="{show: endTime >= 1}">倒计时 {{endTime}}秒</p>
+					<p class="again-time" :class="{show: endTime >= 1}">倒计时 {{endTime}}秒</p>
 				</div>
-				<i class="close iconfont icon-guanbi" v-tap.prevent="{ methods : closePop }"></i>
+				<div class="close">
+					<img class="fullEle" v-tap.prevent="{ methods : closePop }" :src="`${imageUrl}/x.png`" />
+				</div>
+				<!--<i class="close iconfont icon-guanbi" v-tap.prevent="{ methods : closePop }"></i>-->
 			</div>
 		</mt-popup>
 		
 		<!-- 抓取失败提示页面 -->
 		<mt-popup v-model="failStatus" class="pop" :closeOnClickModal="false">
 			<div class="fail-content">
-				<div class="shadow-text" style="text-align: center; color: #fff;">
-					<img class="fail-img" :src="`${imageUrl}/61@2x.png`"   />
-					<p class="succ-tip shadow-text">很遗憾，差点就抓到了！</p>
+				<div class="result-content" style="text-align: center;">
+					
+					<p class="succ-tip">差一点就抓到娃娃了！</p>
+					<p v-show="currRewardType != 4">获得奖励</p>
+					<div v-show="currRewardType != 4" class="profit-info img-mask">
+						<img class="icon" :src="failRewardInfo.image" />
+						<p class="profit-num">{{failRewardInfo.name}} <span>x{{failRewardInfo.num}}</span></p>
+					</div>
+					<img v-show="currRewardType == 4" class="fail-img" :src="`${imageUrl}/61@2x.png`"   />
 					<p class="operate-btn">
 						<!--<span class="btn-hover">分享好友</span>-->
 						<span class="btn-hover shadow-text" v-tap.prevent="{ methods : beginGame }">再次挑战</span>
 					</p>
-					<p class="again-time shadow-text" :class="{show: endTime >= 1}">倒计时 {{endTime}}秒</p>
+					<p class="again-time" :class="{show: endTime >= 1}">倒计时 {{endTime}}秒</p>
 				</div>
-				<i class="close iconfont icon-guanbi" v-tap.prevent="{ methods : closePop }"></i>
+				<div class="close">
+					<img class="fullEle" v-tap.prevent="{ methods : closePop }" :src="`${imageUrl}/x.png`" />
+				</div>
+				
+				<!--<i class="close iconfont icon-guanbi" v-tap.prevent="{ methods : closePop }"></i>-->
 			</div>
 		</mt-popup>
 
@@ -376,10 +394,38 @@ export default {
 		    
 		    chatText: '',        //发言内容
 		    chatStatus: false,   //聊天input显示状态
+		    currRewardType: 4,   //当前奖励
+		    failReward: {  //抓取失败奖励
+		    	1: {   //钻石
+		    		image: `${this.$store.state.imageUrl}/16@2x.png`,
+		    		num: 0,
+		    		name: ''
+		    	},
+		    	2: {  // 积分
+		    		image: `${this.$store.state.imageUrl}/34cd.png`,
+		    		num: 0,
+		    		name: ''
+		    	},
+		    	3: {  // 碎片
+		    		image: '',
+		    		num: 0,
+		    		name: ''
+		    	},
+		    	4: {  // 无
+		    		image: `${this.$store.state.imageUrl}/61@2x.png`,
+		    		num: 0,
+		    		name: ''
+		    	}
+		    }
 		    
 //		    rechargeStatus: false,  //充值
 //		    rechargeList: []
 	    }
+	},
+	computed: {
+		failRewardInfo: function() {
+			return this.failReward[this.currRewardType]
+		}
 	},
 	created() {	
 		this.machineId = this.$route.query.machineId
@@ -635,6 +681,25 @@ export default {
 							this.roomNewsList.push(news)
 						} else {
 							// 抓取失败
+							let type = data.prize_type
+							type && (this.currRewardType = type)
+							switch(type) {
+								case 1:           //钻石
+									this.failReward[type].num = data.num
+									this.failReward[type].name = data.name
+									break;
+								case 2:           //积分
+									this.failReward[type].num = data.num
+									this.failReward[type].name = data.name
+									break;
+								case 3:           //碎片
+									this.failReward[type].num = data.num
+									this.failReward[type].name = data.name
+									break;
+								case 4:
+									this.failReward[type].name = data.name
+									break;
+							}
 							this.grabFailure()
 							var news = {
 								tit: this.nickname,
@@ -1888,55 +1953,90 @@ export default {
 	top: 0;
 }
 .succ-content{
-	width: 5.4rem;
+	width: 5.8rem;
+	height: 8.5rem;
+	top: -0.5rem;
+	padding: 0.5rem 0 0.3rem;
 	position: relative;
-	.goods-img{
-		height: 5.2rem;
-		background:  url(#{$imageUrl}/sw.png) no-repeat center;
-		background-size: 100%;
-		position: relative;
-		img{
+	background: #FFFFFF;
+	border-radius: 0.2rem;
+	.profit-info{
+		height: 4rem;
+		.goods-img{
 			position: absolute;
 			min-width: 1.2rem;
 			left: 50%;
 			top: 50%;
 			transform: translate(-50%, -50%);
-			max-height: 100%;
-			max-width: 100%;
+			max-height: 90%;
+			max-width: 90%;
 		}
 	}
 	
 }
 .fail-content{
-	width: 5.4rem;
-	padding: 1.3rem 0 1rem;
+	width: 5.8rem;
+	height: 7.5rem;
+	padding: 0.5rem 0 0.3rem;
 	position: relative;
+	top: -0.5rem;
+	background: #FFFFFF;
+	border-radius: 0.2rem;
 	.fail-img{
 		display: block;
-		width: 2.6rem;
-		margin: 0 auto 0.5rem;
+		height: 2.8rem;
+		margin: 0.6rem auto 0.8rem;
+	}
+}
+.profit-info{
+	margin: 0.4rem 0;
+	height: 3rem;
+	padding: 0.75rem 0;
+	background: url(#{$imageUrl}/18@2x.png) no-repeat center;
+	background-size: auto 100%;
+	position: relative;
+	.icon{
+		display: block;
+		height: 1.5rem;
+		margin: 0 auto;
+		position: relative;
+	}
+	.profit-num{
+		position: absolute;
+		left: 50%;
+		bottom: -0.06rem;
+		transform: translateX(-50%);
+		font-size: 0.3rem;
+		color: #fd485c;
+		span{
+			font-size: 0.32rem;
+		}
 	}
 }
 .close{
 	position: absolute;
-	right: -0.25rem;
-	top: -0.25rem;
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: -1rem;
 	width: 0.6rem;
+	height: 0.6rem;
 	text-align: center;
 	line-height: 1;
 	font-size: 0.6rem;
-	color: $bg-color;
+	color: #fff;
 }
 .again-time{
 	padding-top: 0.5rem;
-	font-size: 0.3rem;
+	font-size: 0.26rem;
+	font-weight: normal;
 	opacity: 0;
 	&.show{
 		opacity: 1;
 	}
 }
 .succ-tip{
-	font-size: 0.44rem;
+	font-size: 0.28rem;
+	padding-bottom: 0.15rem;
 }
 .check-goods{
 	padding: 0.3rem 0 0;
@@ -1946,18 +2046,19 @@ export default {
 	text-decoration: underline;
 }
 .operate-btn{
-	padding-top: 0.6rem;
+	padding-top: 0.1rem;
 	display: flex;
 	justify-content: center;
 	margin: 0 -0.3rem;
+	color: #fff;
 	span{
-		width: 2rem;
-		height: 0.9rem;
+		width: 1.8rem;
+		height: 0.8rem;
 		border-radius: 0.1rem;
 		background: $bg-color;
-		line-height: 0.9rem;
+		line-height: 0.8rem;
 		font-size: 0.3rem;
-		margin:  0 0.5rem;
+		margin:  0 0.3rem;
 		box-shadow: 3px 0 0 #000,0 3px 0 #000,-2px 0 0 #000,0 -2px 0 #000;;
 	}
 }
@@ -2106,6 +2207,9 @@ export default {
 		padding-bottom: 0.3rem;
 		.tit{
 			padding: 0.2rem 0.4rem;
+		}
+		.toy-imgs{
+			padding: 0 0.3rem;
 		}
 		.toy-imgs img {
 			display: block;
