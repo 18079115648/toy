@@ -133,7 +133,7 @@ export default {
     plus() {
     	if(this.checkPlus) {
     		Toast({
-			  message: '当前积分不足',
+			  message: `当前${this.type == 1 ? '积分' : '碎片'}不足`,
 			  position: 'bottom',
 			  duration: 1500
 			});
