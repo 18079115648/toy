@@ -27,8 +27,8 @@
         	</div>
         	<div class="goods-image-text">
         		<p class="tit">商品介绍</p>
-        		<div class="goods-rich-content" v-html="goodsInfo.description">
-        			
+        		<div class="goods-rich-content" v-html="">
+        			<img :src="value" v-for="value in goodsInfo.description.split(';')"  />
         		</div>
         	</div>
         </div>

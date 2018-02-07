@@ -17,7 +17,7 @@
             </router-link>
         </li>
         <li :class="{'active':actived == 'third'}">
-            <router-link to='/intergalMall' replace>
+            <router-link to='/intergalMall/2' replace>
                 <img v-show="actived == 'third'" :src="`${imageUrl}/3-1-01.png`" alt="商城"/>
                 <img v-show="actived != 'third'" :src="`${imageUrl}/3-2-01.png`" alt="商城"/>
                 <div>商城</div>

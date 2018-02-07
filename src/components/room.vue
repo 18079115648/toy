@@ -810,6 +810,9 @@ export default {
 
 		//点击开始游戏
 		beginGame() {
+			if(this.loadingStatus) {
+				return
+			}
 			document.getElementById('fastClick').scrollTop = 0
 			this.chatStatus = false
 			this.playClickAudio()
@@ -878,6 +881,9 @@ export default {
 		
 		//打开聊天input
 		openChat() {
+			if(this.loadingStatus) {
+				return
+			}
 			const self = this
 			this.playClickAudio()
 			this.chatStatus = true
@@ -1525,10 +1531,10 @@ export default {
 	top: 0;
 	bottom: 0;
 	right: 0;
-	z-index: -2;
+	z-index: -1;
 }
 #frontview.show, #sideview.show {
-	z-index: 0;
+	z-index: 2;
 }
 .app{
 	position: relative;
@@ -1660,14 +1666,14 @@ export default {
 	height: 0.9rem;
 	right: 0.1rem;
 	top: 1.45rem;
-	z-index: 1;
+	z-index: 5;
 }
 .room-side{
 	position: absolute;
 	right: 0.1rem;
 	top: 2.55rem;
 	width: 0.9rem;
-	z-index: 1;
+	z-index: 5;
 	& > .child{
 		width: 100%;
 		height: 0.9rem;

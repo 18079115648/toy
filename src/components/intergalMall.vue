@@ -1,29 +1,37 @@
 <template>
     <div class="content" :class="{'isHybrid' : isHybrid}">
-        <Header back="hidden" v-if="!isHybrid"  title="商城"></Header>
-        <router-link v-if="!isHybrid" class="recharge-record-link btn-hover" to="/convertList">兑换记录</router-link>
-        <div class="pagination-content" id="page-content" @scroll="scrollContent($event)" :class="{'isHybrid' : isHybrid}">
-        	<Pagination :render="render" :param="pagination" :autoload="false"  ref="pagination" :uri="currUrl" >
-		        <div class="mall-top">
-		        	<div class="total-num" id="total-num" v-show="changeType == 1">
-		        		<img class="icon" :src="`${imageUrl}/2@3x.png`"  />
-		        		{{userPoints}}
-		        	</div>
-		        	<div class="total-num" id="total-num" v-show="changeType == 2">
-		        		<img class="icon" :src="`${imageUrl}/3@3x.png`"  />
-		        		{{userFragment}}
-		        	</div>
-		        	<div class="mall-nav-content">
-		        		<div class="mall-nav" :class="{'position': navPosition}">
-			        		<span :class="{'active': currUrl == '/dm-api/pm/goods'}" v-tap="{ methods : changeMall, url: '/dm-api/pm/goods' }">积分商城</span>
-			        		<span :class="{'active': currUrl == '/dm-api/fragment'}" v-tap="{ methods : changeMall, url: '/dm-api/fragment' }">碎片商城</span>
-			        	</div>
-		        	</div>
-			        	
-		        </div>
-		        
+        <Header back="hidden" v-if="!isHybrid">
+        	<div class="mall-kind">
+        		<router-link replace to="/intergalMall/2" :class="{'active' : type == 2}">碎片商城</router-link>
+        		<router-link replace to="/intergalMall/1" :class="{'active' : type == 1}" >积分商城</router-link>
+        	</div>
+        </Header>
+        <div class="user-amount">
+        	<div class="fragment item">
+        		<div class="icon img-mask">
+        			<img class="fullEle" :src="`${imageUrl}/27@3x.png`">
+        		</div>
+        		碎片
+        		<span> &nbsp;{{userFragment}}</span>
+        	</div>
+        	<div class="points item">
+        		<div class="icon img-mask">
+        			<img class="fullEle" :src="`${imageUrl}/26@3x.png`">
+        		</div>
+        		积分
+        		<span> &nbsp;{{userPoints}}</span>
+        	</div>
+        	<router-link to="/convertList" class="record item">
+        		<div class="icon img-mask">
+        			<img class="fullEle" :src="`${imageUrl}/25@3x.png`">
+        		</div>
+        		兑换记录
+        	</router-link>
+        </div>
+        <div class="pagination-content" id="page-content" :class="{'isHybrid' : isHybrid}">
+        	<Pagination :render="render" :param="pagination" :autoload="false"  ref="pagination" :uri="currUrl" > 
 		        <div class="convert-list" v-show="pagination.content.length > 0">
-	            	<router-link :to="`/goodsDetail/${item.goods_id}/${changeType}`" v-tap class="convert-list-item" v-for="(item, index) in pagination.content" :key="index">
+	            	<router-link :to="`/goodsDetail/${item.goods_id}/${type}`" v-tap class="convert-list-item" v-for="(item, index) in pagination.content" :key="index">
 	            		<div class="convert-goods-img img-mask">
 	            			<img class="fullEle" :src="item.thumb"  />
 	            		</div>
@@ -51,67 +59,60 @@ export default {
     return {
     	imageUrl: this.$store.state.imageUrl,
     	isHybrid: this.$common.isHybrid(),
-    	currUrl: '/dm-api/pm/goods',
+    	type: this.$route.params.type,
     	pagination: {
 	        content: [],
 	        loadEnd: false,
 	        data: {
 	        	page: 1,
-	        	pageSize: 12
+	        	pageSize: 10
 	        }
 	    },
-	    scrollH: 0,
-	    navPosition: false,
 	    userPoints: 0,
 	    userFragment: 0,
     }
   },
   computed: {
-  	changeUnit: function() {
-  		return (this.currUrl == '/dm-api/fragment' ? '碎片' : '积分')
+	changeUnit: function() {
+		return (this.type == 1 ? '积分' : '碎片')
+	},
+  	currUrl: function() {
+  		return (this.type == 1 ? '/dm-api/pm/goods' : '/dm-api/fragment')
   	},
-  	changeType: function() {
-  		return (this.currUrl == '/dm-api/fragment' ? 2 : 1)
-  	}
   },
-  activated() {
-  	this.navPosition = false
-  	this.$api.userInfo().then(res => {
-		this.userPoints = res.data.points
-		this.userFragment = res.data.fragmentCounts
-    }, err => {
-    	
-    })
-  	
+  beforeRouteUpdate (to, from, next) {
+    this.type = to.params.type
+    
+	this.$refs.pagination.refresh()
+	next()
   },
+	activated() {
+		(this.type == 1) && this.$router.replace(`/intergalMall/${this.type}`)
+		this.$api.userInfo().then(res => {
+			this.userPoints = res.data.points
+			this.userFragment = res.data.fragmentCounts
+	    }, err => {
+	    	
+	    })
+		
+	},
   mounted(){
 	this.$refs.pagination.refresh()
-	this.scrollH = document.getElementById('total-num').offsetHeight
 	this.pageContent = document.getElementById('page-content')
   },
   methods: {
   	render(res) {
 		res.data.forEach((item) => {
-			if(this.currUrl == '/dm-api/fragment') {
+			if(this.type == 2) {
 				item.goods_id = item.productId
 				item.name = item.productName
 				item.thumb = item.productImg
 				item.points = item.num
 			}
 	    	this.pagination.content.push(item)
-        })
+       })
 		this.pageContent.scrollTop = 0
     }, 
-    scrollContent(e) {
-    	this.navPosition = (e.target.scrollTop > this.scrollH ? true : false)
-    },
-    changeMall(params) {
-    	if(this.currUrl == params.url) {
-    		return
-    	}
-    	this.currUrl = params.url
-    	this.$refs.pagination.refresh()
-    }
   }
 }
 </script>
@@ -121,26 +122,34 @@ export default {
 .isHybrid{
 	.pagination-content{
 		bottom:0 !important;
-		top: 0 !important;
-	}
-	.position{
-		top: 0 !important;
+		top: 1rem !important;
 	}
 }
 .content{
 	background: #fff;
 	min-height: 100vh;
 }
-.recharge-record-link{
-	position: fixed;
+.mall-kind{
+	position: absolute;
+	left: 1.4rem;
+	right: 1.4rem;
+	height: 100%;
 	top: 0;
-	right: 0;
-	height: 0.85rem;
+	display: flex;
 	line-height: 0.85rem;
-	padding: 0 0.2rem;
-	color: $header-text-color;
-	z-index: 30;
-	font-size: 0.28rem;
+	text-align: center;
+	a{
+		font-weight: 700;
+		font-size: 0.26rem;
+		flex: 1;
+		opacity: 0.6;
+		color: $header-text-color;
+		&.active{
+			font-size: 0.28rem;
+			color: $header-text-color;
+			opacity: 1;
+		}
+	}
 }
 .content .pagination-content{
 	bottom: 1rem;
@@ -189,26 +198,49 @@ export default {
 		}
 	}
 }
+.user-amount{
+	height: 1rem;
+	display: flex;
+	border-bottom: 1px solid #f2f2f2;
+	.item{
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		.icon{
+			width: 0.4rem;
+			height: 0.4rem;
+			margin-right: 0.1rem;
+			
+		}
+		span{
+			color: #fd485c;
+		}
+	}
+}
+.pagination-content{
+	top: 1.85rem;
+}
 .convert-list{
-	padding: 0.3rem 0.15rem 0;
 	display: flex;
 	flex-wrap: wrap;
+	/*padding: 0 0.1rem;*/
 	.convert-list-item{
-		width: 3.3rem;
-		margin: 0 0.15rem 0.4rem;
+		width: 50%;
 		font-size: 0.28rem;
 		color: #000000;
+		border-bottom: 1px solid #f2f2f2;
+		border-right: 1px solid #f2f2f2;
+		padding-bottom: 0.2rem;
 		.convert-goods-img{
 			overflow: hidden;
-			height: 3.3rem;
-			border-radius: 0.2rem;
-			img.fullEle{
-				border-radius: 0.2rem;
-			}
+			height: 3.75rem;
+			padding: 0.2rem;
 		}
 		.convert-goods-info{
 			text-align: center;
-			padding-top: 0.15rem;
+			position: relative;
+			top: -0.04rem;
 			.convert-goods-price{
 				color: #999;
 				font-size: 0.26rem;

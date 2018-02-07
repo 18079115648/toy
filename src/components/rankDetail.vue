@@ -21,8 +21,9 @@
 		      			<div class="rank-info-media" v-tap="{ methods : enterRoom, machineId: item.machineId }" v-if="!item.url">
 		      				<img class="fullEle toy-img" :src="item.img"  />
 		      			</div>
-		      			<div class="rank-info-media" v-if="item.url">
+		      			<div class="rank-info-media" v-if="item.url" v-tap="{ methods : playVideo, url: item.url, id: 'video-'+index}">
 		      				<video 
+		      					v-if="!isHybrid"
 		      					:id="'video-'+index"
                             	x-webkit-airplay="allow" 
                             	:src="item.url" 
@@ -31,7 +32,8 @@
 						      	playsinline="true"
                             	:poster="item.img">
                             </video>
-                            <img :src="`${imageUrl}/weed.png`" v-tap="{ methods : playVideo, id: 'video-'+index }"   class="play_img">
+                            <img v-if="isHybrid" class="fullEle toy-img" :src="item.img"  />
+                            <img :src="`${imageUrl}/weed.png`" class="play_img">
 		      			</div>
 		      			<div class="rank-info-text">
 		      				<p class="rank-goods-name">{{item.name}}</p>
@@ -80,6 +82,10 @@ export default {
     	})
     },
     playVideo(params) {
+    	if(this.isHybrid) {
+    		this.$bridge.playVideo(params.url)
+    		return
+    	}
     	const video = document.getElementById(params.id)
     	video.paused ? video.play() : video.pause()
     },

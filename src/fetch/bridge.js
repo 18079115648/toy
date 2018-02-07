@@ -67,6 +67,16 @@ export default {
             })
         })
     },
+    // 播放视频
+    playVideo(url) {
+        return new Promise((resolve, reject) => {
+            setupWebViewJavascriptBridge(bridge => {
+                bridge.callHandler('playVideo', url, response => {
+                    resolve(response)
+                })
+            })
+        })
+    },
 
     // 进入app指定页面
     enterAppPage(params) {
