@@ -82,7 +82,7 @@ export default {
     enterAppPage(params) {
         return new Promise((resovle, reject) => {
             setupWebViewJavascriptBridge(bridge => {
-                bridge.callHandler('enterAppPage', params, response => {
+                bridge.callHandler('enterAppPage', JSON.stringify(params), response => {
                     resovle(response)
                 })
             })

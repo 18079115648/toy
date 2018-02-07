@@ -1,6 +1,6 @@
 <template>
-  <div class="content">
-  	<Header title="娃娃袋"></Header>
+  <div class="content" :class="{'isHybrid' : isHybrid}">
+  	<Header title="娃娃袋" v-if="!isHybrid"></Header>
   	<div class="toys-content" v-show="toysList.length > 0">
   		<div class="toys-list">
   			<div class="toys-item-content" v-for="(item, index) in toysList" :key="index">
@@ -50,6 +50,7 @@ import {Toast, Indicator } from 'mint-ui'
 export default {
   data () {
     return {
+    	isHybrid: this.$common.isHybrid(),
     	imageUrl: this.$store.state.imageUrl,
     	type: this.$route.params.type,
 			toysList: [],
@@ -150,6 +151,14 @@ export default {
 				})
   			return
   		}
+  		let data = {num: this.nums, productId: this.productIds}
+  		if(this.isHybrid) {
+  			this.$bridge.enterAppPage({
+  				page: 'orderSubmit',
+  				data: data
+  			})
+  			return
+  		}
   		this.$storage.set('orderToys', {num: this.nums, productId: this.productIds})
   		this.$router.replace('/orderSubmit')
   	},
@@ -160,6 +169,11 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 @import "../../static/css/style.scss";
+.isHybrid{
+	.toys-content{
+		top: 0;
+	}
+}
 .toys-content{
 	position: absolute;
 	left: 0;

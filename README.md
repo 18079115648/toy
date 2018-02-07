@@ -1,21 +1,26 @@
 # catchtoys
 
-> A fun game of webapp
+> 娃娃机h5版本
 
-## Build Setup
+## 版本列表如下
 
 ``` bash
-# install dependencies
-npm install
+# crazy1.5
+公司最新版本娃娃机
 
-# serve with hot reload at localhost:8080
-npm run dev
+# xmren
+熊喵人娃娃机项目公众号， 支持微信登录、支付
+为crazy版本bug修复版本
 
-# build for production with minification
-npm run build
+# xiaozhu
+北京小主娃娃机项目公众号， 支持微信登录、支付
+为xmren版本同步版本
 
-# build for production and view the bundle analyzer report
-npm run build --report
+# allinZego
+澳IN娱乐娃娃机项目公众号， 原U抓版本，支持微信登录、支付
+# wanba2.0
+澳IN娱乐娃娃机项目玩吧版，参照crazy版本
+
+# 其余版本为过渡测试版本
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).

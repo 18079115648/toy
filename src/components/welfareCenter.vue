@@ -10,7 +10,8 @@
         		<div class="sign-list">
         			<div class="sign-list-item" :class="{'sign': !item.status}" v-for="(item, index) in signList.data" :key="index">
         				<div class="unsign fullEle">
-    						<img class="icon" :src="`${imageUrl}/erdd.png`"  />
+    						<img v-if="item.type == 1" class="icon" :src="`${imageUrl}/erdd.png`"  />
+    						<img v-if="item.type == 2" class="icon" :src="`${imageUrl}/34cd.png`"  />
     						<p class="shadow-text">{{item.points}}</p>
     					</div>
     					<div class="shadow-text fullEle signed">
@@ -375,7 +376,7 @@ export default {
 					justify-content: center;
 					line-height: 1;
 					img.icon{
-						width: 0.4rem;
+						height: 0.36rem;
 						margin-bottom: 0.1rem;
 					}
 				}
