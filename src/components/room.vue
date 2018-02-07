@@ -271,8 +271,6 @@
 			</div>
 		</mt-popup>-->
 		
-
-		
 		<!-- 充值页面 -->
 		<!--<mt-popup v-model="rechargeStatus" class="pop">
 			<div class="recharge-content">
