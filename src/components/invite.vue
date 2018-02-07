@@ -49,7 +49,7 @@ export default {
 		}
 		let key = this.$storage.get('key') ? '?key=' + this.$storage.get('key') : ''
 		key += this.$storage.get('channelKey') ? '&channelKey=' + this.$storage.get('channelKey') : ''
-		this.lineLink = 'http://' + location.host + '/' + key + '/#/index'
+		this.lineLink = 'https://' + location.host + '/' + key + '/#/index'
 		this.imgUrl = this.$store.state.shareLogo
 		this.shareTitle = this.appName
 		this.descContent = '欢乐抓娃娃，分享奖励多多！'

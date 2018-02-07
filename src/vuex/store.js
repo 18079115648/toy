@@ -20,7 +20,7 @@ const state = {
 //	WEBSOCKET_URL: 'http://api.toy.xm.ydd100.cn:8000/netty/socket-wawaji', //熊喵人
 	WEIXIN: {
 	    APP_ID: 'wx74953a61b831d625',
-	    REDIRECT_URI: 'http://h5.toy.ydd100.cn/'
+	    REDIRECT_URI: 'https://h5.toy.ydd100.cn/'
 	},
 }
 

@@ -111,7 +111,7 @@ export default {
     			this.$api.payment({
 			        id: this.id,
 			        type: 3,
-			        returnUrl: 'http://' + window.location.host + key + '/#/index'
+			        returnUrl: 'https://' + window.location.host + key + '/#/index'
 			    }).then(res => {
 		            document.write(res.data)
 			    }, err => {
@@ -124,7 +124,7 @@ export default {
 		        type: 2,
 		        tradeType: 'MWEB'
 		    }).then(res => {
-				window.location.replace(res.data.mweb_url + '&redirect_url=http://' + window.location.host + key + '/#/index')
+				window.location.replace(res.data.mweb_url + '&redirect_url=https://' + window.location.host + key + '/#/index')
 		    }, err => {
 		        
 	        })
