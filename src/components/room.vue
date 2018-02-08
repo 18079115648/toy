@@ -47,6 +47,7 @@
 	    	</div>
     		<div class="video-content" :class="[fullStatus ? 'full' : 'nofull']">
     			<div class="canvas-loading" v-show="loadingStatus">
+    				<img :src="roomLoadImg"  />
     			</div>
 	        	<canvas id="frontview" :class="{show:showFront}"></canvas>
 		      	<canvas id="sideview" :class="{show:showSide}"></canvas>
@@ -305,6 +306,7 @@ import * as SockJS from 'sockjs-client'
 export default {
 	data() {
 	    return {
+	    	roomLoadImg: this.$store.state.roomLoadImg,
 	    	imageUrl: this.$store.state.imageUrl,  //图片路径
 			clickAudioUrl: this.$store.state.clickAudioUrl, // 按钮点击音效
 			grabAudioUrl: this.$store.state.grabAudioUrl, //点击抓取音效
@@ -1520,9 +1522,15 @@ export default {
 	bottom: 0;
 	right: 0;
 	z-index: 3;
-	background: url($roomLoadImg) no-repeat center;
 	background-color: #a6a2a1;
-	background-size: auto 100%;
+	overflow: hidden;
+	img{
+		position: absolute;
+		width: 100%;
+		left: 0;
+		bottom: 0;
+		transform: translateY(25%);
+	}
 }
 #frontview, #sideview {
 	width: 100%;

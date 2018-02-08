@@ -13,7 +13,7 @@ module.exports = {
     proxyTable: {
     	'/dm-api/': {    //将www.exaple.com印射为/apis
 //  		  target: 'http://wawa2.ftgame.com.cn/dm-api/',  // 接口域名
-          target: 'https://h5.toy.xm.ydd100.cn/dm-api/',  // 接口域名
+          target: 'http://t.staruu.com/dm-api/',  // 接口域名
           changeOrigin: true,  //是否跨域
           pathRewrite: {
                 '^/dm-api/': ''   //需要rewrite的,

@@ -6,6 +6,7 @@ Vue.use(Vuex)
 
 const state = {
 	appName: '任我抓',
+	roomLoadImg: 'https://yingdd.oss-cn-hangzhou.aliyuncs.com/90530c7ba350e128fa64cee4d4aee58a.jpg',
 	shareLogo: 'https://yingdd.oss-cn-hangzhou.aliyuncs.com/0d25d14de142d89f5af33b0b53ecc7b0.png',
 	imageUrl: '/static/image/renwozhua',
 	bgAudio: 'https://yingdd.oss-cn-hangzhou.aliyuncs.com/d0bda63fee3ad56ab8938d349b791fa1.mp3',  //背景音乐
@@ -17,7 +18,7 @@ const state = {
 	failAudioUrl: 'https://yingdd.oss-cn-hangzhou.aliyuncs.com/e95cb5cc6a8070f063b09ce9f6843b18.mp3',    //抓取失败音效
 
 //	WEBSOCKET_URL: 'https://api.toy.ydd100.cn/netty/socket-wawaji',  //测试
-	WEBSOCKET_URL: 'https://api.toy.xm.ydd100.cn:8000/netty/socket-wawaji', //熊喵人
+	WEBSOCKET_URL: 'http://t.staruu.com:8000/netty/socket-wawaji', //熊喵人
 	WEIXIN: {
 	    APP_ID: 'wx74953a61b831d625',
 	    REDIRECT_URI: 'https://h5.toy.ydd100.cn/'
