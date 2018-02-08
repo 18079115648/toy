@@ -10,8 +10,8 @@ import storage from '@/fetch/storage'
 import store from '@/vuex/store'
 import Vuex from 'vuex'
 
-import VConsole from 'vconsole'
-var vConsole = new VConsole();
+//import VConsole from 'vconsole'
+//var vConsole = new VConsole();
 
 Vue.use(Vuex)
 Vue.prototype.$storage = storage
@@ -65,7 +65,7 @@ Vue.config.productionTip = false
 
 
 //storage.set('token', {"accessToken":"34bea3264fa230e8741dcd61158c8197","refreshToken":"1aa2ef0da2038a6aefbbe49d75ef066b","expired":1517912614})
-//storage.set('token', {"accessToken":"d5adf1eeeed4d246e4d7bc4c9c3f623d","refreshToken":"869a3ea969b39cec8e4062ac886ee4a6","expired":1519374115})
+storage.set('token', {"accessToken":"47481654408df6b5afab8df24acd1ea7","refreshToken":"001e87e42f7b3173e3e0ba085dc8a10a","expired":1519541583})
 
 //router.beforeEach((to, from, next) => {
 //  if (to.meta.requireAuth && !token.getAccessToken() && common.isWeixin()) {

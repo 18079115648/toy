@@ -1,5 +1,5 @@
 <template> 
-    <div class="app" id="fastClick" :style="{'height': wH + 'px'}" :class="{'overflow': loadingStatus || operateShow || failStatus || succStatus}">
+    <div @click="chatStatus = false" class="app" id="fastClick" :style="{'height': wH + 'px'}" :class="{'overflow': loadingStatus || operateShow || failStatus || succStatus}">
     	<!--<div class="room-loading" v-show="loadingStatus">
     		<div class="back img-mask" v-tap="{ methods : back }">
     			<img class="fullEle" :src="`${imageUrl}/ss44.png`"   />
@@ -141,6 +141,7 @@
 		    		</div>
 		    	</div>
 	        </div>
+	        
     	</div>
         <div class="room-goods-detail img-mask">
         	<div class="room-goods-content">
@@ -151,12 +152,12 @@
         	</div>
 	        	
         </div>
-			
-	    	
-    	<div class="chat-input" v-show="chatStatus">
+		<div class="chat-input" v-show="chatStatus">
 			<input type="text" id="chat-input" @click.stop="preventClick"  @keyup.enter="sendChat" @focus="chatFocus($event)" ref="Input" placeholder="输入发言内容(最多30字)" maxlength="30" v-model="chatText" />
 			<span class="chat-send btn-hover" @click.stop="sendChat">发送</span>
-		</div>
+		</div>	
+	    	
+	    	
 
 			
     	
@@ -465,9 +466,9 @@ export default {
 		// 加载音频资源
 		this.loadAudios()
 		this.chatContent = document.getElementById('chat-content')
-		document.onclick=function(){
-			self.chatStatus = false
-		}
+//		document.onclick=function(){
+//			self.chatStatus = false
+//		}
 	},
 	updated() {
 		this.chatContent.scrollTop = this.chatContent.scrollHeight;
@@ -887,12 +888,14 @@ export default {
 			this.chatStatus = true
 			this.$nextTick(function() {
 				this.$refs.Input.focus()
-				this.$refs.Input.scrollIntoView()
 			})
 		},
 		//聊天input出现在屏幕内
 		chatFocus(event) {
-			event.target.scrollIntoView();
+			setTimeout(() => {
+				event.target.scrollIntoView();
+			},300)
+			
 			
 		},
 		preventClick() {
@@ -1516,10 +1519,10 @@ export default {
 	top: 0.85rem;
 	bottom: 0;
 	right: 0;
-	z-index: 7;
+	z-index: 3;
 	background: url($roomLoadImg) no-repeat center;
 	background-color: #a6a2a1;
-	background-size: 100% auto;
+	background-size: auto 100%;
 }
 #frontview, #sideview {
 	width: 100%;
@@ -1532,14 +1535,14 @@ export default {
 	z-index: -1;
 }
 #frontview.show, #sideview.show {
-	z-index: 2;
+	z-index: 0;
 }
 .app{
 	position: relative;
 	min-height: 100vh;
 	font-weight: 700;
 	background: $bg-color;
-	overflow-y: auto;
+	overflow-y: scroll;
 	-webkit-overflow-scrolling : touch;
 	&.overflow{
 		overflow: hidden;
@@ -1757,7 +1760,7 @@ export default {
 	}
 }
 .chat-input{
-	position: fixed;
+	position: absolute;
 	left: 0;
 	bottom: 0;
 	background: #fff;
