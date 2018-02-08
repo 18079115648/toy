@@ -151,7 +151,7 @@ export default {
 				})
   			return
   		}
-  		let data = {num: this.nums, productId: this.productIds}
+  		let data = {num: this.nums, productId: this.productIds, totalNum: this.checkNum}
   		if(this.isHybrid) {
   			this.$bridge.enterAppPage({
   				page: 'orderSubmit',
@@ -159,7 +159,7 @@ export default {
   			})
   			return
   		}
-  		this.$storage.set('orderToys', {num: this.nums, productId: this.productIds})
+  		this.$storage.set('orderToys', data)
   		this.$router.replace('/orderSubmit')
   	},
   }

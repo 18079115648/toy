@@ -66,7 +66,9 @@ export default {
     }, err => {
     	
     })
-    this.$api.toysWin().then(res => {
+    this.$api.toysWin({
+    	totalNum: this.orderToys.totalNum
+    }).then(res => {
     	res.data.data.forEach((item, index) => {
     		this.orderToys.productId.forEach((obj, key) => {
     			if(item.productId == obj) {
