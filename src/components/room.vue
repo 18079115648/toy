@@ -1,5 +1,5 @@
 <template> 
-    <div @click="chatStatus = false" class="app" id="fastClick" :style="{'height': wH + 'px'}" :class="{'overflow': loadingStatus || operateShow || failStatus || succStatus}">
+    <div @click="chatStatus = false" class="app" id="fastClick" :style="{'height': wH + 'px'}" :class="{'overflow': loadingStatus || operateShow || failStatus || succStatus || chatStatus}">
     	<!--<div class="room-loading" v-show="loadingStatus">
     		<div class="back img-mask" v-tap="{ methods : back }">
     			<img class="fullEle" :src="`${imageUrl}/ss44.png`"   />
@@ -46,7 +46,7 @@
 	    		<div class="btn-hover open-record child" v-tap="{ methods : goGrabList }"></div>-->
 	    	</div>
     		<div class="video-content" :class="[fullStatus ? 'full' : 'nofull']">
-    			<div class="canvas-loading" v-show="loadingStatus">
+    			<div class="canvas-loading img-mask" v-show="loadingStatus">
     				<img :src="roomLoadImg"  />
     			</div>
 	        	<canvas id="frontview" :class="{show:showFront}"></canvas>
@@ -154,7 +154,7 @@
 	        	
         </div>
 		<div class="chat-input" v-show="chatStatus">
-			<input type="text" id="chat-input" @click.stop="preventClick"  @keyup.enter="sendChat" @focus="chatFocus($event)" ref="Input" placeholder="输入发言内容(最多30字)" maxlength="30" v-model="chatText" />
+			<input type="text" id="chat-input" @click.stop="preventClick" @blur="chatStatus = false"  @keyup.enter="sendChat" @focus="chatFocus($event)" ref="Input" placeholder="输入发言内容(最多30字)" maxlength="30" v-model="chatText" />
 			<span class="chat-send btn-hover" @click.stop="sendChat">发送</span>
 		</div>	
 	    	
@@ -467,6 +467,7 @@ export default {
 		
 		// 加载音频资源
 		this.loadAudios()
+		this.fastClick = document.getElementById('fastClick')
 		this.chatContent = document.getElementById('chat-content')
 //		document.onclick=function(){
 //			self.chatStatus = false
@@ -885,6 +886,7 @@ export default {
 			if(this.loadingStatus) {
 				return
 			}
+			this.fastClick.scrollTop = 0
 			const self = this
 			this.playClickAudio()
 			this.chatStatus = true
@@ -894,9 +896,9 @@ export default {
 		},
 		//聊天input出现在屏幕内
 		chatFocus(event) {
-			setTimeout(() => {
-				event.target.scrollIntoView();
-			},300)
+//			setTimeout(() => {
+//				this.fastClick.scrollTop = this.fastClick.offsetHeight
+//			},300)
 			
 			
 		},
@@ -905,7 +907,7 @@ export default {
 		},
         //发送聊天
 		sendChat() {
-			this.$refs.Input.focus()
+//			this.$refs.Input.focus()
 			if(!this.chatText) {
 				Toast({
 					message: '请输入聊天内容',
@@ -1327,7 +1329,7 @@ export default {
 		 * 跳转娃娃袋
 		 */
 		toToysPocket() {
-			this.$router.push('/toysBox')
+			this.$router.push('/toysBox/2')
 		},
 
 		/**
@@ -1550,8 +1552,6 @@ export default {
 	min-height: 100vh;
 	font-weight: 700;
 	background: $bg-color;
-	overflow-y: scroll;
-	-webkit-overflow-scrolling : touch;
 	&.overflow{
 		overflow: hidden;
 	}

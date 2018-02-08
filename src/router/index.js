@@ -253,7 +253,7 @@ const router = new Router({
       component: oauth
     },
     {
-      path: '/toysBox',
+      path: '/toysBox/:type',  //1 tab   2 user
       component: toysBox,
       meta: {
       	requireAuth: true

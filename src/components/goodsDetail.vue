@@ -21,7 +21,7 @@
         				<p v-if="type == 1"><span>{{goodsInfo.points}}</span>积分</p>
         				<p v-if="type == 2"><span>{{goodsInfo.fragmentNum}}</span>{{goodsInfo.fragmentName}}碎片</p>
         			</div>
-        			<div class="convert-btn btn-hover"  v-tap="{ methods : openConvert }">立即兑换</div>
+        			<div class="convert-btn btn-hover" :class="{disabled : checkConvert}"  v-tap="{ methods : openConvert }">立即兑换</div>
         		</div>
         		<p class="tip" v-if="goodsInfo.type == 1">提示：兑换的娃娃商品可在娃娃袋中查看</p>
         	</div>
@@ -124,6 +124,9 @@ export default {
 	    })
   	},
     openConvert() {
+    	if(this.checkConvert) {
+    		return
+    	}
     	this.num = 1
     	this.convertStatus = true
     },
@@ -244,6 +247,11 @@ export default {
 			height: 0.62rem;
 			line-height: 0.62rem;
 			border-radius: 0.58rem;
+			&.disabled{
+				color: #999;
+				border-color: #eee;
+				background: #eee;
+			}
 		}
 	}
 	.tip{

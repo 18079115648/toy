@@ -10,7 +10,7 @@
             </router-link>
         </li>
         <li :class="{'active':actived == 'second'}">
-            <router-link to='/toysBox' replace>
+            <router-link to='/toysBox/1' replace>
                 <img v-show="actived == 'second'" :src="`${imageUrl}/4-1-01.png`"  alt="娃娃袋"/>
                 <img v-show="actived != 'second'" :src="`${imageUrl}/4-2-01.png`"  alt="娃娃袋"/>
                 <div>娃娃袋</div>

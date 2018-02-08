@@ -261,20 +261,25 @@ export default {
 }
 .navbar{
 	height: 0.8rem;
-	display: flex;
+	white-space: nowrap;
 	overflow-x: auto;
 	border-bottom: 1px solid #eee;
+	overflow-y: hidden;
 	.nav-item{
-		flex: 1;
-		display: flex;
-		justify-content: center;
+		height: 100%;
+		display: inline-block;
+		text-align: center;
 		line-height: 0.8rem;
 		min-width: 1.42rem;
 		position: relative;
 		.text{
+			height: 100%;
+			display: inline-block;
+			text-align: center;
 			color: #666;
 			font-size: 0.28rem;
 			transition: all 0.1s;
+			white-space: nowrap;
 		}
 		&.active{
 			.text{
@@ -311,10 +316,11 @@ export default {
 	.homebar-content{
 		display: flex;
 		height: 1.4rem;
-		
+		width: 100%;
 	}
 	.nav-item{
 		flex: 1;
+		height: 100%;
     margin: 0 0.1rem;
     background: #ffffff;
     border-radius: 0.2rem;
@@ -337,6 +343,7 @@ export default {
 		}
 		.text{
 			color: #aaa;
+			white-space: nowrap;
 		}
 	}
 }

@@ -131,7 +131,7 @@
 	    		</p>
 	    		<p class="text">我的碎片</p>
 	    	</router-link>
-	    	<router-link to="/toysBox" v-tap class="nav-item top">
+	    	<router-link to="/toysBox/2" v-tap class="nav-item top">
 	    		<p class="count">
 	    			<svg class="nav-icon" version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 							 viewBox="0 0 60 50" enable-background="new 0 0 60 50" xml:space="preserve">

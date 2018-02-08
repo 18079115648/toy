@@ -1,13 +1,15 @@
 <template>
   <div class="content" :class="{'isHybrid' : isHybrid}">
   	<Header back="hidden" v-if="!isHybrid" title="娃娃袋"></Header>
-  	<div class="toys-content" v-show="toysList.length > 0">
+  	<div class="toys-content">
   		<p class="total-dia">当前娃娃总价值为：
   			<img  :src="`${imageUrl}/erdd.png`"  />
 	    	<span style="font-weight: 700;">{{ total}}</span>
   		</p>
-  		
-  		<div class="toys-list">
+  		<p class="tip">
+	  		<span class="tit">温馨提示：</span><span class="text">娃娃15天内未领取，系统将自动兑换成钻石</span>
+	  	</p>
+  		<div class="toys-list" :class="{'none': toysList.length < 1, 'user': source == 2}">
 	    	<div class="toys-item img-mask shadow-text" v-for="(item, index) in toysList" :key="index">
 	    		<img class="toys-img" :src="item.img"  />
 	    		
@@ -20,23 +22,21 @@
 	    			<p>x{{item.num}}</p>
 	    		</div>	
 	    	</div>
-	    	
+	    	<div class="no_msg bg-color" style="padding-top: 3rem;" v-show="toysList.length < 1 && loadEnd">
+		        <img  :src="`${imageUrl}/ewd.png`"  />
+		        <div>您还没有抓到娃娃~</div>
+		    </div>
 	    	
 	    </div>
 	    
-	    <p class="tip">
-	  		<span class="tit">温馨提示：</span><span class="text">抓中娃娃后15天内未领取，系统将自动兑换成钻石</span>
-	  	</p>
+	    
   	</div>
-  	<div class="no_msg bg-color" v-show="toysList.length < 1 && loadEnd">
-        <img  :src="`${imageUrl}/none-toy.png`"  />
-        <div>您还没有抓到娃娃~</div>
-    </div>
-	  <div class="toys-operate" v-show="toysList.length > 0">
+	  	
+	  <div class="toys-operate" :class="{'user': source == 2}" v-show="toysList.length > 0">
 	  	<router-link to="/toysBoxSelect/1" v-tap class="charge-btn btn-operate btn-hover">兑换钻石</router-link>
 	  	<router-link to="/toysBoxSelect/2" v-tap class="get-btn btn-operate btn-hover">立即领取</router-link>
 	  </div>  
-	  <Menu v-if="!isHybrid" actived="second"></Menu>
+	  <Menu v-if="!isHybrid && (source == 1)" actived="second"></Menu>
   </div>
 </template>
 
@@ -45,11 +45,12 @@ import {Toast, Indicator } from 'mint-ui'
 export default {
   data () {
     return {
+    	source: this.$route.params.type,
     	isHybrid: this.$common.isHybrid(),
     	imageUrl: this.$store.state.imageUrl,
-		toysList: [],
-		total: 0,  //兑换总钻石数
-		loadEnd: false
+			toysList: [],
+			total: 0,  //兑换总钻石数
+			loadEnd: false
     }
   },
   created() {
@@ -83,20 +84,22 @@ export default {
 	bottom: 2rem;
 	width: 100%;
 	
-	padding: 0.3rem 0.2rem 1.5rem;
+	padding: 0.3rem 0.2rem;
 	.tip{
-		position: absolute;
+		/*position: absolute;
 		left: 0.4rem;
 		right: 0.4rem;
-		bottom: 0.4rem;
+		bottom: 0.4rem;*/
 		color: $bg-text-color;
 		display: flex;
+		font-size: 0.22rem;
+		justify-content: center;
 		.tit{
-			width: 1.4rem;
+			width: 1.5rem;
 		}
 		.text{
-			flex: 1;
 			overflow: hidden;
+			white-space: nowrap;
 		}
 		
 	}
@@ -107,7 +110,7 @@ export default {
 	align-items: center;
 	color: $bg-text-color;
 	font-size: 0.3rem;
-	padding-bottom: 0.4rem;
+	padding-bottom: 0.2rem;
 	img{
 		width: 0.4rem;
 		margin-left: 0.2rem;
@@ -118,15 +121,25 @@ export default {
 	position: absolute;
 	left: 0.2rem;
 	right: 0.2rem;
-	top: 1.04rem;
-	bottom: 1.4rem;
+	top: 1.6rem;
+	bottom: 0.3rem;
 	overflow-y: auto;
 	-webkit-overflow-scrolling: touch;
 	border-radius: 0.2rem;
 	display: flex;
 	flex-wrap: wrap;
-	padding: 0.3rem 0.15rem;
+	padding: 0.1rem 0.15rem;
+	border-top: 0.2rem solid #fff;
+	border-bottom: 0.2rem solid #fff;
 	background: #fff;
+	&.none{
+		bottom: -0.7rem;
+		display: block;
+	}
+	&.user{
+		bottom: -0.7rem;
+		display: block;
+	}
 	.toys-item{
 		width: 3.1rem;
 		height: 3.1rem;
@@ -177,6 +190,9 @@ export default {
 	height: 1rem;
 	display: flex;
 	background: #fff;
+	&.user{
+		bottom: 0;
+	}
 	.btn-operate{
 		flex: 1;
 		text-align: center;
