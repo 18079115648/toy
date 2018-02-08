@@ -298,8 +298,11 @@ export default {
 	padding: 0 0.2rem;
 	.swipe-content{	
 		overflow: hidden;
+		border: 0.12rem solid #fff;
+		border-radius: 0.2rem;
 		img{
-			border-radius: 0.2rem;
+			border-radius: 0.1rem;
+			
 		}
 	}
 }

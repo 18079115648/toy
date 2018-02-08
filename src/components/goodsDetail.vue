@@ -284,8 +284,16 @@ export default {
 		color: #000;
 	}
 	.convert-body{
-		padding: 0.8rem 0 0.3rem;
+		padding: 0.8rem 0 0.4rem;
 		display: flex;
+		position: relative;
+		.err-tip{
+			position: absolute;
+			left: 0.9rem;
+			bottom: 0.1rem;
+			font-size: 0.24rem;
+			color: #f10;
+		}
 		span{
 			border: 1px solid #dbdbdb;
 			width: 0.66rem;
@@ -314,7 +322,6 @@ export default {
 		color: #bbb;
 		font-size: 0.24rem;
 		text-align: left;
-		padding-bottom: 0.4rem;
 	}
 	.convert-confirm{
 		height: 0.62rem;
@@ -326,6 +333,9 @@ export default {
 			background: #eee;
 			color: #ccc;
 		}
+	}
+	.convert-footer{
+		padding-top: 0.4rem;
 	}
 }
 </style>
