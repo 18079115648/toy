@@ -1,7 +1,7 @@
 <template>
   <div class="content" :class="{'isHybrid' : isHybrid}">
   	<Header back="hidden" v-if="!isHybrid" title="娃娃袋"></Header>
-  	<div class="toys-content">
+  	<div class="toys-content" :class="{'user': source == 2}">
   		<p class="total-dia">当前娃娃总价值为：
   			<img  :src="`${imageUrl}/erdd.png`"  />
 	    	<span style="font-weight: 700;">{{ total}}</span>
@@ -9,7 +9,7 @@
   		<p class="tip">
 	  		<span class="tit">温馨提示：</span><span class="text">娃娃15天内未领取，系统将自动兑换成钻石</span>
 	  	</p>
-  		<div class="toys-list" :class="{'none': toysList.length < 1, 'user': source == 2}">
+  		<div class="toys-list" :class="{'none': toysList.length < 1}">
 	    	<div class="toys-item img-mask shadow-text" v-for="(item, index) in toysList" :key="index">
 	    		<img class="toys-img" :src="item.img"  />
 	    		
@@ -22,7 +22,7 @@
 	    			<p>x{{item.num}}</p>
 	    		</div>	
 	    	</div>
-	    	<div class="no_msg bg-color" style="padding-top: 3rem;" v-show="toysList.length < 1 && loadEnd">
+	    	<div class="no_msg bg-color" style="padding-top: 3rem; color: #999;" v-show="toysList.length < 1 && loadEnd">
 		        <img  :src="`${imageUrl}/ewd.png`"  />
 		        <div>您还没有抓到娃娃~</div>
 		    </div>
@@ -32,7 +32,7 @@
 	    
   	</div>
 	  	
-	  <div class="toys-operate" :class="{'user': source == 2}" v-show="toysList.length > 0">
+	  <div class="toys-operate" :class="{'user': source == 2}" v-show="toysList.length > 0 && loadEnd">
 	  	<router-link to="/toysBoxSelect/1" v-tap class="charge-btn btn-operate btn-hover">兑换钻石</router-link>
 	  	<router-link to="/toysBoxSelect/2" v-tap class="get-btn btn-operate btn-hover">立即领取</router-link>
 	  </div>  
@@ -85,6 +85,9 @@ export default {
 	width: 100%;
 	
 	padding: 0.3rem 0.2rem;
+	&.user{
+		bottom: 1rem;
+	}
 	.tip{
 		/*position: absolute;
 		left: 0.4rem;
@@ -128,6 +131,7 @@ export default {
 	border-radius: 0.2rem;
 	display: flex;
 	flex-wrap: wrap;
+	align-content: flex-start;
 	padding: 0.1rem 0.15rem;
 	border-top: 0.2rem solid #fff;
 	border-bottom: 0.2rem solid #fff;
@@ -136,10 +140,10 @@ export default {
 		bottom: -0.7rem;
 		display: block;
 	}
-	&.user{
+	/*&.user{
 		bottom: -0.7rem;
 		display: block;
-	}
+	}*/
 	.toys-item{
 		width: 3.1rem;
 		height: 3.1rem;

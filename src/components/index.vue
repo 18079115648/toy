@@ -262,12 +262,13 @@ export default {
 .navbar{
 	height: 0.8rem;
 	white-space: nowrap;
+	display: flex;
 	overflow-x: auto;
 	border-bottom: 1px solid #eee;
 	overflow-y: hidden;
 	.nav-item{
 		height: 100%;
-		display: inline-block;
+		flex: auto;
 		text-align: center;
 		line-height: 0.8rem;
 		min-width: 1.42rem;
