@@ -938,12 +938,11 @@ export default {
 		 */
     	sendHeartBeate() {
       		if (this.sock == undefined) {
-        		alert('服务器连接失败，请重试')
         		return
       		} 
 
 			const sock = this.sock
-			setTimeout(() => {
+			this.heartTimer = setTimeout(() => {
 				sock.send(JSON.stringify({
 				cmd: 'hb',
 				vmc_no: this.machineSn
@@ -1464,6 +1463,9 @@ export default {
 		this.$root.bgAudio && !this.$root.bgAudio.paused && this.$root.bgAudio.pause()
 		this.leaveRoom()
 		this.zg.release()
+		this.sock.close()
+		clearTimeout(this.heartTimer)
+		this.sock = undefined
 	}
 
 		
