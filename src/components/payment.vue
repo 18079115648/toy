@@ -20,11 +20,11 @@
 	                <div class="payment_way_text">微信支付</div>
 	                <i class="default iconfont " :class="[payWay == 2 ? 'icon-xuanze': 'icon-weixuanzhong-01']"></i>
             	</div>  
-            	<div class="pay-item" @click="payWay = 1"  v-if="!isWinxin">
+            	<!--<div class="pay-item" @click="payWay = 1"  v-if="!isWinxin">
             		<img class="pay-icon" :src="`${imageUrl}/444.png`">
 	                <div class="payment_way_text">支付宝支付</div>
 	                <i class="default iconfont" :class="[payWay == 1 ? 'icon-xuanze': 'icon-weixuanzhong-01']" ></i>
-            	</div>
+            	</div>-->
 	              
             </div>
 
@@ -60,6 +60,7 @@ export default {
   },
   methods: {
     recharge() {
+    	const self = this
     	if(this.isWinxin) {
     		this.$api.payment({
 		        id: this.id,
@@ -111,7 +112,7 @@ export default {
     			this.$api.payment({
 			        id: this.id,
 			        type: 3,
-			        returnUrl: location.protocol + '//' + window.location.host + key + '/#/user'
+			        returnUrl: location.protocol + '//' + window.location.host + key + '/#/index'
 			    }).then(res => {
 		            document.write(res.data)
 			    }, err => {
@@ -124,13 +125,11 @@ export default {
 		        type: 2,
 		        tradeType: 'MWEB'
 		    }).then(res => {
-				window.location.replace(res.data.mweb_url + '&redirect_url=' + location.protocol + '//' + window.location.host + key + '/#/user')
+				window.location.replace(res.data.mweb_url + '&redirect_url='+ location.protocol + '//' + window.location.host + key + '/#/index')
 		    }, err => {
 		        
 	        })
-    	}
-	    	
-        
+    	}  
     }
   }
 }

@@ -80,6 +80,7 @@ const router = new Router({
       component: index,
       meta: {
       	keepAlive: true,
+      	requireAuth: true
       }
     },
     {
