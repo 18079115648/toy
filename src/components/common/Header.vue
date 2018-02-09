@@ -43,7 +43,7 @@
         },
         methods: {
             goBack() {
-                if (!this.back) {
+                if (!this.back || this.back == 'back') {
                     this.$router.back()
                 } else {
                     this.$router.replace(this.back)

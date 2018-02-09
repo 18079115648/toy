@@ -1,6 +1,6 @@
 <template>
   <div class="content" :class="{'isHybrid' : isHybrid}">
-  	<Header back="hidden" v-if="!isHybrid" title="娃娃袋"></Header>
+  	<Header :back="hidden" v-if="!isHybrid" title="娃娃袋"></Header>
   	<div class="toys-content" :class="{'user': source == 2}">
   		<p class="total-dia">当前娃娃总价值为：
   			<img  :src="`${imageUrl}/erdd.png`"  />
@@ -9,7 +9,7 @@
   		<p class="tip">
 	  		<span class="tit">温馨提示：</span><span class="text">娃娃15天内未领取，系统将自动兑换成钻石</span>
 	  	</p>
-  		<div class="toys-list" :class="{'none': toysList.length < 1}">
+  		<div class="toys-list" :class="{'none': toysList.length < 1 && loadEnd}">
 	    	<div class="toys-item img-mask shadow-text" v-for="(item, index) in toysList" :key="index">
 	    		<img class="toys-img" :src="item.img"  />
 	    		
@@ -32,7 +32,7 @@
 	    
   	</div>
 	  	
-	  <div class="toys-operate" :class="{'user': source == 2}" v-show="toysList.length > 0 && loadEnd">
+	  <div class="toys-operate" :class="{'user': source == 2}" v-show="toysList.length > 0 ">
 	  	<router-link to="/toysBoxSelect/1" v-tap class="charge-btn btn-operate btn-hover">兑换钻石</router-link>
 	  	<router-link to="/toysBoxSelect/2" v-tap class="get-btn btn-operate btn-hover">立即领取</router-link>
 	  </div>  
@@ -45,6 +45,7 @@ import {Toast, Indicator } from 'mint-ui'
 export default {
   data () {
     return {
+    	hidden: 'hidden',
     	source: this.$route.params.type,
     	isHybrid: this.$common.isHybrid(),
     	imageUrl: this.$store.state.imageUrl,
@@ -54,6 +55,7 @@ export default {
     }
   },
   created() {
+  	(this.source == 2) && (this.hidden = 'back')
   	this.$api.toysWin().then(res => {
   		this.loadEnd = true
 			this.toysList = res.data.data

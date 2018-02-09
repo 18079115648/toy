@@ -65,7 +65,7 @@ Vue.config.productionTip = false
 
 
 //storage.set('token', {"accessToken":"34bea3264fa230e8741dcd61158c8197","refreshToken":"1aa2ef0da2038a6aefbbe49d75ef066b","expired":1517912614})
-//storage.set('token', {"accessToken":"8011f3ea14a79353cd658a778ab8cd26","refreshToken":"eb3e32e1ac2d79d51b8524ee274d7444","expired":1519548345})
+//storage.set('token', {"accessToken":"3c03841e4f9ff8578188e94330f9d7e2","refreshToken":"7eac68599c020ecdfcbc4ba9ee144b2b","expired":1519627714})
 
 //router.beforeEach((to, from, next) => {
 //  if (to.meta.requireAuth && !token.getAccessToken() && common.isWeixin()) {

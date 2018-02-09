@@ -51,6 +51,8 @@ const rankList = r => require.ensure([], () => r(require('../components/rankList
 const rankListApp = r => require.ensure([], () => r(require('../components/rankListApp.vue')), 'rankListApp')
 //排行榜用户详情
 const rankDetail = r => require.ensure([], () => r(require('../components/rankDetail.vue')), 'rankDetail')
+//排行榜用户详情
+const playVideo = r => require.ensure([], () => r(require('../components/playVideo.vue')), 'playVideo')
 //积分商城
 const intergalMall = r => require.ensure([], () => r(require('../components/intergalMall.vue')), 'intergalMall')
 //商城商品详情
@@ -194,6 +196,12 @@ const router = new Router({
     },{
       path: '/rankDetail/:id',
       component: rankDetail,
+      meta: {
+      	requireAuth: true
+      }
+    },{
+      path: '/playVideo',
+      component: playVideo,
       meta: {
       	requireAuth: true
       }

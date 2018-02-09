@@ -21,19 +21,10 @@
 		      			<div class="rank-info-media" v-tap="{ methods : enterRoom, machineId: item.machineId }" v-if="!item.url">
 		      				<img class="fullEle toy-img" :src="item.img"  />
 		      			</div>
-		      			<div class="rank-info-media" v-if="item.url" v-tap="{ methods : playVideo, url: item.url, id: 'video-'+index}">
-		      				<video 
-		      					v-if="!isHybrid"
-		      					:id="'video-'+index"
-                            	x-webkit-airplay="allow" 
-                            	:src="item.url" 
-                            	class="play_video fullEle"  
-                            	webkit-playsinline="true"   
-						      	playsinline="true"
-                            	:poster="item.img">
-                            </video>
-                            <img v-if="isHybrid" class="fullEle toy-img" :src="item.img"  />
-                            <img :src="`${imageUrl}/weed.png`" class="play_img">
+		      			<div class="rank-info-media" v-if="item.url" >
+		      				
+                            <img class="fullEle toy-img" :src="item.img" v-tap="{ methods : enterRoom, machineId: item.machineId }"  />
+                            <img :src="`${imageUrl}/weed.png`" class="play_img" v-tap.prevent="{ methods : playVideo, url: item.url, img: item.img}">
 		      			</div>
 		      			<div class="rank-info-text">
 		      				<p class="rank-goods-name">{{item.name}}</p>
@@ -86,8 +77,8 @@ export default {
     		this.$bridge.playVideo(params.url)
     		return
     	}
-    	const video = document.getElementById(params.id)
-    	video.paused ? video.play() : video.pause()
+    	this.$storage.set('currVideoUrl', {url: params.url, img: params.img})
+    	this.$router.push('/playVideo')
     },
     enterRoom(params) {
     	this.$api.enterRoom({machineId: params.machineId}).then((res) => {
@@ -188,10 +179,9 @@ export default {
 				}
 				.play_img{
 					position: absolute;
-					width: 1.2rem;
-					left: 50%;
-					top: 50%;
-					transform: translate(-50%, -50%);
+					width: 1rem;
+					right: 0;
+					bottom: 0;
 				}
 			}
 			.rank-info-text{
