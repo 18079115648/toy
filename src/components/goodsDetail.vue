@@ -28,7 +28,7 @@
         	<div class="goods-image-text">
         		<p class="tit">商品介绍</p>
         		<div class="goods-rich-content" v-html="">
-        			<img :src="value" v-for="value in goodsInfo.description.split(';')"  />
+        			<img :src="value" v-for="value in desc"  />
         		</div>
         	</div>
         </div>
@@ -60,6 +60,7 @@ export default {
     	goodsId: undefined,
     	type: undefined,
     	goodsInfo: {},
+    	desc: [],
     	userPoints: 0, //用户积分
     	fragmentCounts: 0, //用户碎片
         convertStatus: false,
@@ -117,7 +118,7 @@ export default {
 	    	setTimeout(() => {
 	    		Indicator.close()
 	    	},200)
-	    	
+	    	res.data.description && (this.desc = res.data.description.split(';'))
 	        this.goodsInfo = res.data
 	    }, err => {
 	    	Indicator.close()

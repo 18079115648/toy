@@ -7,7 +7,10 @@
 					<div class="orderList_body" v-for="(item, index) in pagination.content" :key="index">
 			            <div class="orderList_title">
 			                <div><span style="color:#999">{{item.create_time}}</span></div>
-			                <div style="color:#00bc71">已兑换</div>
+			                <div style="color:#00bc71">
+			                	<span v-if="item.exchangeType == 1">积分兑换</span>
+			                	<span v-if="item.exchangeType == 2">碎片兑换</span>
+			                </div>
 			            </div>
 			            <div class="puppets_img">
 			                <div class="puppetsList">
@@ -17,7 +20,8 @@
 			                    <div class="convert-info">
 			                        <div style="color: #000;">{{item.goods_name}}</div>
 			                        <div style="color: #000;">x{{item.quantity}}</div>
-			                        <div style="margin-top: 0.1rem;"><span class="points">{{item.goods_points}}</span>积分</div>
+			                        <div v-if="item.exchangeType == 1" style="margin-top: 0.1rem;"><span class="points">{{item.goods_points}}</span>积分</div>
+			                    	<div v-if="item.exchangeType == 2" style="margin-top: 0.1rem;"><span class="points">{{item.fragmentNum}}</span>{{item.fragmentName}}碎片</div>
 			                    </div>
 			                </div>
 			            </div>

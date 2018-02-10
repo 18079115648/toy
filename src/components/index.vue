@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <div class="header">
-    	<img class="logo-text"  :src="`${imageUrl}/logo-text.png`" />
+    	<img class="logo-text"  :src="`${imageUrl}/logo-ren.png`" />
     </div>
     <div class="home-pagination-content">
     	<Pagination :render="render" :needToken="false" :param="pagination" :autoload="false" ref="pagination" uri="/dm-api/home/tag" >
@@ -246,7 +246,7 @@ export default {
 		}
 	}*/
 	.logo-text{
-		height: 0.7rem;
+		height: 0.5rem;
 	}
 }
 .home-pagination-content{

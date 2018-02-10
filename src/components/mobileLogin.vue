@@ -1,7 +1,7 @@
 <template>
     <div class="app" id="app" :style="{ height: wH + 'px' }">
     	<Header title="">
-    		<img class="logo-text" :src="`${imageUrl}/logo-text.png`" />
+    		<img class="logo-text" :src="`${imageUrl}/logo-ren.png`" />
     	</Header>
     	<div class="login-content">
     		<div class="input-item">
@@ -154,8 +154,8 @@ export default {
 } 
 .logo-text{
 	position: fixed;
-	height: 0.7rem;
-	top: 0.08rem;
+	height: 0.5rem;
+	top: 0.18rem;
 	left: 50%;
 	transform: translateX(-50%);
 	z-index: 15;

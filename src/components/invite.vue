@@ -44,6 +44,7 @@ export default {
   created() {
 	this.$api.userInfo().then(res => {
 		this.code = res.data.inviteCode.split('')
+		!res.data.nickname && (res.data.nickname = this.appName)
 		if(!this.$common.isWeixin()) {
 			return
 		}
@@ -51,8 +52,8 @@ export default {
 		key += this.$storage.get('channelKey') ? '&channelKey=' + this.$storage.get('channelKey') : ''
 		this.lineLink = location.protocol + '//' + location.host + '/' + key + '/#/index'
 		this.imgUrl = this.$store.state.shareLogo
-		this.shareTitle = this.appName
-		this.descContent = '欢乐抓娃娃，分享奖励多多！'
+		this.shareTitle = res.data.nickname + '@我，收到福利礼包！'
+		this.descContent = res.data.nickname + '邀您来任我抓一起免费抓娃娃，在家也能玩'
 		this.wxShare(this.lineLink, this.imgUrl, this.shareTitle, this.descContent)	
     }, err => {
     	
