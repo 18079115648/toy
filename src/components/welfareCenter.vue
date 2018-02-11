@@ -108,8 +108,9 @@
         					</p>
         					<p class="rate">当前进度：{{item.progress > item.goal ? item.goal : item.progress}}/{{item.goal}}</p>
         				</div>
-        				<div v-tap="{ methods : receiveTask, status: item.receiveStatus || (item.goal > item.progress), key: grabList.key, item: item  }" class="task-btn border-btn btn-hover" :class="{'disabled-btn': item.receiveStatus || (item.goal > item.progress)}">
-        					<span v-show="!item.receiveStatus">立即领取</span>
+        				<div v-tap="{ methods : receiveTask, status: item.receiveStatus, finish: item.goal <= item.progress, key: grabList.key, item: item  }" class="task-btn border-btn btn-hover" :class="{'disabled-btn': item.receiveStatus}">
+        					<span v-show="!item.receiveStatus && (item.goal > item.progress)">去抓取</span>
+        					<span v-show="!item.receiveStatus && (item.goal <= item.progress)">立即领取</span>
         					<span v-show="item.receiveStatus">已领取</span>
         				</div>
         			</div>
@@ -129,8 +130,9 @@
         					</p>
         					<p class="rate">当前进度：{{item.progress > item.goal ? item.goal : item.progress}}/{{item.goal}}</p>
         				</div>
-        				<div v-tap="{ methods : receiveTask, status: item.receiveStatus || (item.goal > item.progress), key: grabSuccList.key, item: item  }" class="task-btn border-btn btn-hover" :class="{'disabled-btn': item.receiveStatus || item.goal > item.progress}">
-        					<span v-show="!item.receiveStatus">立即领取</span>
+        				<div v-tap="{ methods : receiveTask, status: item.receiveStatus, finish: item.goal <= item.progress, key: grabSuccList.key, item: item  }" class="task-btn border-btn btn-hover" :class="{'disabled-btn': item.receiveStatus}">
+        					<span v-show="!item.receiveStatus && (item.goal > item.progress)">去抓取</span>
+        					<span v-show="!item.receiveStatus && (item.goal <= item.progress)">立即领取</span>
         					<span v-show="item.receiveStatus">已领取</span>
         				</div>
         			</div>
@@ -263,6 +265,10 @@ export default {
   	receiveTask(params) {
   		console.log(params)
   		if(params.status) {
+			return
+		}
+  		if(!params.finish) {
+			this.$router.go(-1)
 			return
 		}
   		Indicator.open()
