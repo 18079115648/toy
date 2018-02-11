@@ -52,7 +52,7 @@ export default {
 		key += this.$storage.get('channelKey') ? '&channelKey=' + this.$storage.get('channelKey') : ''
 		this.lineLink = location.protocol + '//' + location.host + '/' + key + '/#/index'
 		this.imgUrl = this.$store.state.shareLogo
-		this.shareTitle = res.data.nickname + '@我，收到福利礼包！'
+		this.shareTitle = res.data.nickname + '@我，快来领取福利！'
 		this.descContent = res.data.nickname + '邀您来任我抓一起免费抓娃娃，在家也能玩'
 		this.wxShare(this.lineLink, this.imgUrl, this.shareTitle, this.descContent)	
     }, err => {

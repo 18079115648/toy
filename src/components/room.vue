@@ -436,6 +436,7 @@ export default {
 		}
 	},
 	created() {	
+		console.log(this.sock)
 		this.machineId = this.$route.query.machineId
 		//房间人数
 		this.roomNum = this.$route.query.num
@@ -1139,7 +1140,6 @@ export default {
 		 */
 		grab() {
 			if (this.sock == undefined) {
-				alert('服务器连接失败，请重试')
 				return
 			}
 			if(this.grabProcess) {
@@ -1162,7 +1162,6 @@ export default {
 		 */
 		leaveRoom() {
 			if (this.sock == undefined) {
-				alert('服务器连接失败，请重试')
 				return
 			}
 			this.sock.send(JSON.stringify({
