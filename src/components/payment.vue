@@ -88,6 +88,8 @@ export default {
 								setTimeout(() => {
 									self.$router.go(-1)
 								}, 500)
+							}else {
+								console.log(res)
 							}
 						}
 					);
