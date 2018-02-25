@@ -849,7 +849,12 @@ export default {
 		operateCountDown(seconds) {
 			const self = this
 			this.operateTime = seconds
+			if (this.operationTimer != undefined && this.operationTimer != null && this.operationTimer != '') {
+				clearInterval(this.operationTimer)
+			}
+			console.log(this.operationTimer)
 			this.operationTimer = setInterval(() => {
+				console.log(this.operationTimer)
 				if (self.operateTime === 0) {
 					self.grab()
 					console.info("抓取:" + self.operationTimer)
