@@ -267,8 +267,14 @@ export default {
   		if(params.status) {
 			return
 		}
-  		if(!params.finish) {
+  		if(!params.finish && !this.isHybrid) {
 			this.$router.go(-1)
+			return
+		}
+  		if(!params.finish && this.isHybrid) {
+			this.$bridge.enterAppPage({
+        		page: 'home'
+        	})
 			return
 		}
   		Indicator.open()
