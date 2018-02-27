@@ -86,7 +86,13 @@ export function fetchPost(url, params, needToken, multiple) {
 	            		}else {
 	            			reject(response)
 							if (response.data.errCode === 20002) {
-								router.replace('/login')
+								if(common.isHybrid()) {
+									bridge.enterAppPage({
+						        		page: 'login'
+						        	})
+						        }else {
+						        	router.replace('/login')
+						        }
 								return
 							}
 	            			
@@ -125,7 +131,13 @@ export function fetchPost(url, params, needToken, multiple) {
             		}else {
             			reject(response)
             			if (response.data.errCode === 20002) {
-							router.replace('/login')
+							if(common.isHybrid()) {
+								bridge.enterAppPage({
+					        		page: 'login'
+					        	})
+					        }else {
+					        	router.replace('/login')
+					        }
 							return
 						}
             			
@@ -173,7 +185,13 @@ export function fetchGet(url, params, needToken) {
             		}else {
             			reject(response)
 						if (response.data.errCode === 20002) {
-							router.replace('/login')
+							if(common.isHybrid()) {
+								bridge.enterAppPage({
+					        		page: 'login'
+					        	})
+					        }else {
+					        	router.replace('/login')
+					        }
 							return
 						}
             			
