@@ -114,6 +114,12 @@ export default {
   		(params.item.operateNum < params.item.num) && params.item.operateNum++
   	},
   	back() {
+  		if(this.isHybrid) {
+  			this.$bridge.enterAppPage({
+	    		page: 'back'
+	    	})
+  			return
+  		}
   		this.$router.go(-1)
   	},
   	exchangeDiamond() {
