@@ -15,6 +15,7 @@
     	<div class="loading" >
 	    	<mt-spinner class="loading-icon" type="double-bounce" color="#ffe86e" :size="46"></mt-spinner>
     	</div>
+    	<p class="componey-tip">本应用由"上海富丘网络科技有限公司"提供</p>
     </div>
     <div class="home-pagination-content" :class="{'overflow': vipReceiveStatus || signShow || guideShow || saveShow || shareShow || giftShow || vipGiftShow}">
     	<Pagination :render="render" :needToken="false" :param="pagination" :autoload="false" ref="pagination" uri="/dm-api/home/tag" >
@@ -710,6 +711,14 @@ export default {
 		left: 50%;
 		top: 45%;
 		transform: translate(-50%, -50%);	
+	}
+	.componey-tip{
+		position: absolute;
+		width: 100%;
+		text-align: center;
+		bottom: 1.1rem;
+		color: #333;
+		font-size: 0.26rem;
 	}
 	
 }
