@@ -5,9 +5,9 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const state = {
-	appName: '任我抓',
-	roomLoadImg: 'https://yingdd.oss-cn-hangzhou.aliyuncs.com/90530c7ba350e128fa64cee4d4aee58a.jpg',
-	shareLogo: 'https://yingdd.oss-cn-hangzhou.aliyuncs.com/79aa741598a6d9ab392b91cc309637a1.png',
+	appName: '任我抓', //app名称
+	roomLoadImg: 'https://yingdd.oss-cn-hangzhou.aliyuncs.com/90530c7ba350e128fa64cee4d4aee58a.jpg', //房间loading图片
+	shareLogo: 'https://yingdd.oss-cn-hangzhou.aliyuncs.com/79aa741598a6d9ab392b91cc309637a1.png',   //分享图片
 	imageUrl: '/static/image/renwozhua',
 	bgAudio: 'https://yingdd.oss-cn-hangzhou.aliyuncs.com/d0bda63fee3ad56ab8938d349b791fa1.mp3',  //背景音乐
 	clickAudioUrl: '/static/audio/click.mp3', // 按钮点击音效
