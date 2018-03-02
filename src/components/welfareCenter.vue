@@ -464,6 +464,7 @@ export default {
 					height: 1rem;
 					margin: 0 auto;
 					border-radius:100%;
+					overflow: hidden;
 					img{
 						height: 0.4rem;
 					}

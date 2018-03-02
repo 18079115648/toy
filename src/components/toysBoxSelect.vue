@@ -142,7 +142,7 @@ export default {
 				  duration: 800
 				})
 	  		setTimeout(() => {
-	  			this.$router.go(-1)
+	  			this.back()
 	  		}, 1000)
 	    }, err => {
 	    	
