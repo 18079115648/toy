@@ -819,6 +819,7 @@ export default {
 			document.getElementById('fastClick').scrollTop = 0
 			this.chatStatus = false
 			this.playClickAudio()
+			this.$common.isIOS() && this.iosPlayReadyGoAudio()
 			this.succStatus = false
 			this.failStatus = false
 			this.startGame()
@@ -1155,6 +1156,8 @@ export default {
 			setTimeout(() => {
 				parent.playGrabAudio()
 			}, 100)
+			this.$common.isIOS() && this.iosPlaySuccessAudio()
+			this.$common.isIOS() && this.iosPlayFailureAudio()
 			clearInterval(this.operationTimer)
 			this.sock.send(JSON.stringify({
 				cmd: 'grab',
@@ -1218,7 +1221,14 @@ export default {
 		/**
 		 * 播放ReadyGo音效
 		 */
+		//ios兼容播放声音
+		iosPlayReadyGoAudio() {
+			this.readyGoAudio.play()
+			this.readyGoAudio.pause()
+		},
 		playReadyGoAudio() {
+			this.readyGoAudio.pause()
+			this.readyGoAudio.currentTime = 0
 			this.soundSwitch && this.readyGoAudio.play()
 		},
 		
@@ -1232,7 +1242,13 @@ export default {
 		/**
 		 * 播放抓取成功音效
 		 */
+		iosPlaySuccessAudio() {
+			this.successAudio.play()
+			this.successAudio.pause()
+		},
 		playSuccessAudio() {
+			this.successAudio.pause()
+			this.successAudio.currentTime = 0
 			this.soundSwitch && this.successAudio.play()
 		},
 
@@ -1246,7 +1262,13 @@ export default {
 		/**
 		 * 播放抓取失败音效
 		 */
+		iosPlayFailureAudio() {
+			this.failureAudio.play()
+			this.failureAudio.pause()
+		},
 		playFailureAudio() {
+			this.failureAudio.pause()
+			this.failureAudio.currentTime = 0
 			this.soundSwitch && this.failureAudio.play()
 		},
 
