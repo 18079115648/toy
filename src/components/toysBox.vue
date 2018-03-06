@@ -22,7 +22,7 @@
 	    			<p>x{{item.num}}</p>
 	    		</div>	
 	    	</div>
-	    	<div class="no_msg bg-color" style="padding-top: 3rem; color: #999;" v-show="toysList.length < 1 && loadEnd">
+	    	<div class="no_msg bg-color" style="padding-top: 2rem; color: #999;" v-show="toysList.length < 1 && loadEnd">
 		        <img  :src="`${imageUrl}/ewd.png`"  />
 		        <div>您还没有抓到娃娃~</div>
 		    </div>
@@ -171,6 +171,19 @@ export default {
 			font-size: 0.28rem;
 			display: flex;
 			justify-content: space-between;
+			p{
+				&:first-of-type{
+				overflow: hidden;
+				text-overflow: ellipsis;
+					white-space: nowrap;
+					flex: 1;
+				}
+				
+				&:last-of-type{
+					min-width: 0.6rem;
+					text-align: right;
+				}
+			}
 		}
 		.change-num{
 			position: absolute;

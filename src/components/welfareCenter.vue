@@ -312,7 +312,9 @@ export default {
 	border: 0.06rem solid $welfare-btn-color;
 	height: 0.72rem;
 	border-radius: 0.72rem;
-	line-height: 0.6rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	text-align: center;
 	color: $welfare-btn-color;
 	background: $welfare-btn-bgcolor;
