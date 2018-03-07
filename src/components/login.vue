@@ -30,7 +30,7 @@ export default {
 			this.$token.refreshToken(accessToken.accessToken, accessToken.refreshToken, accessToken.expireTime)
 			this.$storage.set('user', res.data)
 		  this.$storage.set('isNew', res.data.firstLogin)
-		  this.data.firstLogin ? window.reportRegister() : window.reportLogin()
+		  res.data.firstLogin ? window.reportRegister() : window.reportLogin()
 			this.$router.replace('/index')
     }, err => {
     	

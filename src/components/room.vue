@@ -1492,9 +1492,10 @@ export default {
 	left: 0;
 	top: 0;
 	bottom: 0;
-	background: url(https://yingdd.oss-cn-hangzhou.aliyuncs.com/90530c7ba350e128fa64cee4d4aee58a.jpg) no-repeat center;
+	background: url(../../static/image/room-load.jpg) no-repeat center;
 	background-color: #a6a2a1;
-	background-size: 100% 100%;
+	background-size: 100% auto;
+	background-position: center top;
 	.back{
 		position: absolute;
 		width: 0.9rem;
