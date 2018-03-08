@@ -1,7 +1,12 @@
 <template>
     <div class="content" :class="{'isHybrid' : isHybrid}">
-        <Header back="hidden" v-if="!isHybrid" title="兑换商城"></Header>
-        <!--<div class="user-amount">
+        <Header back="hidden" v-if="!isHybrid">
+        	<div class="mall-kind">
+        		<router-link replace to="/intergalMall/2" :class="{'active' : type == 2}">碎片商城</router-link>
+        		<router-link replace to="/intergalMall/1" :class="{'active' : type == 1}" >积分商城</router-link>
+        	</div>
+        </Header>
+        <div class="user-amount">
         	<div class="fragment item">
         		<div class="icon img-mask">
         			<img class="fullEle" :src="`${imageUrl}/27@3x.png`">
@@ -22,8 +27,8 @@
         		</div>
         		兑换记录
         	</router-link>
-        </div>-->
-        <div class="user-amount">
+        </div>
+        <!--<div class="user-amount">
         	<i class="icon-duihuanqingkuang iconfont convert-icon"></i>
         	<router-link to="/convertList" class="record item">
         		<div class="icon img-mask">
@@ -31,7 +36,7 @@
         		</div>
         		兑换记录
         	</router-link>
-        </div>
+        </div>-->
         <div class="pagination-content" id="page-content" :class="{'isHybrid' : isHybrid}">
         	<Pagination :render="render" :param="pagination" :autoload="false"  ref="pagination" :uri="currUrl" > 
 		        <div class="convert-list" v-show="pagination.content.length > 0">
@@ -203,15 +208,14 @@ export default {
 	}
 }
 .user-amount{
-	height: 1.4rem;
+	height: 1rem;
 	display: flex;
 	border-bottom: 1px solid #f2f2f2;
-	padding: 0 0.3rem;
-	.convert-icon{
+	/*.convert-icon{
 		color: #f7b52d;
 		font-size: 0.6rem;
 		line-height: 1.4rem;
-	}
+	}*/
 	.item{
 		flex: 1;
 		display: flex;
@@ -229,7 +233,7 @@ export default {
 	}
 }
 .pagination-content{
-	top: 2.25rem;
+	top: 1.85rem;
 }
 .convert-list{
 	display: flex;

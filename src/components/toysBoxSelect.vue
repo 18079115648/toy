@@ -262,6 +262,19 @@ export default {
 			font-size: 0.28rem;
 			display: flex;
 			justify-content: space-between;
+			p{
+				&:first-of-type{
+				overflow: hidden;
+				text-overflow: ellipsis;
+					white-space: nowrap;
+					flex: 1;
+				}
+				
+				&:last-of-type{
+					min-width: 0.6rem;
+					text-align: right;
+				}
+			}
 		}
 		.change-num{
 			position: absolute;

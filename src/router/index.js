@@ -82,7 +82,7 @@ const router = new Router({
       component: index,
       meta: {
       	keepAlive: true,
-//    	requireAuth: true
+      	requireAuth: true
       }
     },
     {
@@ -124,7 +124,7 @@ const router = new Router({
       	requireAuth: true
       }
     },{
-      path: '/intergalMall', 
+      path: '/intergalMall/:type', //type 1 积分  2 碎片
       component: intergalMall,
       meta: {
       	keepAlive: true,
